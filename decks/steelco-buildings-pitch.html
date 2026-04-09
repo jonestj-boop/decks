@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SteelCo Buildings — Product Page Growth & SEO Strategy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --steel-blue: #2C3E50;
+    --steel-dark: #1a1a2e;
+    --steel-navy: #16213e;
+    --steel-slate: #34495E;
+    --steel-accent: #3498DB;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --orange: #E67E22;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e9ecef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--steel-dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    padding: 48px 64px;
+    overflow-y: auto;
+    background: var(--card-bg);
+  }
+
+  .slide.active { display: flex; }
+
+  .slide.dark {
+    background: linear-gradient(135deg, var(--steel-dark) 0%, var(--steel-navy) 50%, var(--steel-slate) 100%);
+    color: #ffffff;
+  }
+
+  .slide.dark .text-light { color: rgba(255,255,255,0.6); }
+  .slide.dark .stat-value { color: #ffffff; }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--steel-accent); }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+    align-items: center;
+  }
+
+  .nav button {
+    background: var(--steel-dark);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover { background: var(--steel-slate); transform: scale(1.05); }
+  .nav .counter { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; margin: 0 8px; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember-red), var(--steel-accent));
+    transition: width 0.3s ease;
+    z-index: 1001;
+  }
+
+  /* Typography */
+  .slide-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 8px;
+  }
+
+  .slide.dark .slide-label { color: var(--steel-accent); }
+
+  h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -1px; }
+  h2 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.5px; }
+  h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+
+  .subtitle {
+    font-size: 20px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+
+  .slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+  /* Stats */
+  .stats-row { display: flex; gap: 24px; margin: 24px 0; flex-wrap: wrap; }
+
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .slide.dark .stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+
+  .stat-value { font-size: 36px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.blue { color: var(--steel-accent); }
+
+  .stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); margin-top: 4px; }
+
+  /* Annotations */
+  .annotation {
+    background: #FFF8E1;
+    border-left: 3px solid var(--orange);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: var(--text);
+  }
+
+  .annotation strong { color: var(--steel-blue); }
+  .annotation.info { background: #E3F2FD; border-color: var(--steel-accent); }
+  .annotation.info strong { color: var(--steel-slate); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th {
+    text-align: left; padding: 10px 12px; background: var(--light-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light);
+    border-bottom: 2px solid var(--border);
+  }
+  .slide.dark th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .slide.dark td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .slide.dark tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--orange); }
+  .blue { color: var(--steel-accent); }
+  .bold { font-weight: 700; }
+  .right { text-align: right; }
+  .dim { opacity: 0.5; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; }
+  .bar-row { display: flex; align-items: center; gap: 12px; }
+  .bar-label { width: 140px; font-size: 13px; font-weight: 500; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; position: relative; }
+  .slide.dark .bar-track { background: rgba(255,255,255,0.06); }
+  .bar-fill {
+    height: 100%; border-radius: 6px; display: flex; align-items: center;
+    padding-left: 10px; font-size: 12px; font-weight: 600; color: white;
+    min-width: 40px; transition: width 0.8s ease;
+  }
+  .bar-fill.blue-fill { background: linear-gradient(90deg, var(--steel-accent), #2980b9); }
+  .bar-fill.red-fill { background: linear-gradient(90deg, var(--red), #c0392b); }
+  .bar-fill.green-fill { background: linear-gradient(90deg, var(--green), #229954); }
+  .bar-fill.orange-fill { background: linear-gradient(90deg, var(--orange), #d35400); }
+  .bar-fill.ember-fill { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+
+  /* Waterfall */
+  .waterfall { display: flex; align-items: flex-end; gap: 6px; padding: 0 4px; }
+  .waterfall-bar {
+    flex: 1; background: var(--steel-accent); border-radius: 4px 4px 0 0;
+    min-height: 8px; transition: height 0.5s ease; position: relative; cursor: help;
+  }
+  .waterfall-bar.declining { background: var(--orange); }
+  .waterfall-bar.low { background: var(--red); }
+  .waterfall-bar.highlight { background: var(--green); }
+  .waterfall-labels { display: flex; gap: 6px; padding: 4px; }
+  .waterfall-label { flex: 1; text-align: center; font-size: 11px; color: var(--text-light); }
+
+  /* Two-column layout */
+  .two-col { display: flex; gap: 32px; }
+  .col { flex: 1; }
+
+  /* Logo row */
+  .logo-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 16px; margin-top: auto; border-top: 1px solid var(--border);
+  }
+  .slide.dark .logo-row { border-color: rgba(255,255,255,0.1); }
+  .logo-ember { font-weight: 800; font-size: 14px; letter-spacing: 2px; color: var(--ember-red); }
+  .logo-date { font-size: 12px; color: var(--text-light); }
+  .slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+  /* Issue items */
+  .issue-item { display: flex; gap: 12px; margin-bottom: 16px; }
+  .issue-icon {
+    width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
+    justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .issue-text p { font-size: 13px; color: var(--text-light); line-height: 1.5; margin-top: 2px; }
+
+  /* Pill badges */
+  .pill {
+    display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px;
+    font-weight: 600; letter-spacing: 0.3px;
+  }
+  .pill.red { background: #FFEBEE; color: var(--red); }
+  .pill.green { background: #E8F5E9; color: var(--green); }
+  .pill.orange { background: #FFF3E0; color: var(--orange); }
+  .pill.blue { background: #E3F2FD; color: var(--steel-accent); }
+
+  /* Utility */
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .flex-grow { flex: 1; }
+
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; font-size: 14px; line-height: 1.5; color: var(--text-light); }
+  li strong { color: var(--text); }
+  .slide.dark li { color: rgba(255,255,255,0.7); }
+  .slide.dark li strong { color: rgba(255,255,255,0.95); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress" style="width:7.14%;"></div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="deck" id="deck">
+<div class="slide dark active" data-slide="1">
+  <div class="flex-grow" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">Product Page Optimization & SEO Growth Plan</div>
+    <h1 style="font-size:56px;max-width:800px;">SteelCo Buildings</h1>
+    <p class="subtitle" style="max-width:650px;">
+      A comprehensive audit of your 3 core product pages, competitive positioning, and a strategic plan to drive rankings, traffic, and quote submissions.
+    </p>
+    <div class="stats-row mt-24" style="max-width:800px;">
+      <div class="stat-card">
+        <div class="stat-value red">0.33%</div>
+        <div class="stat-label">Site-wide CTR despite 595K monthly impressions (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value blue">191K</div>
+        <div class="stat-label">Impressions on target pages (6 months) &mdash; only 639 clicks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">0</div>
+        <div class="stat-label">Clicks on Commercial Buildings page (6 months)</div>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">April 2026 | Confidential</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: EXEC SUMMARY ==================== -->
+<div class="slide" data-slide="2">
+  <div class="slide-label">Executive Summary</div>
+  <h2>The Situation at a Glance</h2>
+  <div class="two-col mt-16" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Where Things Stand</h3>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-light);">
+        Google Search Console shows <strong style="color:var(--text);">595,256 monthly impressions</strong> but only
+        <strong style="color:var(--red);">1,971 clicks</strong> (0.33% CTR) in March 2026. The 3 target product pages
+        got <strong style="color:var(--red);">639 clicks total over the last 6 months</strong> despite 191,347 impressions.
+        Google is showing these pages &mdash; users just aren&rsquo;t clicking.
+      </p>
+      <div class="annotation danger mt-16">
+        <strong>Core problem:</strong> The product pages are thin, templated, and nearly identical in structure.
+        Blog content drives most traffic, but it isn&rsquo;t linking authority back to the product pages where conversions happen.
+      </div>
+      <h3 class="mt-24 mb-8">What We Found</h3>
+      <ul>
+        <li><strong>Templated product pages</strong> &mdash; all 3 share identical H2/H3 structure with minimal differentiation</li>
+        <li><strong>82% of pages</strong> have broken internal links, missing ALT text, and low text-to-HTML ratio</li>
+        <li><strong>No FAQ schema</strong> despite having FAQ sections on every product page</li>
+        <li><strong>Massive backlink gap</strong> &mdash; 493 referring domains vs. GenSteel&rsquo;s 3,925</li>
+        <li><strong>Blog &rarr; product page interlinking</strong> is weak, failing to pass authority where it matters</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">The Opportunity</h3>
+      <div class="stat-card mb-16">
+        <div class="stat-value blue">191K</div>
+        <div class="stat-label">Impressions on 3 target pages (6 months, GSC) &mdash; but only 639 clicks</div>
+      </div>
+      <div class="stat-card mb-16">
+        <div class="stat-value green">83</div>
+        <div class="stat-label">Striking distance queries (position 5-20) across the 3 target pages</div>
+      </div>
+      <div class="stat-card mb-16">
+        <div class="stat-value orange">0.26%</div>
+        <div class="stat-label">Warehouses page CTR despite 100K impressions &mdash; content isn&rsquo;t earning the click</div>
+      </div>
+      <div class="annotation success">
+        <strong>Bottom line:</strong> SteelCo has real topical authority in steel buildings &mdash; the content it produced previously proved that.
+        The decline is a product page depth problem, a technical SEO problem, and a link building gap &mdash; all fixable.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Domain Overview + Site Audit + Keyword Gap | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: COMPETITIVE LANDSCAPE ==================== -->
+<div class="slide" data-slide="3">
+  <div class="slide-label">Competitive Analysis</div>
+  <h2>Where SteelCo Sits in the Market</h2>
+  <p class="subtitle mb-16">12-month organic traffic trends vs. key competitors</p>
+
+  <div class="bar-chart">
+    <div style="font-size:13px;color:var(--text-light);margin-bottom:8px;">Monthly Organic Traffic (April 2026)</div>
+    <div class="bar-row">
+      <div class="bar-label">GenSteel</div>
+      <div class="bar-track"><div class="bar-fill blue-fill" style="width:100%;">72,984</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Viking Steel</div>
+      <div class="bar-track"><div class="bar-fill blue-fill" style="width:98.6%;">71,978</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Rhino Bldg</div>
+      <div class="bar-track"><div class="bar-fill orange-fill" style="width:15.7%;">11,442</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Maverick</div>
+      <div class="bar-track"><div class="bar-fill orange-fill" style="width:8.4%;">6,142</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="font-weight:700;">SteelCo</div>
+      <div class="bar-track"><div class="bar-fill red-fill" style="width:4.6%;">3,377</div></div>
+    </div>
+  </div>
+
+  <div class="two-col mt-16">
+    <div class="col">
+      <h3 class="mb-8">Traffic Trend (12 Months)</h3>
+      <table style="font-size:13px;">
+        <tr><th>Domain</th><th class="right">Apr 2025</th><th class="right">Apr 2026</th><th class="right">Change</th></tr>
+        <tr><td>GenSteel</td><td class="right">76,529</td><td class="right">72,984</td><td class="right red">-4.6%</td></tr>
+        <tr><td>Viking Steel</td><td class="right">59,143</td><td class="right bold green">71,978</td><td class="right green">+21.7%</td></tr>
+        <tr><td>Rhino Bldg</td><td class="right">13,263</td><td class="right">11,442</td><td class="right red">-13.7%</td></tr>
+        <tr><td>Maverick</td><td class="right">13,795</td><td class="right">6,142</td><td class="right red">-55.5%</td></tr>
+        <tr><td><strong>SteelCo</strong></td><td class="right">4,257</td><td class="right bold red">3,377</td><td class="right red">-20.7%</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Backlink Authority</h3>
+      <table style="font-size:13px;">
+        <tr><th>Domain</th><th class="right">Backlinks</th><th class="right">Ref. Domains</th></tr>
+        <tr><td>GenSteel</td><td class="right bold">20,903</td><td class="right bold">3,925</td></tr>
+        <tr><td>Viking Steel</td><td class="right">37,588</td><td class="right">2,374</td></tr>
+        <tr><td>Rhino Bldg</td><td class="right">11,738</td><td class="right">2,639</td></tr>
+        <tr><td>Maverick</td><td class="right">3,184</td><td class="right">581</td></tr>
+        <tr><td><strong>SteelCo</strong></td><td class="right red">1,698</td><td class="right red">493</td></tr>
+      </table>
+      <div class="annotation danger mt-8">
+        <strong>SteelCo has 8x fewer referring domains than GenSteel</strong> and fewer than every other competitor. Link building is critical.
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation info mt-8">
+    <strong>Key insight:</strong> Viking Steel grew 21.7% while most competitors declined &mdash; their keyword count surged from 25K to 44K.
+    They are actively investing in content and SEO. The market is rewarding that investment.
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Domain Overview Trend | us database | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: TARGET PAGES ==================== -->
+<div class="slide" data-slide="4">
+  <div class="slide-label">Target Page Audit</div>
+  <h2>The 3 Product Pages: Current State</h2>
+  <p class="subtitle mb-16">These are the pages where conversions happen &mdash; and they&rsquo;re severely underperforming</p>
+
+  <table>
+    <tr>
+      <th>Page</th>
+      <th class="right">6-Mo Clicks</th>
+      <th class="right">6-Mo Impressions</th>
+      <th class="right">CTR</th>
+      <th class="right">Avg Position</th>
+      <th>Trend</th>
+    </tr>
+    <tr>
+      <td><strong>Self-Storage</strong><br><span class="mono dim" style="font-size:11px;">/steel-buildings/prefab-self-storage-buildings/</span></td>
+      <td class="right bold">363</td>
+      <td class="right">79,173</td>
+      <td class="right orange">0.46%</td>
+      <td class="right red">20.1</td>
+      <td><span class="pill red">Pos 13.8 &rarr; 23.3</span></td>
+    </tr>
+    <tr>
+      <td><strong>Warehouses</strong><br><span class="mono dim" style="font-size:11px;">/steel-buildings/warehouses/</span></td>
+      <td class="right bold">264</td>
+      <td class="right bold">100,650</td>
+      <td class="right red">0.26%</td>
+      <td class="right">12.3</td>
+      <td><span class="pill orange">Impr surging, CTR dropping</span></td>
+    </tr>
+    <tr>
+      <td><strong>Commercial</strong><br><span class="mono dim" style="font-size:11px;">/steel-buildings/commercial-buildings/</span></td>
+      <td class="right bold red">0</td>
+      <td class="right">6,584</td>
+      <td class="right red">0.00%</td>
+      <td class="right red">21.1</td>
+      <td><span class="pill red">Zero clicks in 6 months</span></td>
+    </tr>
+  </table>
+
+  <div class="annotation danger mt-8">
+    <strong>The Warehouses page got 100,650 impressions but only 264 clicks (0.26% CTR).</strong>
+    Google is actively testing this page &mdash; impressions surged to 38,181 in Feb &mdash; but CTR dropped to 0.12%.
+    The content isn&rsquo;t compelling enough to earn the click.
+  </div>
+
+  <div class="annotation danger mt-8">
+    <strong>Self-Storage is actively losing rank:</strong> Average position degraded from 13.8 (Oct) to 23.3 (Mar) &mdash;
+    a 10-position slide in 6 months. Without intervention, this page will fall off page 3 entirely.
+  </div>
+
+  <div class="annotation danger mt-8">
+    <strong>Commercial Buildings: 0 clicks on any commercial query in 6 months.</strong>
+    484 unique queries triggered impressions but average position 21+ means the page never appears above the fold.
+    This page needs the most work.
+  </div>
+
+  <div class="two-col mt-16">
+    <div class="col">
+      <h3 class="mb-8">On-Page Issues (All 3 Pages)</h3>
+      <ul>
+        <li><strong>Duplicate H2 structure</strong> &mdash; all 3 pages use identical H2s: &ldquo;The SCB Difference,&rdquo; &ldquo;What Our Clients Have to Say,&rdquo; &ldquo;Industry Stats,&rdquo; &ldquo;FAQs&rdquo;</li>
+        <li><strong>H2 duplicates H1</strong> on Self-Storage and Commercial pages</li>
+        <li><strong>Empty H2 tag</strong> on Warehouses page (CMS rendering bug)</li>
+        <li><strong>~16 images missing ALT text</strong> per page</li>
+        <li><strong>Generic OG:title</strong> shared across all 3 pages &mdash; kills social sharing</li>
+        <li><strong>No FAQ schema</strong> despite FAQ sections on every page</li>
+        <li><strong>No Product/Service schema</strong> &mdash; no structured data for rich results</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Content Differentiation Problem</h3>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);">
+        The Warehouses page has unique use-case content (e-commerce fulfillment, cold-chain storage, spec space).
+        <strong style="color:var(--text);">This is why it previously ranked well.</strong>
+      </p>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-top:8px;">
+        Self-Storage and Commercial pages are essentially the same template with swapped keywords.
+        Google sees this as thin/duplicate content and deprioritizes accordingly.
+      </p>
+      <div class="annotation info mt-16">
+        <strong>Fix:</strong> Each product page needs 2,500-3,500 words of unique, intent-matched content &mdash;
+        use cases, cost breakdowns, sizing guides, comparison tables, and buyer journey content specific to that building type.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Organic Pages + Manual Page Audit | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: KEYWORD GAP ==================== -->
+<div class="slide" data-slide="5">
+  <div class="slide-label">Keyword Opportunity</div>
+  <h2>What You&rsquo;re Missing vs. Competitors</h2>
+  <p class="subtitle mb-16">High-value keywords where competitors rank well and SteelCo ranks poorly or not at all</p>
+
+  <div class="two-col">
+    <div class="col">
+      <h3 class="mb-8">Warehouse / Storage Keywords</h3>
+      <table style="font-size:12px;">
+        <tr><th>Keyword</th><th class="right">Vol</th><th class="right">KD</th><th class="right">SteelCo Pos</th><th class="right">Best Comp</th></tr>
+        <tr><td>warehouse building</td><td class="right">880</td><td class="right">17</td><td class="right orange">16</td><td class="right green">1 (Viking)</td></tr>
+        <tr><td>metal warehouse buildings</td><td class="right">480</td><td class="right">26</td><td class="right orange">27</td><td class="right green">2 (GenSteel)</td></tr>
+        <tr><td>storage units buildings</td><td class="right">720</td><td class="right">22</td><td class="right orange">35</td><td class="right green">6 (GenSteel)</td></tr>
+        <tr><td>prefab storage units</td><td class="right">320</td><td class="right">17</td><td class="right green bold">17</td><td class="right">3 (Viking)</td></tr>
+        <tr><td>steel structure warehouse</td><td class="right">210</td><td class="right">1</td><td class="right green bold">4</td><td class="right">1 (Viking)</td></tr>
+        <tr><td>self storage unit kits</td><td class="right">170</td><td class="right">12</td><td class="right orange">13</td><td class="right green">4 (GenSteel)</td></tr>
+        <tr><td>steel storage units</td><td class="right">170</td><td class="right">28</td><td class="right green bold">5</td><td class="right">3 (Viking)</td></tr>
+        <tr><td>commercial storage buildings</td><td class="right">170</td><td class="right">24</td><td class="right orange">12</td><td class="right green">5 (GenSteel)</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Commercial Building Keywords</h3>
+      <table style="font-size:12px;">
+        <tr><th>Keyword</th><th class="right">Vol</th><th class="right">KD</th><th class="right">SteelCo Pos</th><th class="right">Best Comp</th></tr>
+        <tr><td>steel buildings commercial</td><td class="right">480</td><td class="right">25</td><td class="right orange">17</td><td class="right green">1 (Viking)</td></tr>
+        <tr><td>steel commercial buildings</td><td class="right">480</td><td class="right">29</td><td class="right orange">18</td><td class="right green">1 (Viking)</td></tr>
+        <tr><td>industrial metal buildings</td><td class="right">480</td><td class="right">57</td><td class="right orange">28</td><td class="right green">1 (GenSteel)</td></tr>
+        <tr><td>steel office buildings</td><td class="right">260</td><td class="right">30</td><td class="right orange">29</td><td class="right green">2 (Viking)</td></tr>
+        <tr><td>metal building construction</td><td class="right">1,300</td><td class="right">64</td><td class="right orange">13</td><td class="right green">1 (GenSteel)</td></tr>
+        <tr><td>prefabricated buildings</td><td class="right">1,300</td><td class="right">21</td><td class="right orange">29</td><td class="right green">7 (Rhino)</td></tr>
+        <tr><td>prefab metal buildings</td><td class="right">4,400</td><td class="right">38</td><td class="right orange">13</td><td class="right green">1 (GenSteel)</td></tr>
+        <tr><td>prefab metal and steel buildings</td><td class="right">4,400</td><td class="right">51</td><td class="right orange">27</td><td class="right green">1 (GenSteel)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="annotation success mt-16">
+    <strong>GSC confirms the opportunity:</strong> &ldquo;steel structure warehouse&rdquo; already gets <strong>6,121 impressions</strong>
+    at position 7.2 with 51 clicks. &ldquo;prefab storage units&rdquo; gets <strong>2,496 impressions</strong> at position 8.9 with 27 clicks.
+    These are earning impressions &mdash; better content + links will convert them to page 1 rankings.
+  </div>
+
+  <div class="annotation danger mt-8">
+    <strong>The Commercial page crisis:</strong> GSC shows <strong>484 unique queries</strong> triggering impressions
+    but <strong>zero clicks in 6 months</strong>. Average position is 21+. Queries like &ldquo;industrial metal buildings&rdquo; (618 impressions),
+    &ldquo;metal buildings&rdquo; (510 impressions), and &ldquo;prefab commercial buildings&rdquo; (154 impressions) are all going to competitors.
+  </div>
+
+  <div class="annotation info mt-8">
+    <strong>The Self-Storage slide:</strong> Position has degraded from 13.8 &rarr; 23.3 over 6 months (GSC).
+    60 striking distance queries identified &mdash; more than any other target page. This is the most recoverable page with the right content investment.
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Keyword Gap | SteelCo vs. Maverick, GenSteel, Rhino, Viking | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: TECHNICAL SEO ==================== -->
+<div class="slide" data-slide="6">
+  <div class="slide-label">Technical SEO Audit</div>
+  <h2>Site Health: Systemic Issues</h2>
+  <p class="subtitle mb-16">100 pages crawled &mdash; 86% have at least one issue. Average: 18.4 issues per page.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value red">82%</div>
+      <div class="stat-label">Broken internal links</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">81%</div>
+      <div class="stat-label">Missing ALT attributes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value orange">82%</div>
+      <div class="stat-label">Low text-to-HTML ratio</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value orange">40%</div>
+      <div class="stat-label">Content not optimized</div>
+    </div>
+  </div>
+
+  <div class="two-col mt-8">
+    <div class="col">
+      <h3 class="mb-8">Critical Issues</h3>
+      <table style="font-size:13px;">
+        <tr><th>Issue</th><th class="right">Pages</th><th>Severity</th></tr>
+        <tr><td>Broken internal links</td><td class="right">82</td><td><span class="pill red">HIGH</span></td></tr>
+        <tr><td>Missing ALT attributes</td><td class="right">81</td><td><span class="pill red">HIGH</span></td></tr>
+        <tr><td>Low text-to-HTML ratio</td><td class="right">82</td><td><span class="pill orange">MEDIUM</span></td></tr>
+        <tr><td>Unminified JS/CSS (347 instances)</td><td class="right">81</td><td><span class="pill orange">MEDIUM</span></td></tr>
+        <tr><td>Content not optimized</td><td class="right">40</td><td><span class="pill orange">MEDIUM</span></td></tr>
+        <tr><td>Non-descriptive anchor text</td><td class="right">23</td><td><span class="pill orange">MEDIUM</span></td></tr>
+        <tr><td>Structured data errors</td><td class="right">2</td><td><span class="pill blue">LOW</span></td></tr>
+        <tr><td>Missing meta descriptions</td><td class="right">2</td><td><span class="pill blue">LOW</span></td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">What&rsquo;s Working</h3>
+      <table style="font-size:13px;">
+        <tr><th>Check</th><th>Status</th></tr>
+        <tr><td>No 5xx server errors</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>No redirect chains or loops</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>No duplicate content flagged</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>No missing title tags</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>Canonical tags in place</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>HTTPS / SSL valid</td><td><span class="pill green">PASS</span></td></tr>
+        <tr><td>Mobile viewport configured</td><td><span class="pill green">PASS</span></td></tr>
+      </table>
+      <div class="annotation success mt-16">
+        <strong>Good news:</strong> The site&rsquo;s infrastructure is stable. No server errors, no redirect chains, proper HTTPS.
+        The problems are content and on-page optimization &mdash; exactly what LPO + SEO work fixes.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Site Audit | 100 pages crawled | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: QUICK WINS ==================== -->
+<div class="slide dark" data-slide="7">
+  <div class="slide-label">Quick Wins</div>
+  <h2>Immediate Impact Actions</h2>
+  <p class="subtitle mb-24">Things we can fix in Week 1 that the other proposal won&rsquo;t touch</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--green);color:white;">1</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Add FAQ Schema to All 3 Product Pages</h4>
+          <p style="color:rgba(255,255,255,0.6);">Each page already has FAQ content. Adding FAQPage structured data enables rich results in Google &mdash;
+          more SERP real estate at zero cost. Typical CTR lift: 15-25%.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--green);color:white;">2</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Fix OG:Title Tags (All 3 Pages)</h4>
+          <p style="color:rgba(255,255,255,0.6);">All 3 pages share a generic OG:title. When shared on LinkedIn or Facebook, they look identical.
+          5-minute fix per page that improves every social share going forward.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--green);color:white;">3</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Add Brand to Commercial Page Title Tag</h4>
+          <p style="color:rgba(255,255,255,0.6);">Warehouses and Self-Storage both have &ldquo;SteelCo Buildings&rdquo; in the title tag.
+          Commercial page doesn&rsquo;t. Brand presence in title helps branded search and CTR.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">4</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Fix Duplicate/Empty H2 Tags</h4>
+          <p style="color:rgba(255,255,255,0.6);">Empty H2 on Warehouses, H2 duplicating H1 on Self-Storage and Commercial.
+          Replace with keyword-rich, descriptive subheadings that signal content depth to Google.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">5</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Add ALT Text to ~48 Missing Images</h4>
+          <p style="color:rgba(255,255,255,0.6);">16 images per product page lack ALT attributes. This hurts accessibility scores,
+          image search visibility, and Core Web Vitals compliance.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">6</div>
+        <div class="issue-text">
+          <h4 style="color:white;">Fix 82 Broken Internal Links</h4>
+          <p style="color:rgba(255,255,255,0.6);">Site-wide issue affecting 82% of pages. Broken internal links waste crawl budget
+          and prevent link equity from flowing to the product pages.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);">
+    <strong style="color:var(--green);">Total quick win estimate:</strong> These 6 actions can be completed in the first week of engagement.
+    They improve technical health score, enable rich results, and fix structural SEO issues that compound every day they remain unfixed.
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Implementation priority: highest impact, lowest effort first</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: BLOG CONTENT FLYWHEEL ==================== -->
+<div class="slide" data-slide="8">
+  <div class="slide-label">The Bigger Picture</div>
+  <h2>Why Product Pages Alone Won&rsquo;t Win</h2>
+  <p class="subtitle mb-16">The missing piece: a content flywheel that drives authority to your product pages</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Current State: Disconnected</h3>
+      <div style="background:var(--light-bg);border-radius:12px;padding:24px;margin-bottom:16px;">
+        <p style="font-size:14px;line-height:1.6;color:var(--text-light);">
+          SteelCo has blog posts that rank well &mdash; the top non-homepage pages are all blog content:
+        </p>
+        <table style="font-size:12px;margin-top:8px;">
+          <tr><th>Blog Post</th><th class="right">Traffic</th></tr>
+          <tr><td>Advantages of Prefab Metal Buildings</td><td class="right bold">196</td></tr>
+          <tr><td>Industrial Building Design Standards</td><td class="right">179</td></tr>
+          <tr><td>How to Build Steel Building</td><td class="right">162</td></tr>
+          <tr><td>What Is an Industrial Building</td><td class="right">130</td></tr>
+          <tr><td>Steel Building Design</td><td class="right">116</td></tr>
+        </table>
+        <div class="annotation danger mt-8">
+          <strong>Problem:</strong> This blog traffic isn&rsquo;t flowing to product pages. There are
+          minimal contextual internal links from blog content &rarr; warehouse, self-storage, or commercial pages.
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Target State: Content Clusters</h3>
+      <div style="background:var(--light-bg);border-radius:12px;padding:24px;">
+        <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-bottom:12px;">
+          Each product page becomes the <strong style="color:var(--text);">pillar page</strong> at the center of a topic cluster:
+        </p>
+        <div style="margin-bottom:16px;">
+          <h4 style="color:var(--steel-accent);">Warehouses Cluster</h4>
+          <p style="font-size:12px;color:var(--text-light);line-height:1.5;">
+            How to build a warehouse &bull; Warehouse cost per sq ft &bull; Prefab warehouse buildings &bull; Cold storage warehouses &bull; E-commerce fulfillment centers
+          </p>
+        </div>
+        <div style="margin-bottom:16px;">
+          <h4 style="color:var(--steel-accent);">Self-Storage Cluster</h4>
+          <p style="font-size:12px;color:var(--text-light);line-height:1.5;">
+            Self storage building costs &bull; How to start a self storage business &bull; Prefab self storage units &bull; Self storage zoning &bull; Mini storage building plans
+          </p>
+        </div>
+        <div>
+          <h4 style="color:var(--steel-accent);">Commercial Cluster</h4>
+          <p style="font-size:12px;color:var(--text-light);line-height:1.5;">
+            Commercial steel building cost &bull; Office steel buildings &bull; Retail steel buildings &bull; Industrial metal buildings &bull; Flex space buildings
+          </p>
+        </div>
+      </div>
+      <div class="annotation success mt-8">
+        <strong>Each blog post links back to its pillar product page.</strong> Google sees the cluster,
+        understands topical authority, and ranks the product page higher for commercial-intent searches.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">This is the strategy that previously worked for SteelCo &mdash; now applied with surgical precision to 3 target pages</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: BACKLINK GAP ==================== -->
+<div class="slide" data-slide="9">
+  <div class="slide-label">Link Building Opportunity</div>
+  <h2>Closing the Backlink Gap</h2>
+  <p class="subtitle mb-16">SteelCo&rsquo;s 493 referring domains vs. competitors&rsquo; 2,000-4,000 is the #1 ranking bottleneck</p>
+
+  <div class="two-col">
+    <div class="col">
+      <h3 class="mb-8">The Authority Gap</h3>
+      <div class="bar-chart">
+        <div style="font-size:13px;color:var(--text-light);margin-bottom:8px;">Referring Domains (April 2026)</div>
+        <div class="bar-row">
+          <div class="bar-label">GenSteel</div>
+          <div class="bar-track"><div class="bar-fill blue-fill" style="width:100%;">3,925</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Rhino</div>
+          <div class="bar-track"><div class="bar-fill blue-fill" style="width:67%;">2,639</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Viking</div>
+          <div class="bar-track"><div class="bar-fill blue-fill" style="width:60%;">2,374</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Maverick</div>
+          <div class="bar-track"><div class="bar-fill orange-fill" style="width:15%;">581</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="font-weight:700;">SteelCo</div>
+          <div class="bar-track"><div class="bar-fill red-fill" style="width:12.6%;">493</div></div>
+        </div>
+      </div>
+
+      <div class="annotation danger mt-16">
+        <strong>SteelCo has 0 links from most domains competitors share.</strong> The backlink matrix shows competitors
+        have links from high-authority domains like Pinterest (DA 100), Nextdoor (DA 74), Procore (DA 55), and industry directories &mdash; SteelCo has none.
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Link Building Roadmap</h3>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--ember-red);color:white;">1</div>
+        <div class="issue-text">
+          <h4>Guest Post Outreach &amp; Placement</h4>
+          <p>Our primary link building tactic. We identify and pitch relevant construction, real estate, business planning,
+          and industrial sites for guest post placements with contextual backlinks to SteelCo&rsquo;s product pages.
+          Target: <strong>10-15 quality placements/month</strong> with relevant anchor text.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">2</div>
+        <div class="issue-text">
+          <h4>Competitor Gap Targeting</h4>
+          <p>The backlink matrix reveals domains linking to 3+ competitors but not SteelCo. These sites already publish
+          steel building content &mdash; they&rsquo;re natural guest post targets. Industry directories and resource pages
+          that link to every major competitor are also low-hanging fruit.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">3</div>
+        <div class="issue-text">
+          <h4>Content-Driven Link Attraction</h4>
+          <p>Cost guides, comparison content, and industry stats pages naturally attract links over time.
+          The blog cluster content doubles as link bait &mdash; warehouse cost breakdowns, self-storage ROI calculators,
+          and building comparison guides earn organic links from industry sites.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon" style="background:var(--steel-accent);color:white;">4</div>
+        <div class="issue-text">
+          <h4>Product Page Link Prioritization</h4>
+          <p>Unlike typical campaigns that build links to the homepage, we&rsquo;ll target links pointing directly
+          at the 3 product pages. This concentrates authority where it matters most for commercial-intent rankings.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Backlink Gap Analysis | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: INTERLINKING MAP ==================== -->
+<div class="slide dark" data-slide="10">
+  <div class="slide-label">Internal Linking Strategy</div>
+  <h2>Connecting Content to Conversions</h2>
+  <p class="subtitle mb-24">Existing blog posts that should be linking to product pages but aren&rsquo;t</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">Warehouse Page Links Needed</h3>
+      <table style="font-size:12px;">
+        <tr><th>Blog Post (has traffic)</th><th class="right">Traffic</th><th>Link?</th></tr>
+        <tr><td>How to Build a Warehouse</td><td class="right">83</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>50,000 Sq Ft Warehouse Cost</td><td class="right">20</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>How to Start Warehouse Business</td><td class="right">7</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Can You Build a Warehouse on Your Property</td><td class="right">9</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Prefab Warehouse Cost</td><td class="right">38</td><td><span class="pill red">Missing</span></td></tr>
+      </table>
+
+      <h3 class="mt-24 mb-16" style="color:rgba(255,255,255,0.9);">Commercial Page Links Needed</h3>
+      <table style="font-size:12px;">
+        <tr><th>Blog Post</th><th class="right">Traffic</th><th>Link?</th></tr>
+        <tr><td>Industrial Building Construction</td><td class="right">68</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>What Is an Industrial Building</td><td class="right">130</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Industrial Building Design Standards</td><td class="right">179</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Manufacturing Building</td><td class="right">45</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Retail Spaces / Storefront Metal Buildings</td><td class="right">34</td><td><span class="pill red">Missing</span></td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">Self-Storage Page Links Needed</h3>
+      <table style="font-size:12px;">
+        <tr><th>Blog Post</th><th class="right">Traffic</th><th>Link?</th></tr>
+        <tr><td>Self Storage Building Plans</td><td class="right">77</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>How to Build a Self Storage Facility</td><td class="right">24</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Launching Your Self Storage Business</td><td class="right">20</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Profitability of Self Storage Businesses</td><td class="right">6</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Zoning Needed for RV Storage</td><td class="right">12</td><td><span class="pill red">Missing</span></td></tr>
+        <tr><td>Self Storage Construction Costs</td><td class="right">6</td><td><span class="pill red">Missing</span></td></tr>
+      </table>
+
+      <div class="annotation mt-24" style="background:rgba(39,174,96,0.15);border-color:var(--green);">
+        <strong style="color:var(--green);">Impact:</strong> These 16 blog posts collectively drive <strong style="color:white;">~758 monthly visits</strong>.
+        Adding contextual internal links from these posts to the 3 product pages will pass link equity and drive
+        referral traffic directly to quote request forms. This is free &mdash; the content already exists.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Organic Pages cross-referenced with site crawl | April 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: PHASE 1 - LPO ==================== -->
+<div class="slide" data-slide="11">
+  <div class="slide-label">Phase 1: Landing Page Optimization</div>
+  <h2>Months 1-2: Fix the Foundation</h2>
+  <p class="subtitle mb-16">Technical fixes, content deepening, and conversion optimization for the 3 target pages</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Week 1-2: Technical Fixes</h3>
+      <ul>
+        <li><strong>Fix 82 broken internal links</strong> site-wide</li>
+        <li><strong>Add ALT text</strong> to all missing images (162 instances)</li>
+        <li><strong>Implement FAQ schema</strong> on all 3 product pages</li>
+        <li><strong>Add Service schema</strong> with area served, pricing indicators</li>
+        <li><strong>Fix H1/H2 duplication</strong> &mdash; replace with keyword-rich headings</li>
+        <li><strong>Fix OG:title tags</strong> to be page-specific</li>
+        <li><strong>Add brand to Commercial title tag</strong></li>
+        <li><strong>Minify JS/CSS</strong> to improve page speed scores</li>
+      </ul>
+
+      <h3 class="mt-24 mb-8">Week 2-4: Internal Linking Sprint</h3>
+      <ul>
+        <li><strong>Add contextual links</strong> from 16 existing blog posts to product pages</li>
+        <li><strong>Create hub navigation</strong> connecting the 3 product pages + /steel-buildings/ parent</li>
+        <li><strong>Fix non-descriptive anchor text</strong> on 23 pages</li>
+        <li><strong>Build breadcrumb linking</strong> from blog categories to product pages</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Week 3-8: Content Deepening</h3>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-bottom:12px;">
+        Expand each product page from ~1,500 words to 2,500-3,500 words of unique, intent-matched content:
+      </p>
+
+      <div style="background:var(--light-bg);border-radius:8px;padding:16px;margin-bottom:12px;">
+        <h4 style="color:var(--steel-accent);">Warehouses Page</h4>
+        <p style="font-size:13px;color:var(--text-light);">Add: cost per sq ft breakdown, sizing guide (50K-200K sq ft),
+        construction timeline, comparison table (steel vs. traditional), zoning requirements, case studies</p>
+      </div>
+
+      <div style="background:var(--light-bg);border-radius:8px;padding:16px;margin-bottom:12px;">
+        <h4 style="color:var(--steel-accent);">Self-Storage Page</h4>
+        <p style="font-size:13px;color:var(--text-light);">Add: unit mix planning, climate control options, ROI calculator content,
+        facility layout examples, zoning/permitting guide, investor-focused content</p>
+      </div>
+
+      <div style="background:var(--light-bg);border-radius:8px;padding:16px;margin-bottom:12px;">
+        <h4 style="color:var(--steel-accent);">Commercial Page</h4>
+        <p style="font-size:13px;color:var(--text-light);">Add: building type showcase (office, retail, industrial, flex space),
+        customization options, energy efficiency data, tenant improvement flexibility</p>
+      </div>
+
+      <h3 class="mt-16 mb-8">CRO Improvements</h3>
+      <ul>
+        <li><strong>Quote form optimization</strong> &mdash; reduce fields, add urgency signals</li>
+        <li><strong>Add trust signals</strong> near CTA (testimonials, project count, certifications)</li>
+        <li><strong>Mobile CTA placement</strong> audit and optimization</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Phase 1 deliverables: Technical audit report, fixed pages, expanded content, CRO recommendations</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: PHASE 2 - SEO ==================== -->
+<div class="slide" data-slide="12">
+  <div class="slide-label">Phase 2: SEO Growth</div>
+  <h2>Months 3-5: Build Authority & Content</h2>
+  <p class="subtitle mb-16">Link building, content clusters, and ongoing optimization to move the needle on rankings</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Guest Post Outreach &amp; Placement</h3>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-bottom:12px;">
+        Target: <strong style="color:var(--text);">10-15 quality guest post placements/month</strong> with links to product pages
+      </p>
+      <ul>
+        <li><strong>Construction &amp; building industry sites</strong> &mdash; guest posts on relevant blogs and publications</li>
+        <li><strong>Real estate &amp; business planning sites</strong> &mdash; warehouse investment, self-storage business content</li>
+        <li><strong>Competitor gap targeting</strong> &mdash; pitch sites that already link to GenSteel, Viking, Rhino</li>
+        <li><strong>Product page link focus</strong> &mdash; links pointed directly at target pages, not just homepage</li>
+        <li><strong>Relevant anchor text</strong> &mdash; contextual links within topically aligned guest content</li>
+      </ul>
+
+      <h3 class="mt-24 mb-8">Content Production</h3>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-bottom:12px;">
+        <strong style="color:var(--text);">4-6 blog posts/month</strong> organized into the 3 pillar clusters:
+      </p>
+      <ul>
+        <li><strong>Warehouse cluster:</strong> Cost breakdowns by size, fulfillment center guides, cold storage content</li>
+        <li><strong>Self-storage cluster:</strong> Business planning guides, facility cost calculators, ROI analysis</li>
+        <li><strong>Commercial cluster:</strong> Office building guides, retail construction, industrial flex space</li>
+        <li>Every post includes <strong>contextual internal links</strong> back to its pillar product page</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Striking Distance Campaign</h3>
+      <p style="font-size:14px;line-height:1.6;color:var(--text-light);margin-bottom:12px;">
+        Keywords where SteelCo ranks positions 5-20 &mdash; closest to page 1 with minimal effort:
+      </p>
+      <table style="font-size:12px;">
+        <tr><th>Keyword</th><th class="right">Vol</th><th class="right">Pos</th><th class="right">KD</th></tr>
+        <tr><td>steel structure warehouse</td><td class="right">210</td><td class="right blue bold">4</td><td class="right green">1</td></tr>
+        <tr><td>steel storage units</td><td class="right">170</td><td class="right blue bold">5</td><td class="right">28</td></tr>
+        <tr><td>steel riding arenas</td><td class="right">480</td><td class="right blue bold">4</td><td class="right green">13</td></tr>
+        <tr><td>prefab self storage units</td><td class="right">170</td><td class="right">3</td><td class="right green">16</td></tr>
+        <tr><td>steel frame building construction</td><td class="right">390</td><td class="right">8</td><td class="right">24</td></tr>
+        <tr><td>prefab storage units</td><td class="right">320</td><td class="right">17</td><td class="right green">17</td></tr>
+        <tr><td>commercial storage buildings</td><td class="right">170</td><td class="right">12</td><td class="right">24</td></tr>
+        <tr><td>building warehouse</td><td class="right">260</td><td class="right">17</td><td class="right green">20</td></tr>
+      </table>
+
+      <div class="annotation success mt-16">
+        <strong>Combined volume: 2,170/month</strong> from just these 8 keywords.
+        Moving from page 2 to top 5 typically captures 5-15% CTR &mdash; that&rsquo;s 100-300+ additional monthly visits
+        of high commercial intent going directly to product pages.
+      </div>
+
+      <h3 class="mt-16 mb-8">Measurement & Reporting</h3>
+      <ul>
+        <li><strong>Monthly GSC data pull</strong> &mdash; rankings, traffic, CTR for target keywords</li>
+        <li><strong>Form submission tracking</strong> with attribution to organic source pages</li>
+        <li><strong>Backlink growth</strong> monitoring via SEMrush</li>
+        <li><strong>Competitor rank tracking</strong> for the 3 target keyword clusters</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Phase 2 deliverables: Monthly link reports, content published, ranking reports, GSC analysis</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 13: PROJECTED OUTCOMES ==================== -->
+<div class="slide dark" data-slide="13">
+  <div class="slide-label">Projected Outcomes</div>
+  <h2>What Success Looks Like</h2>
+  <p class="subtitle mb-24">Conservative projections based on the technical fixes, content, and link building plan</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">Product Page Traffic</h3>
+
+      <div class="stat-card mb-16" style="border-left:4px solid var(--red);">
+        <div class="stat-label" style="margin-bottom:8px;">NOW: March 2026 (GSC verified)</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value red" style="font-size:28px;">84</div><div class="stat-label">Combined monthly clicks</div></div>
+          <div><div class="stat-value" style="font-size:28px;">0.27%</div><div class="stat-label">Combined CTR</div></div>
+          <div><div class="stat-value" style="font-size:28px;">31K</div><div class="stat-label">Monthly impressions</div></div>
+        </div>
+      </div>
+
+      <div class="stat-card mb-16" style="border-left:4px solid var(--orange);">
+        <div class="stat-label" style="margin-bottom:8px;">MONTH 3: After LPO Phase</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value orange" style="font-size:28px;">300-500</div><div class="stat-label">Combined monthly clicks</div></div>
+          <div><div class="stat-value orange" style="font-size:28px;">1-1.5%</div><div class="stat-label">Target CTR</div></div>
+          <div><div class="stat-value" style="font-size:28px;">35K+</div><div class="stat-label">Monthly impressions</div></div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="border-left:4px solid var(--green);">
+        <div class="stat-label" style="margin-bottom:8px;">MONTH 5: After SEO Phase</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value green" style="font-size:28px;">800-1,200</div><div class="stat-label">Combined monthly clicks</div></div>
+          <div><div class="stat-value green" style="font-size:28px;">2-3%</div><div class="stat-label">Target CTR</div></div>
+          <div><div class="stat-value green" style="font-size:28px;">40K+</div><div class="stat-label">Monthly impressions</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">How We Get There</h3>
+
+      <div class="bar-chart">
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:8px;">Estimated monthly click lift by action</div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:180px;font-size:12px;">CTR optimization (titles, schema, snippets)</div>
+          <div class="bar-track"><div class="bar-fill green-fill" style="width:45%;">+150-250</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:180px;font-size:12px;">Content deepening (3 pages)</div>
+          <div class="bar-track"><div class="bar-fill blue-fill" style="width:55%;">+200-350</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:180px;font-size:12px;">83 striking distance queries</div>
+          <div class="bar-track"><div class="bar-fill blue-fill" style="width:45%;">+150-300</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:180px;font-size:12px;">New cluster content</div>
+          <div class="bar-track"><div class="bar-fill orange-fill" style="width:50%;">+200-400</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:180px;font-size:12px;">Link building + authority</div>
+          <div class="bar-track"><div class="bar-fill ember-fill" style="width:30%;">+100-200</div></div>
+        </div>
+      </div>
+
+      <div class="annotation mt-24" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);">
+        <strong style="color:var(--steel-accent);">The math is simple:</strong> The Warehouses page already gets 100K impressions over 6 months at 0.26% CTR.
+        Moving CTR to just 1% &mdash; still below average &mdash; adds ~140 clicks/month from that page alone. Self-Storage has 60 striking
+        distance queries. Commercial needs to be rebuilt, but the impression data proves Google considers SteelCo relevant for these topics.
+      </div>
+
+      <div class="annotation" style="background:rgba(39,174,96,0.15);border-color:var(--green);margin-top:12px;">
+        <strong style="color:var(--green);">KPIs we&rsquo;ll track monthly via GSC API:</strong>
+        Rankings &bull; Clicks &bull; Impressions &bull; CTR by page &bull; Form submissions &bull; Referring domain growth &bull; Content cluster coverage
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Projections based on SEMrush keyword data + conservative 5-10% CTR assumptions for top-5 positions</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 14: PRICING ==================== -->
+<div class="slide" data-slide="14">
+  <div class="slide-label">Next Steps</div>
+  <h2>Our Proposal</h2>
+  <p class="subtitle mb-24">A focused two-track engagement: upfront page optimization + ongoing SEO growth</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-16">60-Day Landing Page Optimization</h3>
+      <div style="background:var(--light-bg);border-radius:12px;padding:24px;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;">LPO &mdash; 3 Product Pages</h3>
+          <div style="font-size:28px;font-weight:800;color:var(--ember-red);">$3,000<span style="font-size:14px;font-weight:400;color:var(--text-light);"> one-time</span></div>
+        </div>
+        <div style="font-size:13px;color:var(--text-light);margin-bottom:12px;">3 pages &times; $1,000 = $3,000 up front</div>
+        <ul style="padding-left:16px;">
+          <li>Complete technical SEO audit + fixes (82 broken links, ALT text, schema, speed)</li>
+          <li>Product page content expansion (3 pages &times; 2,500-3,500 words)</li>
+          <li>H1/H2/title tag &amp; meta description optimization</li>
+          <li>FAQ + Service schema implementation</li>
+          <li>Internal linking sprint (16 blog posts linked to product pages)</li>
+          <li>CRO recommendations for quote forms</li>
+          <li>Baseline measurement setup (GSC API + form tracking)</li>
+        </ul>
+      </div>
+
+      <h3 class="mb-16">Monthly SEO Retainer</h3>
+      <div style="background:var(--light-bg);border-radius:12px;padding:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3 style="margin:0;">Ongoing SEO</h3>
+          <div style="font-size:28px;font-weight:800;color:var(--ember-red);">$3,000<span style="font-size:14px;font-weight:400;color:var(--text-light);">/mo</span></div>
+        </div>
+        <ul style="padding-left:16px;">
+          <li>4-6 blog posts/month across 3 pillar clusters</li>
+          <li>Guest post outreach &amp; placement targeting product page authority</li>
+          <li>Striking distance keyword optimization campaign</li>
+          <li>Ongoing technical SEO maintenance</li>
+          <li>Internal linking for all new content</li>
+          <li>Monthly GSC + SEMrush reporting with analysis</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-16">Prepayment Incentive</h3>
+
+      <div style="background:linear-gradient(135deg, #27AE60 0%, #2ecc71 100%);border-radius:12px;padding:24px;margin-bottom:16px;color:#fff;">
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Prepay 3 months of SEO retainer&hellip;</div>
+        <div style="font-size:28px;font-weight:800;margin-bottom:8px;">Get 15 bonus blog posts</div>
+        <div style="font-size:14px;opacity:0.9;">Fully interlinked with your product pages and existing content &mdash; accelerates the content cluster strategy from day one.</div>
+      </div>
+
+      <div class="annotation success">
+        <strong>We&rsquo;ve done this before for SteelCo.</strong> The content we produced previously performed &mdash; rankings declined
+        when investment stopped. This plan restarts that engine with precision targeting on the 3 pages that drive quote requests.
+        <br><br>
+        Technical foundation + deep content + strategic guest posting + blog clusters that compound over time.
+      </div>
+
+      <div style="background:var(--light-bg);border-radius:12px;padding:20px;margin-top:16px;">
+        <table style="font-size:13px;margin:0;">
+          <tr><th style="width:55%;text-align:left;">Item</th><th style="text-align:right;">Cost</th></tr>
+          <tr><td>60-Day LPO (3 pages)</td><td style="text-align:right;" class="bold">$3,000 one-time</td></tr>
+          <tr><td>Monthly SEO Retainer</td><td style="text-align:right;" class="bold">$3,000/mo</td></tr>
+          <tr style="border-top:2px solid var(--border);">
+            <td style="padding-top:8px;"><strong>Prepay bonus</strong></td>
+            <td style="text-align:right;padding-top:8px;color:var(--green);" class="bold">+15 blog posts</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">April 2026 | Confidential | Ready to begin immediately</div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prev" onclick="navigate(-1)">&larr;</button>
+  <span class="counter" id="counter">1 / 14</span>
+  <button id="next" onclick="navigate(1)">&rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+    slides[current].scrollTop = 0;
+  }
+
+  function navigate(dir) { showSlide(current + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+  });
+</script>
+
+</body>
+</html>

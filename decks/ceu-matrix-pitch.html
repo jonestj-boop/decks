@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEU Matrix — Growth & Launch Plan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ceu-navy: #0B2545;
+    --ceu-dark: #091B36;
+    --ceu-blue: #13315C;
+    --ceu-mid: #134074;
+    --ceu-teal: #00B4D8;
+    --ceu-sky: #48CAE4;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e9ecef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--ceu-dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    padding: 48px 64px;
+    overflow-y: auto;
+    background: var(--card-bg);
+  }
+
+  .slide.active { display: flex; }
+
+  .slide.dark {
+    background: linear-gradient(135deg, var(--ceu-dark) 0%, var(--ceu-navy) 50%, var(--ceu-blue) 100%);
+    color: #ffffff;
+  }
+
+  .slide.dark .text-light { color: rgba(255,255,255,0.6); }
+  .slide.dark .stat-value { color: #ffffff; }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--ceu-teal); }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+    align-items: center;
+  }
+
+  .nav button {
+    background: var(--ceu-dark);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover { background: var(--ceu-blue); transform: scale(1.05); }
+  .nav .counter { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; margin: 0 8px; }
+
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember-red), var(--ceu-teal));
+    transition: width 0.3s ease;
+    z-index: 1001;
+  }
+
+  /* Typography */
+  .slide-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 8px;
+  }
+
+  .slide.dark .slide-label { color: var(--ceu-teal); }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  h2 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+
+  .slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+  /* Stats */
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .slide.dark .stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+
+  .stat-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.teal { color: var(--ceu-teal); }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* Annotations */
+  .annotation {
+    background: #FFF8E1;
+    border-left: 3px solid var(--ember-red);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: var(--text);
+  }
+
+  .annotation strong { color: var(--ceu-navy); }
+  .annotation.info { background: #E3F2FD; border-color: var(--ceu-teal); }
+  .annotation.info strong { color: var(--ceu-blue); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--light-bg);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .slide.dark th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .slide.dark td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .slide.dark tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .teal { color: var(--ceu-teal); }
+  .bold { font-weight: 700; }
+  .right { text-align: right; }
+  .dim { opacity: 0.5; }
+
+  /* Bar chart */
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 16px 0;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-label {
+    width: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--light-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slide.dark .bar-track { background: rgba(255,255,255,0.06); }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    min-width: 40px;
+    transition: width 0.8s ease;
+  }
+
+  .bar-fill.peak { background: linear-gradient(90deg, #3498db, #2980b9); }
+  .bar-fill.current { background: linear-gradient(90deg, var(--red), #c0392b); }
+  .bar-fill.opportunity { background: linear-gradient(90deg, var(--green), #219a52); }
+  .bar-fill.teal-fill { background: linear-gradient(90deg, var(--ceu-teal), #0096c7); }
+  .bar-fill.ember-fill { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+  .bar-fill.navy-fill { background: linear-gradient(90deg, var(--ceu-navy), var(--ceu-blue)); }
+
+  .bar-value {
+    width: 80px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Layouts */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    flex: 1;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  .col { display: flex; flex-direction: column; }
+
+  /* Channel cards */
+  .channel-card {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+
+  .channel-card h3 { margin-bottom: 12px; }
+  .channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+
+  .channel-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .channel-card ul li {
+    font-size: 14px;
+    padding: 4px 0;
+    position: relative;
+    padding-left: 18px;
+  }
+
+  .channel-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ceu-teal);
+  }
+
+  /* MER meter */
+  .mer-track {
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(90deg, #E74C3C 0%, #F39C12 30%, #27AE60 70%, #2ECC71 100%);
+    border-radius: 20px;
+    position: relative;
+    margin: 24px 0;
+  }
+
+  .mer-marker {
+    position: absolute;
+    top: -8px;
+    width: 4px;
+    height: 56px;
+    background: var(--ceu-dark);
+    border-radius: 2px;
+  }
+
+  .mer-marker-label {
+    position: absolute;
+    top: -28px;
+    transform: translateX(-50%);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* Timeline */
+  .timeline {
+    display: flex;
+    gap: 0;
+    margin: 16px 0;
+  }
+
+  .timeline-phase {
+    flex: 1;
+    padding: 16px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+  .timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+  .timeline-phase h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ceu-navy);
+  }
+
+  .timeline-phase .phase-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ceu-teal);
+    margin-bottom: 4px;
+  }
+
+  .timeline-phase ul {
+    list-style: none;
+    padding: 0;
+    font-size: 13px;
+  }
+
+  .timeline-phase ul li {
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .timeline-phase ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ceu-teal);
+  }
+
+  .timeline-phase .phase-cost {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--ceu-navy);
+  }
+
+  /* Pricing table */
+  .pricing-table td:last-child,
+  .pricing-table th:last-child {
+    text-align: right;
+  }
+
+  .pricing-table .total-row td {
+    font-weight: 800;
+    font-size: 16px;
+    border-top: 2px solid var(--ceu-navy);
+    padding-top: 14px;
+    color: var(--ceu-navy);
+  }
+
+  .pricing-table .subtotal-row td {
+    font-weight: 600;
+    background: var(--light-bg);
+  }
+
+  /* Pill badges */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .pill.seo { background: #E8F5E9; color: #2E7D32; }
+  .pill.paid { background: #E3F2FD; color: #1565C0; }
+  .pill.content { background: #FFF3E0; color: #E65100; }
+  .pill.setup { background: #F3E5F5; color: #7B1FA2; }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .slide { padding: 32px 40px; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 28px; }
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr; }
+    .stats-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ===================== SLIDE 1: TITLE ===================== -->
+<div class="slide dark active" data-slide="1">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="slide-label">Growth & Launch Plan</div>
+    <h1 style="font-size:56px; margin-bottom:20px;">CEU Matrix</h1>
+    <p class="subtitle" style="max-width:800px;">A phased SEO + Paid Media strategy to transform brand-dependent traffic into a scalable, multi-channel growth engine.</p>
+    <div class="stats-row" style="margin-top:40px;">
+      <div class="stat-card">
+        <div class="stat-value teal">$15K</div>
+        <div class="stat-label">Monthly All-In Budget</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--ceu-sky);">3</div>
+        <div class="stat-label">Paid Channels (Meta + Google + LinkedIn)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--ceu-sky);">90</div>
+        <div class="stat-label">Day Foundation Sprint</div>
+      </div>
+    </div>
+    <p style="margin-top: 40px; font-size: 14px; opacity: 0.4;">Prepared for Everett Wolf & Becky Sargeant &mdash; April 2026</p>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 2: CURRENT STATE ===================== -->
+<div class="slide" data-slide="2">
+  <div class="slide-label">Where You Are Today</div>
+  <h2>The Current Picture</h2>
+  <p class="subtitle">CEU Matrix has 20+ years of authority but the marketing infrastructure hasn't kept pace.</p>
+
+  <div class="stats-row" style="margin-top: 20px;">
+    <div class="stat-card">
+      <div class="stat-value">~$40K</div>
+      <div class="stat-label">Monthly Revenue</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">$1,500</div>
+      <div class="stat-label">Current Marketing Spend</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green">26.6x</div>
+      <div class="stat-label">Current MER</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">~700</div>
+      <div class="stat-label">Monthly Organic Traffic (SEMrush, Apr 2026)</div>
+    </div>
+  </div>
+
+  <div class="annotation danger" style="margin-top: 4px;">
+    <strong>Traffic is declining.</strong> Organic traffic peaked at ~1,067/mo in May 2025, was ~850 when we first spoke in November, and has dropped to ~700 today. That's a 35% decline in under a year. Keywords have also dropped from 989 to ~920.
+  </div>
+
+  <div class="two-col" style="margin-top: 20px;">
+    <div class="col">
+      <h3 style="color: var(--red);">What's Holding You Back</h3>
+      <div class="annotation danger">
+        <strong>~47% of organic traffic is branded.</strong> People searching "CEU Matrix" already know you. That's brand recognition, not SEO growth.
+      </div>
+      <div class="annotation danger">
+        <strong>No content strategy.</strong> Zero blog posts, no informational content targeting non-branded keywords. Your site only has product/course pages.
+      </div>
+      <div class="annotation danger">
+        <strong>No paid acquisition.</strong> No pixel installed, no ad history, no retargeting. 100% reliant on organic + brand.
+      </div>
+      <div class="annotation danger">
+        <strong>Organic revenue declining.</strong> 2025 showed a sharp drop vs. 2023-2024, especially in Ohio &mdash; your primary market.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="color: var(--green);">What's Working For You</h3>
+      <div class="annotation success">
+        <strong>20+ years in business.</strong> Deep domain authority, NAADAC/NBCC/IC&RC accredited, trusted by state boards.
+      </div>
+      <div class="annotation success">
+        <strong>Direct e-commerce conversion.</strong> No sales calls needed &mdash; visitors purchase course packages directly on site.
+      </div>
+      <div class="annotation success">
+        <strong>Recurring revenue model.</strong> Counselors renew every 2 years &mdash; built-in repeat purchase cycle.
+      </div>
+      <div class="annotation success">
+        <strong>New website complete.</strong> Fresh design, improved data tracking, better UX foundation to build on.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 3: TRAFFIC PROBLEM ===================== -->
+<div class="slide" data-slide="3">
+  <div class="slide-label">Traffic Analysis</div>
+  <h2>The Brand Dependency Problem</h2>
+  <p class="subtitle">Nearly half your traffic comes from people who already know your name. That's a ceiling, not a growth engine.</p>
+
+  <h3 style="margin-top: 16px;">12-Month Organic Traffic Trend (SEMrush)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <div class="bar-label">May '25</div>
+      <div class="bar-track">
+        <div class="bar-fill teal-fill" style="width: 100%;">1,067 (peak)</div>
+      </div>
+      <div class="bar-value"></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Aug '25</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 84%; background: linear-gradient(90deg, var(--yellow), #e67e22);">~900</div>
+      </div>
+      <div class="bar-value"></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Nov '25</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 78%; background: linear-gradient(90deg, var(--yellow), #e67e22);">~830</div>
+      </div>
+      <div class="bar-value dim">First call</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Jan '26</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 90%; background: linear-gradient(90deg, #3498db, #2980b9);">~956 (new site launch)</div>
+      </div>
+      <div class="bar-value"></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Apr '26</div>
+      <div class="bar-track">
+        <div class="bar-fill ember-fill" style="width: 66%;">~700 (today)</div>
+      </div>
+      <div class="bar-value red bold">-35%</div>
+    </div>
+  </div>
+
+  <div class="annotation danger" style="margin-top: 8px;">
+    <strong>The new site got a brief bump in January (~956) but has since fallen to the lowest point in 12 months.</strong> A redesign alone doesn't fix organic growth &mdash; you need content, backlinks, and technical optimization to sustain it.
+  </div>
+
+  <div class="two-col" style="margin-top: 20px;">
+    <div class="col">
+      <h3>Keyword Gap vs. Competitors (SEMrush)</h3>
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">Keywords where competitors outrank CEU Matrix:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Volume</th>
+            <th>Your Rank</th>
+            <th>Best Competitor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">continuing education for addiction counselors</td>
+            <td>320</td>
+            <td class="red bold">#37</td>
+            <td class="green">#16 (CE4Less)</td>
+          </tr>
+          <tr>
+            <td class="bold">online addiction counselor certification</td>
+            <td>170</td>
+            <td class="red bold">#49</td>
+            <td class="green">#2 (Sober College)</td>
+          </tr>
+          <tr>
+            <td class="bold">how to become a substance abuse counselor in Ohio</td>
+            <td>40</td>
+            <td class="red bold">#36</td>
+            <td class="green">#3 (Ctr. Addiction Studies)</td>
+          </tr>
+          <tr>
+            <td class="bold">drug counselor certification online</td>
+            <td>90</td>
+            <td class="red bold">#51</td>
+            <td class="green">#1 (Sober College)</td>
+          </tr>
+          <tr>
+            <td class="bold">naadac counselor in training certification</td>
+            <td>40</td>
+            <td class="red bold">#29</td>
+            <td class="green">#10 (Sober College)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3>Where You're Winning</h3>
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">Keywords where CEU Matrix ranks well:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Volume</th>
+            <th>Your Rank</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">online lcdc programs in texas</td>
+            <td>140</td>
+            <td class="green bold">#3</td>
+          </tr>
+          <tr>
+            <td class="bold">lcdc in texas</td>
+            <td>50</td>
+            <td class="green bold">#8</td>
+          </tr>
+          <tr>
+            <td class="bold">addiction counselor certification pennsylvania</td>
+            <td>170</td>
+            <td class="green bold">#10</td>
+          </tr>
+          <tr>
+            <td class="bold">texas licensed chemical dependency counselor</td>
+            <td>140</td>
+            <td style="color:var(--yellow);" class="bold">#14</td>
+          </tr>
+          <tr>
+            <td class="bold">lcdc requirements texas</td>
+            <td>110</td>
+            <td style="color:var(--yellow);" class="bold">#14</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="annotation success" style="margin-top: 12px;">
+        <strong>Texas is your strongest non-branded state.</strong> Ohio &mdash; your biggest market &mdash; shows weak rankings. That's the priority gap to close.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 4: MER FRAMEWORK ===================== -->
+<div class="slide dark" data-slide="4">
+  <div class="slide-label">ROI Framework</div>
+  <h2>Anchoring on MER</h2>
+  <p class="subtitle">Marketing Efficiency Ratio (Revenue / Total Marketing Spend) is the north star. Not platform ROAS &mdash; MER tells the whole truth.</p>
+
+  <div class="stats-row" style="margin-top: 32px;">
+    <div class="stat-card">
+      <div class="stat-label">Today</div>
+      <div class="stat-value" style="color: var(--ceu-sky);">26.6x</div>
+      <div class="stat-label">$40K rev / $1.5K spend</div>
+      <div style="font-size: 13px; margin-top: 8px; opacity: 0.7;">High efficiency, but maintaining &mdash; not growing</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Month 1-3 (Investment Phase)</div>
+      <div class="stat-value" style="color: var(--yellow);">2.7-4x</div>
+      <div class="stat-label">$40-60K rev / $15K spend</div>
+      <div style="font-size: 13px; margin-top: 8px; opacity: 0.7;">MER drops as we invest in growth infrastructure</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Month 6+ Target</div>
+      <div class="stat-value" style="color: #2ECC71;">7.5x+</div>
+      <div class="stat-label">$112K+ rev / $15K spend</div>
+      <div style="font-size: 13px; margin-top: 8px; opacity: 0.7;">As channels mature and SEO compounds</div>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top: 24px;">
+    <strong>Why MER drops before it climbs:</strong> You're currently spending $1.5K/mo on basic SEO and generating $40K in revenue &mdash; mostly from 20 years of brand equity. When we invest $15K/mo across SEO + 3 paid channels, the denominator jumps 10x overnight. Revenue takes time to follow. This is normal. The question isn't "did MER drop?" &mdash; it's "is total revenue growing and is MER trending back up month over month?"
+  </div>
+
+  <div class="annotation info" style="margin-top: 8px;">
+    <strong>The long-term play:</strong> SEO compounds. Paid ads teach us what converts. Together, by month 6, the engine should be producing enough incremental revenue that MER climbs past 7.5x and keeps rising. The goal: eventually decrease ad spend as organic takes over.
+  </div>
+</div>
+
+<!-- ===================== SLIDE 5: COMPETITIVE LANDSCAPE ===================== -->
+<div class="slide" data-slide="5">
+  <div class="slide-label">Competitive Landscape</div>
+  <h2>You Have Authority.<br>Competitors Have Infrastructure.</h2>
+  <p class="subtitle">The CE market has shifted to unlimited subscription models. CEU Matrix needs to compete on discoverability, not just catalog.</p>
+
+  <table style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>Competitor</th>
+        <th>Pricing</th>
+        <th>Content</th>
+        <th>Meta Ads</th>
+        <th>LinkedIn Ads</th>
+        <th>Google Ads</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">CE4Less</td>
+        <td>$75 unlimited</td>
+        <td class="green">Blog + guides</td>
+        <td class="green bold">~65 active ads</td>
+        <td class="red">None</td>
+        <td class="orange">Possible</td>
+      </tr>
+      <tr>
+        <td class="bold">AllCEUs</td>
+        <td>$59/mo unlimited</td>
+        <td class="green">YouTube, podcast, webinars</td>
+        <td class="red">None</td>
+        <td class="red">None</td>
+        <td class="dim">Unknown</td>
+      </tr>
+      <tr>
+        <td class="bold">Quantum Units Ed</td>
+        <td>$74.95 unlimited</td>
+        <td class="orange">Some content</td>
+        <td class="red">None</td>
+        <td class="red">None</td>
+        <td class="orange">Bing Ads</td>
+      </tr>
+      <tr>
+        <td class="bold">NetCE</td>
+        <td>$89 All Access</td>
+        <td class="green">Large library</td>
+        <td class="green bold">~24 active ads</td>
+        <td class="red">None</td>
+        <td class="dim">Unknown</td>
+      </tr>
+      <tr>
+        <td class="bold">Ctr. Addiction Studies</td>
+        <td>Course-based</td>
+        <td class="orange">Moderate</td>
+        <td class="red">None</td>
+        <td class="red">None</td>
+        <td class="dim">Unknown</td>
+      </tr>
+      <tr>
+        <td class="bold">PESI</td>
+        <td>$249+ per event</td>
+        <td class="green">Massive (1M+ visits/mo)</td>
+        <td class="red">None</td>
+        <td class="red">None</td>
+        <td class="orange">Some</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation" style="margin-top: 16px;">
+    <strong>Only 2 of 6 competitors run Meta ads.</strong> CE4Less has ~65 active ads (running since March 2025 &mdash; video + static, urgency/deadline messaging). NetCE has ~24 active ads (nursing-focused, not addiction counseling). The other four have zero. <strong>No competitor is running LinkedIn ads.</strong> The addiction counseling CE niche on paid social is wide open.
+  </div>
+
+  <div class="two-col" style="margin-top: 16px;">
+    <div class="col">
+      <div class="annotation info">
+        <strong>Your moat:</strong> NAADAC Provider #619 since 2005. State board approved in 15+ states. Competitors go broad (nursing, psychology, social work) &mdash; you go deep in addiction counseling and criminal justice. That specialization is your content advantage.
+      </div>
+    </div>
+    <div class="col">
+      <div class="annotation">
+        <strong>Backlink gap is severe.</strong> SEMrush backlink matrix shows CEU Matrix has <strong>zero</strong> backlinks from the domains where competitors have links. Competitors like CE4Less and Sober College have backlinks from naadac.org, substanceabusecounselor.org, and state board sites. You don't. This directly impacts domain authority and rankings.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 6: SEO STRATEGY ===================== -->
+<div class="slide" data-slide="6">
+  <div class="slide-label">SEO Strategy</div>
+  <h2>Earn the Traffic You're Missing</h2>
+  <p class="subtitle">Build a content engine around the searches your future customers are already making.</p>
+
+  <div class="two-col" style="margin-top: 20px;">
+    <div class="col">
+      <h3><span class="pill setup">Foundation</span> Technical + Research</h3>
+      <table>
+        <tbody>
+          <tr><td class="bold">Technical Audit</td><td>Full crawl of new site: meta titles, descriptions, schema, site speed, mobile, indexation issues</td></tr>
+          <tr><td class="bold">Keyword Research + Mapping</td><td>State-by-state certification keywords, renewal terms, career entry queries</td></tr>
+          <tr><td class="bold">Content Strategy</td><td>Full-funnel content plan: pillar pages, cluster topics, blog calendar</td></tr>
+          <tr><td class="bold">Competitor Analysis</td><td>Keyword gap, backlink gap, content gap vs. top 5 competitors</td></tr>
+          <tr><td class="bold">Backlink Gap Report</td><td>Where competitors get links that you don't &mdash; plus backlink acquisition plan</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top: 16px;"><span class="pill" style="background:#FFEBEE;color:#C62828;">Preview</span> Initial Crawl (100 pages)</h3>
+      <table>
+        <tbody>
+          <tr><td class="bold red">59</td><td>Broken internal links</td></tr>
+          <tr><td class="bold red">30</td><td>Missing meta descriptions (incl. homepage)</td></tr>
+          <tr><td class="bold red">19</td><td>Multiple H1 tags per page</td></tr>
+          <tr><td class="bold orange">58</td><td>Low text-to-HTML ratio (thin content)</td></tr>
+          <tr><td class="bold orange">31</td><td>Pages with only 1 internal link</td></tr>
+          <tr><td class="bold orange">6</td><td>Duplicate title tags</td></tr>
+          <tr><td class="bold">0</td><td>llms.txt (no AI/AEO foundation)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3><span class="pill content">Ongoing</span> Content + Links</h3>
+      <table>
+        <tbody>
+          <tr><td class="bold">ClusterMagic Articles</td><td>40 SEO-optimized articles/month &mdash; human-edited, internally linked, alt-texted images</td></tr>
+          <tr><td class="bold">Backlinks</td><td>6 quality backlinks/month from relevant domains</td></tr>
+          <tr><td class="bold">On-Page Optimization</td><td>Title tags, meta descriptions, H1/H2 structure, internal linking on existing pages</td></tr>
+          <tr><td class="bold">Technical Implementations</td><td>Fixes identified in audit: schema markup, site speed, crawl errors, etc.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="annotation success" style="margin-top: 16px;">
+        <strong>Content topics we'll target:</strong> "CDCA certification requirements Ohio," "how to become a substance abuse counselor," "CADC renewal CE courses," "addiction counselor salary by state" &mdash; high-intent, non-branded queries your site currently has zero content for.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 7: PAID MEDIA STRATEGY ===================== -->
+<div class="slide" data-slide="7">
+  <div class="slide-label">Paid Media Strategy</div>
+  <h2>Three Channels. One Funnel.</h2>
+  <p class="subtitle">$9,000/mo in ad spend across Meta, Google, and LinkedIn &mdash; each channel plays a specific role.</p>
+
+  <div class="three-col" style="margin-top: 24px;">
+    <div class="channel-card">
+      <div class="channel-icon">G</div>
+      <h3>Google Ads</h3>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 12px;">$3,000/mo &bull; Bottom of Funnel</p>
+      <ul>
+        <li>Capture high-intent searches: "CDCA certification online," "addiction counselor CEU courses"</li>
+        <li>Branded defense &mdash; prevent competitor conquesting</li>
+        <li>State-specific campaigns (Ohio first, then expand)</li>
+        <li>Shopping/product-style ads for course packages</li>
+      </ul>
+      <div class="annotation info" style="margin-top: 12px; font-size: 12px;">
+        <strong>Why Google first:</strong> People already searching for certifications have the highest purchase intent. We meet them at the moment of decision.
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-icon">in</div>
+      <h3>LinkedIn Ads</h3>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 12px;">$3,000/mo &bull; Mid-Funnel</p>
+      <ul>
+        <li>Target by credential acronyms (CDCA, LCDC, CADC, etc. in job titles)</li>
+        <li>Target social workers, counselors, substance abuse professionals</li>
+        <li>Lead magnet: free CE guide or renewal checklist for email capture</li>
+        <li>Retarget site visitors with renewal reminders</li>
+      </ul>
+      <div class="annotation info" style="margin-top: 12px; font-size: 12px;">
+        <strong>Why LinkedIn:</strong> Professionals literally put their certification acronyms in their titles. Unmatched targeting precision for this niche.
+      </div>
+    </div>
+
+    <div class="channel-card">
+      <div class="channel-icon">f</div>
+      <h3>Meta Ads</h3>
+      <p style="font-size: 13px; color: var(--text-light); margin-bottom: 12px;">$3,000/mo &bull; Top of Funnel</p>
+      <ul>
+        <li>Awareness campaigns: career guides, certification pathways</li>
+        <li>Lookalike audiences built from customer email list (5-10K emails)</li>
+        <li>Video + static creative testing (short-form education content)</li>
+        <li>Retargeting: site visitors, video viewers, email engagers</li>
+      </ul>
+      <div class="annotation info" style="margin-top: 12px; font-size: 12px;">
+        <strong>Why Meta:</strong> Widest reach at lowest CPM. We cast the awareness net, capture emails, and feed those audiences back to Google and LinkedIn.
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation success" style="margin-top: 20px;">
+    <strong>Low competition confirmed.</strong> We audited the Facebook Ad Library for all major competitors. Only CE4Less (~65 ads) and NetCE (~24 ads, nursing-focused) are active on Meta. Zero competitors run LinkedIn ads. In the addiction counseling CE niche specifically, paid social is nearly uncontested &mdash; your $9K/mo will go further than in a saturated market.
+  </div>
+
+  <div class="annotation" style="margin-top: 8px;">
+    <strong>No ad history = learning phase.</strong> Expect 2-4 weeks before algorithms optimize. We'll test creative formats (static, video, carousel), copy lengths, and audience segments. Month 1 is data collection. Month 2 is optimization. Month 3 is scaling winners.
+  </div>
+</div>
+
+<!-- ===================== SLIDE 8: 90-DAY ROADMAP ===================== -->
+<div class="slide" data-slide="8">
+  <div class="slide-label">90-Day Roadmap</div>
+  <h2>First 3 Months: Build, Launch, Optimize</h2>
+
+  <div class="timeline" style="margin-top: 24px;">
+    <div class="timeline-phase" style="background: #f0f7ff;">
+      <div class="phase-label">Month 1</div>
+      <h4>Foundation</h4>
+      <ul>
+        <li><span class="pill setup">Setup</span> Intake call + onboarding</li>
+        <li><span class="pill paid">Paid</span> Channel research + strategy</li>
+        <li><span class="pill paid">Paid</span> Build ad creatives (3 channels)</li>
+        <li><span class="pill paid">Paid</span> Set up tracking + pixels</li>
+        <li><span class="pill paid">Paid</span> CRO roadmap + launch plan</li>
+        <li><span class="pill seo">SEO</span> Technical audit + keyword research</li>
+        <li><span class="pill seo">SEO</span> Critical technical fixes</li>
+        <li><span class="pill seo">SEO</span> Content strategy + competitor analysis</li>
+        <li><span class="pill content">Content</span> ClusterMagic articles</li>
+      </ul>
+      <div class="phase-cost">$6,000</div>
+      <div style="font-size: 12px; color: var(--text-light);">Agency fees (no ad spend yet)</div>
+    </div>
+
+    <div class="timeline-phase" style="background: #f0fff4;">
+      <div class="phase-label">Month 2</div>
+      <h4>Launch</h4>
+      <ul>
+        <li><span class="pill paid">Paid</span> Launch ads on Meta, Google, LinkedIn</li>
+        <li><span class="pill paid">Paid</span> Weekly performance summaries</li>
+        <li><span class="pill paid">Paid</span> Monthly strategy call</li>
+        <li><span class="pill seo">SEO</span> On-page optimizations</li>
+        <li><span class="pill seo">SEO</span> Technical implementations</li>
+        <li><span class="pill content">Content</span> ClusterMagic articles</li>
+      </ul>
+      <div class="phase-cost">$6,000</div>
+      <div style="font-size: 12px; color: var(--text-light);">Agency fees + $9,000 ad spend</div>
+    </div>
+
+    <div class="timeline-phase" style="background: #fff8f0;">
+      <div class="phase-label">Month 3</div>
+      <h4>Optimize</h4>
+      <ul>
+        <li><span class="pill paid">Paid</span> Scale winning ads, kill underperformers</li>
+        <li><span class="pill paid">Paid</span> Audience refinement + lookalikes</li>
+        <li><span class="pill paid">Paid</span> Weekly summaries + strategy call</li>
+        <li><span class="pill seo">SEO</span> Backlinks + on-page optimizations</li>
+        <li><span class="pill content">Content</span> ClusterMagic articles</li>
+        <li>First MER check-in &amp; strategy pivot if needed</li>
+      </ul>
+      <div class="phase-cost">$6,000</div>
+      <div style="font-size: 12px; color: var(--text-light);">Agency fees + $9,000 ad spend</div>
+    </div>
+  </div>
+
+  <div class="annotation info" style="margin-top: 16px;">
+    <strong>$6,000/mo agency fees &mdash; flat, every month.</strong> No ad spend in Month 1 &mdash; we build everything right before spending a dollar on ads. You will not need to manage or monitor the day-to-day. We handle implementation, you review reports.
+  </div>
+</div>
+
+<!-- ===================== SLIDE 9: INVESTMENT SUMMARY ===================== -->
+<div class="slide" data-slide="9">
+  <div class="slide-label">Investment Summary</div>
+  <h2>What It Costs</h2>
+  <p class="subtitle">90-day commitment. Transparent pricing. No hidden fees.</p>
+
+  <table class="pricing-table" style="margin-top: 24px; max-width: 800px;">
+    <thead>
+      <tr>
+        <th>Line Item</th>
+        <th>Month 1</th>
+        <th>Month 2</th>
+        <th>Month 3</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill paid">Paid</span> Paid Media (3-channel strategy, management, weekly reports)</td>
+        <td class="right bold">$4,000</td>
+        <td class="right bold">$4,000</td>
+        <td class="right bold">$4,000</td>
+      </tr>
+      <tr>
+        <td><span class="pill seo">SEO</span> SEO (ClusterMagic articles, backlinks, technical fixes, on-page)</td>
+        <td class="right bold">$2,000</td>
+        <td class="right bold">$2,000</td>
+        <td class="right bold">$2,000</td>
+      </tr>
+      <tr class="subtotal-row">
+        <td><strong>Agency Fees Subtotal</strong></td>
+        <td class="right bold">$6,000</td>
+        <td class="right bold">$6,000</td>
+        <td class="right bold">$6,000</td>
+      </tr>
+      <tr>
+        <td>Ad Spend (at cost, passed through)</td>
+        <td class="right dim">$0</td>
+        <td class="right bold">$9,000</td>
+        <td class="right bold">$9,000</td>
+      </tr>
+      <tr class="total-row">
+        <td>TOTAL ALL-IN</td>
+        <td class="right">$6,000</td>
+        <td class="right">$15,000</td>
+        <td class="right">$15,000</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="stats-row" style="margin-top: 24px;">
+    <div class="stat-card" style="border: 2px solid var(--ceu-teal);">
+      <div class="stat-value" style="color: var(--ceu-navy);">$36,000</div>
+      <div class="stat-label">Total 90-Day Investment (Agency + Ad Spend)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--ceu-navy);">$18,000</div>
+      <div class="stat-label">Agency Fees (3-month total)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color: var(--ceu-navy);">$18,000</div>
+      <div class="stat-label">Ad Spend (Months 2-3 only)</div>
+    </div>
+  </div>
+
+  <div class="annotation info" style="margin-top: 12px;">
+    <strong>SEO deliverables flex month to month based on priority.</strong> Month 1 focuses on critical technical fixes and getting ClusterMagic content on the site. As the foundation stabilizes, we phase in backlinks and additional articles. You always get $2,000 of SEO work &mdash; we allocate it where it moves the needle most.
+  </div>
+</div>
+
+<!-- ===================== SLIDE 10: WHAT YOU GET ===================== -->
+<div class="slide" data-slide="10">
+  <div class="slide-label">What You Get</div>
+  <h2>Reporting & Transparency</h2>
+  <p class="subtitle">You'll always know what we're doing, what's working, and what we're adjusting.</p>
+
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="col">
+      <h3>Included in Every Month</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td class="bold">Weekly Summary</td>
+            <td>Quick performance snapshot: spend, impressions, clicks, conversions across all paid channels</td>
+          </tr>
+          <tr>
+            <td class="bold">Monthly Strategy Call</td>
+            <td>Live call with your Account Manager + Digital Strategist to review data, discuss pivots, plan next month</td>
+          </tr>
+          <tr>
+            <td class="bold">MER Dashboard</td>
+            <td>Blended revenue / marketing spend tracking so you always know the real ROI &mdash; not platform-inflated numbers</td>
+          </tr>
+          <tr>
+            <td class="bold">Content Calendar</td>
+            <td>Review titles before articles are written. Approve or redirect. You control the topics.</td>
+          </tr>
+          <tr>
+            <td class="bold">SEO Progress Report</td>
+            <td>Keyword rankings, backlink acquisitions, traffic growth by landing page, technical fixes completed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3>Day-to-Day: We Handle It</h3>
+      <div class="annotation success">
+        <strong>You asked: "Does EmberTribe handle day-to-day SEO implementation?"</strong><br>
+        Yes. We manage all technical implementations in your WordPress backend, write and upload content, build and manage all ad campaigns, and handle backlink outreach. Your involvement is limited to:
+      </div>
+      <table>
+        <tbody>
+          <tr>
+            <td>1.</td>
+            <td><strong>Review content plan</strong> &mdash; approve article titles (one spreadsheet)</td>
+          </tr>
+          <tr>
+            <td>2.</td>
+            <td><strong>Review articles</strong> &mdash; optional, articles can publish without your review</td>
+          </tr>
+          <tr>
+            <td>3.</td>
+            <td><strong>Monthly call</strong> &mdash; 30-60 min strategy review</td>
+          </tr>
+          <tr>
+            <td>4.</td>
+            <td><strong>WP admin access</strong> &mdash; we'll need a secure login to implement</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="annotation info" style="margin-top: 16px;">
+        <strong>Minimal bandwidth required on your end.</strong> We know you're busy with operations. The entire point is to offload the marketing execution so you can focus on running the business.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 11: PROJECTED OUTCOMES ===================== -->
+<div class="slide dark" data-slide="11">
+  <div class="slide-label">Projected Outcomes</div>
+  <h2>What Success Looks Like</h2>
+  <p class="subtitle">Conservative projections based on industry benchmarks for niche e-commerce with no prior paid history.</p>
+
+  <div class="stats-row" style="margin-top: 32px;">
+    <div class="stat-card">
+      <div class="stat-label">End of Month 3</div>
+      <div class="stat-value" style="color: var(--ceu-sky);">120</div>
+      <div class="stat-label">New articles indexed and ranking</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">End of Month 3</div>
+      <div class="stat-value" style="color: var(--ceu-sky);">18</div>
+      <div class="stat-label">Quality backlinks acquired</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">End of Month 3</div>
+      <div class="stat-value" style="color: var(--ceu-sky);">3</div>
+      <div class="stat-label">Optimized paid channels live</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top: 32px;">MER Trajectory (Conservative)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <div class="bar-label" style="color:rgba(255,255,255,0.7);">Today</div>
+      <div class="bar-track">
+        <div class="bar-fill teal-fill" style="width: 100%;">26.6x MER</div>
+      </div>
+      <div class="bar-value" style="color:rgba(255,255,255,0.5);">$40K rev / $1.5K spend</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:rgba(255,255,255,0.7);">Month 3</div>
+      <div class="bar-track">
+        <div class="bar-fill ember-fill" style="width: 30%;">~3-4x MER</div>
+      </div>
+      <div class="bar-value" style="color:rgba(255,255,255,0.5);">$45-55K rev / $15K spend</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:rgba(255,255,255,0.7);">Month 6</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 50%; background: linear-gradient(90deg, var(--yellow), #e67e22);">~5-7x MER</div>
+      </div>
+      <div class="bar-value" style="color:rgba(255,255,255,0.5);">$75-100K rev / $15K spend</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:rgba(255,255,255,0.7);">Month 12</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width: 70%; background: linear-gradient(90deg, var(--green), #27ae60);">7.5-12x MER</div>
+      </div>
+      <div class="bar-value" style="color:rgba(255,255,255,0.5);">$112-180K rev / $15K spend</div>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top: 16px;">
+    <strong>These are directional, not guarantees.</strong> Month 3 MER will be the real test. If paid channels are converting and SEO content is indexing, we'll see the trend line. If a channel underperforms, we reallocate budget to what's working. That's the advantage of running 3 channels &mdash; we have options.
+  </div>
+</div>
+
+<!-- ===================== SLIDE 12: ONBOARDING ===================== -->
+<div class="slide" data-slide="12">
+  <div class="slide-label">Onboarding Process</div>
+  <h2>Getting Started: Week 1</h2>
+  <p class="subtitle">We move fast once you say go. Here's what happens in the first 7 days.</p>
+
+  <table style="margin-top: 24px; max-width: 800px;">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Action</th>
+        <th>Who</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">Day 1</td>
+        <td>Signed scope + first invoice</td>
+        <td>Both</td>
+      </tr>
+      <tr>
+        <td class="bold">Day 2</td>
+        <td>Intake form sent &mdash; we'll need: GA4 access, WordPress admin, WooCommerce access, any SEO reports from current agency, brand guidelines</td>
+        <td>CEU Matrix</td>
+      </tr>
+      <tr>
+        <td class="bold">Day 3</td>
+        <td>Intake call (30 min) &mdash; review form, align on priorities, confirm state focus (Ohio first?)</td>
+        <td>Both</td>
+      </tr>
+      <tr>
+        <td class="bold">Day 3-5</td>
+        <td>Technical audit begins, keyword research kicks off, paid media research starts</td>
+        <td>EmberTribe</td>
+      </tr>
+      <tr>
+        <td class="bold">Day 5-7</td>
+        <td>Ad accounts created/connected, tracking pixels installed, content plan drafting begins</td>
+        <td>EmberTribe</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation info" style="margin-top: 24px;">
+    <strong>What we need from you upfront:</strong>
+  </div>
+
+  <div class="two-col" style="margin-top: 8px;">
+    <div class="col">
+      <table>
+        <tbody>
+          <tr><td>Google Analytics (GA4) viewer access</td></tr>
+          <tr><td>Google Search Console access</td></tr>
+          <tr><td>WordPress admin login (secure handoff)</td></tr>
+          <tr><td>WooCommerce access</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <table>
+        <tbody>
+          <tr><td>Facebook Business Manager access</td></tr>
+          <tr><td>Google Ads account (or we create one)</td></tr>
+          <tr><td>LinkedIn Company Page admin access</td></tr>
+          <tr><td>Any reports from current SEO agency</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SLIDE 13: NEXT STEPS ===================== -->
+<div class="slide dark" data-slide="13">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="slide-label">Next Steps</div>
+    <h1 style="font-size: 48px;">Ready to Build the Engine?</h1>
+    <p class="subtitle" style="max-width: 750px; margin-bottom: 40px;">You've spent 20 years building authority. Let's build the infrastructure to turn that authority into predictable, scalable growth.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--ceu-sky); font-size: 24px;">1</div>
+        <div class="stat-label" style="font-size: 15px; margin-top: 8px;">Review &amp; approve scope</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--ceu-sky); font-size: 24px;">2</div>
+        <div class="stat-label" style="font-size: 15px; margin-top: 8px;">Sign agreement + first invoice</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color: var(--ceu-sky); font-size: 24px;">3</div>
+        <div class="stat-label" style="font-size: 15px; margin-top: 8px;">Onboarding call within 48 hours</div>
+      </div>
+    </div>
+
+    <div class="annotation" style="margin-top: 40px;">
+      <strong>No long-term lock-in.</strong> This is a 90-day engagement. We earn the next 90 days by delivering results in the first 90. If MER isn't trending in the right direction, we'll be the first to tell you.
+    </div>
+
+    <p style="margin-top: 40px; font-size: 16px; opacity: 0.6;">
+      EmberTribe &mdash; Melissa Cedeno, Director of Accounts<br>
+      <span style="font-size: 14px;">melissa@embertribe.com</span>
+    </p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 13</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+  let current = 1;
+  const total = document.querySelectorAll('.slide').length;
+
+  function go(dir) {
+    const next = current + dir;
+    if (next < 1 || next > total) return;
+    document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+    current = next;
+    document.querySelector(`.slide[data-slide="${current}"]`).classList.add('active');
+    document.getElementById('counter').textContent = `${current} / ${total}`;
+    document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+  });
+</script>
+</body>
+</html>
