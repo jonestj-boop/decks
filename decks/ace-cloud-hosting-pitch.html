@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ace Cloud Hosting — Traffic Recovery & Growth Plan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ace-red: #C0392B;
+    --ace-dark: #1a1a2e;
+    --ace-navy: #16213e;
+    --ace-blue: #0f3460;
+    --ace-teal: #00b4d8;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --ember-orange: #ff333d;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e9ecef;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--ace-dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* Slide container */
+  .deck {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    padding: 48px 64px;
+    overflow-y: auto;
+    background: var(--card-bg);
+  }
+
+  .slide.active { display: flex; }
+
+  .slide.dark {
+    background: linear-gradient(135deg, var(--ace-dark) 0%, var(--ace-navy) 50%, var(--ace-blue) 100%);
+    color: #ffffff;
+  }
+
+  .slide.dark .text-light { color: rgba(255,255,255,0.6); }
+  .slide.dark .stat-value { color: #ffffff; }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--ace-teal); }
+
+  /* Navigation */
+  .nav {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    display: flex;
+    gap: 8px;
+    z-index: 1000;
+    align-items: center;
+  }
+
+  .nav button {
+    background: var(--ace-dark);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover { background: var(--ace-blue); transform: scale(1.05); }
+  .nav .counter { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; margin: 0 8px; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ember-red), var(--ace-teal));
+    transition: width 0.3s ease;
+    z-index: 1001;
+  }
+
+  /* Typography */
+  .slide-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 8px;
+  }
+
+  .slide.dark .slide-label { color: var(--ace-teal); }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+
+  h2 {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 20px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+
+  .slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+  /* Stats */
+  .stats-row {
+    display: flex;
+    gap: 24px;
+    margin: 24px 0;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 20px 24px;
+    flex: 1;
+    min-width: 180px;
+  }
+
+  .slide.dark .stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+
+  .stat-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.teal { color: var(--ace-teal); }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* Annotations */
+  .annotation {
+    background: #FFF8E1;
+    border-left: 3px solid var(--ember-orange);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 12px 0;
+    color: var(--text);
+  }
+
+  .annotation strong { color: var(--ace-red); }
+  .annotation.info { background: #E3F2FD; border-color: var(--ace-teal); }
+  .annotation.info strong { color: var(--ace-blue); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--light-bg);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .slide.dark th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
+
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .slide.dark td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .slide.dark tr:hover td { background: rgba(255,255,255,0.03); }
+
+  .mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .teal { color: var(--ace-teal); }
+  .bold { font-weight: 700; }
+  .right { text-align: right; }
+  .dim { opacity: 0.5; }
+
+  /* Bar chart CSS */
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 16px 0;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .bar-label {
+    width: 80px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 28px;
+    background: var(--light-bg);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slide.dark .bar-track { background: rgba(255,255,255,0.06); }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    min-width: 40px;
+    transition: width 0.8s ease;
+  }
+
+  .bar-fill.peak { background: linear-gradient(90deg, #3498db, #2980b9); }
+  .bar-fill.current { background: linear-gradient(90deg, var(--red), #c0392b); }
+  .bar-fill.opportunity { background: linear-gradient(90deg, var(--green), #219a52); }
+  .bar-fill.orange-fill { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+  .bar-fill.teal-fill { background: linear-gradient(90deg, var(--ace-teal), #0096c7); }
+
+  .bar-value {
+    width: 80px;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Two column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    flex: 1;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+
+  .col { display: flex; flex-direction: column; }
+
+  /* Screenshot placeholder */
+  .screenshot-ref {
+    background: var(--light-bg);
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    margin: 12px 0;
+    position: relative;
+  }
+
+  .screenshot-ref .url {
+    font-family: 'SF Mono', monospace;
+    font-size: 12px;
+    color: var(--ace-teal);
+    background: rgba(0,180,216,0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .screenshot-ref .desc {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+
+  .screenshot-ref .badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--red);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .screenshot-ref .badge.warn { background: var(--yellow); color: var(--text); }
+  .screenshot-ref .badge.info { background: var(--ace-teal); }
+
+  /* Pill tags */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .pill.red { background: #FFEBEE; color: var(--red); }
+  .pill.green { background: #E8F5E9; color: var(--green); }
+  .pill.orange { background: #FFF3E0; color: var(--ember-dark); }
+  .pill.blue { background: #E3F2FD; color: var(--ace-blue); }
+  .pill.gray { background: #ECEFF1; color: var(--text-light); }
+
+  /* Phase cards */
+  .phase-card {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 24px;
+    border-top: 4px solid var(--border);
+  }
+
+  .phase-card.phase-1 { border-color: var(--red); }
+  .phase-card.phase-2 { border-color: var(--ember-red); }
+  .phase-card.phase-3 { border-color: var(--green); }
+
+  .phase-num {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .phase-card.phase-1 .phase-num { color: var(--red); }
+  .phase-card.phase-2 .phase-num { color: var(--ember-red); }
+  .phase-card.phase-3 .phase-num { color: var(--green); }
+
+  .phase-card ul {
+    margin: 8px 0 0 0;
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .phase-card li { margin-bottom: 2px; }
+
+  /* Bullet lists */
+  .slide ul:not(.phase-card ul) {
+    margin: 8px 0;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* Logos */
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .slide.dark .logo-row { border-color: rgba(255,255,255,0.1); }
+
+  .logo-ember {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ember-red);
+    letter-spacing: 1px;
+  }
+
+  .logo-date {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-left: auto;
+  }
+
+  .slide.dark .logo-date { color: rgba(255,255,255,0.3); }
+
+  /* Spacer */
+  .flex-grow { flex: 1; }
+  .mt-auto { margin-top: auto; }
+  .mb-8 { margin-bottom: 8px; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+
+  /* Keyboard hint */
+  .key-hint {
+    position: fixed;
+    bottom: 28px;
+    left: 32px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    z-index: 1000;
+  }
+
+  .key-hint kbd {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: inherit;
+  }
+
+  /* Cannibal viz */
+  .cannibal-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cannibal-kw {
+    font-family: 'SF Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 200px;
+  }
+
+  .cannibal-pages {
+    display: flex;
+    gap: 3px;
+  }
+
+  .cannibal-dot {
+    width: 8px;
+    height: 20px;
+    background: var(--red);
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+
+  .cannibal-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--red);
+    min-width: 70px;
+    text-align: right;
+  }
+
+  /* Waterfall */
+  .waterfall {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 200px;
+    padding: 0 0 24px 0;
+    position: relative;
+    margin: 16px 0;
+  }
+
+  .waterfall-bar {
+    flex: 1;
+    background: #3498db;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    min-width: 4px;
+    transition: opacity 0.2s;
+  }
+
+  .waterfall-bar:hover { opacity: 0.8; }
+  .waterfall-bar.declining { background: var(--red); }
+  .waterfall-bar.low { background: #e74c3c80; }
+
+  .waterfall-labels {
+    display: flex;
+    gap: 3px;
+  }
+
+  .waterfall-label {
+    flex: 1;
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-light);
+    min-width: 4px;
+  }
+
+  /* Issue list */
+  .issue-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .issue-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .issue-icon.critical { background: #FFEBEE; color: var(--red); }
+  .issue-icon.warning { background: #FFF3E0; color: var(--ember-red); }
+  .issue-icon.info { background: #E3F2FD; color: var(--ace-blue); }
+
+  .issue-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .issue-text p { font-size: 13px; color: var(--text-light); line-height: 1.4; }
+
+  @media print {
+    .slide { page-break-after: always; display: flex !important; position: relative; height: auto; min-height: 100vh; }
+    .nav, .progress-bar, .key-hint { display: none; }
+    body { overflow: visible; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="key-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> to navigate</div>
+
+<!-- ==================== SLIDE 1: TITLE ==================== -->
+<div class="deck" id="deck">
+<div class="slide dark active" data-slide="1">
+  <div class="flex-grow" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">Organic Traffic Analysis & Recovery Plan</div>
+    <h1 style="font-size:56px;max-width:800px;">Ace Cloud Hosting</h1>
+    <p class="subtitle" style="max-width:600px;">
+      A data-driven diagnosis of the traffic decline, its root causes, and a strategic plan to recover and grow organic performance.
+    </p>
+    <div class="stats-row mt-24" style="max-width:700px;">
+      <div class="stat-card">
+        <div class="stat-value red">-76.5%</div>
+        <div class="stat-label">Traffic decline from peak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">16 mo</div>
+        <div class="stat-label">GSC data analyzed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value teal">3.8M</div>
+        <div class="stat-label">Keyword volume opportunity</div>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">March 2026 | Confidential</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: EXEC SUMMARY ==================== -->
+<div class="slide" data-slide="2">
+  <div class="slide-label">Executive Summary</div>
+  <h2>The Situation at a Glance</h2>
+  <div class="two-col mt-16" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">What Happened</h3>
+      <p style="font-size:15px;line-height:1.7;color:var(--text-light);">
+        Organic traffic dropped from <strong style="color:var(--text);">32,241 clicks/month</strong> (Jan 2025) to
+        <strong style="color:var(--red);">7,579 clicks/month</strong> (Feb 2026) &mdash; a 76.5% decline. The drop accelerated through
+        mid-2025 and has not stabilized.
+      </p>
+      <div class="annotation danger mt-16">
+        <strong>Critical:</strong> Impressions stayed high (2.8M &rarr; 3.9M) while clicks collapsed.
+        This indicates position decay and AI Overview displacement, not a loss of topical relevance.
+      </div>
+      <h3 class="mt-24 mb-8">Root Causes Identified</h3>
+      <ul>
+        <li><strong>AI Overview displacement</strong> on high-volume informational queries (W-2/W-4 content wiped out)</li>
+        <li><strong>Massive keyword cannibalization</strong> across 2,100+ blog posts</li>
+        <li><strong>Knowledgebase subdomain broken</strong> &mdash; customer.acecloudhosting.com returning errors</li>
+        <li><strong>Content quality signals</strong> &mdash; thin/outdated posts triggering Helpful Content decay</li>
+        <li><strong>Missing technical SEO fundamentals</strong> across every page</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">The Opportunity</h3>
+      <div class="stat-card mb-16">
+        <div class="stat-value teal">3.8M</div>
+        <div class="stat-label">Total keyword volume across core business clusters</div>
+      </div>
+      <div class="stat-card mb-16">
+        <div class="stat-value green">KD 29-35</div>
+        <div class="stat-label">Average difficulty of easy-win clusters (QB Hosting, Enterprise, Citrix)</div>
+      </div>
+      <div class="stat-card mb-16">
+        <div class="stat-value orange">344K</div>
+        <div class="stat-label">Impressions for "what is a virtual desktop" &mdash; position 8.5, only 3 clicks</div>
+      </div>
+      <div class="annotation success">
+        <strong>Bottom line:</strong> The site has strong topical authority in cloud hosting for accountants.
+        The decline is fixable. The untapped commercial keyword opportunity is massive.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: Google Search Console API (Dec 2024 &ndash; Mar 2026) + SEMrush</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: TRAFFIC TIMELINE ==================== -->
+<div class="slide" data-slide="3">
+  <div class="slide-label">Traffic Analysis</div>
+  <h2>Monthly Organic Traffic (GSC)</h2>
+  <p class="subtitle mb-16">16 months of Google Search Console data showing the decline trajectory</p>
+
+  <div class="waterfall" style="height:220px;">
+    <div class="waterfall-bar" style="height:72%;" title="Dec 2024: 27,324 clicks"></div>
+    <div class="waterfall-bar" style="height:100%;background:#2980b9;" title="Jan 2025: 32,241 clicks (PEAK)"></div>
+    <div class="waterfall-bar" style="height:87%;" title="Feb 2025: 28,121 clicks"></div>
+    <div class="waterfall-bar" style="height:85%;" title="Mar 2025: 27,303 clicks"></div>
+    <div class="waterfall-bar declining" style="height:78%;" title="Apr 2025: 25,257 clicks"></div>
+    <div class="waterfall-bar declining" style="height:69%;" title="May 2025: 22,258 clicks"></div>
+    <div class="waterfall-bar declining" style="height:62%;" title="Jun 2025: 19,891 clicks"></div>
+    <div class="waterfall-bar" style="height:79%;" title="Jul 2025: 25,400 clicks"></div>
+    <div class="waterfall-bar" style="height:77%;" title="Aug 2025: 24,855 clicks"></div>
+    <div class="waterfall-bar declining" style="height:77%;" title="Sep 2025: 24,684 clicks"></div>
+    <div class="waterfall-bar declining" style="height:71%;" title="Oct 2025: 23,011 clicks"></div>
+    <div class="waterfall-bar declining" style="height:70%;" title="Nov 2025: 22,532 clicks"></div>
+    <div class="waterfall-bar declining" style="height:62%;" title="Dec 2025: 19,868 clicks"></div>
+    <div class="waterfall-bar low" style="height:55%;" title="Jan 2026: 17,633 clicks"></div>
+    <div class="waterfall-bar low" style="height:24%;" title="Feb 2026: 7,579 clicks"></div>
+    <div class="waterfall-bar low" style="height:15%;" title="Mar 2026 (partial): 4,876 clicks"></div>
+  </div>
+  <div class="waterfall-labels">
+    <div class="waterfall-label">Dec<br>24</div>
+    <div class="waterfall-label"><strong>Jan<br>25</strong></div>
+    <div class="waterfall-label">Feb</div>
+    <div class="waterfall-label">Mar</div>
+    <div class="waterfall-label">Apr</div>
+    <div class="waterfall-label">May</div>
+    <div class="waterfall-label">Jun</div>
+    <div class="waterfall-label">Jul</div>
+    <div class="waterfall-label">Aug</div>
+    <div class="waterfall-label">Sep</div>
+    <div class="waterfall-label">Oct</div>
+    <div class="waterfall-label">Nov</div>
+    <div class="waterfall-label">Dec<br>25</div>
+    <div class="waterfall-label">Jan<br>26</div>
+    <div class="waterfall-label">Feb</div>
+    <div class="waterfall-label">Mar*</div>
+  </div>
+
+  <div class="annotation mt-16">
+    <strong>Key pattern:</strong> Impressions grew from 2.8M to 4.8M (Jul-Aug 2025) even as clicks fell.
+    Google was still showing your pages but users weren't clicking &mdash; classic CTR erosion from AI Overviews
+    and position decay. The Feb 2026 cliff (7.6K clicks, down from 17.6K) suggests a core algorithm correction
+    compounding the gradual decline.
+  </div>
+
+  <table class="mt-16" style="font-size:13px;">
+    <tr><th>Month</th><th class="right">Clicks</th><th class="right">Impressions</th><th class="right">CTR</th><th class="right">Avg Position</th></tr>
+    <tr><td><strong>Jan 2025 (peak)</strong></td><td class="right bold">32,241</td><td class="right">2,795,454</td><td class="right">1.15%</td><td class="right">28.7</td></tr>
+    <tr><td>Jul 2025</td><td class="right">25,400</td><td class="right">4,499,277</td><td class="right red">0.56%</td><td class="right">29.0</td></tr>
+    <tr><td>Jan 2026</td><td class="right">17,633</td><td class="right">3,923,725</td><td class="right red">0.45%</td><td class="right">18.3</td></tr>
+    <tr><td><strong>Feb 2026 (latest full)</strong></td><td class="right bold red">7,579</td><td class="right">1,603,586</td><td class="right red">0.47%</td><td class="right">19.4</td></tr>
+  </table>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: GSC API &bull; sc-domain:acecloudhosting.com &bull; *Mar 2026 partial month</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: WHERE TRAFFIC WAS LOST ==================== -->
+<div class="slide" data-slide="4">
+  <div class="slide-label">Loss Breakdown</div>
+  <h2>Where the Traffic Went</h2>
+  <p class="subtitle mb-24">Comparing Q1 2025 (peak) vs Q1 2026 (current) by site section and content type</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">By Site Section</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Blog</div>
+          <div class="bar-track"><div class="bar-fill peak" style="width:100%;">77,358</div></div>
+          <div class="bar-value red">-51%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"></div>
+          <div class="bar-track"><div class="bar-fill current" style="width:48%;">37,516</div></div>
+          <div class="bar-value"></div>
+        </div>
+        <div style="height:12px;"></div>
+        <div class="bar-row">
+          <div class="bar-label" style="font-size:12px;">Knowledge&shy;base</div>
+          <div class="bar-track"><div class="bar-fill peak" style="width:35%;">27,211</div></div>
+          <div class="bar-value red bold">-84%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"></div>
+          <div class="bar-track"><div class="bar-fill current" style="width:6%;">4,339</div></div>
+          <div class="bar-value"></div>
+        </div>
+        <div style="height:12px;"></div>
+        <div class="bar-row">
+          <div class="bar-label">Core pages</div>
+          <div class="bar-track"><div class="bar-fill peak" style="width:6%;">4,829</div></div>
+          <div class="bar-value green">-4%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"></div>
+          <div class="bar-track"><div class="bar-fill opportunity" style="width:6%;">4,651</div></div>
+          <div class="bar-value"></div>
+        </div>
+      </div>
+
+      <div class="annotation danger mt-16">
+        <strong>Critical:</strong> The customer.acecloudhosting.com knowledgebase subdomain is now
+        returning errors &mdash; it redirects to customer.acecloud.ai which shows "Oops! Something went wrong."
+        3,342 KB pages lost 84% of their traffic. Many were generic Linux tutorials (e.g., "Install Pacman on Ubuntu")
+        irrelevant to your target audience of accountants and CPAs.
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Blog Losses by Topic</h3>
+      <table>
+        <tr><th>Topic Category</th><th class="right">Peak</th><th class="right">Now</th><th class="right">Change</th></tr>
+        <tr><td>Accounting lifestyle<br><span class="dim" style="font-size:12px;">quotes, movies, books, gifts</span></td><td class="right">36,533</td><td class="right">20,117</td><td class="right red bold">-16,416</td></tr>
+        <tr><td>Tax / compliance<br><span class="dim" style="font-size:12px;">W-2, W-4, IRS, 1099</span></td><td class="right">19,733</td><td class="right">7,466</td><td class="right red bold">-12,267</td></tr>
+        <tr><td>Accounting software<br><span class="dim" style="font-size:12px;">QuickBooks, Sage, Xero</span></td><td class="right">12,198</td><td class="right">4,782</td><td class="right red">-7,416</td></tr>
+        <tr><td>Business tools<br><span class="dim" style="font-size:12px;">laptops, email, Office 365</span></td><td class="right">10,513</td><td class="right">5,003</td><td class="right red">-5,510</td></tr>
+        <tr><td>Cybersecurity</td><td class="right">6,988</td><td class="right">2,446</td><td class="right red">-4,542</td></tr>
+        <tr><td>AI / technology</td><td class="right">1,527</td><td class="right">631</td><td class="right red">-896</td></tr>
+      </table>
+
+      <div class="annotation mt-16">
+        <strong>Pattern:</strong> The largest losses are in informational content categories with
+        zero conversion value. Tax form content (W-2 vs W-4) and lifestyle content (quotes, movies)
+        drove volume but not business. The smaller losses in accounting software and business tools
+        are the ones that actually hurt revenue potential.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: GSC API page-level comparison, Q1 2025 vs Q1 2026</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: THE W-2/W-4 STORY ==================== -->
+<div class="slide" data-slide="5">
+  <div class="slide-label">Case Study: AI Overview Impact</div>
+  <h2>The W-2 / W-4 Collapse</h2>
+  <p class="subtitle mb-16">A single blog post that once drove ~15,000 monthly visits from SEMrush-estimated traffic</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <div class="screenshot-ref">
+        <div class="badge warn">Biggest single-page loss</div>
+        <div class="url">acecloudhosting.com/blog/w-4-vs-w-2/</div>
+        <div class="desc">
+          Blog post: "W-2 Vs. W-4: What's The Difference?" &mdash; categorized under "Application Hosting"
+          (incorrect category), last updated Feb 25, 2026. Features AI summarize buttons for ChatGPT, Google AI,
+          Perplexity, Grok, and Claude.
+        </div>
+      </div>
+
+      <h3 class="mt-16 mb-8">Keywords Lost from This Single Page</h3>
+      <table style="font-size:13px;">
+        <tr><th>Keyword</th><th class="right">Volume</th><th class="right">Was Pos</th><th class="right">Traffic Lost</th></tr>
+        <tr><td class="mono">w4</td><td class="right bold">110,000</td><td class="right">#1</td><td class="right red bold">-4,510</td></tr>
+        <tr><td class="mono">w2</td><td class="right bold">90,500</td><td class="right">#1</td><td class="right red bold">-2,941</td></tr>
+        <tr><td class="mono">w-4</td><td class="right">49,500</td><td class="right">#1</td><td class="right red">-2,029</td></tr>
+        <tr><td class="mono">w2 form</td><td class="right">90,500</td><td class="right">#1</td><td class="right red">-1,991</td></tr>
+        <tr><td class="mono">what is a w4</td><td class="right">12,100</td><td class="right">#1</td><td class="right red">-1,500</td></tr>
+        <tr><td class="mono">w-4 form</td><td class="right">33,100</td><td class="right">#1</td><td class="right red">-728</td></tr>
+        <tr><td class="mono">w-2 vs w-4</td><td class="right">2,900</td><td class="right">#1</td><td class="right red">-719</td></tr>
+        <tr><td colspan="3" style="color:var(--text-light);">+ 288 more keywords lost</td><td class="right red bold">-22,921 total</td></tr>
+      </table>
+    </div>
+    <div class="col">
+      <div class="stat-card mb-16">
+        <div class="stat-value red">-22,921</div>
+        <div class="stat-label">Total SEMrush estimated traffic lost from tax-form keywords</div>
+      </div>
+
+      <div class="annotation danger">
+        <strong>What happened:</strong> This page ranked #1 for "w4" (110K monthly searches), "w2" (90.5K),
+        and dozens of related terms. Google's AI Overview now answers these queries directly in the SERP.
+        All positions dropped to 0 in SEMrush by Aug 2025. The page had a "Position Type" of "People also ask"
+        &mdash; meaning Google was already treating it as a featured snippet source before AI Overviews replaced it entirely.
+      </div>
+
+      <div class="annotation info mt-16">
+        <strong>Why it's not recoverable:</strong> "What is a W-2?" and "What is a W-4?" are definitional
+        queries that Google now answers inline. A cloud hosting company has no E-E-A-T advantage for tax form
+        definitions. This traffic was always low-intent &mdash; visitors searching "w4" are looking for the IRS form,
+        not cloud hosting services.
+      </div>
+
+      <div class="annotation mt-16">
+        <strong>Strategic lesson:</strong> The site's content strategy over-indexed on high-volume informational
+        keywords with zero commercial relevance. 34.5% of all GSC clicks came from informational queries.
+        The recovery plan must shift investment toward commercial-intent keywords aligned with your core products and services.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Position Changes report (Feb 2025 baseline)</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: CANNIBALIZATION ==================== -->
+<div class="slide" data-slide="6">
+  <div class="slide-label">Keyword Cannibalization</div>
+  <h2>Google Can't Pick a Winner</h2>
+  <p class="subtitle mb-16">When dozens of pages target the same keyword, Google splits authority and ranks none of them well</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Worst Offenders</h3>
+      <div style="margin:8px 0;">
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"quickbooks hosting"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<9;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">93 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"quickbooks cloud hosting"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<9;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">95 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"quickbooks hosting pricing"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<7;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">67 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"cloud hosting"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<6;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">60 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"quickbooks cloud"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<5;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">52 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"vdi"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<5;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">47 pages</div>
+        </div>
+        <div class="cannibal-item">
+          <div class="cannibal-kw mono">"desktop as a service"</div>
+          <div class="cannibal-pages">
+            <script>for(let i=0;i<4;i++){document.write('<div class="cannibal-dot"></div>')}</script>
+          </div>
+          <div class="cannibal-count">37 pages</div>
+        </div>
+      </div>
+
+      <div class="annotation danger mt-16">
+        <strong>Impact:</strong> "quickbooks hosting" has 75,029 impressions across 93 competing pages
+        but only 215 total clicks. At position 12.8 average, consolidating to one authoritative page could
+        realistically move into the top 5 and capture 3,750+ clicks &mdash; a 17x improvement.
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">High-Value Cannibalized Keywords</h3>
+      <table style="font-size:13px;">
+        <tr><th>Keyword</th><th class="right">Impressions</th><th class="right">Clicks</th><th class="right">Pages</th><th class="right">Avg Pos</th></tr>
+        <tr><td class="mono">what is a virtual desktop</td><td class="right bold">344,763</td><td class="right red">3</td><td class="right">17</td><td class="right">8.5</td></tr>
+        <tr><td class="mono">cloud hosting</td><td class="right">96,958</td><td class="right red">29</td><td class="right">60</td><td class="right">-</td></tr>
+        <tr><td class="mono">quickbooks hosting</td><td class="right">75,029</td><td class="right">215</td><td class="right">93</td><td class="right">12.8</td></tr>
+        <tr><td class="mono">quickbooks cloud</td><td class="right">62,565</td><td class="right">62</td><td class="right">52</td><td class="right">8.9</td></tr>
+        <tr><td class="mono">sage 50 cloud</td><td class="right">58,810</td><td class="right">240</td><td class="right">18</td><td class="right">10.6</td></tr>
+        <tr><td class="mono">vmware alternatives</td><td class="right">55,072</td><td class="right">501</td><td class="right">6</td><td class="right">8.9</td></tr>
+        <tr><td class="mono">vdi solutions</td><td class="right">49,613</td><td class="right">15</td><td class="right">31</td><td class="right">-</td></tr>
+        <tr><td class="mono">desktop as a service</td><td class="right">45,388</td><td class="right">6</td><td class="right">37</td><td class="right">-</td></tr>
+        <tr><td class="mono">quickbooks hosting pricing</td><td class="right">44,311</td><td class="right">15</td><td class="right">67</td><td class="right">8.5</td></tr>
+      </table>
+
+      <div class="annotation info mt-16">
+        <strong>The math:</strong> "what is a virtual desktop" gets 344,763 impressions spread across 17 pages,
+        resulting in just 3 clicks. If one definitive page captured even 1% CTR at that impression volume,
+        that's 3,447 clicks from a single query. This pattern repeats across dozens of your core commercial keywords.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: GSC API, 1,128,442 page+query rows aggregated across 16 months</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: TECHNICAL SEO ==================== -->
+<div class="slide" data-slide="7">
+  <div class="slide-label">Technical SEO Audit</div>
+  <h2>Foundation Issues</h2>
+  <p class="subtitle mb-16">Every page examined had fundamental SEO problems that compound the content issues</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <div class="issue-item">
+        <div class="issue-icon critical">!</div>
+        <div class="issue-text">
+          <h4>Missing meta descriptions &mdash; every page</h4>
+          <p>Not a single page examined (homepage, service pages, blog posts, KB articles) had a meta description.
+          This directly hurts CTR from SERPs and leaves Google to auto-generate snippets.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon critical">!</div>
+        <div class="issue-text">
+          <h4>Broken service page: /managed-security/ returns 404</h4>
+          <p>A core service pillar page linked from the main navigation is returning a 404 error.
+          "Cybersecurity Solutions" is in the top nav but the landing page doesn't exist.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon critical">!</div>
+        <div class="issue-text">
+          <h4>KB subdomain completely broken</h4>
+          <p>customer.acecloudhosting.com redirects to customer.acecloud.ai and returns "Oops! Something went wrong."
+          3,342 indexed KB pages are now dead links. Peak traffic was 15,358 clicks/quarter.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon warning">&#9888;</div>
+        <div class="issue-text">
+          <h4>Heavy JavaScript rendering</h4>
+          <p>Elementor page builder + NitroPack optimization layer + Bootstrap. Content rendered client-side
+          may not be fully crawlable by Googlebot. Core Web Vitals likely impacted.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="issue-item">
+        <div class="issue-icon warning">&#9888;</div>
+        <div class="issue-text">
+          <h4>H1 tags duplicate title tags</h4>
+          <p>Homepage, blog listing, and service pages all have H1 text identical to the title tag.
+          H2 structure is absent or undetectable on most pages due to JS rendering.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon warning">&#9888;</div>
+        <div class="issue-text">
+          <h4>Inconsistent structured data</h4>
+          <p>The Citrix VDI page has FAQPage + BreadcrumbList schema. Most other pages have none.
+          No Product, Service, or HowTo schema on service or KB pages.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon info">i</div>
+        <div class="issue-text">
+          <h4>3,100+ indexed URLs</h4>
+          <p>2,114 blog posts + 592 integration pages + 238 KB articles + 171 static pages.
+          For a focused B2B hosting company, this URL volume creates crawl budget waste and thin content risk.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon info">i</div>
+        <div class="issue-text">
+          <h4>Inconsistent title tag branding</h4>
+          <p>"Ace Cloud Hosting" appears at the start, end, or not at all across different page types.
+          No consistent naming convention for the 7 sitemaps worth of blog content.</p>
+        </div>
+      </div>
+
+      <div class="annotation mt-16">
+        <strong>Site stack:</strong> WordPress + Elementor + Rank Math SEO + NitroPack + Cloudflare CDN.
+        Rank Math is installed but underutilized &mdash; meta descriptions aren't populated despite the plugin supporting them.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: Site crawl analysis of homepage, 5 service pages, blog, KB, robots.txt, sitemap_index.xml</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: CONTENT QUALITY ==================== -->
+<div class="slide" data-slide="8">
+  <div class="slide-label">Content Quality Assessment</div>
+  <h2>2,114 Blog Posts. How Many Matter?</h2>
+  <p class="subtitle mb-16">13 years of content accumulation has created a quality liability</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">The Scale Problem</h3>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">2,114</div>
+          <div class="stat-label">Blog posts across 7 sitemaps</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">592</div>
+          <div class="stat-label">Integration pages</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">238</div>
+          <div class="stat-label">Knowledgebase articles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">18</div>
+          <div class="stat-label">Industry vertical pages</div>
+        </div>
+      </div>
+
+      <div class="annotation danger mt-16">
+        <strong>Thin content examples:</strong><br>
+        &bull; KB article "Resolving the MS Office File-Blocking Issue" &mdash; updated Oct 9, <strong>2014</strong>, 2-min read, basic troubleshooting<br>
+        &bull; 592 integration pages (Salesforce, Stripe, DocuSign, etc.) &mdash; template-based, likely thin<br>
+        &bull; Blog posts like "Install Pacman on Ubuntu" &mdash; zero relevance to accounting/hosting ICP
+      </div>
+
+      <div class="screenshot-ref mt-16">
+        <div class="badge">Dated 2014</div>
+        <div class="url">acecloudhosting.com/knowledgebase/resolving-the-ms-office-file-blocking-issue/</div>
+        <div class="desc">Knowledgebase article from 2014, "2 Min Read," thin troubleshooting content.
+        Peak clicks: 1,145/quarter. Now: 123/quarter (-89%). KB categories include a typo: "Accessebility issues."</div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Current SEMrush Traffic by Content Type</h3>
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:12px;">
+        SEMrush estimates only 5,700 total monthly organic visits. Here's where they come from:
+      </p>
+      <table style="font-size:13px;">
+        <tr><th>Content Type</th><th class="right">Traffic</th><th class="right">$ Value</th><th class="right">Pages</th></tr>
+        <tr><td>Blog: Tax / compliance</td><td class="right bold">1,513</td><td class="right">$573</td><td class="right">73</td></tr>
+        <tr><td>Core / service pages</td><td class="right">1,163</td><td class="right green bold">$20,385</td><td class="right">155</td></tr>
+        <tr><td>Blog: QuickBooks</td><td class="right">663</td><td class="right green bold">$17,257</td><td class="right">228</td></tr>
+        <tr><td>Blog: Other</td><td class="right">650</td><td class="right">$2,989</td><td class="right">227</td></tr>
+        <tr><td>Blog: Cloud/hosting</td><td class="right">449</td><td class="right">$2,054</td><td class="right">195</td></tr>
+        <tr><td>Blog: Lifestyle</td><td class="right">404</td><td class="right dim">$603</td><td class="right">14</td></tr>
+        <tr><td>Blog: Business tools</td><td class="right">245</td><td class="right">$726</td><td class="right">13</td></tr>
+        <tr><td>Knowledgebase</td><td class="right dim">231</td><td class="right dim">$128</td><td class="right">302</td></tr>
+        <tr><td>Buy QuickBooks pages</td><td class="right">134</td><td class="right green">$2,387</td><td class="right">9</td></tr>
+        <tr><td>Integrations</td><td class="right dim">85</td><td class="right dim">$784</td><td class="right red">174</td></tr>
+      </table>
+
+      <div class="annotation info mt-16">
+        <strong>The efficiency gap:</strong> 9 "Buy QuickBooks" pages generate $2,387 in traffic value.
+        174 integration pages generate $784. The site has a massive long tail of low-value pages dragging
+        down overall quality signals. Google's Helpful Content system penalizes sites where a large proportion
+        of content appears unhelpful.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Organic Positions (16,716 keywords) + sitemap analysis</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: COMPETITIVE LANDSCAPE ==================== -->
+<div class="slide" data-slide="9">
+  <div class="slide-label">Competitive Analysis</div>
+  <h2>Competitive Landscape</h2>
+  <p class="subtitle mb-16">How Ace Cloud Hosting stacks up against key competitors in the QuickBooks hosting space</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-8">Direct Competitors</h3>
+      <table>
+        <tr><th>Competitor</th><th>Focus</th><th>Key Advantage</th></tr>
+        <tr>
+          <td><strong>Rightworks</strong><br><span class="dim" style="font-size:12px;">rightnetworks.com</span></td>
+          <td>QuickBooks hosting + Microsoft 365 ecosystem</td>
+          <td>Dominates Office/M365 login keywords; strong brand in accounting vertical</td>
+        </tr>
+        <tr>
+          <td><strong>Verito</strong><br><span class="dim" style="font-size:12px;">verito.com</span></td>
+          <td>Cloud hosting for accounting software</td>
+          <td>Ranking for "cloud accounting software" (60.5K vol), "quickbooks download" (9.9K vol)</td>
+        </tr>
+        <tr>
+          <td><strong>Summit Hosting</strong></td>
+          <td>QuickBooks + Sage cloud hosting</td>
+          <td>Direct competitor with comparison pages</td>
+        </tr>
+        <tr>
+          <td><strong>Certinia</strong><br><span class="dim" style="font-size:12px;">certinia.com</span></td>
+          <td>Cloud ERP / financial management</td>
+          <td>Enterprise-focused; ranking for cloud accounting terms</td>
+        </tr>
+      </table>
+
+      <div class="annotation mt-16">
+        <strong>Keyword gap analysis (SEMrush):</strong> 8,448 keywords analyzed across all four competitors.
+        6,594 keywords where competitors rank but Ace doesn't. However, most overlap is navigational
+        (Office 365 logins, brand terms) &mdash; not directly actionable.
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-8">Your Competitive Moat</h3>
+      <div class="stat-card mb-16" style="border-left:4px solid var(--green);">
+        <h4 style="color:var(--green);margin-bottom:4px;">Intuit Elite QuickBooks Solution Provider</h4>
+        <p style="font-size:13px;color:var(--text-light);">Official Intuit partnership tier. This is a genuine E-E-A-T signal that competitors
+        cannot easily replicate. Should be prominently featured in all QuickBooks content.</p>
+      </div>
+
+      <h3 class="mb-8 mt-16">Actionable Competitive Gaps</h3>
+      <table style="font-size:13px;">
+        <tr><th>Keyword</th><th class="right">Volume</th><th class="right">KD</th><th class="right">CPC</th><th>Who Ranks</th></tr>
+        <tr><td class="mono">cloud accounting software</td><td class="right bold">60,500</td><td class="right">61</td><td class="right green">$35.71</td><td>Verito #53</td></tr>
+        <tr><td class="mono">quickbooks desktop 2023</td><td class="right">14,800</td><td class="right green">27</td><td class="right">$12.36</td><td>Verito #34</td></tr>
+        <tr><td class="mono">quickbooks download</td><td class="right">9,900</td><td class="right">52</td><td class="right">$9.10</td><td>Verito #23</td></tr>
+        <tr><td class="mono">cloud bookkeeping software</td><td class="right">8,100</td><td class="right">87</td><td class="right green">$35.71</td><td>Verito #71</td></tr>
+        <tr><td class="mono">lacerte</td><td class="right">3,600</td><td class="right">42</td><td class="right">$8.66</td><td>Verito #26</td></tr>
+        <tr><td class="mono">anti phishing software</td><td class="right">1,300</td><td class="right green">24</td><td class="right green">$12.84</td><td>Verito #20</td></tr>
+      </table>
+
+      <div class="annotation success mt-16">
+        <strong>Biggest gap:</strong> "cloud accounting software" (60.5K volume, $35.71 CPC) &mdash;
+        nobody in the competitive set owns this term. Verito barely ranks at #53.
+        With your Intuit partnership and existing authority, this is a winnable pillar keyword.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: SEMrush Keyword Gap analysis (acecloudhosting.com vs rightnetworks.com, verito.com, certinia.com)</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: THE OPPORTUNITY ==================== -->
+<div class="slide dark" data-slide="10">
+  <div class="slide-label">Growth Opportunity</div>
+  <h2 style="font-size:42px;">3.8 Million Keywords. Zero Competition at Low KD.</h2>
+  <p class="subtitle mb-24">Keyword research identified 10 topic clusters across your core business</p>
+
+  <table style="font-size:14px;">
+    <tr><th>Topic Cluster</th><th class="right">Keywords</th><th class="right">Total Volume</th><th class="right">Avg KD</th><th>Priority</th></tr>
+    <tr>
+      <td><strong>IT Security & Compliance</strong></td><td class="right">422</td><td class="right">2,487,860</td><td class="right">44</td>
+      <td><span class="pill orange">Optimize existing</span></td>
+    </tr>
+    <tr>
+      <td><strong>Cloud Hosting for Accounting Firms</strong></td><td class="right">647</td><td class="right">498,220</td><td class="right">40</td>
+      <td><span class="pill blue">Core &mdash; your ICP</span></td>
+    </tr>
+    <tr>
+      <td><strong>VDI / Desktop-as-a-Service</strong></td><td class="right">457</td><td class="right">191,550</td><td class="right">37</td>
+      <td><span class="pill blue">Core &mdash; 2nd pillar</span></td>
+    </tr>
+    <tr>
+      <td><strong>Business Application Hosting</strong></td><td class="right">398</td><td class="right">185,110</td><td class="right">55</td>
+      <td><span class="pill gray">Hard &mdash; high KD</span></td>
+    </tr>
+    <tr>
+      <td><strong>Cloud Migration & Management</strong></td><td class="right">509</td><td class="right">154,880</td><td class="right">44</td>
+      <td><span class="pill gray">Adjacent</span></td>
+    </tr>
+    <tr>
+      <td><strong>Remote Work IT Solutions</strong></td><td class="right">276</td><td class="right">94,740</td><td class="right">40</td>
+      <td><span class="pill gray">Adjacent</span></td>
+    </tr>
+    <tr>
+      <td><strong>Azure Virtual Desktop Services</strong></td><td class="right">275</td><td class="right">76,520</td><td class="right">40</td>
+      <td><span class="pill orange">Product-specific</span></td>
+    </tr>
+    <tr style="background:rgba(39,174,96,0.1);">
+      <td><strong style="color:var(--green);">QuickBooks Cloud Hosting</strong></td><td class="right bold">181</td><td class="right bold">70,740</td><td class="right" style="color:var(--green);font-weight:700;">35</td>
+      <td><span class="pill green">Easy win &mdash; flagship</span></td>
+    </tr>
+    <tr style="background:rgba(39,174,96,0.1);">
+      <td><strong style="color:var(--green);">QuickBooks Enterprise Pricing</strong></td><td class="right bold">207</td><td class="right bold">53,810</td><td class="right" style="color:var(--green);font-weight:700;">34</td>
+      <td><span class="pill green">Easy win &mdash; BoFu</span></td>
+    </tr>
+    <tr style="background:rgba(39,174,96,0.1);">
+      <td><strong style="color:var(--green);">Managed Citrix Desktop</strong></td><td class="right bold">40</td><td class="right bold">11,620</td><td class="right" style="color:var(--green);font-weight:700;">29</td>
+      <td><span class="pill green">Easiest win</span></td>
+    </tr>
+  </table>
+
+  <div class="annotation mt-16">
+    <strong>The play:</strong> Three clusters have average KD under 35 &mdash; well within range for a domain with
+    your existing authority (15+ years, Intuit partnership, 16K+ ranking keywords). These map directly to your
+    flagship products: QuickBooks Hosting, QuickBooks Enterprise, and Managed Citrix Desktops. New content here
+    will rank faster and convert better than any other topic area.
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: Keyword cluster analysis (5 seed keywords, 3,412 total keywords, 10 clusters)</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: STRIKING DISTANCE ==================== -->
+<div class="slide" data-slide="11">
+  <div class="slide-label">Quick Wins</div>
+  <h2>Striking Distance Opportunities</h2>
+  <p class="subtitle mb-16">Keywords already ranking at positions 5-20 with massive impressions &mdash; small improvements yield big gains</p>
+
+  <table>
+    <tr><th>Keyword</th><th class="right">Impressions</th><th class="right">Current Pos</th><th class="right">Current Clicks</th><th class="right">Potential Clicks</th><th>Action</th></tr>
+    <tr>
+      <td class="mono bold">what is a virtual desktop</td>
+      <td class="right bold">344,763</td><td class="right orange">8.5</td><td class="right red">3</td>
+      <td class="right green bold">+17,238</td>
+      <td><span class="pill green">Consolidate 17 pages &rarr; 1 pillar</span></td>
+    </tr>
+    <tr>
+      <td class="mono">quickbooks hosting</td>
+      <td class="right">75,029</td><td class="right orange">12.8</td><td class="right">215</td>
+      <td class="right green">+3,751</td>
+      <td><span class="pill green">Consolidate 93 pages &rarr; 1</span></td>
+    </tr>
+    <tr>
+      <td class="mono">sage 50 cloud</td>
+      <td class="right">58,810</td><td class="right orange">10.6</td><td class="right">240</td>
+      <td class="right green">+2,940</td>
+      <td><span class="pill orange">Optimize + de-cannibalize</span></td>
+    </tr>
+    <tr>
+      <td class="mono">vmware alternatives</td>
+      <td class="right">55,072</td><td class="right orange">8.9</td><td class="right">501</td>
+      <td class="right green">+2,753</td>
+      <td><span class="pill orange">Refresh existing post</span></td>
+    </tr>
+    <tr>
+      <td class="mono">quickbooks hosting pricing</td>
+      <td class="right">44,311</td><td class="right orange">8.5</td><td class="right">15</td>
+      <td class="right green">+2,215</td>
+      <td><span class="pill green">Consolidate 67 pages &rarr; 1</span></td>
+    </tr>
+    <tr>
+      <td class="mono">quickbooks cloud hosting</td>
+      <td class="right">35,419</td><td class="right">17.4</td><td class="right">55</td>
+      <td class="right green">+1,770</td>
+      <td><span class="pill green">Consolidate 95 pages &rarr; 1</span></td>
+    </tr>
+    <tr>
+      <td class="mono">quickbooks enterprise hosting</td>
+      <td class="right">29,361</td><td class="right">13.1</td><td class="right">98</td>
+      <td class="right green">+1,468</td>
+      <td><span class="pill orange">Optimize service page</span></td>
+    </tr>
+    <tr>
+      <td class="mono">intuit enterprise suite</td>
+      <td class="right">26,202</td><td class="right orange">8.6</td><td class="right">87</td>
+      <td class="right green">+1,310</td>
+      <td><span class="pill blue">Leverage Intuit partnership</span></td>
+    </tr>
+  </table>
+
+  <div class="annotation success mt-24">
+    <strong>Conservative estimate:</strong> Consolidating cannibalized pages and optimizing these 8 striking-distance
+    keywords could recover <strong>33,445 clicks/month</strong> &mdash; more than your current total monthly site traffic.
+    These are all commercial-intent keywords with direct relevance to your products.
+    Potential clicks calculated at a conservative 5% CTR on existing impression volume.
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Source: GSC API, 1.1M query rows, position 5-20 filter with 5K+ impressions</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: RECOVERY PLAN ==================== -->
+<div class="slide" data-slide="12">
+  <div class="slide-label">Recovery Strategy</div>
+  <h2>The Two-Phase Plan</h2>
+  <p class="subtitle mb-24">Clean up the foundation first, then build new growth on solid ground</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="phase-card phase-1">
+      <div class="phase-num">Phase 1: Fix, Prune & Consolidate (Month 1)</div>
+      <h3>Restore the Foundation</h3>
+      <ul>
+        <li><strong>Fix KB subdomain</strong> &mdash; either restore customer.acecloudhosting.com or 301 redirect valuable pages to main domain</li>
+        <li><strong>Fix /managed-security/</strong> 404 &mdash; restore or redirect the service page</li>
+        <li><strong>Noindex thin content</strong> &mdash; generic Linux tutorials, template integration pages with no traffic</li>
+        <li><strong>Add meta descriptions</strong> to all key pages (service, top blog posts, KB)</li>
+        <li><strong>Audit 644 integration pages</strong> &mdash; 506 (79%) have zero organic clicks. They rank for third-party brand names with no realistic path to meaningful traffic. Noindex low-traffic pages while keeping them accessible for prospects browsing the site</li>
+        <li><strong>Consolidate cannibalized pages</strong> &mdash; merge overlapping posts into definitive guides:
+          <br>&bull; 93+ QB hosting pages &rarr; 1 pillar
+          <br>&bull; 17 virtual desktop pages &rarr; 1 pillar
+          <br>&bull; 67 QB pricing pages &rarr; 1 definitive guide</li>
+        <li><strong>Refresh top 25 traffic losers</strong> &mdash; update content, add structured data, fix internal links</li>
+        <li><strong>Optimize striking-distance keywords</strong> &mdash; target the 8 keywords with 33K+ click potential</li>
+        <li><strong>301 redirect</strong> all consolidated/pruned URLs to their canonical destinations</li>
+        <li><strong>Add FAQ schema</strong> to service pages and top blog posts</li>
+      </ul>
+      <div class="annotation danger" style="margin-top:12px;font-size:13px;">
+        <strong>Goal:</strong> Reduce indexed page count from 3,100+ to ~500 quality pages.
+        Recapture 30-50% of lost commercial keyword traffic through consolidation and optimization alone.
+      </div>
+    </div>
+    <div class="phase-card phase-3">
+      <div class="phase-num">Phase 2: New Content Production (Month 2+)</div>
+      <h3>Capture New Territory</h3>
+      <ul>
+        <li><strong>Begin content production</strong> targeting the 3 easy-win clusters:
+          <br>&bull; QuickBooks Cloud Hosting (181 KWs, 71K vol, KD 35)
+          <br>&bull; QB Enterprise Pricing (207 KWs, 54K vol, KD 34)
+          <br>&bull; Managed Citrix Desktop (40 KWs, 12K vol, KD 29)</li>
+        <li><strong>Pillar + supporting cluster model</strong> &mdash; each cluster gets a comprehensive pillar page supported by targeted long-tail content</li>
+        <li><strong>Expand to larger clusters</strong> (VDI/DaaS at 192K vol, Cloud for Accounting at 498K vol) as core clusters mature</li>
+        <li><strong>Target competitive gaps</strong>: "cloud accounting software" (60.5K vol), "quickbooks desktop 2023" (14.8K vol)</li>
+        <li><strong>Build internal linking</strong> between new cluster content and existing service pages</li>
+      </ul>
+      <div class="annotation success" style="margin-top:12px;font-size:13px;">
+        <strong>Goal:</strong> Grow commercial-intent traffic into the 20-30K clicks/month range
+        with content that aligns directly with your products and converts visitors into pipeline.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Phase 1 creates the clean foundation that makes Phase 2 content perform</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 13: PROJECTED IMPACT ==================== -->
+<div class="slide dark" data-slide="13">
+  <div class="slide-label">Projected Outcomes</div>
+  <h2>What Recovery Looks Like</h2>
+  <p class="subtitle mb-24">Shifting from vanity traffic to commercial-intent traffic that drives pipeline</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">Traffic Quality Shift</h3>
+
+      <div class="stat-card mb-16">
+        <div class="stat-label" style="margin-bottom:8px;">BEFORE: Jan 2025 (peak)</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value" style="font-size:28px;">32,241</div><div class="stat-label">Monthly clicks</div></div>
+          <div><div class="stat-value" style="font-size:28px;">30%</div><div class="stat-label">Commercial intent</div></div>
+          <div><div class="stat-value" style="font-size:28px;">~9,672</div><div class="stat-label">Commercial clicks</div></div>
+        </div>
+      </div>
+
+      <div class="stat-card mb-16" style="border-left:4px solid var(--red);">
+        <div class="stat-label" style="margin-bottom:8px;">NOW: Feb 2026</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value red" style="font-size:28px;">7,579</div><div class="stat-label">Monthly clicks</div></div>
+          <div><div class="stat-value" style="font-size:28px;">~30%</div><div class="stat-label">Commercial intent</div></div>
+          <div><div class="stat-value red" style="font-size:28px;">~2,274</div><div class="stat-label">Commercial clicks</div></div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="border-left:4px solid var(--green);">
+        <div class="stat-label" style="margin-bottom:8px;">TARGET: Q4 2026</div>
+        <div style="display:flex;gap:16px;">
+          <div><div class="stat-value green" style="font-size:28px;">20-30K</div><div class="stat-label">Monthly clicks</div></div>
+          <div><div class="stat-value green" style="font-size:28px;">60%+</div><div class="stat-label">Commercial intent</div></div>
+          <div><div class="stat-value green" style="font-size:28px;">12-18K</div><div class="stat-label">Commercial clicks</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-16" style="color:rgba(255,255,255,0.9);">How We Get There</h3>
+
+      <div class="bar-chart">
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:8px;">Estimated click recovery by action</div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:160px;font-size:12px;">Cannibalization fix</div>
+          <div class="bar-track"><div class="bar-fill teal-fill" style="width:75%;">~10-15K</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:160px;font-size:12px;">Striking distance opt.</div>
+          <div class="bar-track"><div class="bar-fill teal-fill" style="width:50%;">~5-8K</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:160px;font-size:12px;">New cluster content</div>
+          <div class="bar-track"><div class="bar-fill opportunity" style="width:60%;">~5-10K</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:rgba(255,255,255,0.7);width:160px;font-size:12px;">Technical SEO fixes</div>
+          <div class="bar-track"><div class="bar-fill orange-fill" style="width:25%;">~2-4K</div></div>
+        </div>
+      </div>
+
+      <div class="annotation mt-24">
+        <strong>Key insight:</strong> We don't need to recover the 32K peak to deliver more value.
+        The old 32K included ~22K clicks from W-2/W-4, accounting quotes, and Linux tutorials &mdash;
+        traffic that never converted. Replacing it with 15-20K commercial-intent clicks is a net improvement
+        for the business, even at a lower headline number.
+      </div>
+
+      <div class="annotation info mt-16">
+        <strong>Traffic value target:</strong> Current SEMrush traffic value is $50,292/mo.
+        With the recovery plan, targeting $120-150K/mo in traffic value from higher-CPC commercial keywords
+        like "quickbooks hosting" ($18.50), "cloud accounting software" ($35.71), and "managed citrix" ($14+).
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">Projections based on GSC impression data + conservative 5% CTR assumptions on consolidated pages</div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 14: NEXT STEPS ==================== -->
+<div class="slide" data-slide="14">
+  <div class="slide-label">Next Steps</div>
+  <h2>Getting Started</h2>
+  <p class="subtitle mb-24">Immediate actions to begin the recovery</p>
+
+  <div class="two-col" style="flex:1;">
+    <div class="col">
+      <h3 class="mb-16">Month 1: Foundation Work</h3>
+      <div class="issue-item">
+        <div class="issue-icon critical" style="background:var(--ember-orange);color:white;">1</div>
+        <div class="issue-text">
+          <h4>Fix the KB subdomain</h4>
+          <p>customer.acecloudhosting.com is broken. Either restore it or implement 301 redirects
+          for the top-traffic pages to equivalent content on the main domain. 3,342 dead pages are actively harming domain authority.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon critical" style="background:var(--ember-orange);color:white;">2</div>
+        <div class="issue-text">
+          <h4>Restore /managed-security/ or redirect</h4>
+          <p>A core service page in the main navigation returns 404.
+          Fix immediately or redirect to the cybersecurity solutions parent.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon critical" style="background:var(--ember-orange);color:white;">3</div>
+        <div class="issue-text">
+          <h4>Full technical audit + content pruning</h4>
+          <p>Crawl the full 3,100+ URL footprint. Noindex thin/irrelevant pages, add meta descriptions,
+          fix heading hierarchy. Target reducing indexed pages to ~500.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon warning" style="background:var(--ace-teal);color:white;">4</div>
+        <div class="issue-text">
+          <h4>Consolidate cannibalized content</h4>
+          <p>Merge competing pages into definitive guides (93 QB hosting pages &rarr; 1 pillar, etc.),
+          optimize striking-distance keywords, 301 redirect pruned URLs.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 class="mb-16">Month 2+: Content Production</h3>
+      <div class="issue-item">
+        <div class="issue-icon info" style="background:var(--green);color:white;">5</div>
+        <div class="issue-text">
+          <h4>Begin new content targeting easy-win clusters</h4>
+          <p>Start with QuickBooks Cloud Hosting (181 keywords, 70,740 volume, avg KD 35).
+          Pillar page first, then supporting cluster content addressing long-tail queries.</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon info" style="background:var(--green);color:white;">6</div>
+        <div class="issue-text">
+          <h4>Expand into larger clusters</h4>
+          <p>As core clusters mature, expand into VDI/DaaS (192K vol) and Cloud for Accounting Firms (498K vol).
+          Target competitive gaps like "cloud accounting software" (60.5K vol).</p>
+        </div>
+      </div>
+      <div class="issue-item">
+        <div class="issue-icon info" style="background:var(--green);color:white;">7</div>
+        <div class="issue-text">
+          <h4>Ongoing internal linking + measurement</h4>
+          <p>Build internal links between new cluster content and existing service pages.
+          Monthly GSC data pull via API to track recovery against the Feb 2026 baseline.</p>
+        </div>
+      </div>
+
+      <div style="background:var(--light-bg);border-radius:12px;padding:24px;margin-top:24px;">
+        <h3 style="color:var(--ember-red);margin-bottom:8px;">Investment</h3>
+        <table style="font-size:14px;">
+          <tr><td style="width:140px;"><strong>Month 1</strong></td><td style="font-size:22px;font-weight:700;color:var(--ember-red);">$5,000</td></tr>
+          <tr><td colspan="2" style="color:#666;padding-bottom:12px;">Technical fixes, content pruning, consolidation, optimization</td></tr>
+          <tr><td><strong>Month 2+ Ongoing</strong></td><td style="font-size:22px;font-weight:700;color:var(--ember-red);">$4,000<span style="font-size:14px;font-weight:400;color:#666;">/mo</span></td></tr>
+          <tr><td colspan="2" style="color:#666;padding-bottom:12px;">100 pieces of content per month &mdash; mix of new content plus optimization of existing content (2,114 blogs need to be consolidated and cleaned up)</td></tr>
+        </table>
+      </div>
+
+      <div class="annotation success mt-16">
+        <strong>We have the data, the clusters, and the infrastructure.</strong>
+        Your domain authority, Intuit partnership, and 15-year history are real assets.
+        The traffic decline is a content quality and technical SEO problem &mdash; both are fixable.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <div class="logo-ember">EMBERTRIBE</div>
+    <div class="logo-date">March 2026 | Confidential</div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prev" onclick="navigate(-1)">&larr;</button>
+  <span class="counter" id="counter">1 / 14</span>
+  <button id="next" onclick="navigate(1)">&rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+
+  function showSlide(n) {
+    slides[current].classList.remove('active');
+    current = ((n % total) + total) % total;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+    // Reset scroll position
+    slides[current].scrollTop = 0;
+  }
+
+  function navigate(dir) { showSlide(current + dir); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+    if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+    if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { navigate(diff > 0 ? 1 : -1); }
+  });
+
+  // Initialize
+  showSlide(0);
+</script>
+
+</body>
+</html>
