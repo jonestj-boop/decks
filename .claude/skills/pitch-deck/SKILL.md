@@ -36,6 +36,29 @@ The user can:
 1. **Paste directly** into the conversation (transcripts, data summaries)
 2. **Provide file paths** to CSVs, JSONs, or text files
 3. **Describe findings** verbally for the skill to structure
+4. **Pull live GSC data** if the prospect has granted access (see below)
+
+### Pulling Google Search Console Data
+
+If the prospect has added `embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com` to their GSC property, you can pull live data:
+
+```bash
+python3 scripts/gsc-api.py \
+  --key-file embertribe-content-tools-e6776250739e.json \
+  --site "https://www.example.com/" \
+  --days 180 \
+  --output gsc-data.json
+```
+
+This returns clicks, impressions, CTR, and average position by page and query. Use this data to populate the Current State, Traffic Trends, and Keyword Opportunities slides.
+
+If the API isn't available, the user can export CSVs from GSC and provide them. Use `scripts/gsc-import.py` to parse those:
+
+```bash
+python3 scripts/gsc-import.py --files exported-queries.csv exported-pages.csv --output gsc-data.json
+```
+
+**Prerequisites:** `pip install -r scripts/requirements.txt` (google-auth, google-api-python-client)
 
 ---
 
