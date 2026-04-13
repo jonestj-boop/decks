@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance Plumbing — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================================
+   THEME — Alliance Plumbing brand (#2ea3f2 blue)
+   ============================================================= */
+:root {
+  --primary-dark:  #082136;
+  --primary-mid:   #0d3561;
+  --primary-light: #1356a0;
+  --accent:        #2ea3f2;
+
+  --ember-red:  #ff333d;
+  --ember-dark: #e0202a;
+
+  --text:       #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg:   #f8f9fa;
+  --card-bg:    #ffffff;
+  --border:     #e9ecef;
+  --green:      #27AE60;
+  --yellow:     #F39C12;
+  --red:        #E74C3C;
+  --orange:     #E67E22;
+  --teal:       #00B4D8;
+  --blue:       #3498DB;
+}
+
+/* =============================================================
+   RESET & BASE
+   ============================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* =============================================================
+   DECK & SLIDES
+   ============================================================= */
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none; flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #fff;
+}
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+.slide.dark .stat-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.10); }
+.slide.dark table th  { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td  { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* =============================================================
+   TYPOGRAPHY
+   ============================================================= */
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 18px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 20px; line-height: 1.5; }
+.slide-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px; }
+.slide.dark .slide-label { color: var(--accent); }
+
+/* =============================================================
+   STAT CARDS
+   ============================================================= */
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 140px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+.stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.teal   { color: var(--teal); }
+.red    { color: var(--red); }
+.orange { color: var(--orange); }
+.green  { color: var(--green); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.accent { color: var(--accent); }
+
+/* =============================================================
+   ANNOTATIONS
+   ============================================================= */
+.annotation {
+  background: #FFF8E1; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 12px 16px;
+  font-size: 14px; margin: 12px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info    { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger  { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: #1B5E20; }
+
+/* =============================================================
+   TABLES
+   ============================================================= */
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.5px; color: var(--text-light);
+  text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+tr.you td { background: #E3F2FD; font-weight: 600; }
+tr.you td:first-child { border-left: 3px solid var(--accent); }
+.right { text-align: right; }
+.bold  { font-weight: 700; }
+.dim   { opacity: 0.55; font-size: 12px; }
+
+/* =============================================================
+   BAR CHARTS
+   ============================================================= */
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.bar-row   { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 80px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill  {
+  height: 100%; border-radius: 6px;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px; font-size: 12px; font-weight: 700; color: white;
+  min-width: 36px;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, #0096c7, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #1a7abf, var(--accent)); }
+
+/* =============================================================
+   PILLS / BADGES
+   ============================================================= */
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.pill.high   { background: #FFEBEE; color: var(--red); }
+.pill.med    { background: #FFF3E0; color: var(--orange); }
+.pill.low    { background: #E8F5E9; color: #1B5E20; }
+.pill.top    { background: #EDE7F6; color: #4527A0; }
+.pill.win    { background: #E3F2FD; color: #01579B; }
+.pill.seo    { background: #E8F5E9; color: #1B5E20; }
+.pill.paid   { background: #E3F2FD; color: #0D47A1; }
+.pill.web    { background: #F3E5F5; color: #6A1B9A; }
+.pill.ai     { background: #E8EAF6; color: #283593; }
+
+/* =============================================================
+   LAYOUT
+   ============================================================= */
+.two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.four-col  { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 18px; }
+.flex-grow { flex: 1; }
+
+/* =============================================================
+   CHANNEL CARDS
+   ============================================================= */
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; font-size: 17px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 14px; margin-bottom: 5px;
+  font-size: 13px; line-height: 1.5; color: var(--text);
+}
+.channel-card ul li::before {
+  content: ''; position: absolute; left: 0; top: 7px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+}
+
+/* =============================================================
+   TIMELINE / ROADMAP
+   ============================================================= */
+.timeline { display: flex; gap: 0; margin: 12px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; display: block; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 13px; margin-bottom: 4px; font-size: 13px; line-height: 1.4; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+.phase-note { font-size: 11px; color: var(--text-light); font-weight: 400; }
+
+/* =============================================================
+   SCOPE LISTS (Web Dev / AEO slides)
+   ============================================================= */
+.scope-section h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 8px; margin-top: 16px; }
+.scope-section h4:first-child { margin-top: 0; }
+.scope-section ul { list-style: none; padding: 0; margin-bottom: 4px; }
+.scope-section ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 13px; line-height: 1.4; color: var(--text); }
+.scope-section ul li::before { content: '→'; position: absolute; left: 0; font-size: 11px; color: var(--accent); top: 1px; }
+
+/* =============================================================
+   UTILITY
+   ============================================================= */
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.text-center { text-align: center; }
+
+/* =============================================================
+   LOGO ROW
+   ============================================================= */
+.logo-row {
+  margin-top: auto; padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date  { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+/* =============================================================
+   PROGRESS BAR
+   ============================================================= */
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100; transition: width 0.3s ease;
+}
+
+/* =============================================================
+   NAVIGATION
+   ============================================================= */
+.nav {
+  position: fixed; bottom: 24px; right: 32px;
+  display: flex; align-items: center; gap: 12px; z-index: 100;
+}
+.nav button {
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.45); color: white;
+  font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+.counter {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.35); padding: 6px 14px; border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; } h2 { font-size: 28px; }
+  .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ============================================================
+     SLIDE 1 · TITLE
+     ============================================================ -->
+<div class="slide dark active" data-slide="1">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <p class="slide-label">Growth Audit · April 2026</p>
+    <h1>Alliance Plumbing</h1>
+    <p class="subtitle">1.24 million impressions. 0.58% CTR. Your next 2,000 customers are already searching — they're just not clicking you first.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">7,187</div>
+        <div class="stat-label">Annual Clicks (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">1.24M</div>
+        <div class="stat-label">Annual Impressions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">0.58%</div>
+        <div class="stat-label">Avg. Click-Through Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">23.0</div>
+        <div class="stat-label">Avg. Search Position</div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared for Kelly Caudel &mdash; April 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 2 · CURRENT STATE
+     ============================================================ -->
+<div class="slide" data-slide="2">
+  <p class="slide-label">Current State</p>
+  <h2>Where You Are Today</h2>
+  <p class="subtitle">allianceplumbingservices.com &mdash; Webster, TX · Data from Google Search Console</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value teal">7,187</div>
+      <div class="stat-label">Clicks (Apr 25–Mar 26)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value accent">1.24M</div>
+      <div class="stat-label">Total Impressions</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">0.58%</div>
+      <div class="stat-label">Avg. CTR</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value orange">23.0</div>
+      <div class="stat-label">Avg. Position</div>
+    </div>
+  </div>
+
+  <div class="two-col flex-grow mt-16">
+    <div>
+      <h3 class="green">✓ What's Working</h3>
+      <ul style="list-style:none;padding:0;margin-top:12px;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">📝 One blog post ranks #1–2 for water heater queries — driving <strong>5,518 clicks</strong> (77% of all traffic)</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">📍 GBP listing delivering <strong>427 direct visits</strong> via Google Maps</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">🔍 <em>"plumbing webster tx"</em> ranking position <strong>2.6</strong> with 3,721 impressions</li>
+        <li style="padding:8px 0;font-size:14px;">⭐ Branded searches converting at <strong>12.6% CTR</strong> — strong brand trust</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="red">✗ What's Holding You Back</h3>
+      <ul style="list-style:none;padding:0;margin-top:12px;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">🚨 <em>"Plumber near me"</em> — <strong>11,406 impressions</strong> at position 16.5 → only <strong>10 clicks</strong></li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">🏠 Homepage at position <strong>24.5</strong> despite 92,777 impressions — 0.4% CTR</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">📉 Nearly all traffic is <strong>informational</strong>, not commercial service intent</li>
+        <li style="padding:8px 0;font-size:14px;">🗺️ <strong>Zero top-3 map pack</strong> rankings for core service keywords</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 3 · TRAFFIC TRENDS
+     ============================================================ -->
+<div class="slide" data-slide="3">
+  <p class="slide-label">Traffic Trends</p>
+  <h2>12-Month Organic Trajectory</h2>
+  <p class="subtitle">Monthly clicks — Google Search Console · Apr 2025 to Mar 2026</p>
+
+  <div class="bar-chart flex-grow">
+    <div class="bar-row">
+      <span class="bar-label">Apr 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:4%;">107</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">May 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:5%;">116</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Jun 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:5%;">121</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Jul 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:4%;">101</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Aug 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:5%;">119</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Sep 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:6%;">138</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Oct 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:5%;">134</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Nov 2025</span>
+      <div class="bar-track"><div class="bar-fill yellow" style="width:14%;">339</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Dec 2025</span>
+      <div class="bar-track"><div class="bar-fill yellow" style="width:32%;">802</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Jan 2026</span>
+      <div class="bar-track"><div class="bar-fill green" style="width:100%;">2,488 ← Peak</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Feb 2026</span>
+      <div class="bar-track"><div class="bar-fill blue" style="width:63%;">1,568</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Mar 2026</span>
+      <div class="bar-track"><div class="bar-fill blue" style="width:46%;">1,154</div></div>
+    </div>
+  </div>
+
+  <div class="annotation mt-12">
+    <strong>Key takeaway:</strong> One water heater blog post triggered a <strong>23x traffic spike</strong> (Jan 2026: 2,488 clicks) — proving strong content authority. But the traffic is almost entirely informational. <em>"Plumber near me"</em> still sits at position 16.5 with <strong>11,406 monthly impressions</strong> and only 10 clicks. Moving that single keyword into the top 3 map pack at a 15% CTR = <strong>1,700+ monthly visits from one keyword.</strong>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 4 · COMPETITOR LANDSCAPE
+     ============================================================ -->
+<div class="slide" data-slide="4">
+  <p class="slide-label">Competitive Landscape</p>
+  <h2>How You Stack Up</h2>
+  <p class="subtitle">SE Houston / Bay Area plumbing market &mdash; Webster, League City, Clear Lake, Pearland</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Est. Monthly Traffic</th>
+        <th>Keywords Ranking</th>
+        <th>Domain Rating</th>
+        <th>Referring Domains</th>
+        <th>Est. Traffic Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="you">
+        <td><strong>⭐ Alliance Plumbing</strong> <span class="dim">(you)</span></td>
+        <td class="bold teal">~599 avg / 1,737 recent</td>
+        <td>~110</td>
+        <td>~18</td>
+        <td>~22</td>
+        <td>~$1,200</td>
+      </tr>
+      <tr>
+        <td><strong>Knight's Plumbing</strong> <span class="dim">knightsplumbing.com</span></td>
+        <td>~850</td>
+        <td>~195</td>
+        <td>~27</td>
+        <td>~52</td>
+        <td>~$2,400</td>
+      </tr>
+      <tr>
+        <td><strong>Epic Plumbing</strong> <span class="dim">epicservices.com</span></td>
+        <td>~620</td>
+        <td>~155</td>
+        <td>~24</td>
+        <td>~41</td>
+        <td>~$1,800</td>
+      </tr>
+      <tr>
+        <td><strong>Space City Plumbing</strong> <span class="dim">spacecityplumbing.com</span></td>
+        <td>~190</td>
+        <td>~45</td>
+        <td>~14</td>
+        <td>~16</td>
+        <td>~$420</td>
+      </tr>
+      <tr>
+        <td><strong>All Clear Plumbing</strong> <span class="dim">allclearplumbinghouston.com</span></td>
+        <td>~310</td>
+        <td>~72</td>
+        <td>~17</td>
+        <td>~24</td>
+        <td>~$750</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation danger mt-16">
+    <strong>Gap alert:</strong> Knight's Plumbing (est. 2000) leads the local pack with ~850 monthly visits and a DR of 27. But <strong>your recent content momentum is already outpacing Space City and All Clear</strong> — you ranked #1 for a national water heater keyword that drove 2,488 clicks in January alone. The gap to close is commercial intent: map pack + transactional pages.
+  </div>
+
+  <p style="font-size:11px;color:var(--text-light);margin-top:8px;">* Alliance Plumbing traffic from Google Search Console. Competitor metrics estimated from SEMrush / SimilarWeb research — verify in SEMrush for final figures.</p>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 5 · KEYWORD OPPORTUNITIES
+     ============================================================ -->
+<div class="slide" data-slide="5">
+  <p class="slide-label">Keyword Opportunities</p>
+  <h2>Map Pack Keywords to Own</h2>
+  <p class="subtitle">15 priority keywords — current GSC position vs. map pack target across Webster, League City & Clear Lake</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Keyword</th>
+        <th>GSC Impressions/mo</th>
+        <th>Current Position</th>
+        <th>Competition</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td><td><strong>plumber near me</strong></td>
+        <td>11,406</td><td style="color:var(--red);font-weight:700;">16.5</td>
+        <td><span class="pill high">High</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>2</td><td><strong>plumbing company near me</strong></td>
+        <td>5,411</td><td style="color:var(--red);font-weight:700;">16.0</td>
+        <td><span class="pill high">High</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>3</td><td><strong>plumbing services</strong></td>
+        <td>8,834</td><td style="color:var(--red);font-weight:700;">17.7</td>
+        <td><span class="pill high">High</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>4</td><td><strong>plumbers near me</strong></td>
+        <td>4,089</td><td style="color:var(--red);font-weight:700;">14.7</td>
+        <td><span class="pill high">High</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>5</td><td><strong>plumber clear lake</strong></td>
+        <td>3,247</td><td style="color:var(--orange);font-weight:700;">11.5</td>
+        <td><span class="pill med">Medium</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+      <tr>
+        <td>6</td><td><strong>plumbing near me</strong></td>
+        <td>987</td><td style="color:var(--red);font-weight:700;">15.7</td>
+        <td><span class="pill high">High</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>7</td><td>plumbers webster tx</td>
+        <td>696</td><td style="color:var(--orange);font-weight:700;">10.3</td>
+        <td><span class="pill med">Medium</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+      <tr>
+        <td>8</td><td>emergency plumbing league city</td>
+        <td>927</td><td style="color:var(--red);font-weight:700;">23.0</td>
+        <td><span class="pill med">Medium</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>9</td><td>water heater repair webster tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill med">Medium</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>10</td><td>drain cleaning webster tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill med">Medium</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+      <tr>
+        <td>11</td><td>plumber league city tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill high">High</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+      <tr>
+        <td>12</td><td>slab leak repair webster tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill low">Low</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>13</td><td>24 hour plumber webster tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill high">High</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+      <tr>
+        <td>14</td><td>leak detection clear lake tx</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill low">Low</span></td><td><span class="pill top">⭐ #1 Priority</span></td>
+      </tr>
+      <tr>
+        <td>15</td><td>water heater installation league city</td>
+        <td>—</td><td style="color:var(--red);font-weight:700;">Not ranking</td>
+        <td><span class="pill low">Low</span></td><td><span class="pill win">Quick Win</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation info mt-12">
+    <strong>The math:</strong> Top 4 keywords alone have <strong>30,737 combined monthly impressions</strong>. At a conservative 10% map pack CTR, that's <strong>3,000+ additional monthly visits</strong> — all commercial, high-intent traffic.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 6 · STRATEGY OVERVIEW
+     ============================================================ -->
+<div class="slide" data-slide="6">
+  <p class="slide-label">Recommended Strategy</p>
+  <h2>How We'd Grow Alliance Plumbing</h2>
+  <p class="subtitle">A fully integrated 4-channel system — from map pack to AI search</p>
+
+  <div class="four-col flex-grow mt-16">
+    <div class="channel-card">
+      <div class="channel-icon">📍</div>
+      <h3>Local SEO + Maps</h3>
+      <ul>
+        <li>GBP creation &amp; optimization</li>
+        <li>Top-3 map pack guaranteed in 90 days (10 keywords)</li>
+        <li>5 localized service/area pages per month</li>
+        <li>5 backlinks/mo + citation building</li>
+        <li>10 technical SEO changes/mo</li>
+        <li>Google LSA management (free w/ SEO)</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">🎯</div>
+      <h3>Paid Media</h3>
+      <ul>
+        <li>Meta &amp; Google Ads campaigns</li>
+        <li>Bid strategy optimization</li>
+        <li>Lead monitoring &amp; dispute mgmt</li>
+        <li>Bi-weekly experiment reports</li>
+        <li>Monthly strategy calls</li>
+        <li>2 channels included</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">💻</div>
+      <h3>Web Development</h3>
+      <ul>
+        <li>Custom WordPress (up to 10 pages)</li>
+        <li>Online payment + shopping cart</li>
+        <li>GA4 + Meta &amp; Google Pixel</li>
+        <li>CRO roadmap (100+ point eval)</li>
+        <li>Market research + ICP analysis</li>
+        <li>12-month growth plan</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">🤖</div>
+      <h3>AI Visibility (AEO)</h3>
+      <ul>
+        <li>5 AEO placements per month</li>
+        <li>ChatGPT / Perplexity / Gemini</li>
+        <li>Structured data &amp; schema</li>
+        <li>Entity authority building</li>
+        <li>Knowledge graph optimization</li>
+        <li>Monthly performance reporting</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 7 · ROADMAP
+     ============================================================ -->
+<div class="slide" data-slide="7">
+  <p class="slide-label">Roadmap</p>
+  <h2>First 90 Days</h2>
+  <p class="subtitle">Three phases — from foundation to full commercial acceleration</p>
+
+  <div class="timeline flex-grow">
+    <div class="timeline-phase">
+      <span class="phase-label">Month 1 — Foundation</span>
+      <h4>Setup &amp; Research</h4>
+      <ul>
+        <li>Google Business Profile optimization</li>
+        <li>Full technical SEO audit</li>
+        <li>Sitemap, robots.txt, Local Schema</li>
+        <li>Citation building &amp; Google Map embed</li>
+        <li>Keyword research &amp; site mapping</li>
+        <li>Market research + ICP + competitor analysis</li>
+        <li>Figma design kickoff (web dev)</li>
+        <li>Meta &amp; Google Ads account setup + launch</li>
+        <li>First 5 AEO placements submitted</li>
+      </ul>
+      <div class="phase-cost">$5,650/mo <span class="phase-note">+ $5,500 one-time (web)</span></div>
+    </div>
+    <div class="timeline-phase">
+      <span class="phase-label">Month 2 — Momentum</span>
+      <h4>Content &amp; Development</h4>
+      <ul>
+        <li>GBP management (posts, photos, monitoring)</li>
+        <li>5 localized articles / service area pages</li>
+        <li>5 backlinks built</li>
+        <li>10 technical SEO changes implemented</li>
+        <li>Growth plan deliverables + alignment call</li>
+        <li>Website development phase begins</li>
+        <li>Bi-weekly paid media experiments + reports</li>
+        <li>Next 5 AEO placements live</li>
+        <li>Rank tracking dashboard shared</li>
+      </ul>
+      <div class="phase-cost">$5,650/mo</div>
+    </div>
+    <div class="timeline-phase">
+      <span class="phase-label">Month 3 — Acceleration</span>
+      <h4>Launch &amp; Scale</h4>
+      <ul>
+        <li>Map pack ranking results confirmed</li>
+        <li>Continued localized content production</li>
+        <li>Website goes live</li>
+        <li>Full paid media optimization cycles</li>
+        <li>AEO placements expanding reach</li>
+        <li>Lead volume + cost-per-lead analysis</li>
+        <li>30-60-90 milestone review call</li>
+        <li>Renewal strategy discussion</li>
+        <li>Capital &amp; funding introductions</li>
+      </ul>
+      <div class="phase-cost">$5,650/mo</div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 8 · INVESTMENT
+     ============================================================ -->
+<div class="slide" data-slide="8">
+  <p class="slide-label">Investment</p>
+  <h2>Pricing &amp; Deliverables</h2>
+  <p class="subtitle">Everything you need to dominate local search and generate consistent inbound leads</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Billing</th>
+        <th>Price</th>
+        <th>Key Deliverables</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="pill seo">Local SEO</span> <strong style="margin-left:6px;">Local SEO + Guaranteed Maps</strong></td>
+        <td>Monthly</td>
+        <td class="bold">$2,150/mo</td>
+        <td style="font-size:13px;color:var(--text-light);">GBP mgmt · 10 kw guaranteed top-3 · 5 pages/mo · 5 links/mo · 10 tech changes</td>
+      </tr>
+      <tr>
+        <td><span class="pill seo">Local SEO</span> <strong style="margin-left:6px;">Google Local Service Ads</strong></td>
+        <td>Monthly</td>
+        <td class="bold green">FREE</td>
+        <td style="font-size:13px;color:var(--text-light);">Bid optimization · lead monitoring · dispute management · monthly reporting</td>
+      </tr>
+      <tr>
+        <td><span class="pill paid">Paid Media</span> <strong style="margin-left:6px;">Meta &amp; Google Ads</strong></td>
+        <td>Monthly</td>
+        <td class="bold">$1,500/mo</td>
+        <td style="font-size:13px;color:var(--text-light);">2 channels · brand discovery · bi-weekly reports · experiment tracker · monthly calls</td>
+      </tr>
+      <tr>
+        <td><span class="pill ai">AEO</span> <strong style="margin-left:6px;">AI Visibility Starter</strong></td>
+        <td>Monthly</td>
+        <td class="bold">$1,000/mo</td>
+        <td style="font-size:13px;color:var(--text-light);">5 AEO placements/mo · ChatGPT/Perplexity/Gemini · entity authority · reporting</td>
+      </tr>
+      <tr>
+        <td><span class="pill" style="background:#FCE4EC;color:#880E4F;">Social</span> <strong style="margin-left:6px;">Social Media Management</strong></td>
+        <td>Monthly</td>
+        <td class="bold">$1,000/mo</td>
+        <td style="font-size:13px;color:var(--text-light);">16 posts/mo · comment &amp; DM moderation · 3 channels: Facebook, Instagram, TikTok</td>
+      </tr>
+      <tr>
+        <td><span class="pill web">Web Dev</span> <strong style="margin-left:6px;">Custom WordPress Website</strong></td>
+        <td>One-Time</td>
+        <td class="bold">$5,500</td>
+        <td style="font-size:13px;color:var(--text-light);">10-page build · GA4 + pixels · SEO essentials · growth plan · CRO roadmap · market research</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="font-weight:700;border-top:2px solid var(--border);background:var(--light-bg);">
+        <td>Monthly Total</td>
+        <td></td>
+        <td style="font-size:20px;color:var(--primary-dark);">$5,650/mo</td>
+        <td style="font-size:13px;color:var(--text-light);">+ $5,500 one-time web dev &nbsp;·&nbsp; ad spend billed directly to client</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="annotation success mt-16">
+    <strong>What you get:</strong> A fully managed growth engine — map pack rankings, paid leads from day one, a high-converting website, and AI visibility that puts you ahead of every local competitor not yet optimizing for ChatGPT and Perplexity.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 9 · WEB DEVELOPMENT
+     ============================================================ -->
+<div class="slide" data-slide="9">
+  <p class="slide-label">Scope of Work</p>
+  <h2>Web Development</h2>
+  <p class="subtitle">Custom WordPress website with optimized design &amp; development &mdash; One-Time: $5,500</p>
+
+  <div class="three-col flex-grow mt-16">
+    <div class="scope-section">
+      <h4>Features</h4>
+      <ul>
+        <li>Design, development &amp; copywriting (up to 10 pages)</li>
+        <li>Unlimited revisions in design phase</li>
+        <li>Online payment setup</li>
+        <li>Shopping cart integration</li>
+        <li>Unlimited product listings with details</li>
+        <li>Content management tools</li>
+        <li>GA4 setup (5 custom/enhanced events)</li>
+        <li>Meta &amp; Google Pixel installation</li>
+        <li>Pre-configured conversion plugins</li>
+        <li>Account management throughout</li>
+        <li>Exclusive funding &amp; capital access via EmberTribe network</li>
+      </ul>
+
+      <h4>SEO Essentials</h4>
+      <ul>
+        <li>Keyword research</li>
+        <li>Technical SEO assessment &amp; implementation</li>
+        <li>Meta/alt tags, URL structure, indexing</li>
+        <li>On-page optimizations</li>
+      </ul>
+    </div>
+
+    <div class="scope-section">
+      <h4>Growth Essentials — Research</h4>
+      <ul>
+        <li>Market research</li>
+        <li>Competitor analysis</li>
+        <li>ICP research</li>
+        <li>CRO Roadmap — 100+ point evaluation</li>
+      </ul>
+
+      <h4>Growth Plan</h4>
+      <ul>
+        <li>Creative angles / messaging</li>
+        <li>Creative pillars / table stakes</li>
+        <li>12-month strategy</li>
+        <li>30-60-90 day milestones</li>
+        <li>Tech stack analysis</li>
+      </ul>
+    </div>
+
+    <div class="scope-section">
+      <h4>Timeline</h4>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+        <div style="border-left:3px solid var(--ember-red);background:var(--light-bg);border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Setup Phase</div>
+          <div style="font-size:12px;color:var(--text-light);">Market research · competitor analysis · ICP · keyword research · CRO Roadmap · Alignment Call</div>
+        </div>
+        <div style="border-left:3px solid var(--yellow);background:var(--light-bg);border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Design Phase</div>
+          <div style="font-size:12px;color:var(--text-light);">Figma designs (unlimited revisions) · Technical SEO · Growth Plan deliverables · Alignment Call</div>
+        </div>
+        <div style="border-left:3px solid var(--green);background:var(--light-bg);border-radius:0 8px 8px 0;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Development Phase</div>
+          <div style="font-size:12px;color:var(--text-light);">Development mode begins (no more revisions) · Site goes live</div>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--text-light);margin-top:10px;">Timeline begins after Intake Call and invoice is paid.</p>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 10 · AEO / AI VISIBILITY
+     ============================================================ -->
+<div class="slide" data-slide="10">
+  <p class="slide-label">AI Visibility</p>
+  <h2>AEO — AI Visibility Starter</h2>
+  <p class="subtitle">Be found where the next generation of search is happening &mdash; $1,000/month</p>
+
+  <div class="two-col flex-grow mt-16">
+    <div>
+      <div class="channel-card mb-16" style="border-left:3px solid var(--blue);">
+        <h3 style="color:var(--blue);">Why AI Visibility Matters Now</h3>
+        <ul>
+          <li>ChatGPT, Perplexity, and Gemini are replacing Google for local service recommendations</li>
+          <li>40%+ of consumers now use AI assistants to find service providers</li>
+          <li>Early movers capture dominant share before competitors catch up</li>
+          <li>AI citations drive high-intent, pre-qualified leads directly</li>
+          <li>Zero Alliance Plumbing competitors currently optimizing for AEO</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-left:3px solid var(--accent);">
+        <h3 style="color:var(--accent);">What's Included — Starter Package</h3>
+        <ul>
+          <li><strong>5 AEO placements per month</strong></li>
+          <li>Optimization for ChatGPT, Perplexity &amp; Gemini</li>
+          <li>Structured data &amp; schema markup</li>
+          <li>Entity authority building</li>
+          <li>Knowledge graph optimization</li>
+          <li>AI answer engine monitoring &amp; monthly reporting</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(46,163,242,0.08),rgba(8,33,54,0.08));border:1px solid rgba(46,163,242,0.25);border-radius:14px;padding:40px;text-align:center;gap:12px;">
+      <div style="font-size:52px;">🤖</div>
+      <div style="font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);">AI Visibility Starter</div>
+      <div style="font-size:42px;font-weight:900;color:var(--primary-dark);">$1,000</div>
+      <div style="font-size:14px;color:var(--text-light);">per month</div>
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%;margin-top:12px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="color:var(--green);font-weight:900;">✓</span> 5 AEO Placements / Month</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="color:var(--green);font-weight:900;">✓</span> Multi-platform AI optimization</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="color:var(--green);font-weight:900;">✓</span> Monthly performance reporting</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;"><span style="color:var(--green);font-weight:900;">✓</span> Entity &amp; authority building</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Alliance Plumbing &mdash; Growth Audit</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 11 · NEXT STEPS
+     ============================================================ -->
+<div class="slide dark" data-slide="11">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <p class="slide-label">Next Steps</p>
+    <h1>Ready to Grow?</h1>
+    <p class="subtitle" style="text-align:center;max-width:600px;">Let's put Alliance Plumbing in the top 3 for every service keyword in Webster, League City, and Clear Lake — before your competitors do.</p>
+
+    <div class="mt-24" style="display:grid;grid-template-columns:repeat(4,1fr);gap:28px;width:100%;max-width:720px;">
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:white;">$5,650</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Monthly Investment</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:white;">90 Days</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">To Map Pack Rankings</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:white;">4 Channels</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Fully Integrated</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:900;color:white;">3,000+</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;">Est. New Monthly Visits</div>
+      </div>
+    </div>
+
+    <div class="mt-24">
+      <p style="font-size:18px;font-weight:600;">Book your onboarding call to get started</p>
+      <p style="font-size:16px;color:rgba(255,255,255,0.5);margin-top:8px;">tj@embertribe.com &nbsp;·&nbsp; embertribe.com</p>
+    </div>
+
+    <div class="logo-row" style="width:100%;">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Confidential &mdash; April 2026</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+</body>
+</html>
