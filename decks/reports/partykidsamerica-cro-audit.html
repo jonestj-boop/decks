@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRO Audit -Party Kids America</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --surface2: #f1f3f8;
+      --border: #e2e8f0;
+      --accent: #5b3fd4;
+      --accent-dim: rgba(91, 63, 212, 0.08);
+      --red: #dc2626;
+      --red-dim: #fef2f2;
+      --orange: #ea580c;
+      --orange-dim: #fff7ed;
+      --yellow: #d97706;
+      --yellow-dim: #fffbeb;
+      --green: #16a34a;
+      --green-dim: #f0fdf4;
+      --text: #1a1a2e;
+      --text-muted: #374151;
+      --text-dim: #9ca3af;
+      --mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* HEADER */
+    .report-header {
+      background: linear-gradient(135deg, #3a2a8a 0%, #5b3fd4 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 0 56px;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 28px; }
+    .report-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-dim); border: 1px solid rgba(124,92,252,0.3);
+      color: #a989ff; border-radius: 4px; padding: 4px 10px;
+      font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .report-tag::before { content: '●'; font-size: 8px; }
+    h1 { font-size: 38px; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 12px; color: #fff; }
+    h1 span { color: #c8b8ff; }
+    .report-meta { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .report-meta strong { color: #fff; }
+
+    /* SCORE CARDS */
+    .score-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+      margin-top: 48px; margin-bottom: 56px;
+    }
+    @media (max-width: 680px) { .score-grid { grid-template-columns: repeat(2, 1fr); } }
+    .score-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 22px 20px;
+    }
+    .score-card .label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 8px; }
+    .score-card .value { font-size: 32px; font-weight: 700; line-height: 1; }
+    .score-card .sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .score-red .value { color: var(--red); }
+    .score-orange .value { color: var(--orange); }
+    .score-yellow .value { color: var(--yellow); }
+    .score-accent .value { color: var(--accent); }
+
+    /* SECTION TITLES */
+    .section { margin-bottom: 64px; }
+    .section-label {
+      font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--text-dim); margin-bottom: 24px; display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+
+    /* EXEC SUMMARY */
+    .summary-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 28px 32px; line-height: 1.8;
+    }
+    .summary-box p { color: var(--text-muted); }
+    .summary-box p + p { margin-top: 12px; }
+    .highlight { color: var(--text); font-weight: 500; }
+
+    /* FUNNEL */
+    .funnel {
+      display: flex; align-items: center; gap: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; margin-bottom: 12px;
+    }
+    .funnel-step {
+      flex: 1; padding: 18px 16px; text-align: center; position: relative;
+      border-right: 1px solid var(--border);
+    }
+    .funnel-step:last-child { border-right: none; }
+    .funnel-step .step-name { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .funnel-step .step-issue { font-size: 13px; color: var(--text-muted); }
+    .funnel-step.critical { background: rgba(240,64,88,0.07); }
+    .funnel-step.warning { background: rgba(245,135,58,0.07); }
+    .funnel-step.ok { background: rgba(52,217,139,0.05); }
+    .funnel-arrow { color: var(--text-dim); font-size: 18px; flex-shrink: 0; padding: 0 4px; }
+    .funnel-note { font-size: 14px; color: var(--text-muted); margin-top: 8px; }
+
+    /* ISSUE CARDS */
+    .issue-group { margin-bottom: 48px; }
+    .priority-banner {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 20px; border-radius: 8px; margin-bottom: 20px;
+    }
+    .priority-banner.critical { background: var(--red-dim); border: 1px solid rgba(240,64,88,0.25); }
+    .priority-banner.high { background: var(--orange-dim); border: 1px solid rgba(245,135,58,0.25); }
+    .priority-banner.medium { background: var(--yellow-dim); border: 1px solid rgba(245,200,66,0.25); }
+    .priority-banner.low { background: var(--accent-dim); border: 1px solid rgba(124,92,252,0.25); }
+    .priority-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .critical .priority-dot { background: var(--red); }
+    .high .priority-dot { background: var(--orange); }
+    .medium .priority-dot { background: var(--yellow); }
+    .low .priority-dot { background: var(--accent); }
+    .priority-banner .label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .critical .label { color: var(--red); }
+    .high .label { color: var(--orange); }
+    .medium .label { color: var(--yellow); }
+    .low .label { color: #a989ff; }
+    .priority-banner .desc { font-size: 14px; color: var(--text-muted); margin-left: 4px; }
+
+    .issue-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; margin-bottom: 16px; overflow: hidden;
+    }
+    .issue-card:last-child { margin-bottom: 0; }
+    .issue-header {
+      padding: 20px 24px 16px; display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 16px;
+    }
+    .issue-header-left { flex: 1; }
+    .issue-number {
+      font-size: 13px; font-weight: 700; color: var(--text-dim);
+      font-family: var(--mono); margin-bottom: 4px;
+    }
+    .issue-title { font-size: 18px; font-weight: 600; line-height: 1.3; }
+    .issue-badges { display: flex; gap: 6px; flex-wrap: wrap; flex-shrink: 0; margin-top: 4px; }
+    .badge {
+      font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+      text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap;
+    }
+    .badge-page { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); text-decoration: none; cursor: pointer; }
+    a.badge-page:hover { background: #e8eaf6; color: var(--accent); border-color: var(--accent); text-decoration: none; }
+    .badge-effort-low { background: rgba(52,217,139,0.15); color: var(--green); }
+    .badge-effort-med { background: rgba(245,200,66,0.15); color: var(--yellow); }
+    .badge-effort-high { background: rgba(240,64,88,0.15); color: var(--red); }
+
+    .issue-body { padding: 0 24px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 640px) { .issue-body { grid-template-columns: 1fr; } }
+    .issue-section-title {
+      font-size: 13px; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--text-dim); font-weight: 700; margin-bottom: 8px;
+    }
+    .issue-text { font-size: 15px; color: var(--text-muted); line-height: 1.75; }
+    .issue-fix {
+      background: var(--surface2); border-radius: 8px; padding: 14px 16px;
+    }
+    .issue-fix .issue-section-title { color: var(--green); }
+    .issue-fix .issue-text { color: var(--text); }
+
+    .code-example {
+      font-family: var(--mono); font-size: 14px; background: var(--surface2);
+      border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px;
+      margin-top: 10px; color: var(--text); white-space: pre-wrap; line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-example .kw { color: var(--accent); }
+    .code-example .str { color: var(--green); }
+    .code-example .cm { color: var(--text-dim); }
+
+    /* GHL STEPS */
+    .issue-ghl {
+      margin: 0 24px 22px; padding: 14px 16px;
+      background: #eef3ff; border: 1px solid #c5d3f5;
+      border-radius: 8px;
+    }
+    .issue-ghl .issue-section-title { color: #3a5abf; margin-bottom: 8px; }
+    .issue-ghl ol { padding-left: 18px; }
+    .issue-ghl ol li { font-size: 15px; color: #2a3a6e; line-height: 1.75; margin-bottom: 4px; }
+    .issue-ghl ol li:last-child { margin-bottom: 0; }
+    .issue-ghl ol li strong { color: #1a2a5e; }
+
+    /* MASTER CHECKLIST */
+    .checklist { list-style: none; }
+    .checklist li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      font-size: 15px;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-box {
+      width: 18px; height: 18px; border: 2px solid var(--border);
+      border-radius: 4px; flex-shrink: 0; margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .checklist li .check-priority {
+      font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 3px;
+      flex-shrink: 0; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .cp-critical { background: var(--red-dim); color: var(--red); }
+    .cp-high { background: var(--orange-dim); color: var(--orange); }
+    .cp-medium { background: var(--yellow-dim); color: var(--yellow); }
+    .cp-low { background: var(--accent-dim); color: #a989ff; }
+    .check-text { flex: 1; color: var(--text-muted); }
+    .check-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+    /* DIVIDER */
+    hr { border: none; border-top: 1px solid var(--border); margin: 56px 0; }
+
+    /* FOOTER */
+    .report-footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 32px 0; margin-top: 80px;
+    }
+    .report-footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .report-footer p { font-size: 15px; color: var(--text-muted); }
+
+    /* UTILS */
+    .mt-4 { margin-top: 4px; }
+    .mt-8 { margin-top: 8px; }
+    .mt-12 { margin-top: 12px; }
+    .mt-16 { margin-top: 16px; }
+    .mt-24 { margin-top: 24px; }
+    .mb-8 { margin-bottom: 8px; }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* GA4 DATA TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 16px; }
+    .data-table th {
+      text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border);
+      font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--text-dim); font-weight: 700; background: var(--surface2);
+    }
+    .data-table th:first-child { border-radius: 8px 0 0 0; }
+    .data-table th:last-child { border-radius: 0 8px 0 0; }
+    .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--surface2); }
+    .data-table td:first-child { color: var(--text); font-family: var(--mono); font-size: 14px; }
+    .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .data-table .flag { color: var(--red); font-size: 13px; font-weight: 600; }
+    .data-table .good { color: var(--green); font-size: 13px; font-weight: 600; }
+    .stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (max-width: 680px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px 18px;
+    }
+    .stat-card .s-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-dim); margin-bottom: 6px; }
+    .stat-card .s-value { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-card .s-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .stat-card.s-red .s-value { color: var(--red); }
+    .stat-card.s-green .s-value { color: var(--green); }
+    .stat-card.s-orange .s-value { color: var(--orange); }
+
+    /* FUNNEL VISUAL */
+    .funnel-data {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; margin-bottom: 16px;
+    }
+    .funnel-row {
+      display: grid; grid-template-columns: 160px 1fr 100px 100px 100px;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      align-items: center; gap: 16px;
+    }
+    .funnel-row:last-child { border-bottom: none; }
+    .funnel-row.header { background: var(--surface2); }
+    .funnel-row.header span { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-dim); font-weight: 700; }
+    .funnel-row .f-step { font-size: 15px; font-weight: 600; }
+    .funnel-row .f-bar-wrap { position: relative; height: 8px; background: var(--surface2); border-radius: 4px; }
+    .funnel-row .f-bar { height: 8px; border-radius: 4px; background: var(--accent); }
+    .funnel-row .f-bar.drop { background: var(--red); }
+    .funnel-row .f-num { font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; color: var(--text); }
+    .funnel-row .f-pct { font-size: 15px; text-align: right; font-weight: 600; }
+    .funnel-row .f-abandon { font-size: 15px; text-align: right; }
+    .pct-red { color: var(--red); }
+    .pct-orange { color: var(--orange); }
+    .pct-green { color: var(--green); }
+    .device-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+    @media (max-width: 600px) { .device-grid { grid-template-columns: 1fr; } }
+    .device-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 18px 20px;
+    }
+    .device-card .d-name { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+    .device-card .d-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-muted); padding: 4px 0; border-bottom: 1px solid var(--border); }
+    .device-card .d-row:last-child { border-bottom: none; }
+    .device-card .d-row span:last-child { color: var(--text); font-weight: 500; }
+    .insight-box {
+      background: var(--accent-dim); border: 1px solid rgba(91,63,212,0.2);
+      border-radius: 8px; padding: 16px 20px; margin-top: 16px;
+      font-size: 15px; color: var(--text-muted); line-height: 1.75;
+    }
+    .insight-box strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="report-header">
+  <div class="container">
+    <div class="report-tag">CRO Audit</div>
+    <h1>Party Kids America<br /><span>Conversion Rate Optimization Report</span></h1>
+    <div class="report-meta">
+      <span><strong>Site:</strong> partykidsamerica.com</span>
+      <span><strong>Audit Date:</strong> April 2026</span>
+      <span><strong>Primary Goal:</strong> Purchase (Rental Booking)</span>
+      <span><strong>Prepared by:</strong> EmberTribe</span>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top: 56px; padding-bottom: 80px;">
+
+  <!-- SCORE CARDS -->
+  <div class="score-grid">
+    <div class="score-card score-red">
+      <div class="label">Critical Issues</div>
+      <div class="value">4</div>
+      <div class="sub">Blocking conversions now</div>
+    </div>
+    <div class="score-card score-orange">
+      <div class="label">High Priority</div>
+      <div class="value">7</div>
+      <div class="sub">Significant lift potential</div>
+    </div>
+    <div class="score-card score-yellow">
+      <div class="label">Medium Priority</div>
+      <div class="value">8</div>
+      <div class="sub">UX & trust improvements</div>
+    </div>
+    <div class="score-card score-accent">
+      <div class="label">Total Issues</div>
+      <div class="value">19</div>
+      <div class="sub">Across full funnel</div>
+    </div>
+  </div>
+
+  <!-- GA4 DATA -->
+  <div class="section">
+    <div class="section-label">01 -GA4 Data · Jan 13 – Apr 13, 2026</div>
+    <h2 class="mb-8">The Numbers Behind the Audit</h2>
+    <p class="issue-text mt-4" style="margin-bottom: 24px;">90-day data from GA4 funnel exploration and Pages & Screens report. This is what's actually happening, not estimated.</p>
+
+    <!-- FUNNEL STATS -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="s-label">Total Visitors</div>
+        <div class="s-value">1,572</div>
+        <div class="s-sub">Entered funnel</div>
+      </div>
+      <div class="stat-card s-red">
+        <div class="s-label">Overall CVR</div>
+        <div class="s-value">2.2%</div>
+        <div class="s-sub">35 purchases · benchmark 1.5–4%</div>
+      </div>
+      <div class="stat-card s-red">
+        <div class="s-label">Funnel Entry Drop</div>
+        <div class="s-value">73%</div>
+        <div class="s-sub">Left before product view</div>
+      </div>
+      <div class="stat-card s-orange">
+        <div class="s-label">Product → Cart</div>
+        <div class="s-value">71.6%</div>
+        <div class="s-sub">Abandon after viewing</div>
+      </div>
+      <div class="stat-card s-orange">
+        <div class="s-label">Cart → Purchase</div>
+        <div class="s-value">70.8%</div>
+        <div class="s-sub">Abandon at checkout</div>
+      </div>
+    </div>
+
+    <div style="font-size:13px; color:var(--text-dim); margin-bottom:16px; margin-top:-8px;">* Funnel stats (1,572 users) reflect a GA4 funnel exploration cohort — users tracked through this specific funnel sequence. The 4,684 active users shown in the Pages and Tech sections represents all-site traffic for the same period. Both are accurate for their respective scope.</div>
+
+    <!-- FUNNEL TABLE -->
+    <div class="funnel-data">
+      <div class="funnel-row header">
+        <span>Step</span>
+        <span>Drop-off bar</span>
+        <span style="text-align:right">Users</span>
+        <span style="text-align:right">% of Start</span>
+        <span style="text-align:right">Abandon rate</span>
+      </div>
+      <div class="funnel-row">
+        <div class="f-step">1 · Page view</div>
+        <div class="f-bar-wrap"><div class="f-bar" style="width:100%"></div></div>
+        <div class="f-num">1,572</div>
+        <div class="f-pct pct-green">100%</div>
+        <div class="f-abandon pct-red">73.1%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="f-step">2 · Product view</div>
+        <div class="f-bar-wrap"><div class="f-bar drop" style="width:26.9%"></div></div>
+        <div class="f-num">423</div>
+        <div class="f-pct pct-orange">26.9%</div>
+        <div class="f-abandon pct-red">71.6%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="f-step">3 · Add to Cart</div>
+        <div class="f-bar-wrap"><div class="f-bar drop" style="width:7.6%"></div></div>
+        <div class="f-num">120</div>
+        <div class="f-pct pct-orange">7.6%</div>
+        <div class="f-abandon pct-red">70.8%</div>
+      </div>
+      <div class="funnel-row">
+        <div class="f-step">4 · Purchase</div>
+        <div class="f-bar-wrap"><div class="f-bar" style="width:2.2%; background: var(--green)"></div></div>
+        <div class="f-num">35</div>
+        <div class="f-pct pct-red">2.2%</div>
+        <div class="f-abandon">—</div>
+      </div>
+    </div>
+
+    <!-- DEVICE BREAKDOWN -->
+    <h3 style="margin-top:28px; margin-bottom:4px;">Device Breakdown</h3>
+    <p class="issue-text" style="margin-bottom:0">Mobile drives more traffic and converts better at every stage -desktop users are the harder sell.</p>
+    <div class="device-grid">
+      <div class="device-card">
+        <div class="d-name">📱 Mobile</div>
+        <div class="d-row"><span>Visitors</span><span>919 (58.5%)</span></div>
+        <div class="d-row"><span>Reach product page</span><span>31.7%</span></div>
+        <div class="d-row"><span>Purchase rate</span><span>2.7%</span></div>
+        <div class="d-row"><span>Homepage abandon</span><span>68.3%</span></div>
+      </div>
+      <div class="device-card">
+        <div class="d-name">💻 Desktop</div>
+        <div class="d-row"><span>Visitors</span><span>650 (41.4%)</span></div>
+        <div class="d-row"><span>Reach product page</span><span>19.8%</span></div>
+        <div class="d-row"><span>Purchase rate</span><span>1.5%</span></div>
+        <div class="d-row"><span>Homepage abandon</span><span>80.2%</span></div>
+      </div>
+      <div class="device-card">
+        <div class="d-name">📊 Key Insight</div>
+        <div class="d-row"><span>Mobile CVR advantage</span><span style="color:var(--green)">+80% vs desktop</span></div>
+        <div class="d-row"><span>Desktop product reach gap</span><span style="color:var(--red)">−12pts vs mobile</span></div>
+        <div class="d-row"><span>Tablet purchases</span><span>0 of 3 visitors</span></div>
+        <div class="d-row"><span>Biggest lever</span><span style="color:var(--orange)">Desktop homepage</span></div>
+      </div>
+    </div>
+
+    <!-- PAGES REPORT -->
+    <h3 style="margin-top:28px; margin-bottom:4px;">Top Pages · Last 90 Days</h3>
+    <p class="issue-text" style="margin-bottom:12px;">Jan 13 – Apr 12, 2026. 36,332 total views · 4,684 active users · $7,535 total revenue · 46.59% avg bounce rate.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Page</th>
+          <th class="num">Views</th>
+          <th class="num">Active Users</th>
+          <th class="num">Views/User</th>
+          <th class="num">Avg Engagement</th>
+          <th class="num">Bounce Rate</th>
+          <th class="num">Revenue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>/  (Homepage)</td>
+          <td class="num">8,462</td><td class="num">2,240</td><td class="num">3.78</td>
+          <td class="num">48s <span class="flag">LOW</span></td>
+          <td class="num">44.4%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>2</td><td>/category/bounce-houses/</td>
+          <td class="num">3,496</td><td class="num">978</td><td class="num">3.57</td>
+          <td class="num">1m 05s</td>
+          <td class="num">17.1% <span class="good">LOW</span></td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>3</td><td>/category/water-slides/</td>
+          <td class="num">2,869</td><td class="num">634</td><td class="num">4.53</td>
+          <td class="num">1m 39s <span class="good">BEST</span></td>
+          <td class="num">20.4%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>4</td><td>/category/party-equipment/</td>
+          <td class="num">2,205</td><td class="num">622</td><td class="num">3.55</td>
+          <td class="num">58s</td>
+          <td class="num">19.8%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>5</td><td>/category/bounce-house-with-slides/</td>
+          <td class="num">2,039</td><td class="num">466</td><td class="num">4.38</td>
+          <td class="num">1m 36s</td>
+          <td class="num">11.3% <span class="good">BEST</span></td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>6</td><td>/cart/</td>
+          <td class="num">1,977</td><td class="num">378</td><td class="num">5.23</td>
+          <td class="num">2m 36s</td>
+          <td class="num">13.2%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>7</td><td>/category/</td>
+          <td class="num">1,819</td><td class="num">418</td><td class="num">4.35</td>
+          <td class="num">51s</td>
+          <td class="num">8.5%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>8</td><td>/order-by-date/</td>
+          <td class="num">784</td><td class="num">229</td><td class="num">3.42</td>
+          <td class="num">54s</td>
+          <td class="num">8.8%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>9</td><td>/category/interactives/</td>
+          <td class="num">752</td><td class="num">249</td><td class="num">3.02</td>
+          <td class="num">50s</td>
+          <td class="num">10.7%</td><td class="num">$0</td>
+        </tr>
+        <tr>
+          <td>10</td><td>/category/entertainment/</td>
+          <td class="num">624</td><td class="num">189</td><td class="num">3.30</td>
+          <td class="num">36s <span class="flag">LOW</span></td>
+          <td class="num">10.1%</td><td class="num">$0</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight-box">
+      <strong>Key observations from pages data:</strong> The homepage gets 47% of all users but only 48 seconds average engagement -people are landing and leaving fast with no clear next step. Water slides (1m 39s) and combo slides (1m 36s) have the highest engagement time, meaning those browsers are the most motivated -they need better conversion elements, not more traffic. The cart page (2m 36s engagement, 13.2% bounce) shows people spending real time there, suggesting they're evaluating carefully before abandoning -likely hitting the payment method wall.
+    </div>
+
+    <!-- ECOMMERCE TRACKING FLAG -->
+    <h3 style="margin-top:28px; margin-bottom:4px;">Ecommerce Item Tracking -Broken</h3>
+    <p class="issue-text" style="margin-bottom:12px;">Jan 13 – Apr 12, 2026 · Ecommerce purchases report. <span style="color:var(--text-dim); font-size:13px;">Note: "Views" counts below are pulled from the Pages &amp; Screens report (page views per product URL), not ecommerce item_view events — those events are not firing. Add-to-cart and purchase columns reflect ecommerce event data, which is why they show zero.</span></p>
+    <div style="background: var(--red-dim); border: 1px solid rgba(240,64,88,0.3); border-radius:8px; padding:16px 20px; margin-bottom:16px;">
+      <div style="font-size:15px; font-weight:700; color:var(--red); margin-bottom:6px;">⚠ TRACKING GAP - Item-level ecommerce events are not firing</div>
+      <div class="issue-text">GA4 shows 3,218 product views but <strong style="color:var(--text)">0 add-to-cart events and 0 purchase events</strong> at the item level. Total revenue of $7,535 exists in GA4 but is not attributed to any product. This means there is no way to know which specific rentals drive revenue, which items get viewed but never booked, or where in the product funnel customers drop off. Fixing ecommerce tracking should be treated as a parallel priority alongside the CRO fixes -without it, you can't measure the impact of any improvements.</div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Top Viewed Products (last 90 days)</th>
+          <th class="num">Views</th>
+          <th class="num">Add to Cart</th>
+          <th class="num">Purchased</th>
+          <th class="num">Revenue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Table Rentals for Events – Pearland &amp; Surrounding Areas</td><td class="num">106</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+        <tr><td>2</td><td>White Folding Chair Rentals – Pearland &amp; Nearby Areas</td><td class="num">99</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+        <tr><td>3</td><td>Mechanical Bull Party Rental – Serving Greater Houston</td><td class="num">98</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+        <tr><td>4</td><td>Face Painting</td><td class="num">93</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+        <tr><td>5</td><td>Sports Obstacle Course – Pearland Party Rental</td><td class="num">86</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+        <tr><td>6</td><td>Gamer Glitch Level Up Dual Slide Combo – Pearland, TX</td><td class="num">80</td><td class="num flag">0</td><td class="num flag">0</td><td class="num flag">$0</td></tr>
+      </tbody>
+    </table>
+    <div class="insight-box" style="margin-top:12px;">
+      <strong>What to note:</strong> Tables and chairs are the #1 and #2 most-viewed product pages -low-cost equipment items, not the premium inflatables. This suggests customers are actively researching full-event setups (not just a bounce house), making the "Frequently Booked Together" upsell strategy (issue M-01) even more valuable. The Mechanical Bull at #3 is a high-interest item with no conversions tracked -worth investigating whether it's actually converting offline.
+    </div>
+
+    <!-- TRAFFIC ACQUISITION -->
+    <h3 style="margin-top:28px; margin-bottom:4px;">Traffic Acquisition · Channel Performance</h3>
+    <p class="issue-text" style="margin-bottom:12px;">Jan 13 – Apr 12, 2026 · 4,684 active users · 7,251 sessions · $7,535 total revenue. <span style="color:var(--text-dim); font-size:13px;">"Key Events" = GA4 key events (custom events you've marked as conversions in GA4 settings) — not purchase transactions. High key event counts in Referral and Google Ads reflect form fills, clicks, or other tracked actions alongside revenue.</span></p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th class="num">Users</th>
+          <th class="num">Sessions</th>
+          <th class="num">Avg Session</th>
+          <th class="num">Engagement Rate</th>
+          <th class="num">Key Events</th>
+          <th class="num">Revenue</th>
+          <th class="num">Rev %</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cross-network (Google Ads)</td>
+          <td class="num">1,537 (32.8%)</td><td class="num">2,186</td><td class="num">5m 54s</td>
+          <td class="num good">72.5%</td><td class="num">33</td>
+          <td class="num good">$4,271</td><td class="num good">56.7%</td>
+        </tr>
+        <tr>
+          <td>Direct</td>
+          <td class="num">1,448 (30.9%)</td><td class="num">2,517</td><td class="num flag">2m 22s</td>
+          <td class="num flag">23%</td><td class="num">8</td>
+          <td class="num">$339</td><td class="num">4.5%</td>
+        </tr>
+        <tr>
+          <td>Organic Search</td>
+          <td class="num">918 (19.6%)</td><td class="num">1,348</td><td class="num">5m 34s</td>
+          <td class="num">61.3%</td><td class="num">10</td>
+          <td class="num flag">$71</td><td class="num flag">0.9%</td>
+        </tr>
+        <tr>
+          <td>Paid Search</td>
+          <td class="num">799 (17.1%)</td><td class="num">1,091</td><td class="num">5m 16s</td>
+          <td class="num good">72%</td><td class="num">21</td>
+          <td class="num">$642</td><td class="num">8.5%</td>
+        </tr>
+        <tr>
+          <td>Referral</td>
+          <td class="num">78 (1.7%)</td><td class="num">159</td><td class="num good">9m 55s</td>
+          <td class="num">52.8%</td><td class="num">41</td>
+          <td class="num good">$2,212</td><td class="num good">29.4%</td>
+        </tr>
+        <tr>
+          <td>Organic Social</td>
+          <td class="num">55 (1.2%)</td><td class="num">62</td><td class="num flag">1m 06s</td>
+          <td class="num">48.4%</td><td class="num">0</td>
+          <td class="num flag">$0</td><td class="num flag">0%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="insight-box" style="margin-top:12px;">
+      <strong>Three channel findings that demand action:</strong><br/><br/>
+      <strong>1. Referral is your highest-quality traffic by far.</strong> 1.7% of users, 29.4% of revenue, nearly 10 minutes average session duration. Someone is sending you buyers, not browsers. You need to identify where these referrals come from (check GA4 → Acquisition → Traffic acquisition → filter for Referral → break down by source) and invest in growing that channel.<br/><br/>
+      <strong>2. Direct traffic looks like a problem.</strong> 30.9% of users but 23% engagement rate (vs 53% site average) and only $339 revenue. This is either bot/spam traffic inflating your user count, or it's branded searches and return visitors who aren't converting -likely because they hit the homepage, see no clear path forward, and leave. Either way, this isn't real demand.<br/><br/>
+      <strong>3. Organic Search is bringing mid-funnel research traffic, not bottom-funnel buyers.</strong> 19.6% of users, 61% engagement, 5m 34s sessions -these visitors are actively researching, not ready to book. Only $71 in revenue (0.9%) despite strong engagement. This is consistent with informational search intent ("bounce house rental Pearland" vs "book bounce house now") -these users need more convincing at the product page and checkout level before they'll convert. The fix is on-site, not in the ad account.
+    </div>
+
+    <!-- TECH / DEVICE -->
+    <h3 style="margin-top:28px; margin-bottom:8px;">Tech Overview · Device &amp; OS</h3>
+    <div class="device-grid">
+      <div class="device-card">
+        <div class="d-name">Device Split</div>
+        <div class="d-row"><span>Mobile</span><span style="color:var(--green)">56.7% · 2,700 users</span></div>
+        <div class="d-row"><span>Desktop</span><span>43.0% · 2,000 users</span></div>
+        <div class="d-row"><span>Tablet</span><span>0.3% · 13 users</span></div>
+      </div>
+      <div class="device-card">
+        <div class="d-name">Top Operating Systems</div>
+        <div class="d-row"><span>iOS</span><span style="color:var(--orange)">2,200 users</span></div>
+        <div class="d-row"><span>Windows</span><span>1,500 users</span></div>
+        <div class="d-row"><span>Android</span><span>502 users</span></div>
+        <div class="d-row"><span>macOS</span><span>329 users</span></div>
+      </div>
+      <div class="device-card">
+        <div class="d-name">Top Browsers</div>
+        <div class="d-row"><span>Chrome</span><span>~2,500 users</span></div>
+        <div class="d-row"><span>Safari</span><span style="color:var(--orange)">~2,000 users</span></div>
+        <div class="d-row"><span>Edge</span><span>small share</span></div>
+        <div class="d-row"><span>Samsung Internet</span><span>small share</span></div>
+      </div>
+    </div>
+    <div class="insight-box" style="margin-top:12px;">
+      <strong>iOS + Safari is your primary customer environment.</strong> iOS has 2,200 users vs Android's 502 -that's 4:1. Safari is nearly as large as Chrome. Any payment integration (Stripe, Square) and checkout flow must be thoroughly tested on iOS Safari specifically. Apple Pay as a checkout option would be extremely relevant for this audience and could meaningfully lift mobile conversion rate given this OS split.
+    </div>
+  </div>
+
+  <!-- EXEC SUMMARY -->
+  <div class="section">
+    <div class="section-label">02 -Executive Summary</div>
+    <div class="summary-box">
+      <p>Party Kids America has a functional e-commerce rental site with real inventory, fair pricing, and a legitimate service area -but the site is leaving a significant amount of revenue on the table through several structural conversion blockers.</p>
+      <p>The <span class="highlight">single most damaging issue</span> is the payment model: the site accepts only cash or PayPal upon delivery, with no online credit card checkout. For a product that requires advance booking and a $50 deposit, this creates immediate hesitation. Most customers in 2026 expect to pay by card at the time of booking to confirm their reservation -the current model shifts all the commitment onto the customer with no reciprocal confirmation from the business.</p>
+      <p>Beyond payments, the site struggles with <span class="highlight">zero visible social proof</span>, a <span class="highlight">hero section that conveys no value proposition</span>, and <span class="highlight">critical purchase information buried in an FAQ page</span> instead of surfaced at the point of decision. There are also structural UX gaps -the availability calendar requires too many clicks to reach, delivery costs are hidden until late in the funnel, and product pages lack the details needed to justify the spend.</p>
+      <p>The good news: <span class="highlight">most of these fixes are execution-level changes</span>, not rebuilds. The product catalog is solid, pricing is competitive, and the service differentiation (Texas-inspected, no hidden fees, free delivery zones) is genuinely strong -it just isn't showing up where it needs to.</p>
+    </div>
+  </div>
+
+  <!-- FUNNEL MAP -->
+  <div class="section">
+    <div class="section-label">03 -Funnel Analysis</div>
+    <h2 class="mb-8">Where You're Losing Customers</h2>
+    <p class="issue-text mt-4" style="margin-bottom: 20px;">Each stage of the funnel has distinct issues. Red = active drop-off risk. Orange = friction that degrades confidence. Green = functioning adequately.</p>
+
+    <div class="funnel">
+      <div class="funnel-step warning">
+        <div class="step-name">Homepage</div>
+        <div class="step-issue">No value prop, carousel hero, weak trust</div>
+      </div>
+      <div class="funnel-step warning">
+        <div class="step-name">Category Page</div>
+        <div class="step-issue">No filters, no ratings, no urgency</div>
+      </div>
+      <div class="funnel-step critical">
+        <div class="step-name">Product Page</div>
+        <div class="step-issue">Missing reviews, rental terms, objection handling</div>
+      </div>
+      <div class="funnel-step warning">
+        <div class="step-name">Cart</div>
+        <div class="step-issue">Delivery fee reveal, accidental clear button</div>
+      </div>
+      <div class="funnel-step critical">
+        <div class="step-name">Checkout</div>
+        <div class="step-issue">Cash/PayPal only -no online card payment</div>
+      </div>
+    </div>
+    <p class="funnel-note">Highest-leverage areas to fix first: Checkout payment model, then Product page trust building, then Homepage value prop.</p>
+  </div>
+
+  <!-- CRITICAL ISSUES -->
+  <div class="section">
+    <div class="section-label">04 -Issues by Priority</div>
+
+    <div class="issue-group">
+      <div class="priority-banner critical">
+        <div class="priority-dot"></div>
+        <span class="label">Critical</span>
+        <span class="desc">— Fix these first. Each one is actively blocking or destroying purchase intent.</span>
+      </div>
+
+      <!-- C1 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">C-01</div>
+            <div class="issue-title">No online credit card payment -cash or PayPal upon delivery only</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Checkout</span>
+            <span class="badge badge-effort-high">High Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The FAQ explicitly states: "We accept Cash or PayPal upon delivery." There is no option to pay by credit or debit card at time of booking. For a rental service that requires customers to plan days or weeks ahead, this is a fundamental trust gap. A customer who can't pay by card has no confirmed booking -just a verbal promise. Most modern customers in this category expect to pay and confirm online, the same way they'd book Airbnb, a bounce house on a competitor site, or any other service requiring advance scheduling.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Integrate Stripe (or Square) for card payment at checkout. Collect the $50 deposit online at time of booking. Cash and PayPal can still be offered for the remaining balance on delivery. If a full payment processor integration isn't feasible immediately, even a "secure deposit by card" option through Stripe Checkout or a hosted payment link would be a meaningful improvement. This is the single highest-ROI change on this list.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>Go to <strong>Settings &gt; Payments &gt; Integrations</strong> and connect your Stripe account. GHL has native Stripe support with no third-party plugin needed.</li>
+            <li>In <strong>Payments &gt; Products</strong>, enable "Collect payment at checkout" for each rental. Set the $50 deposit as a required payment at time of order.</li>
+            <li>In the <strong>Website Builder</strong>, edit the checkout page and add a GHL Order Form element. Under payment settings, set it to "partial payment" mode so customers pay the deposit now and the balance on delivery.</li>
+            <li>Enable Apple Pay and Google Pay under <strong>Settings &gt; Payments &gt; Payment Methods</strong> - critical given 56% of your traffic is iOS.</li>
+            <li>Test the full checkout flow on an iPhone in Safari before going live.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- C2 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">C-02</div>
+            <div class="issue-title">Zero customer reviews or ratings visible anywhere on the site</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Sitewide</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Neither the homepage, category pages, product pages, nor checkout display any customer reviews, testimonials, star ratings, or Google review counts. For a service business where strangers are inviting equipment into their home or event, social proof is a primary trust mechanism. A parent booking a bounce house for their kid's birthday party wants validation that other parents have done this safely and had a good experience. The absence of any visible reviews creates doubt -not neutrality.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">1. Add a Google Reviews widget or manually embed 5-8 best reviews (with star rating, name, date) directly on the homepage and each product page. 2. Display a total review count and average star rating in the header or above the fold ("4.8 - 200+ Google Reviews"). 3. Add a testimonials section on the homepage above the fold, ideally with a photo of the actual event setup. Even a static section with 3 real quotes is a significant conversion lift over nothing.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, add a new section to your homepage. Use the "HTML/Custom Code" element to embed a Google Reviews widget (Elfsight or EmbedSocial both work with GHL). Paste the embed code directly into the element.</li>
+            <li>For a no-code option, go to <strong>Reputation &gt; Reviews</strong> in GHL - copy your best 5-8 reviews and manually build a testimonial section using GHL's card or column elements.</li>
+            <li>On each product page in the <strong>Website Builder</strong>, scroll to below the "Book Now" button and add a 3-column row with one testimonial quote per column.</li>
+            <li>In the <strong>Website Builder &gt; Header</strong>, add a small trust line with your Google star rating and review count. Style it as plain text - e.g. "4.8 stars - 200+ Google Reviews."</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- C3 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">C-03</div>
+            <div class="issue-title">Hero section has no value proposition -rotating carousel with no headline</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Homepage</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The homepage hero is a rotating image carousel with no persistent headline, no stated value proposition, and no qualifying statement about who the service is for. Visitors arriving from Google, social, or referrals have to infer what the business does from photos alone. Carousels have decades of documented evidence of poor conversion performance -users don't watch them, banner blindness kicks in, and they hide content from everyone except those who happen to see the first slide.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Replace the carousel with a single static hero image (your best setup photo) overlaid with a clear headline. Suggested format:
+            <div class="code-example"><span class="cm">// Hero headline structure</span>
+H1: <span class="str">"Party Rentals in Pearland -Delivered, Set Up &amp; Cleaned Up"</span>
+Subhead: <span class="str">"Bounce houses, water slides &amp; concessions for birthdays, schools &amp; corporate events. Serving SE Houston."</span>
+CTA: <span class="str">"Browse Rentals"</span> | <span class="str">"Check Availability"</span></div>
+This immediately tells who you are, where you serve, what you offer, and what to do next in under 3 seconds.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open your homepage and delete the existing slider/carousel element.</li>
+            <li>Add a new <strong>Section</strong> at the top with a full-width background image (upload your best event photo via Media Library). Set a dark overlay at 40% opacity so text is readable.</li>
+            <li>Inside the section, add a <strong>Heading</strong> element for your H1, a <strong>Paragraph</strong> for the subheadline, and a <strong>Button Row</strong> with two buttons: "Browse Rentals" linking to /category/ and "Check Availability" linking to /order-by-date/.</li>
+            <li>In the section settings, set min-height to 520px and center-align content vertically. Save and preview on mobile before publishing.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- C4 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">C-04</div>
+            <div class="issue-title">Delivery fee is hidden -not shown until late in the checkout funnel</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Cart / Checkout</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The FAQ states delivery fees are charged separately based on distance. But the site claims "NO hidden fees" prominently in the About page. The disconnect between that promise and discovering a delivery fee during checkout is a classic cart abandonment trigger. Surprise costs at checkout are the #1 reason customers abandon e-commerce carts, and this applies equally to rental bookings.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add a delivery fee calculator or lookup widget on every product page so customers can enter their zip code and see the delivery fee instantly before adding to cart. Alternatively, display a static delivery fee table on product pages ("Free delivery to Pearland, Manvel, Rosharon. $XX to Sugar Land, Missouri City, etc."). Also update the "no hidden fees" claim to say "transparent pricing - see delivery fee before you book" so it's accurate and still reassuring.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open each product page and add a new row below the product title/price area.</li>
+            <li>Add a <strong>Text/HTML element</strong> containing a simple delivery fee table. Format it as a two-column list: Zone / Fee. Example: "Pearland, Manvel, Rosharon - Free | Sugar Land, Missouri City - $XX | Houston (beyond 20mi) - $XX."</li>
+            <li>If you want a zip code calculator, use GHL's <strong>Form element</strong> with a single zip code field that submits to a custom workflow. The workflow looks up the zip and sends an SMS/email with the exact fee. This is a medium-effort build inside <strong>Automation &gt; Workflows</strong>.</li>
+            <li>Update the "no hidden fees" text on the About page in the <strong>Website Builder</strong> to say "Transparent pricing - delivery fee shown on every product page before you book."</li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /critical -->
+
+    <!-- HIGH PRIORITY -->
+    <div class="issue-group">
+      <div class="priority-banner high">
+        <div class="priority-dot"></div>
+        <span class="label">High Priority</span>
+        <span class="desc">— Significant conversion lift available. Address after Critical items.</span>
+      </div>
+
+      <!-- H1 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-01</div>
+            <div class="issue-title">Rental duration (6 hours) and key booking terms buried in FAQ</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The FAQ reveals that all rates are for a 6-hour rental. This is important context a customer needs before deciding whether a $425 or $699 item is worth it -but it's only visible if they navigate to the FAQ page. Similarly, the $50 nonrefundable deposit requirement for orders over $300 is a purchase condition that customers should see before adding to cart, not after. Hiding these details creates surprise and distrust at critical decision moments.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add a persistent "Rental includes 6-hour window - $50 deposit required for orders over $300 - Cancel for weather with full credit" callout on every product page, ideally directly below the price. Also add an inline FAQ accordion on product pages with the 4-5 most common questions (duration, delivery, cancellation, setup requirements) so customers never have to leave the page to resolve objections.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open a product page. Just below the price element, add a <strong>Text element</strong> with a light-gray background box containing: "6-hour rental window - $50 deposit for orders over $300 - Free rescheduling for weather." Style it at 13px, muted color.</li>
+            <li>To add an FAQ accordion, use GHL's built-in <strong>Accordion element</strong> (found in the element panel under "Content"). Add it below the Book Now button. Pre-populate with: How long is my rental? / Is delivery included? / What's the cancellation policy? / What surfaces do you set up on? / What power do I need?</li>
+            <li>Repeat for every product page, or build one product page template in the <strong>Website Builder</strong> and duplicate it so the callout and FAQ carry forward automatically.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H2 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-02</div>
+            <div class="issue-title">No filtering or sorting on category pages -customers can't narrow by need</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Category Pages</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The Bounce Houses page has 13 products ranging from $200 to $425. The Water Slides page has 22 products from $290 to $699. Customers shopping for a specific age group, theme (princess, dinosaur, superhero), or budget have to scroll every product manually. Parents planning a kid's birthday party are time-constrained and theme-specific -if they can't quickly surface the Paw Patrol or princess bounce house, they'll go to a competitor who makes it easy.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add filter/sort controls to category pages: Sort by (Price: Low to High, Price: High to Low, Popular), Filter by Theme (Princess, Dinosaur, Sports, Neutral), Filter by Type (Dry/Wet), and Filter by Price Range. Even basic theme tags displayed on product cards (colored badge: "Princess," "Dinosaur," "Sports") help customers self-qualify quickly without building a full filter system.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>GHL's native product catalog does not support front-end filtering. The quickest workaround is to create <strong>separate category sub-pages</strong> by theme: /category/princess-bounce-houses/, /category/dinosaur-bounce-houses/, etc. Link to these from the main category page with visual tile buttons.</li>
+            <li>In each product listing in <strong>Payments &gt; Products</strong>, add a custom field for "Theme" (Princess, Dinosaur, Sports, Neutral, Water). This won't power a filter but organizes your catalog for when you build sub-pages.</li>
+            <li>For a sort-by-price solution, duplicate the category page twice - one sorted low-to-high and one high-to-low - and add a visible "Sort by Price" toggle at the top that links between the two pages.</li>
+            <li>Add theme badge labels to product card images directly in the <strong>Website Builder</strong> using a small colored tag overlay on each product thumbnail.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H3 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-03</div>
+            <div class="issue-title">"Order By Date" availability check requires too many clicks and is buried</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Homepage / Nav</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Checking availability is one of the first things a motivated customer wants to do -"Is my date even open?" -yet the "Order By Date" flow requires navigating to a separate page, clicking a button to open a calendar modal, waiting for AJAX to load, and is blocked entirely if cookies are disabled. This is a high-intent action being gated behind unnecessary friction. The date check should be the first thing a visitor can do, not the fourth.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add an inline date picker directly in the hero section of the homepage: "What's your event date?" - calendar input - "See Available Rentals" button. This surfaces availability checking at the moment of highest intent, before they've even browsed products. Also consider adding a persistent date selector to the top of each category page so availability filtering is always one step away.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open the homepage hero section. Add a <strong>Form element</strong> with a single Date field labeled "What's your event date?" and a submit button labeled "See Available Rentals."</li>
+            <li>Set the form's redirect URL to your /order-by-date/ page (or /category/) with the selected date passed as a URL parameter if your booking system supports it.</li>
+            <li>Under <strong>Automation &gt; Workflows</strong>, create a simple workflow triggered by the form submission that stores the date as a contact field - useful for follow-up if they don't complete a booking.</li>
+            <li>For category pages, add the same date form element at the top of each category page template in the <strong>Website Builder</strong>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H4 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-04</div>
+            <div class="issue-title">No urgency or scarcity signals -customers have no reason to book now</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages / Category</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Party rentals are inherently time-constrained -popular summer weekends and holiday dates book out weeks in advance. The site makes no mention of this at the product or category level. Customers browsing in April for a May party feel no urgency to book today, even though the best equipment genuinely may not be available if they wait. Missing urgency signals is a particularly costly gap for a seasonal, inventory-constrained service.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add date-aware urgency copy to product pages once inventory data is available (e.g., "Only 2 summer Saturdays left in June"). In the near term, add seasonal urgency banners: "Summer weekends book fast - secure your date early." On product pages, add copy like "This unit books 2-3 weeks out for weekend events." Also consider a "Popular" or "Hot This Season" badge on bestselling items for social proof-driven urgency that doesn't require live inventory data.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, add a thin announcement bar at the top of your site (above the header) with seasonal copy: "Summer weekends are filling up - book your date now." Update this manually at the start of each season.</li>
+            <li>On each product page, add a small <strong>Text element</strong> directly below the price with copy like: "Books 2-3 weeks out for weekend events - secure your date early."</li>
+            <li>For "Popular" badges, open each top-selling product page in the <strong>Website Builder</strong> and add a colored label element overlaid on the product image. Use a bright color (red or orange) with the text "Popular" or "Books Fast."</li>
+            <li>Add the same badge to product cards on category pages by editing the product thumbnail image directly in <strong>Media Library</strong> - overlay the badge in a photo editor before uploading.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H5 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-05</div>
+            <div class="issue-title">Trust signals exist on the About page but are invisible at point of purchase</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages / Checkout</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The About page contains strong trust content: Texas Department of Insurance inspection, sanitized before/after every use, no hidden fees, family-owned local business, commitment to weekends and holidays. None of this is visible on product pages or in the checkout flow -where customers are actually deciding whether to complete a purchase. Trust signals do zero work sitting on a page most visitors never see.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add a 4-icon trust bar below the "Book Now" button on every product page and in the checkout sidebar:
+            <div class="code-example">✓ Texas Dept. of Insurance Inspected
+✓ Sanitized Before &amp; After Every Use
+✓ Free Setup &amp; Breakdown Included
+✓ Family-Owned, Locally Operated</div>
+These are genuine differentiators that reduce risk perception right at the decision point.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open a product page and add a new 4-column row directly below the "Book Now" button.</li>
+            <li>In each column, add an <strong>Icon + Text element</strong>: checkmark icon with one trust line each (Texas DOI Inspected / Sanitized Before &amp; After / Free Setup &amp; Breakdown / Family-Owned).</li>
+            <li>Style the row with a light gray background, small font (13px), and centered alignment. Save as a <strong>Section Template</strong> in GHL so you can drop it onto every product page without rebuilding.</li>
+            <li>For the checkout page, add the same trust row in the right sidebar column of the order form layout.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H6 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-06</div>
+            <div class="issue-title">Inconsistent CTA language -"Book Now" and "Reserve Now" used interchangeably</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Sitewide</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Product listing cards use "Book Now" while the navigation header uses "Reserve Now." These lead to different destinations (product page vs. category page), but the inconsistency creates subtle confusion -customers may wonder if clicking a different button takes them somewhere different or initiates a different kind of commitment. Inconsistent CTAs signal a lack of intentionality that subtly erodes trust.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Standardize on one CTA verb sitewide. "Book Now" is the stronger choice - it's more action-oriented and implies commitment (which is what you want). Use "Book Now" on all product cards, product pages, and the primary header CTA. Reserve "Check Availability" as the secondary CTA for date-first browsing flows. Every instance of "Reserve Now" should become "Book Now."</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open the site header. Find the primary nav button labeled "Reserve Now" and change the text to "Book Now." Save and publish.</li>
+            <li>Go to each category and product page in the <strong>Website Builder</strong> and update any button elements that say "Reserve Now" to "Book Now."</li>
+            <li>If the "Reserve Now" label is coming from a global navigation element, update it once in the <strong>Global Sections</strong> or header template and it will apply sitewide automatically.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- H7 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">H-07</div>
+            <div class="issue-title">"Clear Order" button in cart is too prominent -high accidental click risk</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Cart</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The cart page displays a "Clear Order" button that resets the entire cart. This is placed near the checkout CTAs with no confirmation dialog. A customer who accidentally clicks this loses everything they've selected -and on mobile, touch targets are close together. A single accidental tap that empties the cart is a guaranteed lost conversion, especially if the customer is in a hurry or on a small screen.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Two changes: 1) Add a confirmation modal before clearing ("Are you sure you want to remove all items from your cart? This can't be undone.") 2) Move or visually demote the "Clear Order" button - make it small, gray, and text-only, far from the "Checkout" CTA. Destructive actions should never compete visually with primary conversion actions.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>The cart page in GHL is partially controlled by the platform's native checkout system. Open the cart page in the <strong>Website Builder</strong> and locate the "Clear Order" button element.</li>
+            <li>If the button is a custom GHL element, add an <strong>onclick confirmation</strong> via custom JavaScript in the page's <strong>Custom Code</strong> section (Settings &gt; Custom Code): <code>document.querySelector('.clear-order-btn').addEventListener('click', function(e) { if (!confirm('Remove all items from your cart?')) e.preventDefault(); });</code></li>
+            <li>To visually demote the button, edit its style in the <strong>Website Builder</strong>: set the background to transparent, text color to light gray (#999), font size to 12px, and add significant margin to separate it from the Checkout button.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /high -->
+
+    <!-- MEDIUM PRIORITY -->
+    <div class="issue-group">
+      <div class="priority-banner medium">
+        <div class="priority-dot"></div>
+        <span class="label">Medium Priority</span>
+        <span class="desc">— UX improvements and trust-builders. Address after High items are complete.</span>
+      </div>
+
+      <!-- M1 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-01</div>
+            <div class="issue-title">No upsell or bundle strategy on product pages -only suggested items in cart</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Cross-sells currently only appear in the cart. By then the customer has already decided what they want and is mentally in "finalize and pay" mode -not browsing mode. Product pages are the right place to present complementary add-ons, because the customer is already engaged with a specific item and imagining the event. A bounce house customer is a natural concession machine customer, but they have to find that separately.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add "Frequently Booked Together" or "Complete Your Party" section below the booking form on product pages. Pre-populate smart pairings: bounce house - concession machine + tables/chairs; water slide - snow cone machine; entertainment - balloon garland. Even a static "customers also rented" section with 3 items would increase average order value meaningfully.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open a product page and scroll below the booking form. Add a new section titled "Complete Your Party."</li>
+            <li>Add a 3-column row. In each column, add a product image, name, price, and an "Add to Cart" button linking to the relevant product page. Manually curate the 3 pairings per product type (bounce house, water slide, etc.).</li>
+            <li>Save this upsell section as a <strong>Saved Section</strong> in GHL so you can reuse it across product pages with minor edits to swap the 3 products shown.</li>
+            <li>For the most-visited products (tables, chairs, mechanical bull based on GA4 data), build the pairing section first - these pages get the most eyes.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M2 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-02</div>
+            <div class="issue-title">No email capture -no way to nurture visitors who aren't ready to book</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Homepage / Sitewide</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">A meaningful percentage of site visitors are in early research mode -they're planning an event 4–6 weeks out and comparing options. The site has no mechanism to capture these leads: no email opt-in, no lead magnet, no "notify me when a date opens up" functionality. These visitors leave and either return later (if they remember you) or book a competitor who followed up.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add a simple email capture with a value-exchange offer: "Get $25 off your first rental - enter your email for your discount code." Or a utility offer: "Party planning checklist - free download." Even a footer newsletter opt-in with "Get early access to summer availability + seasonal deals" is better than nothing. Connect to Mailchimp or Klaviyo and send a 2-3 email nurture sequence with popular rentals and a booking CTA.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, add a popup or inline section with a GHL <strong>Form element</strong> - just Name + Email fields and a submit button ("Get My $25 Off").</li>
+            <li>In <strong>Automation &gt; Workflows</strong>, create a trigger on form submission that sends an automatic email with the discount code and adds the contact to a "Leads - Not Yet Booked" list.</li>
+            <li>Build a 3-email nurture sequence in <strong>Email Marketing &gt; Campaigns</strong>: Email 1 (immediate) - discount code + top rentals; Email 2 (day 3) - water slides and combos with urgency copy; Email 3 (day 7) - social proof + "your date may still be open" CTA.</li>
+            <li>GHL has a built-in <strong>Popup builder</strong> under Website Builder - set it to trigger after 30 seconds on the homepage or on exit intent for category pages.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M3 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-03</div>
+            <div class="issue-title">Product pages lack dimension specs, weight limits, and space requirements</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Customers renting large inflatables need to know if the equipment will fit in their yard before they can commit to a purchase. The current product pages don't visibly surface dimensions, required clearance space, weight limits, or power requirements (though these are mentioned on the FAQ page). A customer uncertain whether a 24-foot water slide fits in their backyard will not book -they'll close the tab and try to find the answer elsewhere.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add a structured spec block to every product page above the fold:
+            <div class="code-example">Setup Size: 24ft L × 12ft W × 18ft H
+Space Needed: 28ft L × 16ft W minimum
+Weight Limit: 250 lbs / 6 riders at once
+Power: 1 standard outlet within 50ft
+Surface: Grass preferred · Asphalt OK</div>
+This eliminates a key objection before it becomes a reason to abandon the page.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In <strong>Payments &gt; Products</strong>, open each product and add custom fields for: Setup Dimensions, Space Required, Weight Limit, Power Needed, Surface Compatibility. Fill these in for every product.</li>
+            <li>In the <strong>Website Builder</strong>, open a product page and add a 2-column spec table below the product images using a <strong>Table element</strong> or styled text block. Populate it with the values from the product custom fields.</li>
+            <li>Save this spec block as a <strong>Saved Section</strong> template in GHL, then paste it onto every product page - just update the values per product.</li>
+            <li>Prioritize the highest-traffic product pages first based on GA4: tables/chairs, mechanical bull, water slides, and sports obstacle course.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M4 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-04</div>
+            <div class="issue-title">No breadcrumbs or clear navigation path between product and category views</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">When a customer lands directly on a product page (via Google or a shared link) and decides they want to see more options, there's no clear breadcrumb trail back to the category. They're forced to use the main navigation or browser back button to continue browsing. This interrupts the shopping flow and increases the chance they leave the site rather than continue browsing toward a purchase.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add breadcrumb navigation to all product pages: Home - Water Slides - 24ft Tropical Thunder Dual Lane. Also add a "More Water Slides" link at the bottom of each product page alongside the suggested items section. This keeps browsers in the funnel instead of bouncing them off the site.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open a product page and add a <strong>Text element</strong> at the very top of the page content (above the product title). Type the breadcrumb trail and hyperlink each segment: "Home" links to /, category name links to the category page.</li>
+            <li>Style it at 12px, muted gray color, with "/" separators between segments.</li>
+            <li>Save this as a <strong>Saved Row</strong> in GHL and paste it at the top of every product page. Only the category link needs to change per page.</li>
+            <li>At the bottom of each product page, add a <strong>Button element</strong> labeled "See More Water Slides" (or relevant category) linking back to the parent category URL.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M5 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-05</div>
+            <div class="issue-title">Weather cancellation policy is a hidden competitive advantage -undersold</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Product Pages / Homepage</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The FAQ mentions that if weather forces a cancellation, customers can reschedule at no extra charge. For outdoor party rentals in Southeast Texas -where summer storms are common -this is a significant purchase objection remover. Yet it's buried in FAQ and never surfaced on product pages or in the checkout flow, where booking hesitation ("what if it rains?") is highest.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Add "Rain? No problem - free rescheduling for weather cancellations" as a trust badge on every product page, and in the checkout flow near the deposit section. This directly addresses the #1 hesitation for outdoor party rentals in Houston and converts it from a concern into a confidence builder. Put it next to the price, not buried below the fold.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, open a product page. In the trust bar row below the "Book Now" button (from H-05), add a 5th item: rain/cloud icon with the text "Free rescheduling for weather cancellations."</li>
+            <li>If building the trust bar for the first time, include this as one of the 4-5 trust icons from the start - it's more impactful than the generic "family-owned" line for Houston customers.</li>
+            <li>On the checkout/order form page, add a single line of text near the deposit field: "Weather cancellation? We'll reschedule at no extra charge." Style it in green or with a checkmark icon.</li>
+            <li>Update the FAQ page text in the <strong>Website Builder</strong> to match, so the policy language is consistent across the site.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M6 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-06</div>
+            <div class="issue-title">No post-booking confirmation flow or "what to expect" page</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Post-Checkout</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">After booking, customers have no clear visibility into what happens next: when to expect a confirmation call, when the team arrives to set up, what to prepare (clear space, power outlet access, etc.). Uncertainty after payment creates buyer's remorse and inbound support calls. A well-designed post-booking experience reduces anxiety, reduces support volume, and increases referral likelihood.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Create a simple "What Happens Next" page linked from the order confirmation email: 1) You'll receive a confirmation call within 24 hours 2) We'll confirm setup window (typically 1-2 hrs before event) 3) Our team handles full setup and breakdown 4) Balance is due on delivery. This could also be a brief section on the thank-you/confirmation page. Small investment, high impact on customer experience and referral rate.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In the <strong>Website Builder</strong>, create a new page at /what-happens-next/. Build a simple 4-step layout using GHL's icon + text column elements: Step 1 (confirmation call) / Step 2 (setup window confirmed) / Step 3 (team arrives, sets up) / Step 4 (balance due on delivery).</li>
+            <li>In <strong>Automation &gt; Workflows</strong>, find or create the post-purchase confirmation workflow. Add an <strong>Email action</strong> that sends immediately after a successful order, with a link to the /what-happens-next/ page and the customer's booking details.</li>
+            <li>In <strong>Payments &gt; Order Confirmation settings</strong>, update the thank-you page or confirmation message to include a "What happens next" section inline - no extra page click required.</li>
+            <li>Add a reply-to address on the confirmation email so customers can respond directly with questions rather than calling in.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M7 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-07</div>
+            <div class="issue-title">No Apple Pay or Google Pay at checkout -friction for 56% of visitors</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Checkout</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">56.7% of site traffic is mobile and iOS accounts for 2,200 of those users. Once card payment is enabled (C-01), the next friction point is payment method. Requiring customers to manually type a 16-digit card number on a phone screen creates meaningful drop-off. Apple Pay and Google Pay allow one-tap payment confirmation using Face ID or fingerprint -eliminating form fill entirely for the majority of visitors. On mobile checkout flows, wallet payment options typically lift completion rates by 10-20%.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">After integrating Stripe (C-01), enable Apple Pay and Google Pay through Stripe's Payment Request Button. This requires no additional merchant account setup -it's a toggle in Stripe Dashboard under Payment Methods. Both wallets auto-display on compatible devices, so iOS users see Apple Pay and Android users see Google Pay with no extra configuration needed.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>After connecting Stripe in <strong>Settings &gt; Payments &gt; Integrations</strong>, go to your Stripe Dashboard and navigate to <strong>Settings &gt; Payment Methods</strong>.</li>
+            <li>Enable <strong>Apple Pay</strong> and <strong>Google Pay</strong>. Stripe will automatically verify your domain for Apple Pay (requires your site to be on HTTPS, which GHL handles by default).</li>
+            <li>In GHL's <strong>Order Form</strong> settings, ensure the payment element is using the Stripe Elements integration (not a legacy embed) - this is required for wallet payments to surface automatically.</li>
+            <li>Test on an iPhone in Safari (Apple Pay) and an Android in Chrome (Google Pay) to confirm the wallet buttons appear at checkout before going live.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- M8 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-08</div>
+            <div class="issue-title">No post-delivery review request -referral engine left idle</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Post-Checkout</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The site currently has zero visible reviews (C-02), but reviews have to come from somewhere. There is no automated post-delivery workflow asking satisfied customers to leave a Google review. Given that C-02 is one of the highest-impact fixes on this list, the review request workflow is what feeds it. Referral is already the highest-quality traffic channel (29.4% of revenue from 1.7% of users) -a consistent review generation process compounds that effect over time.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Build a simple 2-message post-delivery sequence: (1) Day-of or day-after delivery: SMS or email asking "How was your event?" with a 5-star rating prompt. (2) If positive response (4-5 stars): follow-up with a direct Google Review link. If negative: route to the owner directly, not to Google. This is a standard review generation workflow and takes under an hour to build in GHL.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>In <strong>Automation &gt; Workflows</strong>, create a new workflow triggered by "Order Fulfilled" or a manual tag applied at delivery.</li>
+            <li>Add a <strong>Wait</strong> step (4-6 hours after delivery) then an <strong>SMS action</strong>: "Hi [First Name], hope the event was a blast! How did we do? Reply 1-5." or use GHL's built-in <strong>Review Request</strong> action under the Reputation section.</li>
+            <li>Add a <strong>Condition</strong> branch: if reply is 4 or 5, send a follow-up with your Google Review direct link. If 1-3, send to the owner's phone for personal follow-up.</li>
+            <li>In <strong>Reputation &gt; Settings</strong>, connect your Google Business Profile so GHL can pull reviews and you can respond from within the platform.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /medium -->
+
+    <!-- LOW PRIORITY -->
+    <div class="issue-group">
+      <div class="priority-banner low">
+        <div class="priority-dot"></div>
+        <span class="label">Low Priority</span>
+        <span class="desc">— Polish and optimization. Meaningful but address last.</span>
+      </div>
+
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">L-01</div>
+            <div class="issue-title">Social media links don't show follower count or engagement -missed proof</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Footer / Homepage</span>
+            <span class="badge badge-effort-low">Low Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">Facebook and Instagram are linked in the footer but with no indication of following size or content quality. A social media icon with no context doesn't build trust. If the pages have strong following or good engagement photos, those should be surfaced -not hidden in footer links.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">If the Instagram account has good real-event photos, embed a 6-photo Instagram feed on the homepage above the footer - real customer events are better social proof than stock-style product shots. If following is 500+, add "Follow us on Instagram - 1,200 followers" style social proof. Even a "See our setups in action" link above a few best photos works well.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to fix in GoHighLevel</div>
+          <ol>
+            <li>Use <strong>Elfsight Instagram Feed</strong> (free tier available) to generate an embed code for your Instagram account. Copy the script tag.</li>
+            <li>In the <strong>Website Builder</strong>, open the homepage and add a new section above the footer. Add an <strong>HTML element</strong> and paste the Elfsight embed code. Set it to show 6 photos in a 3x2 grid.</li>
+            <li>Add a heading above the feed: "See Our Setups in Action" with a subline "Follow us @partykidsamerica." Hyperlink the handle to your Instagram profile.</li>
+            <li>If you'd rather not use a third-party embed, manually upload 6 recent event photos to the <strong>Media Library</strong> and build a static 3-column image grid in the Website Builder. Link each image to your Instagram profile. Update the photos monthly.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div><!-- /low -->
+  </div>
+
+  <hr />
+
+  <!-- ROADMAP -->
+  <div class="section">
+    <div class="section-label">05 -Implementation Roadmap</div>
+    <h2 class="mb-8">Phased Rollout Plan</h2>
+    <p class="issue-text mt-4" style="margin-bottom: 28px;">Sequenced by dependency and effort. Quick Wins first to build momentum and baseline metrics before tackling heavier builds.</p>
+
+    <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px;">
+
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+        <div style="background:var(--red-dim); border-bottom:1px solid rgba(220,38,38,0.2); padding:14px 20px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--red); margin-bottom:2px;">Phase 1 · Quick Wins</div>
+          <div style="font-size:13px; color:var(--text-muted);">Weeks 1–2 · Low effort, high impact</div>
+        </div>
+        <div style="padding:16px 20px;">
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--red); font-weight:700; flex-shrink:0;">C-02</span>Add Google Reviews widget sitewide</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--red); font-weight:700; flex-shrink:0;">C-04</span>Surface delivery fee on product pages</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-01</span>Add rental terms callout to product pages</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-05</span>Add trust bar to product pages</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-06</span>Standardize CTAs to "Book Now"</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-05</span>Add weather policy badge near price</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-08</span>Build post-delivery review workflow</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+        <div style="background:var(--orange-dim); border-bottom:1px solid rgba(234,88,12,0.2); padding:14px 20px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--orange); margin-bottom:2px;">Phase 2 · Core Builds</div>
+          <div style="font-size:13px; color:var(--text-muted);">Weeks 2–4 · Highest revenue impact</div>
+        </div>
+        <div style="padding:16px 20px;">
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--red); font-weight:700; flex-shrink:0;">C-01</span>Integrate Stripe, enable deposit at booking</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-07</span>Enable Apple Pay + Google Pay</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--red); font-weight:700; flex-shrink:0;">C-03</span>Replace hero carousel with static headline</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-03</span>Move date picker into homepage hero</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-07</span>Add confirmation modal to Clear Order</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-03</span>Add product spec block to all product pages</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-06</span>Build "What Happens Next" confirmation flow</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+        <div style="background:var(--yellow-dim); border-bottom:1px solid rgba(217,119,6,0.2); padding:14px 20px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--yellow); margin-bottom:2px;">Phase 3 · Polish &amp; Optimize</div>
+          <div style="font-size:13px; color:var(--text-muted);">Weeks 4+ · Ongoing lift</div>
+        </div>
+        <div style="padding:16px 20px;">
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-02</span>Add category sub-pages by theme/filter</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--orange); font-weight:700; flex-shrink:0;">H-04</span>Add urgency signals and popular badges</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-01</span>Add "Booked Together" upsell to product pages</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-02</span>Add email capture with value offer</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-04</span>Add breadcrumb navigation</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--accent); font-weight:700; flex-shrink:0;">L-01</span>Embed Instagram feed on homepage</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--text-dim); font-weight:700; flex-shrink:0;">+</span>Fix ecommerce event tracking in GA4</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <strong>Success metrics to track:</strong> After Phase 1-2 implementation, expect overall CVR to move from 2.2% toward 3.5–4% within 60 days (industry benchmark for optimized event rental is 3–5%). Key leading indicators: homepage bounce rate below 35%, product page to cart rate above 35% (currently ~28%), cart to purchase above 40% (currently ~29%). Re-run this funnel analysis at 30 and 60 days post-launch.
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- MASTER CHECKLIST -->
+  <div class="section">
+    <div class="section-label">06 -Master Implementation Checklist</div>
+    <h2 class="mb-8">All Issues -Prioritized by Impact</h2>
+    <p class="issue-text mt-4" style="margin-bottom: 28px;">Use this as your working task list. Items are ordered by conversion impact -fix top to bottom.</p>
+
+    <ul class="checklist">
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-critical">Critical</span>
+        <div class="check-text"><strong>C-01 -Integrate online card payment (Stripe or Square)</strong>Collect $50 deposit by card at booking. Allow balance on delivery. This is the single highest-ROI change on the site.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-critical">Critical</span>
+        <div class="check-text"><strong>C-02 -Add customer reviews sitewide</strong>Google Reviews widget or manually embedded testimonials on homepage, category pages, and product pages. Display star rating + review count in header.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-critical">Critical</span>
+        <div class="check-text"><strong>C-03 -Replace hero carousel with static headline + CTA</strong>Single best photo, clear H1 value prop, location, and two CTA buttons (Browse Rentals / Check Availability).</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-critical">Critical</span>
+        <div class="check-text"><strong>C-04 -Surface delivery fee before cart -add zip code fee lookup on product pages</strong>Eliminate hidden cost surprise. Update "no hidden fees" messaging to accurately reflect transparent pricing model.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-01 -Add rental terms to every product page</strong>6-hour window, $50 deposit requirement, weather rescheduling -all visible below the price, not in FAQ.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-02 -Add filters and theme tags to category pages</strong>Sort by price, filter by theme (princess/dinosaur/sports/neutral) and type (wet/dry). Tag products with colored theme badges.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-03 -Move availability date picker into homepage hero</strong>Inline date input in hero section, not behind a separate page and modal. Also add to top of category pages.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-04 -Add urgency signals to product pages and category pages</strong>Seasonal availability copy, "Popular" badges on bestsellers, "Books fast for summer weekends" messaging.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-05 -Move trust signals to product pages and checkout</strong>4-icon trust bar: Texas DOI inspected, sanitized, free setup/breakdown, family-owned. Visible on every product page and checkout sidebar.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-06 -Standardize CTA language to "Book Now" sitewide</strong>Replace all instances of "Reserve Now" with "Book Now." Use "Check Availability" as secondary CTA only.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-high">High</span>
+        <div class="check-text"><strong>H-07 -Add confirmation modal to "Clear Order" and visually demote the button</strong>Require confirmation before cart wipe. Move button away from Checkout CTA and reduce visual weight.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-01 -Add "Frequently Booked Together" upsell section to product pages</strong>Pre-built pairings: bounce house → concession + tables; water slide → snow cone machine; entertainment → balloon garland.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-02 -Add email capture with value offer</strong>"$25 off your first rental" opt-in or party planning checklist lead magnet. Connect to Mailchimp/Klaviyo 3-email nurture sequence.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-03 -Add product spec block to every product page</strong>Setup dimensions, clearance needed, weight limit, power requirements, surface compatibility -structured above the fold.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-04 -Add breadcrumb navigation to all product pages</strong>Home › Category › Product Name. Add "More [Category]" link at bottom of page to keep browsers in funnel.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-05 -Surface weather cancellation policy on product pages and checkout</strong>"Rain? No problem -free rescheduling for weather cancellations." Trust badge near price and near deposit section.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-06 -Create "What Happens Next" post-booking page</strong>Linked from order confirmation email. 4-step process: confirmation call → setup window → team arrives → balance due on delivery.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-07 -Enable Apple Pay and Google Pay at checkout</strong>After Stripe integration (C-01), toggle on wallet payments in Stripe Dashboard. Auto-surfaces for iOS (Apple Pay) and Android (Google Pay) users. One-tap checkout for 56% of traffic.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-08 -Build post-delivery review request workflow</strong>GHL automation: SMS or email day-after delivery → positive response routes to Google Review link → negative response routes to owner. Feeds the C-02 review gap over time.</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-low">Low</span>
+        <div class="check-text"><strong>L-01 -Embed Instagram feed on homepage if account has real event photos</strong>6-photo grid above footer. Authentic setup photos outperform product shots for service business trust.</div>
+      </li>
+    </ul>
+  </div>
+
+</div><!-- /container -->
+
+<div class="report-footer">
+  <div class="container">
+    <p>Party Kids America -CRO Audit · April 2026</p>
+    <p>Prepared by EmberTribe · <a href="mailto:info@partykidsamerica.com">info@partykidsamerica.com</a></p>
+  </div>
+</div>
+
+<script>
+  const pageLinks = {
+    'Homepage': 'https://www.partykidsamerica.com/',
+    'Sitewide': 'https://www.partykidsamerica.com/',
+    'Homepage / Nav': 'https://www.partykidsamerica.com/',
+    'Homepage / Sitewide': 'https://www.partykidsamerica.com/',
+    'Footer / Homepage': 'https://www.partykidsamerica.com/',
+    'Category Pages': 'https://www.partykidsamerica.com/category/',
+    'Product Pages': 'https://www.partykidsamerica.com/category/bounce-houses/',
+    'Product Pages / Category': 'https://www.partykidsamerica.com/category/bounce-houses/',
+    'Product Pages / Checkout': 'https://www.partykidsamerica.com/category/bounce-houses/',
+    'Product Pages / Homepage': 'https://www.partykidsamerica.com/category/bounce-houses/',
+    'Cart': 'https://www.partykidsamerica.com/cart/',
+    'Cart / Checkout': 'https://www.partykidsamerica.com/cart/',
+    'Checkout': 'https://www.partykidsamerica.com/cart/',
+    'Post-Checkout': 'https://www.partykidsamerica.com/'
+  };
+  document.querySelectorAll('.badge-page').forEach(function(el) {
+    var text = el.textContent.trim();
+    var url = pageLinks[text];
+    if (url) {
+      var a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = el.className;
+      a.textContent = el.textContent;
+      el.parentNode.replaceChild(a, el);
+    }
+  });
+</script>
+</body>
+</html>
