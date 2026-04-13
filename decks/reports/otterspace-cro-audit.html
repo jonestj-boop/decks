@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRO Audit - OtterSpace | inotterspace.com</title>
+  <style>
+    :root {
+      --brand-blue: #294d69;
+      --brand-yellow: #f0ff2e;
+      --brand-orange: #ff8329;
+      --brand-offwhite: #fffdf5;
+      --critical: #dc2626;
+      --critical-bg: #fef2f2;
+      --critical-border: #fecaca;
+      --high: #ea580c;
+      --high-bg: #fff7ed;
+      --high-border: #fed7aa;
+      --medium: #d97706;
+      --medium-bg: #fffbeb;
+      --medium-border: #fde68a;
+      --low: #6b7280;
+      --low-bg: #f9fafb;
+      --low-border: #e5e7eb;
+      --text: #1a1a2e;
+      --muted: #64748b;
+      --divider: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f9fb;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ───────────────────────────────────────── */
+    .report-header {
+      background: var(--brand-blue);
+      color: white;
+      padding: 56px 0 48px;
+    }
+    .report-header .inner {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .report-header .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand-yellow);
+      margin-bottom: 12px;
+    }
+    .report-header h1 {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .report-header .url {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+    .report-header .url a { color: rgba(255,255,255,0.7); text-decoration: none; }
+    .report-header .url a:hover { color: white; }
+    .meta-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .meta-item .val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--brand-yellow);
+    }
+    .meta-item .key {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── LAYOUT ───────────────────────────────────────── */
+    .body-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── SECTION HEADINGS ─────────────────────────────── */
+    .section-heading {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 56px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--divider);
+    }
+    .section-heading:first-of-type { margin-top: 0; }
+
+    /* ── EXECUTIVE SUMMARY CARD ───────────────────────── */
+    .summary-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .summary-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      margin-bottom: 12px;
+    }
+    .summary-card p {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.7;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin: 28px 0 0;
+    }
+    .score-box {
+      background: var(--brand-blue);
+      border-radius: 10px;
+      padding: 20px 16px;
+      text-align: center;
+      color: white;
+    }
+    .score-box .num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--brand-yellow);
+      display: block;
+    }
+    .score-box .lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+    }
+
+    /* ── FUNNEL FLOW ──────────────────────────────────── */
+    .funnel {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .funnel-step {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brand-blue);
+      white-space: nowrap;
+    }
+    .funnel-arrow {
+      font-size: 18px;
+      color: var(--muted);
+      padding: 0 8px;
+    }
+    .funnel-step.has-issue {
+      border-color: var(--critical);
+      background: var(--critical-bg);
+      color: var(--critical);
+    }
+    .funnel-step.has-high {
+      border-color: var(--high);
+      background: var(--high-bg);
+      color: var(--high);
+    }
+
+    /* ── ISSUE CARDS ──────────────────────────────────── */
+    .issues-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .issue-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .issue-card.priority-critical { border-left: 4px solid var(--critical); }
+    .issue-card.priority-high     { border-left: 4px solid var(--high); }
+    .issue-card.priority-medium   { border-left: 4px solid var(--medium); }
+    .issue-card.priority-low      { border-left: 4px solid var(--low); }
+
+    .issue-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 24px 0;
+    }
+    .issue-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .priority-critical .issue-number { background: var(--critical-bg); color: var(--critical); }
+    .priority-high     .issue-number { background: var(--high-bg); color: var(--high); }
+    .priority-medium   .issue-number { background: var(--medium-bg); color: var(--medium); }
+    .priority-low      .issue-number { background: var(--low-bg); color: var(--low); }
+
+    .issue-title-block { flex: 1; }
+    .issue-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .issue-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-critical { background: var(--critical-bg); color: var(--critical); border: 1px solid var(--critical-border); }
+    .badge-high     { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+    .badge-medium   { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+    .badge-low      { background: var(--low-bg); color: var(--low); border: 1px solid var(--low-border); }
+    .badge-page     { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+    .issue-body {
+      padding: 16px 24px 24px 68px;
+    }
+    .issue-what {
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+    .fix-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #22c55e;
+      margin-bottom: 6px;
+    }
+    .fix-content {
+      font-size: 14px;
+      color: #1e3a2f;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 14px 16px;
+      line-height: 1.65;
+    }
+    .fix-content ul {
+      padding-left: 18px;
+      margin-top: 6px;
+    }
+    .fix-content li { margin-bottom: 4px; }
+    .fix-content code {
+      background: #dcfce7;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+    }
+    .fix-content a, .issue-what a {
+      color: #1d4ed8;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      word-break: break-all;
+    }
+    .fix-content a:hover, .issue-what a:hover { color: #1e40af; }
+
+    /* ── GA4 FUNNEL TABLE ────────────────────────────── */
+    .funnel-table-wrap {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .funnel-table-wrap table thead tr { background: var(--brand-blue); }
+    .funnel-row-critical td { background: #fef2f2; }
+    .funnel-row-high td { background: #fff7ed; }
+    .funnel-row-ok td { background: #f0fdf4; }
+    .drop-pct {
+      font-weight: 800;
+      font-size: 15px;
+    }
+    .drop-critical { color: var(--critical); }
+    .drop-high { color: var(--high); }
+    .drop-ok { color: #16a34a; }
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .insight-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #78350f;
+      line-height: 1.6;
+    }
+    .insight-box strong { color: #92400e; }
+    .insight-box.insight-green {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      color: #14532d;
+    }
+    .insight-box.insight-green strong { color: #166534; }
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0 0;
+    }
+    .device-card {
+      background: #f8fafc;
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+    .device-card .device-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .device-card .device-cvr {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--brand-blue);
+    }
+    .device-card .device-traffic {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .device-card .device-note {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+    /* ── CHECKLIST TABLE ──────────────────────────────── */
+    .checklist-wrap {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    thead tr {
+      background: var(--brand-blue);
+    }
+    thead th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    thead th:first-child { width: 36px; text-align: center; }
+    thead th:nth-child(2) { width: 40px; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--divider);
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td {
+      padding: 13px 16px;
+      font-size: 14px;
+      color: #334155;
+      vertical-align: top;
+    }
+    tbody td:first-child {
+      text-align: center;
+      width: 36px;
+    }
+    .check-box {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #cbd5e1;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .row-critical { background: #fffafa; }
+    .row-high     { background: #fffcfa; }
+    .row-medium   { background: #fffefa; }
+    .row-num {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .checklist-item { font-weight: 500; color: var(--text); }
+    .checklist-page { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ── FOOTER ───────────────────────────────────────── */
+    .report-footer {
+      background: var(--brand-blue);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 28px 32px;
+      font-size: 12px;
+    }
+    .report-footer strong { color: rgba(255,255,255,0.8); }
+
+    /* ── CALLOUT ──────────────────────────────────────── */
+    .callout {
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 14px;
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+    .callout-info {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1e40af;
+    }
+    .callout strong { font-weight: 700; }
+
+    @media (max-width: 640px) {
+      .report-header h1 { font-size: 26px; }
+      .issue-body { padding-left: 24px; }
+      .meta-row { gap: 20px; }
+      .score-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<header class="report-header">
+  <div class="inner">
+    <div class="label">CRO Audit Report</div>
+    <h1>OtterSpace Blackout Curtains</h1>
+    <div class="url"><a href="https://inotterspace.com" target="_blank">inotterspace.com</a></div>
+    <div class="meta-row">
+      <div class="meta-item"><span class="val">27</span><span class="key">Total Issues</span></div>
+      <div class="meta-item"><span class="val">4</span><span class="key">Critical</span></div>
+      <div class="meta-item"><span class="val">10</span><span class="key">High Priority</span></div>
+      <div class="meta-item"><span class="val">9</span><span class="key">Medium</span></div>
+      <div class="meta-item"><span class="val">4</span><span class="key">Low</span></div>
+      <div class="meta-item"><span class="val">Apr 2026</span><span class="key">Audit Date</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════ BODY -->
+<div class="body-wrap">
+
+  <!-- EXECUTIVE SUMMARY -->
+  <p class="section-heading">Executive Summary</p>
+
+  <div class="summary-card">
+    <h2>What We Found</h2>
+    <p>OtterSpace has a genuinely strong product with excellent social proof - 5-star ratings across 150-200+ reviews, a patented mechanism, OEKO-TEX certification, and three distinct customer segments actively searching for this solution: <strong>Parents</strong> trying every sleep hack for their children, <strong>Sleep Optimizers</strong> who treat sleep as a performance lever (Whoop, Huberman Lab listeners), and <strong>Shift Workers</strong> who need blackout during daylight hours. The CRO issues are not about the product but about how the site communicates trust, reduces friction, and guides shoppers toward checkout. The primary funnel has several significant gaps that are actively costing conversions: stale preorder dates that destroy credibility, trust information (returns, guarantees, shipping timelines) that exists but isn't surfaced on product pages, and a homepage that under-delivers on the brand's value proposition for all three segments. The good news: most of these are quick Shopify fixes, copy additions, or page-linking changes - not full redesigns.</p>
+    <div class="score-grid">
+      <div class="score-box"><span class="num">5.0★</span><span class="lbl">Avg Review Score</span></div>
+      <div class="score-box"><span class="num">200+</span><span class="lbl">Reviews (Bundle)</span></div>
+      <div class="score-box"><span class="num">15</span><span class="lbl">Products in Catalog</span></div>
+      <div class="score-box"><span class="num">51</span><span class="lbl">Blog Posts (Untapped)</span></div>
+      <div class="score-box"><span class="num">6</span><span class="lbl">Collections</span></div>
+      <div class="score-box"><span class="num">5</span><span class="lbl">Hidden Useful Pages</span></div>
+    </div>
+  </div>
+
+  <!-- GA4 SECTION -->
+  <p class="section-heading">GA4 - Funnel Data & What It Tells Us</p>
+
+  <!-- FUNNEL RESULTS -->
+  <div class="summary-card" style="margin-bottom:20px;">
+    <h2>Purchase Funnel Results</h2>
+    <p style="margin-bottom:4px;">2,086 sessions · Feb 13 - Apr 13, 2026 · Overall conversion rate: <strong>2.1%</strong> (44 purchases)</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">The same funnel was also checked over a shorter window - the numbers are nearly identical across both periods. These are structural issues, not a bad week.</p>
+
+    <div class="funnel-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28px;">#</th>
+            <th>Step</th>
+            <th style="text-align:right;">Users</th>
+            <th style="text-align:right;">% of Start</th>
+            <th style="text-align:right;">Abandoned</th>
+            <th style="text-align:right;">Abandon Rate</th>
+            <th>Priority Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="funnel-row-high">
+            <td class="row-num">1</td>
+            <td><strong>First Visit</strong></td>
+            <td style="text-align:right;">2,086</td>
+            <td style="text-align:right;">100%</td>
+            <td style="text-align:right;">1,040</td>
+            <td style="text-align:right;"><span class="drop-pct drop-high">49.9%</span></td>
+            <td><span class="badge badge-high">High</span> Homepage not pulling people into browse</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">2</td>
+            <td><strong>View Products</strong></td>
+            <td style="text-align:right;">1,046</td>
+            <td style="text-align:right;">50.1%</td>
+            <td style="text-align:right;">846</td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">80.9%</span></td>
+            <td><span class="badge badge-critical">Primary Problem</span> Product detail page (PDP) failing to convert browsers to buyers</td>
+          </tr>
+          <tr class="funnel-row-high">
+            <td class="row-num">3</td>
+            <td><strong>Add to Cart</strong></td>
+            <td style="text-align:right;">200</td>
+            <td style="text-align:right;">9.6%</td>
+            <td style="text-align:right;">130</td>
+            <td style="text-align:right;"><span class="drop-pct drop-high">65%</span></td>
+            <td><span class="badge badge-high">High</span> Cart abandonment - friction before checkout</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">4</td>
+            <td><strong>Begin Checkout</strong></td>
+            <td style="text-align:right;">70</td>
+            <td style="text-align:right;">3.4%</td>
+            <td style="text-align:right;">26</td>
+            <td style="text-align:right;"><span class="drop-pct" style="color:#d97706;">37.1%</span></td>
+            <td><span class="badge badge-medium">Healthiest step</span> Shopify checkout doing its job</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">5</td>
+            <td><strong>Purchase</strong></td>
+            <td style="text-align:right;">44</td>
+            <td style="text-align:right;">2.1%</td>
+            <td style="text-align:right;">-</td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok">-</span></td>
+            <td style="color:#16a34a;font-size:13px;">End of funnel</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <strong>The product page is bleeding 8 out of 10 visitors.</strong> 846 people viewed a product and didn't add to cart - more lost users than all other steps combined. This is the #1 priority in this entire audit. Every PDP fix (trust badges, return policy, FAQ, size guide, video, preorder cleanup) is a direct attack on this 80.9% abandonment rate.
+    </div>
+    <div class="insight-box">
+      <strong>Half of all visitors never reach a product page.</strong> 1,040 people - 49.9% - leave without clicking into a single product. The homepage is not doing its job of pulling people into the funnel. Issues #8 (homepage hero) and #18 (kit vs. bundle confusion) address this directly.
+    </div>
+    <div class="insight-box">
+      <strong>The cart loses 65% before checkout - but the checkout itself is fine.</strong> Of the 200 people who added to cart, only 70 started checkout (65% abandonment). That's likely a shipping cost reveal or lack of urgency in the cart. However, once people <em>do</em> start checkout, 63% complete it - which means Shopify's native checkout is working and doesn't need major changes. Focus on getting more people <em>into</em> checkout, not fixing the checkout itself.
+    </div>
+    <div class="insight-box insight-green">
+      <strong>Desktop has a homepage problem that mobile doesn't.</strong> 60.8% of desktop visitors abandon at Step 1 vs. 43.1% on mobile. Desktop traffic skews toward research and discovery - these users may be comparison shopping and not yet ready to buy. This is worth monitoring but is secondary to the PDP fixes.
+    </div>
+
+    <div class="device-grid">
+      <div class="device-card">
+        <div class="device-name">Mobile</div>
+        <div class="device-cvr">2.3%</div>
+        <div class="device-traffic">1,284 users · 62% of traffic</div>
+        <div class="device-note">Slightly better CVR than desktop. 43% abandon at homepage vs. 61% on desktop.</div>
+      </div>
+      <div class="device-card">
+        <div class="device-name">Desktop</div>
+        <div class="device-cvr">1.8%</div>
+        <div class="device-traffic">786 users · 38% of traffic</div>
+        <div class="device-note">Highest homepage abandonment (60.8%). Likely research traffic that isn't ready to buy.</div>
+      </div>
+      <div class="device-card">
+        <div class="device-name">Overall</div>
+        <div class="device-cvr">2.1%</div>
+        <div class="device-traffic">2,086 users · 44 purchases</div>
+        <div class="device-note">Industry avg: 2-4%. Fixing PDP alone could realistically push this to 3-3.5%.</div>
+      </div>
+    </div>
+    <div class="insight-box insight-green" style="margin-top:20px;">
+      <strong>85% of all site sessions are on mobile (iOS/Safari dominant) per the Tech Overview.</strong> The 62% figure in the funnel above reflects only users who entered the purchase funnel via the homepage - overall mobile share is higher because mobile visitors browse more broadly before (or without) entering the funnel. Either way, mobile is the dominant platform. Any rendering, font, or layout issue on Safari affects the majority of customers. Among users who do enter the purchase funnel, mobile CVR (2.3%) is slightly better than desktop (1.8%) - mobile UX is not the primary bottleneck, but all fixes should be mobile-tested first.
+    </div>
+  </div>
+
+  <!-- LANDING PAGE DATA -->
+  <div class="summary-card" style="margin-bottom:20px;">
+    <h2>Landing Page Report: Feb 13 to Apr 13, 2026</h2>
+    <p style="margin-bottom:20px;">19,128 total sessions across 164 landing pages. This shows exactly where traffic enters the site and which pages are actually generating revenue - and which aren't.</p>
+
+    <div class="funnel-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28px;">#</th>
+            <th>Landing Page</th>
+            <th style="text-align:right;">Sessions</th>
+            <th style="text-align:right;">Revenue</th>
+            <th style="text-align:right;">CVR</th>
+            <th>Insight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="funnel-row-high">
+            <td class="row-num">1</td>
+            <td><a href="https://inotterspace.com/" target="_blank">/</a> <span class="stat-label">(Homepage)</span></td>
+            <td style="text-align:right;">9,947 <span class="stat-label">52%</span></td>
+            <td style="text-align:right;">$20,859</td>
+            <td style="text-align:right;"><span class="drop-pct drop-high">1.17%</span></td>
+            <td>Gets majority of traffic but converts well below site avg (2.21%). Biggest revenue opportunity on the site.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">2</td>
+            <td><a href="https://inotterspace.com/products/blackout-layer" target="_blank">/products/blackout-layer</a></td>
+            <td style="text-align:right;">4,924 <span class="stat-label">25.7%</span></td>
+            <td style="text-align:right;">$28,179</td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok" style="color:#16a34a;">2.94%</span></td>
+            <td>Top revenue page. Converts at 2.94% - above avg. The highest-priority page to improve further.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">3</td>
+            <td><a href="https://inotterspace.com/products/magnetic-blackout-blocks-for-blackout-curtains" target="_blank">/products/magnetic-blackout-blocks</a></td>
+            <td style="text-align:right;">1,249 <span class="stat-label">6.5%</span></td>
+            <td style="text-align:right;">$12,946</td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok" style="color:#16a34a;">6.16%</span></td>
+            <td>Highest CVR of any page at 6.16%. Accessory product over-performing - consider featuring it more prominently.</td>
+          </tr>
+          <tr>
+            <td class="row-num">4</td>
+            <td><a href="https://inotterspace.com/pages/installation" target="_blank">/pages/installation</a></td>
+            <td style="text-align:right;">412 <span class="stat-label">2.2%</span></td>
+            <td style="text-align:right;">$591</td>
+            <td style="text-align:right;"><span class="drop-pct" style="color:#d97706;">0.73%</span></td>
+            <td>412 people landing on the installation page suggests pre-purchase research. Low CVR - needs a stronger CTA to product pages.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">5</td>
+            <td><a href="https://inotterspace.com/products/white-linen-blackout-curtains" target="_blank">/products/white-linen-blackout-curtains</a></td>
+            <td style="text-align:right;">281 <span class="stat-label">1.5%</span></td>
+            <td style="text-align:right;">$2,519</td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok" style="color:#16a34a;">3.91%</span></td>
+            <td>Solid CVR. Worth ensuring this page has all trust signals and a full image gallery.</td>
+          </tr>
+          <tr>
+            <td class="row-num">6</td>
+            <td><a href="https://inotterspace.com/collections/blackout-bundle" target="_blank">/collections/blackout-bundle</a></td>
+            <td style="text-align:right;">202 <span class="stat-label">1.1%</span></td>
+            <td style="text-align:right;">$554</td>
+            <td style="text-align:right;"><span class="drop-pct" style="color:#d97706;">1.49%</span></td>
+            <td>Collection page converting below avg. Lack of filtering, no star ratings on cards, no badges all contributing.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">7</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/best-blackout-curtains-guide" target="_blank">/blogs/essentials/best-blackout-curtains-guide</a></td>
+            <td style="text-align:right;">149 <span class="stat-label">0.8%</span></td>
+            <td style="text-align:right;"><strong>$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>High-intent blog post - zero revenue. No CTAs, no product links. Confirmed Issue #13.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">8</td>
+            <td><a href="https://inotterspace.com/pages/faqs" target="_blank">/pages/faqs</a></td>
+            <td style="text-align:right;">110 <span class="stat-label">0.6%</span></td>
+            <td style="text-align:right;">$1,124</td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok" style="color:#16a34a;">5.45%</span></td>
+            <td style="color:#166534;font-weight:600;">FAQ page converts at 5.45% - 2.5× the site average. People who find it, buy. It's buried. This is a confirmed quick win.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">9</td>
+            <td><a href="https://inotterspace.com/products/blackout-curtain-bundle-space-otters" target="_blank">/products/blackout-curtain-bundle-space-otters</a></td>
+            <td style="text-align:right;">108 <span class="stat-label">0.6%</span></td>
+            <td style="text-align:right;"><strong>$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>108 sessions, zero revenue. Almost certainly the stale preorder issue (Issue #1) killing all conversion.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <strong>The FAQ page is the single clearest quick win in this entire audit.</strong> It converts at 5.45% - more than twice the site average - yet it receives only 110 sessions and is not linked from any product page or the main navigation. Adding it to the nav and linking to it from every product page could redirect high-intent traffic to the highest-converting page on the site.
+    </div>
+    <div class="insight-box">
+      <strong>The homepage gets 52% of all traffic but earns only 26% of revenue at a 1.17% CVR.</strong> The <a href="https://inotterspace.com/products/blackout-layer" target="_blank">blackout-layer product page</a> converts at 2.94% - 2.5× the homepage rate. This is a direct argument for a strong homepage hero with a primary CTA pointing to that product.
+    </div>
+    <div class="insight-box">
+      <strong>The installation page is a hidden pre-purchase signal.</strong> 412 people are landing on <a href="https://inotterspace.com/pages/installation" target="_blank">/pages/installation</a> - that's pre-purchase research, not just post-purchase support. That page needs a clear "Shop Now" CTA pointing to the Blackout Kit.
+    </div>
+  </div>
+
+  <!-- ECOMMERCE PURCHASES DATA -->
+  <div class="summary-card" style="margin-bottom:20px;">
+    <h2>E-commerce Purchases by Item: Feb 13 to Apr 13, 2026</h2>
+    <p style="margin-bottom:8px;">17,017 items viewed · 1,538 added to cart · 585 purchased · <strong>$84,461 total revenue</strong></p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Note: a GA4 tracking discrepancy is present in this data (explained in Issue #26). Revenue totals are reliable; variant-level data is not. <strong>Why 585 purchased here vs. 44 in the funnel above?</strong> The funnel tracks 2,086 users who entered via the homepage - 44 completed a purchase (2.1% CVR). The E-commerce Purchases report counts individual product units sold across <em>all</em> sessions site-wide, including direct, paid, and referral traffic that bypassed the homepage. These are two different report scopes, not a data error. Similarly, the Landing Page report's 19,128 sessions is a broader session count vs. this report's 17,017 item view events - one measures sessions, the other product-level interaction events.</p>
+
+    <div class="funnel-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28px;">#</th>
+            <th>Item</th>
+            <th style="text-align:right;">Viewed</th>
+            <th style="text-align:right;">Added to Cart</th>
+            <th style="text-align:right;">Purchased</th>
+            <th style="text-align:right;">Revenue</th>
+            <th>Insight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="funnel-row-critical">
+            <td class="row-num">1</td>
+            <td><a href="https://inotterspace.com/products/blackout-layer" target="_blank">Total Blackout Curtain Kit - 57" / One Panel</a></td>
+            <td style="text-align:right;">6,290</td>
+            <td style="text-align:right;">115</td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">0</span></td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">$0.00</span></td>
+            <td>Most viewed item, zero purchases. <strong>Tracking bug</strong> - purchase event fires under base product name, not variant name.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">2</td>
+            <td><a href="https://inotterspace.com/products/blackout-layer" target="_blank">Total Blackout Curtain Kit</a> <span class="stat-label">(base name)</span></td>
+            <td style="text-align:right;">3,786</td>
+            <td style="text-align:right;">447</td>
+            <td style="text-align:right;"><span style="color:#16a34a;font-weight:700;">357</span></td>
+            <td style="text-align:right;"><span style="color:#16a34a;font-weight:700;">$64,677</span></td>
+            <td><strong>76.6% of all revenue.</strong> Clear flagship product. Every improvement on this page has the highest ROI.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">3</td>
+            <td><a href="https://inotterspace.com/products/magnetic-blackout-blocks-for-blackout-curtains" target="_blank">Blackout Blocks™ by OtterSpace - Black</a></td>
+            <td style="text-align:right;">2,010</td>
+            <td style="text-align:right;">141</td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">0</span></td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">$0.00</span></td>
+            <td>Same tracking bug pattern - variant-named item shows $0 while base name (row 4) captures the purchases.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">4</td>
+            <td><a href="https://inotterspace.com/products/magnetic-blackout-blocks-for-blackout-curtains" target="_blank">Blackout Blocks™ by OtterSpace</a> <span class="stat-label">(base name)</span></td>
+            <td style="text-align:right;">859</td>
+            <td style="text-align:right;">47</td>
+            <td style="text-align:right;">138</td>
+            <td style="text-align:right;">$6,762</td>
+            <td>8% of total revenue. Accessory punching above its weight - supports making it a more prominent cross-sell.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">5</td>
+            <td><a href="https://inotterspace.com/products/white-linen-blackout-curtains" target="_blank">Blackout Curtain Bundle | Cloud White - 63" / One Bundle</a></td>
+            <td style="text-align:right;">620</td>
+            <td style="text-align:right;">10</td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">0</span></td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">$0.00</span></td>
+            <td>Same tracking bug. Purchases likely attributed to base name row below.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">6</td>
+            <td><a href="https://inotterspace.com/products/white-linen-blackout-curtains" target="_blank">Blackout Curtain Bundle | Cloud White</a> <span class="stat-label">(base name)</span></td>
+            <td style="text-align:right;">391</td>
+            <td style="text-align:right;">36</td>
+            <td style="text-align:right;">35</td>
+            <td style="text-align:right;">$9,757</td>
+            <td>11.6% of revenue. Second-best bundle seller - worth improving imagery and trust signals here.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">7-10</td>
+            <td>Various variant-named items (57"/2 Panels, Outer Curtain, Bloom Bundle, 78"/2 Panels)</td>
+            <td style="text-align:right;">811</td>
+            <td style="text-align:right;">240</td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">0</span></td>
+            <td style="text-align:right;"><span style="color:var(--critical);font-weight:700;">$0.00</span></td>
+            <td>All showing $0. Mix of tracking bug + genuine non-conversion (preorder/OOS items).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;background:#fef2f2;border-color:#fecaca;color:#7f1d1d;">
+      <strong>⚠ GA4 Tracking Bug - Fix Before Making Variant-Level Decisions.</strong> The <code style="background:#fee2e2;padding:1px 5px;border-radius:3px;font-size:12px;">view_item</code> and <code style="background:#fee2e2;padding:1px 5px;border-radius:3px;font-size:12px;">add_to_cart</code> events are sending the full variant name (e.g., "Total Blackout Curtain Kit - 57" / One Panel") but the <code style="background:#fee2e2;padding:1px 5px;border-radius:3px;font-size:12px;">purchase</code> event is sending just the base product name ("Total Blackout Curtain Kit"). Purchases never match to variants, so every variant shows $0. To fix: ensure the <code style="background:#fee2e2;padding:1px 5px;border-radius:3px;font-size:12px;">item_name</code> parameter is consistent across all three events in your Shopify > GA4 data layer. This is typically a one-line fix in the GA4 Shopify integration settings or GTM tag configuration.
+    </div>
+    <div class="insight-box">
+      <strong>76.6% of all revenue comes from one product.</strong> The <a href="https://inotterspace.com/products/blackout-layer" target="_blank">Total Blackout Curtain Kit</a> ($64,677) dwarfs everything else. This confirms it as the highest-priority page for every CRO improvement in this audit. The Blackout Bundles and Blackout Blocks are meaningful but secondary.
+    </div>
+    <div class="insight-box insight-green">
+      <strong>Blackout Blocks are over-performing as an accessory.</strong> At $6,762 (8% of revenue) with a 6.16% landing page CVR, this product punches well above its traffic share. Adding it as a cross-sell on the kit page and in the cart (Issue #14) is a reliable AOV (average order value) play.
+    </div>
+  </div>
+
+
+  <!-- BLOG DATA -->
+  <div class="summary-card" style="margin-bottom:20px;">
+    <h2>Blog Traffic: Landing Page Report - Feb 13 to Apr 13, 2026</h2>
+    <p style="margin-bottom:8px;">372 blog sessions across 40 posts. Overall blog CVR: <strong style="color:var(--critical);">0.81%</strong> vs. 2.21% site average. Total blog revenue: <strong>$2,772</strong>.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;">Blog traffic is 1.94% of all sessions but generates only 3.47% of revenue - and most of that comes from a single post. 8 of the top 10 posts generate $0 revenue.</p>
+
+    <div class="funnel-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:28px;">#</th>
+            <th>Blog Post</th>
+            <th style="text-align:right;">Sessions</th>
+            <th style="text-align:right;">Avg Time</th>
+            <th style="text-align:right;">Revenue</th>
+            <th style="text-align:right;">CVR</th>
+            <th>Insight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="funnel-row-critical">
+            <td class="row-num">1</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/best-blackout-curtains-guide" target="_blank">/best-blackout-curtains-guide</a></td>
+            <td style="text-align:right;">149 <span class="stat-label">40%</span></td>
+            <td style="text-align:right;">1m 13s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>40% of all blog traffic, zero revenue. Highest-priority post to add CTAs to. People are reading (1m+ engagement) but have no path to purchase.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">2</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/enhance-your-home-with-thermal-drapes" target="_blank">/enhance-your-home-with-thermal-drapes</a></td>
+            <td style="text-align:right;">29 <span class="stat-label">7.8%</span></td>
+            <td style="text-align:right;">1m 14s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>Good engagement (1m+), zero conversion. Needs a CTA linking to the relevant product.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">3</td>
+            <td><a href="https://inotterspace.com/blogs/sleep-guides/impact-of-night-shift-work" target="_blank">/impact-of-night-shift-work</a></td>
+            <td style="text-align:right;">22 <span class="stat-label">5.9%</span></td>
+            <td style="text-align:right;">37s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>Low engagement time (37s) suggests content may not match search intent well. Add CTA and review content quality.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">4</td>
+            <td><a href="https://inotterspace.com/blogs/sleep-guides/5-mental-exercises-to-help-you-fall-asleep-fast" target="_blank">/5-mental-exercises-to-help-you-fall-asleep-fast</a></td>
+            <td style="text-align:right;">21 <span class="stat-label">5.6%</span></td>
+            <td style="text-align:right;">11s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>11s engagement is essentially a bounce. Content likely too generic - not OtterSpace-relevant enough to convert.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">5</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/benefits-of-back-tab-curtains" target="_blank">/benefits-of-back-tab-curtains</a></td>
+            <td style="text-align:right;">18 <span class="stat-label">4.8%</span></td>
+            <td style="text-align:right;">24s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>Low engagement. Back-tab curtains topic is tangential to OtterSpace's product - intent mismatch likely.</td>
+          </tr>
+          <tr class="funnel-row-ok">
+            <td class="row-num">6</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/the-best-blackout-curtains-for-a-nursery" target="_blank">/the-best-blackout-curtains-for-a-nursery</a></td>
+            <td style="text-align:right;">13 <span class="stat-label">3.5%</span></td>
+            <td style="text-align:right;">3m 21s</td>
+            <td style="text-align:right;"><span style="color:#16a34a;font-weight:700;"></span></td>
+            <td style="text-align:right;"><span class="drop-pct drop-ok" style="color:#16a34a;">7.69%</span></td>
+            <td style="color:#166534;font-weight:600;">Best performing blog post. 3m 21s engagement + 7.69% CVR. This is the model - high-intent topic, strong product fit, likely has a natural product mention. Replicate this structure across other posts.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">7</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/choosing-ideal-curtains-for-your-nursery" target="_blank">/choosing-ideal-curtains-for-your-nursery</a></td>
+            <td style="text-align:right;">12 <span class="stat-label">3.2%</span></td>
+            <td style="text-align:right;">28s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>Same topic as row 6 (nursery curtains) but converting at 0% vs 7.69%. Compare the two posts - the difference reveals what's making row 6 work.</td>
+          </tr>
+          <tr class="funnel-row-critical">
+            <td class="row-num">8</td>
+            <td><a href="https://inotterspace.com/blogs/essentials/dorm-blackout-curtains-the-ultimate-solution-for-better-sleep-in-college" target="_blank">/dorm-blackout-curtains</a></td>
+            <td style="text-align:right;">12 <span class="stat-label">3.2%</span></td>
+            <td style="text-align:right;">7s</td>
+            <td style="text-align:right;"><strong style="color:var(--critical);">$0.00</strong></td>
+            <td style="text-align:right;"><span class="drop-pct drop-critical">0%</span></td>
+            <td>7s engagement is an immediate bounce. Content is likely not matching what searchers expect to find.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="insight-box" style="margin-top:20px;">
+      <strong>Fix the best-blackout-curtains-guide first.</strong> It gets 149 of 372 blog sessions (40% of all blog traffic), people are reading it (1m 13s avg), and it generates $0. Adding one inline CTA and a product widget to that post is the highest-leverage blog fix available. If it converted at the site average of 2.21% it would generate roughly $250/month in additional revenue from current traffic alone.
+    </div>
+    <div class="insight-box">
+      <strong>The nursery post (row 6) is the template.</strong> Same site, same blog, 3m 21s engagement and 7.69% CVR. Compare it side-by-side with the other nursery post (row 7) which converts at 0% - the difference will show exactly what's driving conversion. Apply that structure to the top 5 posts by traffic.
+    </div>
+    <div class="insight-box insight-green">
+      <strong>Posts 3, 4, 5, 8 have bounce-level engagement (7-37 seconds).</strong> These are not being read - visitors land and leave. Low engagement combined with 0% CVR means the content either doesn't match search intent or doesn't load fast enough. These are lower priority than fixing posts people are actually reading.
+    </div>
+  </div>
+
+
+
+  <!-- FUNNEL -->
+  <p class="section-heading">Purchase Funnel: Where Issues Live</p>
+  <div class="funnel">
+    <div class="funnel-step has-issue">Homepage</div>
+    <div class="funnel-arrow">></div>
+    <div class="funnel-step has-issue">Collection Page</div>
+    <div class="funnel-arrow">></div>
+    <div class="funnel-step has-issue">Product Page (PDP)</div>
+    <div class="funnel-arrow">></div>
+    <div class="funnel-step has-high">Add to Cart</div>
+    <div class="funnel-arrow">></div>
+    <div class="funnel-step has-high">Cart / Checkout</div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════ CRITICAL ISSUES -->
+  <p class="section-heading">Critical Issues: Fix Immediately</p>
+  <div class="issues-list">
+
+    <!-- C1 -->
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">1</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Preorder Products Showing a December 2024 Ship Date</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Outer Curtain PDPs</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The Outer Curtain products (<a href="https://inotterspace.com/products/outer-curtain-bloom" target="_blank">Bloom</a>, <a href="https://inotterspace.com/products/outer-curtain-midnight" target="_blank">Midnight</a>, <a href="https://inotterspace.com/products/outer-curtain-space-otters" target="_blank">Space Otters</a>, <a href="https://inotterspace.com/products/outer-curtain-dinosaur" target="_blank">Dinos</a>, <a href="https://inotterspace.com/products/cloud-white-linen-curtain" target="_blank">Cloud White</a>) are listed as <strong>"EXCLUSIVE PREORDER - LIMITED QUANTITIES AVAILABLE"</strong> with the message <em>"Pre-orders expected to ship in early December 2024."</em> It is currently April 2026 - 16+ months after that deadline. Any shopper who reads this will immediately question whether the company is legitimate, whether orders will be fulfilled, or whether the site is abandoned. This is the single highest-priority issue on the entire site.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>If the products are now in stock and shipping: remove all preorder messaging immediately. Update product descriptions, variant labels, and any references to December 2024. Change the "EXCLUSIVE PREORDER" badge to something like "In Stock" or remove it entirely.</li>
+            <li>If still on preorder: update the ship date to a realistic current estimate and add a transparency note explaining the delay (e.g., "We're working through our waitlist - thank you for your patience. Estimated ship: [Month Year]").</li>
+            <li>If discontinued: remove the products or mark clearly as unavailable with a redirect or "notify me" option.</li>
+            <li>Audit all product pages for similar stale date references before publishing any ad traffic.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- C2 -->
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">2</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Negative Inventory on Live Products (-32 Units Showing)</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Outer Curtain 84"</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The Outer Curtain Bloom 84" variant shows <strong>-32 inventory</strong> in the product data while still being listed as available for purchase. This means 32 orders may have been taken for stock that doesn't exist. Customers who ordered could receive delayed or unfulfilled shipments, leading to chargebacks, negative reviews, and damage to the brand.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Audit inventory counts in Shopify admin for all outer curtain variants immediately.</li>
+            <li>Cross-reference actual warehouse stock against Shopify inventory records.</li>
+            <li>If oversold: proactively email affected customers with a timeline and offer a discount or alternative.</li>
+            <li>Enable Shopify's "Continue selling when out of stock" toggle only intentionally and with accurate lead times displayed on the PDP.</li>
+            <li>Set up a low-stock alert threshold in Shopify (or a third-party tool) to prevent this happening again.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- C3 -->
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">3</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Out-of-Stock Variants Shown With No Redirect or Alternative</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Multiple PDPs</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          Multiple variants are out of stock across the catalog (91" Blackout Kit, 63" and 95" Outer Curtain Bloom, most Outer Curtain sizes). These appear greyed out but with no "notify me when back in stock," no messaging about expected restock, and no redirect to an alternative size or product. A shopper who lands on a product needing a specific size and finds it unavailable has no path forward - they leave.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify admin, go to <strong>Products > [product] > Variants</strong> and confirm each OOS variant has "Continue selling when out of stock" turned OFF. Then install a back-in-stock app - <strong>Swym Back in Stock</strong> or <strong>Klaviyo</strong> (if already installed) both integrate natively with Shopify and add a "Notify Me" button automatically when a variant is unavailable.</li>
+            <li>Add a short copy line next to greyed variants: e.g., "Restocking soon - join the waitlist."</li>
+            <li>On the collection page, consider hiding variants that are entirely out of stock from the default view, or at minimum label them clearly so they don't kill browsing momentum.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- C4 -->
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">5</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">FAQ Page Exists But Is Not Linked From Product Pages</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">All Product Pages</span>
+            <span class="badge badge-page">Nav</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          There is a full FAQ page at <a href="https://inotterspace.com/pages/faqs" target="_blank">inotterspace.com/pages/faqs</a> but it is not linked from the main navigation or from any product page. <strong>GA4 confirms this page converts at 5.45% - more than twice the 2.21% site average.</strong> It is the highest-converting page on the entire site. Customers who find it buy at 2.5x the rate of average visitors, yet it receives only 110 sessions out of 19,128 because nothing links to it. This is the fastest ROI fix available.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify admin: <strong>Online Store > Navigation > Main menu > Add menu item</strong>. Set label to "FAQ" and link to <code>/pages/faqs</code>.</li>
+            <li>On product pages: <strong>Themes > Customize > Product page > Add block > Collapsible row</strong>. Add 4-6 FAQ rows per product covering installation, sizing, light blocking %, travel use, and washing. This is a native Shopify feature - no app needed.</li>
+            <li>At minimum, add a text link in the product description: "Have questions? <a href="https://inotterspace.com/pages/faqs" target="_blank">See our full FAQ ></a>"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /critical -->
+
+  <!-- ══════════════════════════════════════════════ HIGH PRIORITY -->
+  <p class="section-heading">High Priority: Fix Before Next Paid Campaign</p>
+  <div class="issues-list">
+
+    <!-- H1 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">4</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Return Policy or Guarantee Visible on Product Pages</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">All Product Pages</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          Blackout curtains are a considered purchase - customers want to know they can return the product if it doesn't work for their windows. There is no mention of a return window, refund policy, or satisfaction guarantee anywhere visible on product pages. The most common question before any first purchase is "what if it doesn't work?" This is unanswered.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify admin, go to <strong>Online Store > Themes > Customize</strong>, open a product page, and look for a "Custom HTML" or "Text" block below the Add to Cart button. Add a trust badge row there: <em>Free Returns · 30-Day Guarantee · Free Shipping · OEKO-TEX Certified</em>. If your Aurora theme supports metafields, you can also use a product-level metafield block.</li>
+            <li>Add a collapsible accordion block in the product description using Shopify's <strong>Themes > Customize > Product page > Add block > Collapsible row</strong>. Label it "Shipping &amp; Returns" and link to your Shopify policy pages under <strong>Settings > Policies</strong>.</li>
+            <li>If you offer a satisfaction guarantee, lead with it: "Try it risk-free for 30 days." This single line can meaningfully lift conversion on a premium-priced item.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H3 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">6</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Size Guide Page Exists But Is Not Linked at Point of Decision</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">All Product Pages</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          There is a size guide at <a href="https://inotterspace.com/pages/size-guide" target="_blank">inotterspace.com/pages/size-guide</a> but it is not linked from the variant selector on any product page. The most common reason a shopper hesitates on a curtain purchase is uncertainty about sizing. If they pick the wrong size, they return it. If they're unsure which size, they abandon. The size guide exists - it just isn't being used.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify: <strong>Themes > Edit code > Sections > main-product.liquid</strong> (or similar). Find the variant selector block and add a link tag pointing to <code>/pages/size-guide</code> immediately after it. Alternatively, use <strong>Themes > Customize > Product page</strong> and add a Text block with the link if your Aurora theme supports it without code edits.</li>
+            <li>Consider adding a brief sizing callout in the product description: "57" fits windows up to 50" wide · 78" fits up to 72" · 91" fits up to 84"."</li>
+            <li>If the size guide page has good visuals (measuring diagrams, window type examples), link to it from the announcement bar or homepage too.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H4 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">7</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">HSA/FSA Eligibility Is Underutilized as a Conversion Lever</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">PDPs</span>
+            <span class="badge badge-page">Homepage</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          HSA/FSA eligibility is a significant differentiator - most blackout curtain competitors don't have it. Right now it only appears in the rotating announcement bar as a small text line. There is a full dedicated page at <a href="https://inotterspace.com/pages/hsa-fsa-eligibility" target="_blank">inotterspace.com/pages/hsa-fsa-eligibility</a> that is not surfaced anywhere shoppers can find it mid-purchase. This is a major trust and value signal being buried.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In <strong>Themes > Customize > Product page</strong>, add a Text or Custom HTML block below the Add to Cart button with the message: "Pay with your HSA or FSA card at checkout - pre-tax savings apply." Link to <a href="https://inotterspace.com/pages/hsa-fsa-eligibility" target="_blank">/pages/hsa-fsa-eligibility</a>. Include it in the trust badge row alongside Free Returns and OEKO-TEX.</li>
+            <li>Add "HSA/FSA Eligible" as one of the trust badge row items below the Add to Cart button.</li>
+            <li>Consider a dedicated callout section on the homepage targeting the sleep-health audience: parents, shift workers, travelers - the same audiences your blog targets.</li>
+            <li>Add FAQ to the hsa-fsa page: "What counts as a qualifying expense? How do I submit for reimbursement?"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H5 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">8</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Homepage Lacks a Clear Above-Fold Value Proposition</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Homepage</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The homepage converts at <strong>1.17% CVR</strong> despite receiving 52% of all site traffic. The <a href="https://inotterspace.com/products/blackout-layer" target="_blank">product page</a> it should be sending people to converts at 2.94% - 2.5x higher. GA4 shows 1,040 people left the homepage without viewing a single product. The page has no strong H1, no subheadline, and no primary CTA - it is doing navigation-level work when it should be doing sales-level work. OtterSpace has three distinct customer segments (Parents, Sleep Optimizers/Health Enthusiasts, and Shift Workers) - the current homepage doesn't speak to any of them.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Lead with an outcome-first H1 that spans all three segments: "The Last Blackout Curtain You'll Ever Need" or "Total Darkness. On Every Window." Avoid parent-specific language in the hero - that's one segment, not the whole market. Reference designs: <a href="https://eightsleep.com" target="_blank">eightsleep.com</a> (outcome-led, science-forward, dark and sleek) and <a href="https://trygraymatter.com" target="_blank">trygraymatter.com</a> (premium, clean, health-performance feel) are the right tone to aim for.</li>
+            <li>Add a subhead explaining the mechanism and the unique edge: "The only kit that seals light from the sides, top, and middle - not just the fabric." This directly addresses the #1 failure point of competitors like Sleepout (see Issue #23).</li>
+            <li>Add a prominent CTA button ("Shop Blackout Kits") and a hero image showing the product installed in a real bedroom.</li>
+            <li>Below the hero: a 3-icon trust row (✓ 100% Blackout Guarantee · ✓ Tool-Free Install · ✓ OEKO-TEX Certified) followed by segment-specific proof - one quote from a parent, one from a shift worker, one from a sleep-focused customer - to signal "this product is for you" to all three audiences without spelling it out explicitly.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H6 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">9</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Email Capture - No Way to Recover Non-Buyers</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Site-Wide</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The vast majority of visitors (typically 95-98%) don't purchase on the first visit. There is no email popup, exit-intent offer, footer newsletter signup, or lead magnet anywhere on the site. This means every non-purchasing visitor is lost permanently with no way to follow up.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>If Klaviyo is installed: go to <strong>Klaviyo > Sign-up Forms > Create Form</strong> and set up a popup with a 10% discount offer. Klaviyo integrates directly with Shopify and syncs subscriber data automatically.</li>
+            <li>For a footer signup: <strong>Themes > Customize > Footer > Add block > Newsletter</strong> - this is a native Shopify block, no app needed. Add a value prop line: "Sleep tips + exclusive offers."</li>
+            <li>For the back-in-stock out-of-stock visitors: capture emails via "Notify Me" (see Issue #3) - these are high-intent leads.</li>
+            <li>The HSA/FSA page is also a natural lead capture opportunity: "Get a reminder before your FSA deadline" opt-in.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H7 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">10</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Product Video Demonstrating the 100% Blackout Claim</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">All Product Pages</span>
+            <span class="badge badge-page">Homepage</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The core claim - "blocks 100% of light, even around the edges" - is extraordinary and exactly the kind of thing shoppers are skeptical of after buying cheap blackout curtains that leak light. This claim needs to be proven visually, not just stated. Product images alone don't do this. There is no video on any product page.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Create a short (30-60 second) product demo video: before/after showing a window with regular curtains vs. OtterSpace, ideally in a dark room. Show the light-sealing edges specifically.</li>
+            <li>Embed this video as the first or second image in the PDP gallery on every product page.</li>
+            <li>Embed it as a homepage section. This single asset can be repurposed for paid ads, TikTok, and Instagram - it addresses the #1 objection ("does it actually work?") without any copy.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H8 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">11</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Star Ratings Shown on Collection Page Cards</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The product pages have 5-star ratings with 150-200+ reviews - a huge trust asset. But on the collection page, product cards show only the product name, image, and price. Star ratings are not displayed. Shoppers scanning the collection to decide which product to click are making that decision without social proof, which increases bounce and reduces click-through to PDPs.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In <strong>Judge.me</strong>: go to Judge.me app > Settings > Widgets > enable "Show rating badges on collection pages." In <strong>Loox</strong>: Loox app > Widgets > Collection page > toggle on. Both inject the stars automatically into Shopify collection card templates. Verify it's rendering after enabling by visiting <a href="https://inotterspace.com/collections/all" target="_blank">inotterspace.com/collections/all</a>.</li>
+            <li>Once enabled, validate it's displaying correctly on both desktop and mobile.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H9 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">12</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Shipping Timeframe Is Never Stated</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">All Product Pages</span>
+            <span class="badge badge-page">Cart</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          "Free Shipping*" appears in the announcement bar, but no product page or cart page states <em>when</em> the order will arrive. "When will I get it?" is among the top 3 questions before any online purchase. The asterisk on "Free Shipping*" is also unexplained at point of sale - shoppers may wonder if their order qualifies.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In <strong>Themes > Customize > Product page > Add block > Text</strong>, add a line below the Add to Cart button: "Orders ship within 1-2 business days. Estimated delivery: 3-7 days (US)." For dynamic estimates, install the <strong>Estimated Delivery Date</strong> app (free tier available on Shopify App Store) which auto-calculates based on the order date.</li>
+            <li>Clarify the free shipping terms inline: "Free standard shipping on all US orders" (or whatever the actual condition is). Remove the asterisk mystery.</li>
+            <li>Shopify's native shipping date estimate feature (or apps like Estimated Delivery Date) can dynamically show "Get it by [date]" - which is proven to increase conversions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H10 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">13</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">51 Blog Posts Are Not Driving Internal Links to Products</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Blog</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          GA4 confirms: 40 blog posts received 372 sessions in 60 days at a <strong>0.81% CVR vs. the 2.21% site average.</strong> 8 of the top 10 posts generated $0 revenue. The <a href="https://inotterspace.com/blogs/essentials/best-blackout-curtains-guide" target="_blank">best-blackout-curtains-guide</a> alone gets 149 sessions with 1m 13s average engagement (people are reading it) and produces zero revenue because there are no CTAs. One exception: the <a href="https://inotterspace.com/blogs/essentials/the-best-blackout-curtains-for-a-nursery" target="_blank">nursery post</a> converts at 7.69% - proving the blog CAN convert when product links are present.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Audit the top 10 blog posts by traffic (use GA4) and ensure each has at least one inline CTA linking to the most relevant product (e.g., "Shop the Total Blackout Kit >").</li>
+            <li>Add a persistent product widget or sticky "Shop Now" sidebar/banner on blog posts.</li>
+            <li>For posts ranking on Google, prioritize updating internal links and CTAs first - these are already getting traffic and conversions from them are essentially free.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- H11 -->
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">26</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">GA4 Tracking Bug: Variant Revenue Not Attributed Correctly</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">GA4 / Shopify Integration</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The <code>view_item</code> and <code>add_to_cart</code> events fire with the full variant name (e.g., "Total Blackout Curtain Kit - 57&quot; / One Panel") but the <code>purchase</code> event fires with just the base product name ("Total Blackout Curtain Kit"). As a result, every variant shows $0 revenue and 0 purchases in GA4. The 57&quot; kit has 6,290 views and shows $0 - while the base product name records all 357 purchases and $64,677. You cannot currently tell which sizes are selling, which are dead weight, or where to focus inventory. Fix this before making any variant-level decisions.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In your Shopify GA4 integration (or Google Tag Manager), locate the <code>purchase</code> event tag and confirm the <code>item_name</code> parameter matches the format used in <code>view_item</code> and <code>add_to_cart</code>.</li>
+            <li>The fix is typically setting <code>item_name</code> to include the variant title consistently across all three events - either always include the variant suffix, or always use just the base product name. Pick one and apply it to all events.</li>
+            <li>After the fix, verify in GA4 > E-commerce Purchases that variant-named items now show purchase data.</li>
+            <li>Once fixed, re-run the E-commerce Purchases report over 30+ days to get clean variant-level revenue data to inform inventory and merchandising decisions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /high -->
+
+  <!-- ══════════════════════════════════════════════ MEDIUM PRIORITY -->
+  <p class="section-heading">Medium Priority: Fix in the Next Sprint</p>
+  <div class="issues-list">
+
+    <!-- M1 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">14</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Accessories Are Buried - No Cross-Sell Strategy</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">All Product Pages</span>
+            <span class="badge badge-page">Cart</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          There are three useful accessory products in the catalog -<a href="https://inotterspace.com/products/magnetic-blackout-blocks-for-blackout-curtains" target="_blank">Magnetic Blackout Blocks</a>, <a href="https://inotterspace.com/products/3m-command-refill-strips" target="_blank">3M Command Refill Strips</a>, and a <a href="https://inotterspace.com/products/portable-blackout-curtain-travel-bag" target="_blank">Portable Travel Bag</a> - that most buyers of the main kit would genuinely want. These are not prominently cross-sold on the main product pages or in the cart. Adding them to an order is a natural upsell that increases AOV without requiring a new customer.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Add a "Frequently Bought Together" or "Complete Your Kit" section on the Blackout Layer and Bundle PDPs featuring the travel bag and replacement strips.</li>
+            <li>In the cart drawer, replace or supplement the "You may also like" recommendations with the accessories for customers who've added a kit.</li>
+            <li>Consider bundling: "Add a Travel Bag for $X" as a one-click add-on in the cart.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">15</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Collection Page Has No Filtering or Sorting</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The <a href="https://inotterspace.com/collections/all" target="_blank">main collection page</a> shows 15 products with no ability to filter by type (kit vs. bundle vs. accessory), size, color, or price. No sort options (best sellers, price, newest). On mobile especially, this creates browsing friction.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify admin: <strong>Online Store > Navigation > Collection and search filters</strong>. Enable filtering and add filter groups for Product Type, Size (variant option), and Price. This is a native Shopify feature - no app needed on Shopify plans that include it. In <strong>Themes > Customize > Collection page</strong>, enable the filter and sort UI if not already visible.</li>
+            <li>Consider splitting the navigation into clearer subcollections: <a href="https://inotterspace.com/collections/blackout-layer" target="_blank">"Kits"</a>, <a href="https://inotterspace.com/collections/blackout-bundle" target="_blank">"Bundles"</a>, <a href="https://inotterspace.com/collections/blackout-sleep-accessories" target="_blank">"Accessories"</a> - these already exist as collections in the sitemap but aren't prominent in the nav.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">16</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Product Badges on Collection Cards (Best Seller, New, etc.)</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          Product cards on the collection page have no visual hierarchy indicators. Shoppers don't know which product is most popular, which is recommended for first-time buyers, or which is new. This slows decision-making and can result in shoppers clicking the wrong product first, getting confused, and leaving.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Add a "Best Seller" badge to the Total Blackout Curtain Kit (your flagship product).</li>
+            <li>Consider an "Editor's Pick" or "Most Popular" badge on the Bloom Bundle.</li>
+            <li>If the Outer Curtains are genuinely preorder, badge them clearly as "Coming Soon" (after fixing the date issue).</li>
+            <li>This can be done via Shopify product tags + theme metafields, or with a badge app like Product Label & Badge.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">17</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Limited Product Imagery - No Before/After, Lifestyle, or Room Context</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">All Product Pages</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          Product pages appear to have primarily one hero product image, with limited lifestyle or room-context shots. Curtains are a visual purchase - shoppers want to see how the product looks installed in a real bedroom, nursery, or hotel room. Before/after comparisons (light leaking vs. sealed) are especially compelling for this product category.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>For each product: add a minimum of 5-8 images including: (1) product on white background, (2) installed in a real room, (3) close-up of the magnetic/edge sealing mechanism, (4) the blackout effect in a dark room, (5) travel/portability use case.</li>
+            <li>Source customer photos from your review platforms (Loox especially) - you likely already have great UGC that can be added to the gallery.</li>
+            <li>A before/after GIF or short video clip of the light-blocking effect would outperform any static image.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">18</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Kit vs. Bundle Differentiation Is Unclear</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Homepage</span>
+            <span class="badge badge-page">Collection Page</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          There is a "Total Blackout Curtain Kit" ($129-149) and separate "Blackout Curtain Bundles" ($151-354). First-time visitors will not immediately understand the difference between these two offerings, which can lead to confusion, wrong product selection, and abandonment. The bundle includes an outer decorative curtain - but this isn't telegraphed clearly on the collection page.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Add a short comparison section on the homepage or collection page: "What's the difference? Kit = blackout layer only. Bundle = blackout layer + decorative outer curtain."</li>
+            <li>On the collection page, add a subtitle or secondary text under each product name clarifying what's included.</li>
+            <li>Consider adding a "Which is right for me?" quiz or decision-helper - even a 2-option selector ("I just need blackout" vs. "I want style + blackout") that routes to the correct product.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M7 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">19</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Dr. Melissa Smith (PhD Founder) Is an Underused Trust Signal</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">About Page</span>
+            <span class="badge badge-page">Homepage</span>
+            <span class="badge badge-page">PDPs</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The <a href="https://inotterspace.com/pages/about-otterspace-sleep-solutions" target="_blank">about page</a> title references "Melissa Smith, Ph.D. | Founder of OtterSpace Sleep Solutions." A PhD founder in a sleep-science context is a significant credibility differentiator - especially for HSA/FSA-eligible products positioned as health tools. This information appears to be on a page that most shoppers never visit and is not surfaced on product pages or the homepage.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Add a founder byline or short bio callout on the homepage: "Designed by a sleep scientist, built for real life."</li>
+            <li>Reference her credentials in the PDP copy: "Developed by Dr. Melissa Smith, Ph.D., to solve the exact problem she faced as a new parent."</li>
+            <li>Add a "Founder's Note" section on the homepage with a photo - this humanizes the brand and makes the premium price feel justified.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M8 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">20</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Three Review Platforms Running Simultaneously</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Site-Wide</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          Loox, Judge.me, and Yotpo are all installed and loading on the site. Each adds JavaScript payload and potential widget conflicts. Reviews are fragmented across three platforms - a product showing 203 reviews on Judge.me may show 78 on Yotpo, undermining perceived social proof. Also, three paid review apps is an unnecessary monthly cost.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>In Shopify admin: <strong>Apps > [review app to remove] > Delete app</strong>. Before deleting, export your reviews: in Judge.me go to Settings > Import/Export > Export. In Loox go to Settings > Export reviews. Import into your chosen platform first, then delete the others.</li>
+            <li>After removing unused apps, go to <strong>Themes > Edit code</strong> and check for any leftover widget snippets (look for Loox or Yotpo liquid tags in product templates) and remove them to clean up load time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M9 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">21</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Page Speed Risk From Heavy Third-Party Script Load</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Site-Wide</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          The site loads a significant number of third-party scripts: Hotjar, TikTok Pixel, Facebook Pixel, Google Tag Manager, TriplePixel, three review platforms, Kaching Bundles, Gorgias chat, Klaviyo, and more. Each adds weight. Estimated LCP (Largest Contentful Paint) is likely in the 2.5-3.5s range. Every 1-second delay in page load correlates with a 7% drop in conversions (industry benchmark). On mobile this is amplified.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Run the site through Google PageSpeed Insights and prioritize any LCP or CLS warnings.</li>
+            <li>Remove the two unused review apps (see Issue #20) - this is the easiest quick win.</li>
+            <li>Use Google Tag Manager to load non-critical pixels (TikTok, TriplePixel) after the page is interactive, not on initial load.</li>
+            <li>Ensure product images are served in WebP format and properly sized for the container - oversized images are a common Shopify slowdown.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- M9 -->
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">27</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Award Placement: "Parents Best for Baby 2026" Needs Careful Positioning</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Homepage</span>
+            <span class="badge badge-page">PDPs</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">
+          OtterSpace won <strong>Parents Best for Baby 2026: Best Blackout Curtains</strong> - a legitimate third-party credibility signal. The risk: prominently displaying a "Best for Baby" award in the hero or above-fold sends a category signal to non-parent shoppers (shift workers, sleep optimizers) that this is a children's product. That's one of three customer segments, not the whole market. The award's value as social proof must be captured without letting it define the brand's positioning for everyone who isn't a parent.
+        </div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li><strong>Do not place it in the hero or immediately below the product title.</strong> The first impression on a 32-year-old shift worker or Huberman Lab listener should not be a baby-specific award badge.</li>
+            <li><strong>Place it in a "Press &amp; Awards" or "As Seen In" trust bar</strong> - ideally alongside other credentials (OEKO-TEX, HSA/FSA eligible, any press mentions). In a row of 4-5 trust signals, it reads as external validation rather than a product category statement. The shopper registers "this brand is credible" rather than "this is a baby product."</li>
+            <li><strong>Use it prominently on nursery-specific pages and blog posts</strong> (e.g., the <a href="https://inotterspace.com/blogs/essentials/the-best-blackout-curtains-for-a-nursery" target="_blank">nursery blog post</a>, any baby/nursery collection if one exists). Full badge, full context - it's perfectly on-brand there.</li>
+            <li><strong>In Klaviyo</strong>, use it in email flows targeted at the parent segment (customers who mention babies or nurseries in their order notes or who came from nursery blog posts). It's a powerful close for that audience.</li>
+            <li><strong>Framing if used in the main trust bar:</strong> consider displaying just the award logo/badge image (without the "Best for Baby" text) if the image format allows, or using small supporting copy: "Award-winning sleep solution - Parents Magazine 2026." This gives credit without the category narrowing.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /medium -->
+
+  <!-- ══════════════════════════════════════════════ LOW PRIORITY -->
+  <p class="section-heading">Low Priority: Good to Have</p>
+  <div class="issues-list">
+
+    <!-- L1 -->
+    <div class="issue-card priority-low">
+      <div class="issue-header">
+        <div class="issue-number">22</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Gift Card Not Merchandised</span>
+            <span class="badge badge-low">Low</span>
+            <span class="badge badge-page">Footer / Homepage</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">A gift card is in the product catalog but is not linked or promoted anywhere on the site. Sleep products make strong gift purchases - especially for new parents.</div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">Add a "Gift Cards" link in the footer and consider a brief callout around key gift-giving seasons (new baby, holidays). Link from the homepage if running a seasonal promotion.</div>
+      </div>
+    </div>
+
+    <!-- L2 -->
+    <div class="issue-card priority-low">
+      <div class="issue-header">
+        <div class="issue-number">23</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Competitive Differentiation on Site - Shoppers Are Comparing Elsewhere</span>
+            <span class="badge badge-low">Low</span>
+            <span class="badge badge-page">Homepage / PDP</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">OtterSpace competes in a well-defined category with three main direct competitors: <strong>Sleepout</strong> (suction cup portable blackout curtains - but suction cups fall, and the product blocks fabric light only, not edge gaps, leaving customers disappointed); <strong>UBlockout</strong> (premium aluminum-framed custom shades, genuinely 100% blackout, but $500-600 per window - roughly 5x OtterSpace's price); and <strong>GuardBlinds</strong> (similar concept to UBlockout, lower price, but questionable quality and overseas manufacturing). None of these objections or differentiators are addressed anywhere on inotterspace.com. Shoppers who arrive mid-funnel after comparing Sleepout will have specific doubts ("does it actually seal the edges?") that go unanswered.</div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">
+          <ul>
+            <li>Add a comparison table on the PDP or homepage: OtterSpace vs. Sleepout vs. UBlockout. Key axes: actual light seal (edges + top + middle), price, installation method (no-drill vs. screws), return policy, and portability. OtterSpace wins on all four for the renter/traveler audience.</li>
+            <li>Address the "does it actually block edge gaps?" doubt directly in the product copy - this is the exact failure point Sleepout customers complain about. A before/after image or short video of a window with no edge leak is the most persuasive asset possible.</li>
+            <li>Greenguard certification is coming - once live, this directly counters Sleepout's primary "safest for kids" angle. Plan to update the PDP and homepage trust row the day it's certified.</li>
+            <li>UBlockout's $500+ price point is a gift - a subtle "starting at $X vs. $500+ for custom shades" callout positions OtterSpace as the smart, renter-friendly choice without sounding defensive.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- L3 -->
+    <div class="issue-card priority-low">
+      <div class="issue-header">
+        <div class="issue-number">24</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Referral or Loyalty Program Visible</span>
+            <span class="badge badge-low">Low</span>
+            <span class="badge badge-page">Post-Purchase</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">With strong reviews and a passionate customer base (parents, travelers, sleep-health enthusiasts), a referral program could drive meaningful organic acquisition. None is visible.</div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">Consider adding Referral Candy, Yotpo Loyalty, or a simple Klaviyo referral flow post-purchase. A "Give $15, Get $15" offer in the post-purchase email sequence can compound over time with low ongoing effort.</div>
+      </div>
+    </div>
+
+    <!-- L4 -->
+    <div class="issue-card priority-low">
+      <div class="issue-header">
+        <div class="issue-number">25</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Announcement Bar Is Doing Too Much at Once</span>
+            <span class="badge badge-low">Low</span>
+            <span class="badge badge-page">Site-Wide</span>
+          </div>
+        </div>
+      </div>
+      <div class="issue-body">
+        <div class="issue-what">The announcement bar rotates through three messages: HSA/FSA eligibility, "Up to 20% OFF," and "Free Shipping." Rotating bars are often ignored (banner blindness) and each message competes with the others. "Up to 20% OFF" without context can feel vague and salesy.</div>
+        <div class="fix-label">How to Fix</div>
+        <div class="fix-content">Pick one primary message per campaign/season and make it specific. "Free shipping on all US orders" is more credible than "Up to 20% OFF." Or lead with urgency when running a real promo: "Sale ends Sunday - 15% off all kits." Test single-message vs. rotating in GA4.</div>
+      </div>
+    </div>
+
+  </div><!-- /low -->
+
+  <!-- ══════════════════════════════════════════════ MASTER CHECKLIST -->
+  <p class="section-heading">Master Checklist: All 27 Items</p>
+
+  <div class="checklist-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>✓</th>
+          <th>#</th>
+          <th>Issue</th>
+          <th>Priority</th>
+          <th>Page(s)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-critical">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">1</td>
+          <td><div class="checklist-item">Remove/update December 2024 preorder ship dates</div></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span style="font-size:12px;color:#64748b">Outer Curtain PDPs</span></td>
+        </tr>
+        <tr class="row-critical">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">2</td>
+          <td><div class="checklist-item">Fix negative inventory (-32) on Outer Curtain 84"</div></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span style="font-size:12px;color:#64748b">Shopify Admin</span></td>
+        </tr>
+        <tr class="row-critical">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">3</td>
+          <td><div class="checklist-item">Add "Notify Me" / back-in-stock capture on all OOS variants</div></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span style="font-size:12px;color:#64748b">All Product Pages</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">4</td>
+          <td><div class="checklist-item">Add return policy + money-back guarantee badge below ATC button</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">All Product Pages</span></td>
+        </tr>
+        <tr class="row-critical">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">5</td>
+          <td><div class="checklist-item">Link FAQ page from nav + add FAQ accordion on PDPs</div></td>
+          <td><span class="badge badge-critical">Critical</span></td>
+          <td><span style="font-size:12px;color:#64748b">Nav, PDPs</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">6</td>
+          <td><div class="checklist-item">Add "Size Guide" link next to variant selector on all PDPs</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">All Product Pages</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">7</td>
+          <td><div class="checklist-item">Add HSA/FSA badge + link to eligibility page on PDPs</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Product Pages, Homepage</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">8</td>
+          <td><div class="checklist-item">Build homepage hero: headline, subhead, CTA, trust row</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Homepage</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">9</td>
+          <td><div class="checklist-item">Add email capture popup + footer newsletter signup</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Site-Wide</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">10</td>
+          <td><div class="checklist-item">Create + embed product demo video showing 100% blackout</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Product Pages, Homepage</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">11</td>
+          <td><div class="checklist-item">Enable star ratings display on collection page product cards</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Collection Page</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">12</td>
+          <td><div class="checklist-item">Add shipping timeframe + clarify free shipping terms on PDPs</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Product Pages, Cart</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">13</td>
+          <td><div class="checklist-item">Add inline CTAs + product links to top 10 blog posts by traffic</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">Blog</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">14</td>
+          <td><div class="checklist-item">Cross-sell accessories (blocks, strips, bag) on PDPs and in cart</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Product Pages, Cart</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">15</td>
+          <td><div class="checklist-item">Enable collection page filtering (type, size, price) + sort options</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Collection Page</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">16</td>
+          <td><div class="checklist-item">Add "Best Seller" and relevant product badges to collection cards</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Collection Page</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">17</td>
+          <td><div class="checklist-item">Expand product gallery: lifestyle shots, room context, before/after</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">All Product Pages</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">18</td>
+          <td><div class="checklist-item">Add Kit vs. Bundle comparison explanation on homepage/collection</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Homepage, Collection</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">19</td>
+          <td><div class="checklist-item">Surface PhD founder credentials on homepage + PDPs</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Homepage, PDPs</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">20</td>
+          <td><div class="checklist-item">Consolidate to one review platform (remove Loox or Yotpo or Judge.me)</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Site-Wide</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">21</td>
+          <td><div class="checklist-item">Run PageSpeed audit; remove unused apps; optimize image formats</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Site-Wide</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">22</td>
+          <td><div class="checklist-item">Add Gift Cards link to footer + seasonal promotion callouts</div></td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span style="font-size:12px;color:#64748b">Footer</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">23</td>
+          <td><div class="checklist-item">Add competitor comparison table ("Why OtterSpace vs. regular curtains")</div></td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span style="font-size:12px;color:#64748b">Homepage / PDP</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">24</td>
+          <td><div class="checklist-item">Set up a referral program (Referral Candy or Klaviyo post-purchase)</div></td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span style="font-size:12px;color:#64748b">Post-Purchase</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">25</td>
+          <td><div class="checklist-item">Simplify announcement bar to a single, specific message per campaign</div></td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span style="font-size:12px;color:#64748b">Site-Wide</span></td>
+        </tr>
+        <tr class="row-high">
+          <td><span class="check-box"></span></td>
+          <td class="row-num">26</td>
+          <td><div class="checklist-item">Fix GA4 tracking: align item_name across view_item, add_to_cart, and purchase events</div></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span style="font-size:12px;color:#64748b">GA4 / Shopify</span></td>
+        </tr>
+        <tr>
+          <td><span class="check-box"></span></td>
+          <td class="row-num">27</td>
+          <td><div class="checklist-item">Place "Parents Best for Baby" award in trust bar (not hero) - prominent on nursery pages only</div></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span style="font-size:12px;color:#64748b">Homepage, PDPs, Blog</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /body-wrap -->
+
+<!-- ═══════════════════════════════════════════════════════ FOOTER -->
+<footer class="report-footer">
+  <strong>OtterSpace CRO Audit</strong> · inotterspace.com · April 2026 · Prepared by EmberTribe
+</footer>
+
+</body>
+</html>
