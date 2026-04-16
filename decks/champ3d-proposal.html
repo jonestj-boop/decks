@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Champ3D — SEO Growth Strategy 2026 | EmberTribe</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+            background: #1a1a2e;
+            color: #2c3e50;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e94560, #ff6b35);
+            transition: width 0.4s ease;
+            z-index: 1000;
+        }
+
+        .slides-wrapper { width: 100%; height: 100vh; position: relative; }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 48px 64px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.45s ease;
+            overflow-y: auto;
+        }
+        .slide.active { opacity: 1; pointer-events: all; }
+        .slide.dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+            color: #fff;
+        }
+        .slide.light { background: #f8f9fa; color: #2c3e50; }
+
+        /* Nav */
+        .nav-controls {
+            position: fixed; bottom: 28px; right: 28px;
+            display: flex; align-items: center; gap: 10px; z-index: 100;
+        }
+        .nav-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: none; background: rgba(233,69,96,0.9); color: #fff;
+            font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; line-height: 1;
+        }
+        .nav-btn:hover { background: #ff333d; }
+        .slide-counter {
+            font-size: 13px; color: rgba(255,255,255,0.7);
+            background: rgba(0,0,0,0.4); padding: 4px 12px; border-radius: 20px;
+        }
+
+        /* Logo */
+        .logo-row {
+            position: fixed; bottom: 24px; left: 28px;
+            display: flex; align-items: center; gap: 8px; z-index: 100;
+        }
+        .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: #e94560; }
+        .logo-text {
+            font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.45); text-transform: uppercase;
+        }
+
+        /* Typography */
+        .slide-label {
+            font-size: 11px; font-weight: 700; letter-spacing: 3px;
+            text-transform: uppercase; color: #e94560; margin-bottom: 14px;
+        }
+        h1.hero-title {
+            font-size: 50px; font-weight: 900; letter-spacing: -1.5px;
+            line-height: 1.08; color: #fff; margin-bottom: 20px;
+        }
+        h1.hero-title span { color: #e94560; }
+        .hero-sub {
+            font-size: 17px; color: rgba(255,255,255,0.62);
+            margin-bottom: 36px; max-width: 640px; line-height: 1.65;
+        }
+        h2.section-title {
+            font-size: 34px; font-weight: 800; color: #1a1a2e;
+            margin-bottom: 6px; letter-spacing: -0.5px;
+        }
+        h2.section-title.white { color: #fff; }
+        .section-sub { font-size: 14px; color: #7f8c8d; margin-bottom: 30px; }
+        .divider {
+            width: 48px; height: 4px;
+            background: linear-gradient(90deg, #e94560, #ff6b35);
+            border-radius: 2px; margin: 12px 0 20px;
+        }
+
+        /* Layout */
+        .content-wrapper { width: 100%; max-width: 1100px; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 1100px; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; width: 100%; max-width: 1100px; }
+        .four-col { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; width: 100%; max-width: 1100px; }
+
+        /* Stat Cards */
+        .stats-row {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            justify-content: center; width: 100%; max-width: 1100px;
+        }
+        .stat-card {
+            background: #fff; border-radius: 12px; padding: 20px 24px;
+            flex: 1; min-width: 150px; max-width: 220px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+        .stat-card.dark-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.11);
+        }
+        .stat-value {
+            font-size: 30px; font-weight: 900; color: #1a1a2e;
+            line-height: 1; margin-bottom: 6px;
+        }
+        .stat-card.dark-card .stat-value { color: #fff; }
+        .stat-label {
+            font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+            text-transform: uppercase; color: #95a5a6;
+        }
+        .stat-card.dark-card .stat-label { color: rgba(255,255,255,0.45); }
+        .stat-delta {
+            display: inline-block; margin-top: 8px; font-size: 11px;
+            font-weight: 700; padding: 2px 8px; border-radius: 20px;
+        }
+        .delta-up { background: rgba(39,174,96,0.15); color: #27AE60; }
+        .delta-neutral { background: rgba(52,152,219,0.15); color: #3498DB; }
+
+        /* Cards */
+        .card {
+            background: #fff; border-radius: 12px; padding: 22px 26px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .card.dark-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.11); color: #fff;
+        }
+        .card h3 { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; }
+        .card.dark-card h3 { color: #fff; }
+        .icon-badge {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin-bottom: 12px;
+        }
+        .card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .card ul li {
+            font-size: 13px; color: #555; display: flex;
+            align-items: flex-start; gap: 8px; line-height: 1.45;
+        }
+        .card.dark-card ul li { color: rgba(255,255,255,0.72); }
+        .card ul li::before { content: "→"; color: #e94560; font-weight: 700; flex-shrink: 0; }
+
+        /* Pills */
+        .pill {
+            display: inline-block; padding: 3px 9px; border-radius: 20px;
+            font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+        }
+        .pill.seo { background: rgba(0,180,216,0.12); color: #00B4D8; }
+        .pill.content { background: rgba(39,174,96,0.12); color: #27AE60; }
+        .pill.links { background: rgba(233,69,96,0.12); color: #e94560; }
+        .pill.tech { background: rgba(52,152,219,0.12); color: #3498DB; }
+
+        /* Bar Charts */
+        .bar-row { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+        .bar-item { display: flex; align-items: center; gap: 14px; }
+        .bar-label {
+            font-size: 12px; font-weight: 600; color: #555;
+            width: 210px; flex-shrink: 0; text-align: right;
+        }
+        .bar-track {
+            flex: 1; height: 26px; background: #eef0f2;
+            border-radius: 6px; overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%; border-radius: 6px;
+            display: flex; align-items: center; padding-left: 12px;
+            font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.95);
+        }
+        .bar-fill.teal { background: linear-gradient(90deg, #00B4D8, #0096c7); }
+        .bar-fill.ember { background: linear-gradient(90deg, #e94560, #ff6b35); }
+        .bar-fill.green { background: linear-gradient(90deg, #27AE60, #2ecc71); }
+        .bar-fill.blue { background: linear-gradient(90deg, #3498DB, #2980b9); }
+        .bar-fill.purple { background: linear-gradient(90deg, #8e44ad, #9b59b6); }
+        .bar-fill.orange { background: linear-gradient(90deg, #f39c12, #e67e22); }
+
+        /* Annotations */
+        .annotation {
+            border-radius: 8px; padding: 13px 17px; border-left: 4px solid;
+            font-size: 13px; line-height: 1.55;
+        }
+        .annotation.warning { background: rgba(241,196,15,0.09); border-color: #F1C40F; color: #7d6608; }
+        .annotation.info { background: rgba(52,152,219,0.09); border-color: #3498DB; color: #1a5276; }
+        .annotation.success { background: rgba(39,174,96,0.09); border-color: #27AE60; color: #1e5631; }
+        .annotation.danger { background: rgba(231,76,60,0.09); border-color: #E74C3C; color: #7b241c; }
+
+        /* Pillar Cards */
+        .pillar-card {
+            background: #fff; border-radius: 12px; padding: 18px 18px 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07); border-top: 4px solid;
+        }
+        .pillar-card:nth-child(1) { border-color: #e94560; }
+        .pillar-card:nth-child(2) { border-color: #00B4D8; }
+        .pillar-card:nth-child(3) { border-color: #27AE60; }
+        .pillar-card:nth-child(4) { border-color: #f39c12; }
+        .pillar-icon { font-size: 26px; margin-bottom: 10px; }
+        .pillar-title { font-size: 14px; font-weight: 800; color: #1a1a2e; margin-bottom: 4px; }
+        .pillar-kw {
+            font-size: 10px; color: #e94560; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;
+        }
+        .cluster-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .cluster-list li {
+            font-size: 11px; color: #666;
+            display: flex; align-items: flex-start; gap: 6px; line-height: 1.35;
+        }
+        .cluster-list li::before { content: "›"; color: #ccc; font-size: 14px; font-weight: 700; margin-top: -1px; }
+
+        /* Data Table */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th {
+            background: #1a1a2e; color: rgba(255,255,255,0.75); padding: 10px 14px;
+            text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .data-table td { padding: 10px 14px; border-bottom: 1px solid #eef0f2; color: #444; }
+        .data-table tr:hover td { background: #f0f2f5; }
+        .dr-badge {
+            display: inline-block; padding: 2px 8px; border-radius: 12px;
+            font-size: 11px; font-weight: 700;
+        }
+        .dr-high { background: rgba(39,174,96,0.12); color: #27AE60; }
+        .dr-mid { background: rgba(52,152,219,0.12); color: #3498DB; }
+
+        /* Timeline */
+        .timeline { display: flex; width: 100%; max-width: 1100px; border-radius: 12px; overflow: hidden; }
+        .timeline-phase { flex: 1; padding: 22px 20px; }
+        .timeline-phase:nth-child(1) { background: #0f3460; }
+        .timeline-phase:nth-child(2) { background: #16213e; }
+        .timeline-phase:nth-child(3) { background: #1a1a2e; }
+        .phase-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: #e94560; margin-bottom: 6px;
+        }
+        .phase-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+        .phase-items { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+        .phase-items li {
+            font-size: 12px; color: rgba(255,255,255,0.68);
+            display: flex; align-items: flex-start; gap: 7px; line-height: 1.4;
+        }
+        .phase-items li::before { content: "✓"; color: #27AE60; font-weight: 700; flex-shrink: 0; }
+        .phase-cost { margin-top: 18px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.5); }
+        .phase-highlight { color: #fff; font-size: 15px; font-weight: 800; }
+
+        /* Pricing Cards */
+        .pricing-card {
+            background: #fff; border-radius: 16px; padding: 28px 26px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08); position: relative;
+        }
+        .pricing-card.featured {
+            background: linear-gradient(145deg, #0f3460, #1a1a2e);
+            color: #fff;
+        }
+        .recommended-badge {
+            position: absolute; top: 18px; right: 18px;
+            background: #e94560; color: #fff; font-size: 9px;
+            font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            padding: 4px 10px; border-radius: 20px;
+        }
+        .pricing-label {
+            font-size: 10px; font-weight: 700; letter-spacing: 2px;
+            text-transform: uppercase; color: #95a5a6; margin-bottom: 8px;
+        }
+        .pricing-card.featured .pricing-label { color: rgba(255,255,255,0.45); }
+        .pricing-price {
+            font-size: 44px; font-weight: 900; color: #1a1a2e;
+            line-height: 1; margin-bottom: 4px;
+        }
+        .pricing-card.featured .pricing-price { color: #fff; }
+        .pricing-price span { font-size: 18px; font-weight: 500; color: #95a5a6; }
+        .pricing-card.featured .pricing-price span { color: rgba(255,255,255,0.45); }
+        .pricing-items {
+            list-style: none; display: flex; flex-direction: column; gap: 9px;
+            margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;
+        }
+        .pricing-card.featured .pricing-items { border-top-color: rgba(255,255,255,0.12); }
+        .pricing-item { font-size: 13px; color: #555; display: flex; gap: 8px; }
+        .pricing-card.featured .pricing-item { color: rgba(255,255,255,0.78); }
+        .pricing-item::before { content: "✓"; color: #27AE60; font-weight: 700; flex-shrink: 0; }
+        .pricing-breakdown {
+            margin-top: 16px; font-size: 11px; color: #aaa;
+            padding-top: 12px; border-top: 1px dashed #eee;
+        }
+        .pricing-card.featured .pricing-breakdown { color: rgba(255,255,255,0.3); border-top-color: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div class="slides-wrapper" id="slides">
+
+    <!-- ── SLIDE 1 · Title ── -->
+    <div class="slide dark active" id="slide-1">
+        <div class="content-wrapper">
+            <div class="slide-label">EmberTribe · SEO Proposal · April 2026</div>
+            <h1 class="hero-title">Own the Search for<br><span>3D Printing & Rapid<br>Prototyping.</span></h1>
+            <p class="hero-sub">A Pillar-Cluster content strategy that builds Champ3D from zero domain authority into the go-to resource for engineers, designers, and manufacturers searching for additive manufacturing solutions.</p>
+            <div class="stats-row" style="justify-content:flex-start;">
+                <div class="stat-card dark-card">
+                    <div class="stat-value">$0</div>
+                    <div class="stat-label">Organic Traffic Today</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">DR 0</div>
+                    <div class="stat-label">Domain Authority</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">60K+</div>
+                    <div class="stat-label">Monthly Searches (target KWs)</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">19%</div>
+                    <div class="stat-label">3D Print Industry CAGR</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 2 · Market Opportunity ── -->
+    <div class="slide light" id="slide-2">
+        <div class="content-wrapper">
+            <div class="slide-label" style="color:#e94560;">The Opportunity</div>
+            <h2 class="section-title">High-Intent Buyers Are Searching Every Month</h2>
+            <div class="divider"></div>
+            <p class="section-sub">Most results are dominated by large generic platforms — not specialists. Champ3D can own the niches they ignore.</p>
+            <div class="bar-row" style="max-width:940px;">
+                <div class="bar-item">
+                    <div class="bar-label">custom 3D printing</div>
+                    <div class="bar-track"><div class="bar-fill teal" style="width:90%">22,200 / mo</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">online 3D printing service</div>
+                    <div class="bar-track"><div class="bar-fill ember" style="width:74%">18,100 / mo</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">rapid prototyping service</div>
+                    <div class="bar-track"><div class="bar-fill green" style="width:62%">14,800 / mo</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">additive manufacturing services</div>
+                    <div class="bar-track"><div class="bar-fill blue" style="width:44%">8,400 / mo</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">3D printing for prototypes</div>
+                    <div class="bar-track"><div class="bar-fill purple" style="width:32%">6,600 / mo</div></div>
+                </div>
+                <div class="bar-item">
+                    <div class="bar-label">SLS / SLA 3D printing service</div>
+                    <div class="bar-track"><div class="bar-fill orange" style="width:24%">5,900 / mo</div></div>
+                </div>
+            </div>
+            <div class="annotation info" style="max-width:940px; margin-top:18px;">
+                <strong>The edge:</strong> Long-tail variants of these keywords (e.g. "SLS 3D printing for automotive prototypes") convert at 3–5× the rate of head terms — and a new site can rank for them within 90–120 days with focused, structured content.
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 3 · Current State ── -->
+    <div class="slide light" id="slide-3">
+        <div class="content-wrapper">
+            <div class="slide-label" style="color:#e94560;">Where You Stand Today</div>
+            <h2 class="section-title">A Clean Slate — That's Actually the Advantage</h2>
+            <div class="divider"></div>
+            <p class="section-sub">No legacy content, no penalties, no toxic links. We get to build the perfect foundation from day one.</p>
+            <div class="three-col" style="margin-bottom:20px;">
+                <div class="annotation danger" style="margin:0;">
+                    <strong>No Domain Authority</strong><br>
+                    <span style="font-size:12px;">New domain with no link profile. Google hasn't established trust yet — but 2–3 quality backlinks a month changes that fast.</span>
+                </div>
+                <div class="annotation warning" style="margin:0;">
+                    <strong>No Indexed Content</strong><br>
+                    <span style="font-size:12px;">Zero published pages = zero organic rankings. Every article we publish becomes a 24/7 lead-generation asset working for you indefinitely.</span>
+                </div>
+                <div class="annotation success" style="margin:0;">
+                    <strong>Clean Slate Advantage</strong><br>
+                    <span style="font-size:12px;">We build the architecture right from the start — proper URL structure, perfect internal linking, and topical clusters that compound over time.</span>
+                </div>
+            </div>
+            <div class="two-col">
+                <div class="card">
+                    <h3>What this means for strategy</h3>
+                    <ul>
+                        <li>Target low-competition long-tail keywords first to get early wins</li>
+                        <li>Build topical authority cluster-by-cluster before going after head terms</li>
+                        <li>Internal linking from day one amplifies each new piece published</li>
+                        <li>First backlinks carry outsized weight — new domains see big jumps early</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Where competitors are vulnerable</h3>
+                    <ul>
+                        <li>Generic platforms (Shapeways, Xometry) ignore niche how-to content</li>
+                        <li>Most 3D printing blogs are thin, outdated, and poorly linked</li>
+                        <li>Local/specialized services almost never invest in content marketing</li>
+                        <li>That gap = Champ3D's window to rank fast across dozens of sub-topics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 4 · The Strategy ── -->
+    <div class="slide dark" id="slide-4">
+        <div class="content-wrapper">
+            <div class="slide-label">The Strategy</div>
+            <h2 class="section-title white">The Pillar-Cluster Model</h2>
+            <div class="divider"></div>
+            <p class="hero-sub" style="margin-bottom:28px;">Each Pillar page targets a broad, high-volume keyword. Cluster pages target related long-tail variants and all link back to the pillar — telling Google that Champ3D is the authority on that topic.</p>
+            <div class="two-col">
+                <div class="card dark-card">
+                    <div class="icon-badge" style="background:rgba(233,69,96,0.18);">🏛️</div>
+                    <h3>Pillar Pages (4 Total)</h3>
+                    <ul>
+                        <li>1,500–3,000 word comprehensive service guides</li>
+                        <li>Targets a broad, high-volume head keyword</li>
+                        <li>Lives at /services/[topic] or /resources/[topic]</li>
+                        <li>Receives internal links from all related cluster posts</li>
+                        <li>Primary landing pages for both organic and paid traffic</li>
+                    </ul>
+                </div>
+                <div class="card dark-card">
+                    <div class="icon-badge" style="background:rgba(0,180,216,0.18);">📝</div>
+                    <h3>Cluster Content (25–40/month)</h3>
+                    <ul>
+                        <li>800–1,200 word targeted articles and guides</li>
+                        <li>Captures specific long-tail questions and buyer intent searches</li>
+                        <li>Each post links back to its parent Pillar page</li>
+                        <li>Published at consistent velocity to build topical momentum</li>
+                        <li>Covers comparisons, how-tos, use cases, and FAQ content</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="annotation" style="max-width:1100px; margin-top:22px; background:rgba(0,180,216,0.08); border-left:4px solid #00B4D8; color:rgba(255,255,255,0.78);">
+                <strong>Why it works on a new site:</strong> Google rewards topical authority. Publishing 25+ tightly linked pieces around one topic signals "this site is the expert" — accelerating rankings across the entire cluster, not just individual pages.
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 5 · Content Architecture ── -->
+    <div class="slide light" id="slide-5">
+        <div class="content-wrapper">
+            <div class="slide-label" style="color:#e94560;">Content Architecture</div>
+            <h2 class="section-title">4 Pillars. Dozens of Clusters. One Authority Brand.</h2>
+            <div class="divider"></div>
+            <p class="section-sub">Each pillar owns a core service area. Clusters capture every buyer question, comparison, and use case within that topic.</p>
+            <div class="four-col">
+                <div class="pillar-card">
+                    <div class="pillar-icon">🖨️</div>
+                    <div class="pillar-title">3D Printing Services</div>
+                    <div class="pillar-kw">~22,200 searches / mo</div>
+                    <ul class="cluster-list">
+                        <li>FDM vs SLA vs SLS explained</li>
+                        <li>3D printing materials guide</li>
+                        <li>How to prepare files for printing</li>
+                        <li>Tolerances, finishes & post-processing</li>
+                        <li>Cost of 3D printing per part</li>
+                        <li>Online vs local 3D print services</li>
+                        <li>3D printing for small businesses</li>
+                        <li>Fastest 3D printing technologies</li>
+                    </ul>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon">⚡</div>
+                    <div class="pillar-title">Rapid Prototyping</div>
+                    <div class="pillar-kw">~18,100 searches / mo</div>
+                    <ul class="cluster-list">
+                        <li>Rapid prototyping vs traditional methods</li>
+                        <li>How long does prototyping take?</li>
+                        <li>Rapid prototyping for product designers</li>
+                        <li>CAD to prototype: a step-by-step guide</li>
+                        <li>Prototype iteration best practices</li>
+                        <li>Rapid prototyping for startups</li>
+                        <li>Prototype testing and validation</li>
+                        <li>Functional vs visual prototypes</li>
+                    </ul>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon">🏭</div>
+                    <div class="pillar-title">Additive Manufacturing</div>
+                    <div class="pillar-kw">~8,400 searches / mo</div>
+                    <ul class="cluster-list">
+                        <li>Additive vs subtractive manufacturing</li>
+                        <li>AM for aerospace components</li>
+                        <li>AM for medical devices & implants</li>
+                        <li>DMLS metal printing guide</li>
+                        <li>Design for additive manufacturing</li>
+                        <li>AM vs CNC machining comparison</li>
+                        <li>Low-volume production with AM</li>
+                        <li>Additive manufacturing ROI guide</li>
+                    </ul>
+                </div>
+                <div class="pillar-card">
+                    <div class="pillar-icon">🔩</div>
+                    <div class="pillar-title">Custom 3D Printed Parts</div>
+                    <div class="pillar-kw">~11,400 searches / mo</div>
+                    <ul class="cluster-list">
+                        <li>Custom plastic parts on demand</li>
+                        <li>3D printed parts for automotive</li>
+                        <li>Custom enclosures & housings</li>
+                        <li>End-use vs prototype parts</li>
+                        <li>How to order custom 3D parts</li>
+                        <li>Custom jigs, fixtures & tooling</li>
+                        <li>Replacement parts with 3D printing</li>
+                        <li>Rigid vs flexible material guide</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="annotation success" style="max-width:100%; margin-top:18px;">
+                <strong>Month 1 priority:</strong> All 4 Pillar pages go live first. Every cluster article published afterward immediately has a "home" to link back to — amplifying the impact of every single piece from day one.
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 6 · Backlink Strategy ── -->
+    <div class="slide light" id="slide-6">
+        <div class="content-wrapper">
+            <div class="slide-label" style="color:#e94560;">Authority Building</div>
+            <h2 class="section-title">2 Quality Backlinks Per Month — No Shortcuts</h2>
+            <div class="divider"></div>
+            <p class="section-sub">For a brand new domain, 2 high-DR placements per month signals natural growth to Google. We target sites with real traffic and strong Domain Ratings — no PBNs, no link farms.</p>
+            <table class="data-table" style="border-radius:10px; overflow:hidden; margin-bottom:18px;">
+                <thead>
+                    <tr>
+                        <th>Site</th>
+                        <th>Placement Type</th>
+                        <th>Domain Rating</th>
+                        <th>Monthly Traffic</th>
+                        <th>Cost</th>
+                        <th>Relevance to Champ3D</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>techzeel.com</strong></td>
+                        <td><span class="pill tech">Link Insertion</span></td>
+                        <td><span class="dr-badge dr-mid">DR 43</span></td>
+                        <td>18,400 / mo</td>
+                        <td><strong>$390</strong></td>
+                        <td>Tech & manufacturing audience</td>
+                    </tr>
+                    <tr>
+                        <td><strong>computertechreviews.com</strong></td>
+                        <td><span class="pill links">Guest Post</span></td>
+                        <td><span class="dr-badge dr-mid">DR 54</span></td>
+                        <td>11,700 / mo</td>
+                        <td><strong>$382.50</strong></td>
+                        <td>Tech reviews — product designers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>theenvironmentalblog.org</strong></td>
+                        <td><span class="pill links">Guest Post</span></td>
+                        <td><span class="dr-badge dr-mid">DR 51</span></td>
+                        <td>30,500 / mo</td>
+                        <td><strong>$412.50</strong></td>
+                        <td>Sustainable manufacturing angle</td>
+                    </tr>
+                    <tr>
+                        <td><strong>urbansplatter.com</strong></td>
+                        <td><span class="pill links">Guest Post</span></td>
+                        <td><span class="dr-badge dr-high">DR 61</span></td>
+                        <td>31,500 / mo</td>
+                        <td><strong>$457.50</strong></td>
+                        <td>Design/tech audience; high traffic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>thearchitectsdiary.com</strong></td>
+                        <td><span class="pill links">Guest Post</span></td>
+                        <td><span class="dr-badge dr-high">DR 68</span></td>
+                        <td>28,800 / mo</td>
+                        <td><strong>$532.50</strong></td>
+                        <td>Architects & designers — 3D printing buyers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>gisuser.com</strong></td>
+                        <td><span class="pill links">Guest Post</span></td>
+                        <td><span class="dr-badge dr-high">DR 66</span></td>
+                        <td>2,500 / mo</td>
+                        <td><strong>$292.50</strong></td>
+                        <td>Engineering & spatial tech professionals</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="two-col">
+                <div class="annotation warning" style="margin:0;">
+                    <strong>Pacing strategy:</strong> First backlink placed at the end of Month 1, after foundational pages are indexed. Too many links in the first 30 days on a brand-new domain can trigger Google's unnatural link filters.
+                </div>
+                <div class="annotation info" style="margin:0;">
+                    <strong>Quality rule:</strong> 2 DR 50+ links per month outperforms 10 DR 20 links. We choose placements based on topical relevance, real traffic, and editorial standards — not just Domain Rating alone.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 7 · Investment Options ── -->
+    <div class="slide dark" id="slide-7">
+        <div class="content-wrapper">
+            <div class="slide-label">Investment</div>
+            <h2 class="section-title white">Two Paths Within Your Budget</h2>
+            <div class="divider"></div>
+            <p class="hero-sub" style="margin-bottom:30px;">Both packages include the full Pillar-Cluster architecture, monthly reporting, and hands-on strategy from EmberTribe. Pillar pages are available as a separate add-on.</p>
+            <div class="two-col" style="max-width:920px; margin:0 auto;">
+
+                <div class="pricing-card">
+                    <div class="pricing-label">Starter Plan</div>
+                    <div class="pricing-price">$1,500 <span>/mo</span></div>
+                    <ul class="pricing-items">
+                        <li class="pricing-item">25 articles per month (cluster content)</li>
+                        <li class="pricing-item">2 backlinks per month — DR 43–54 placements</li>
+                        <li class="pricing-item">Full keyword research & cluster mapping</li>
+                        <li class="pricing-item">Monthly rankings & traffic report</li>
+                        <li class="pricing-item">Sites: techzeel.com + computertechreviews.com</li>
+                    </ul>
+                    <div class="pricing-breakdown">
+                        Articles $700 &nbsp;·&nbsp; Link Insertion $390 &nbsp;·&nbsp; Guest Post $382.50 &nbsp;·&nbsp; Total ≈ $1,472
+                    </div>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="recommended-badge">Recommended</div>
+                    <div class="pricing-label">Growth Plan</div>
+                    <div class="pricing-price">$2,000 <span>/mo</span></div>
+                    <ul class="pricing-items">
+                        <li class="pricing-item">40 articles per month — faster topical authority</li>
+                        <li class="pricing-item">2 backlinks per month — DR 51–68, higher traffic sites</li>
+                        <li class="pricing-item">Full keyword research & cluster mapping</li>
+                        <li class="pricing-item">Monthly report + strategy check-in call</li>
+                        <li class="pricing-item">Sites: theenvironmentalblog.org + urbansplatter.com</li>
+                    </ul>
+                    <div class="pricing-breakdown">
+                        Articles $1,100 &nbsp;·&nbsp; Guest Posts $412.50 + $457.50 &nbsp;·&nbsp; Total ≈ $1,970
+                    </div>
+                </div>
+
+            </div>
+            <div style="max-width:920px; margin:22px auto 0; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); border-radius:12px; padding:20px 24px; display:flex; align-items:center; gap:24px;">
+                <div style="flex-shrink:0;">
+                    <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#e94560; margin-bottom:6px;">Add-On</div>
+                    <div style="font-size:36px; font-weight:900; color:#fff; line-height:1;">$1,000<span style="font-size:16px; font-weight:500; color:rgba(255,255,255,0.4);">/mo</span></div>
+                </div>
+                <div style="width:1px; height:56px; background:rgba(255,255,255,0.12); flex-shrink:0;"></div>
+                <div>
+                    <div style="font-size:15px; font-weight:700; color:#fff; margin-bottom:6px;">Pillar Pages &nbsp;·&nbsp; 4 Pages / Month</div>
+                    <div style="font-size:13px; color:rgba(255,255,255,0.6); line-height:1.5;">Long-form, 2,000–3,000 word authority pages targeting your highest-volume head keywords. Can be added to either plan above. Recommended to run alongside cluster content from Month 1 for maximum topical signal.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 8 · Roadmap ── -->
+    <div class="slide light" id="slide-8">
+        <div class="content-wrapper">
+            <div class="slide-label" style="color:#e94560;">The Roadmap</div>
+            <h2 class="section-title">6 Months to Topical Authority</h2>
+            <div class="divider"></div>
+            <p class="section-sub">A phased approach that builds the right foundation before scaling — no wasted spend, no shortcuts that backfire.</p>
+            <div class="timeline" style="margin-bottom:22px;">
+                <div class="timeline-phase">
+                    <div class="phase-label">Months 1 – 2 &nbsp;·&nbsp; Foundation</div>
+                    <div class="phase-title">Build the Base</div>
+                    <ul class="phase-items">
+                        <li>Full keyword research & cluster map delivered</li>
+                        <li>All 4 Pillar pages published Week 2</li>
+                        <li>25–40 cluster articles live by end of Month 2</li>
+                        <li>Technical SEO audit & on-page fixes</li>
+                        <li>Internal linking architecture locked in</li>
+                        <li>First 2 backlinks placed (end of Month 1)</li>
+                    </ul>
+                    <div class="phase-cost">Target: <span class="phase-highlight">50–100 keywords</span> in Google's index</div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-label">Months 3 – 4 &nbsp;·&nbsp; Momentum</div>
+                    <div class="phase-title">First Rankings</div>
+                    <ul class="phase-items">
+                        <li>50–80 total articles live across all clusters</li>
+                        <li>2 backlinks/month cadence fully established</li>
+                        <li>First long-tail rankings appearing in Search Console</li>
+                        <li>Optimize top-performing posts for featured snippets</li>
+                        <li>Add FAQ schema & structured data site-wide</li>
+                        <li>Identify highest-velocity content for amplification</li>
+                    </ul>
+                    <div class="phase-cost">Target: <span class="phase-highlight">200–500 organic visits/mo</span></div>
+                </div>
+                <div class="timeline-phase">
+                    <div class="phase-label">Months 5 – 6 &nbsp;·&nbsp; Authority</div>
+                    <div class="phase-title">Compounding Growth</div>
+                    <ul class="phase-items">
+                        <li>100+ articles live across all 4 pillar clusters</li>
+                        <li>Head-term rankings beginning to climb</li>
+                        <li>Domain Rating rising from backlink accumulation</li>
+                        <li>Double down on articles driving conversions</li>
+                        <li>Begin targeting competitor brand + comparison terms</li>
+                        <li>Scale to 3–4 backlinks/month if budget allows</li>
+                    </ul>
+                    <div class="phase-cost">Target: <span class="phase-highlight">1,000–3,000 organic visits/mo</span></div>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#e94560;">Wk 2</div>
+                    <div class="stat-label">Pillar Pages Live</div>
+                    <div class="stat-delta delta-neutral">Foundation set</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#00B4D8;">Mo 2</div>
+                    <div class="stat-label">First Rankings</div>
+                    <div class="stat-delta delta-up">Long-tail keywords</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#27AE60;">Mo 4</div>
+                    <div class="stat-label">Measurable Traffic</div>
+                    <div class="stat-delta delta-up">200–500 visits/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#f39c12;">Mo 6</div>
+                    <div class="stat-label">Authority Building</div>
+                    <div class="stat-delta delta-up">1k–3k visits/mo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color:#8e44ad;">Mo 12</div>
+                    <div class="stat-label">Compounding Returns</div>
+                    <div class="stat-delta delta-up">5k–15k visits/mo</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 9 · Why EmberTribe ── -->
+    <div class="slide dark" id="slide-9">
+        <div class="content-wrapper">
+            <div class="slide-label">Why EmberTribe</div>
+            <h2 class="section-title white">Built for Zero-to-Authority Brands</h2>
+            <div class="divider"></div>
+            <p class="hero-sub" style="margin-bottom:30px;">We specialize in building SEO programs from scratch. The Pillar-Cluster approach is how you compete with established players — without their history or their budget.</p>
+            <div class="three-col" style="margin-bottom:28px;">
+                <div class="card dark-card">
+                    <div class="icon-badge" style="background:rgba(233,69,96,0.18);">🎯</div>
+                    <h3>Content That Converts</h3>
+                    <ul>
+                        <li>Articles written by subject-matter-informed writers — not generic AI content</li>
+                        <li>Bottom-of-funnel clusters designed to drive quote requests and demo bookings</li>
+                        <li>CTAs on every article aligned to Champ3D's sales funnel</li>
+                    </ul>
+                </div>
+                <div class="card dark-card">
+                    <div class="icon-badge" style="background:rgba(0,180,216,0.18);">🔗</div>
+                    <h3>White-Hat Link Building</h3>
+                    <ul>
+                        <li>Only real DR 40+ sites with genuine organic traffic</li>
+                        <li>Zero PBNs, link farms, or shortcuts that risk a penalty</li>
+                        <li>Every placement topically relevant to 3D printing and engineering</li>
+                    </ul>
+                </div>
+                <div class="card dark-card">
+                    <div class="icon-badge" style="background:rgba(39,174,96,0.18);">📈</div>
+                    <h3>Transparent Reporting</h3>
+                    <ul>
+                        <li>Monthly dashboard: keyword rankings, organic traffic, Domain Rating</li>
+                        <li>Full visibility into every article published and every link placed</li>
+                        <li>Clear KPIs tied to business outcomes — not vanity metrics</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="stats-row" style="justify-content:flex-start;">
+                <div class="stat-card dark-card">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Pillar Pages (Mo 1)</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">Articles by Month 6</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">12+</div>
+                    <div class="stat-label">Backlinks by Month 6</div>
+                </div>
+                <div class="stat-card dark-card">
+                    <div class="stat-value">DR 20+</div>
+                    <div class="stat-label">Projected by Month 6</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── SLIDE 10 · Next Steps ── -->
+    <div class="slide dark" id="slide-10">
+        <div class="content-wrapper" style="text-align:center; max-width:720px; margin:0 auto;">
+            <div class="slide-label">Next Steps</div>
+            <h1 class="hero-title" style="font-size:46px; text-align:center;">Ready to Own Your<br><span>Search Category?</span></h1>
+            <p class="hero-sub" style="margin:20px auto 36px; text-align:center;">Every month without content is a month your competitors gain ground. Let's build Champ3D's SEO foundation the right way — and start compounding results from day one.</p>
+            <div class="stats-row" style="justify-content:center; margin-bottom:36px;">
+                <div class="stat-card dark-card" style="text-align:left; max-width:200px;">
+                    <div class="stat-value" style="font-size:26px; color:#e94560;">01</div>
+                    <div class="stat-label" style="color:rgba(255,255,255,0.75); font-size:12px; text-transform:none; letter-spacing:0; line-height:1.4;">Sign engagement & kick off keyword research</div>
+                </div>
+                <div class="stat-card dark-card" style="text-align:left; max-width:200px;">
+                    <div class="stat-value" style="font-size:26px; color:#00B4D8;">02</div>
+                    <div class="stat-label" style="color:rgba(255,255,255,0.75); font-size:12px; text-transform:none; letter-spacing:0; line-height:1.4;">Pillar page briefs delivered for review (Week 2)</div>
+                </div>
+                <div class="stat-card dark-card" style="text-align:left; max-width:200px;">
+                    <div class="stat-value" style="font-size:26px; color:#27AE60;">03</div>
+                    <div class="stat-label" style="color:rgba(255,255,255,0.75); font-size:12px; text-transform:none; letter-spacing:0; line-height:1.4;">Cluster content publishing begins (Week 3)</div>
+                </div>
+            </div>
+            <div style="font-size:13px; color:rgba(255,255,255,0.35);">Prepared by EmberTribe &nbsp;·&nbsp; April 2026 &nbsp;·&nbsp; embertribe.com</div>
+        </div>
+    </div>
+
+</div><!-- /slides -->
+
+<!-- Branding -->
+<div class="logo-row">
+    <div class="logo-dot"></div>
+    <div class="logo-text">EmberTribe</div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-counter" id="slide-counter">1 / 10</div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+</div>
+
+<script>
+    const TOTAL = 10;
+    let cur = 1;
+
+    function changeSlide(dir) {
+        document.getElementById('slide-' + cur).classList.remove('active');
+        cur = Math.max(1, Math.min(TOTAL, cur + dir));
+        document.getElementById('slide-' + cur).classList.add('active');
+        document.getElementById('slide-counter').textContent = cur + ' / ' + TOTAL;
+        document.getElementById('progress-bar').style.width = (cur / TOTAL * 100) + '%';
+    }
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+        if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    // Init
+    document.getElementById('progress-bar').style.width = (1 / TOTAL * 100) + '%';
+</script>
+</body>
+</html>
