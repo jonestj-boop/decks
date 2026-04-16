@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEU Matrix: SEO Foundation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ceu-navy: #0B2545;
+    --ceu-dark: #091B36;
+    --ceu-blue: #13315C;
+    --ceu-mid: #134074;
+    --ceu-teal: #00B4D8;
+    --ceu-sky: #48CAE4;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2c3e50;
+    --text-light: #7f8c8d;
+    --border: #e9ecef;
+    --nav-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; overflow: hidden; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--ceu-dark);
+    color: var(--text);
+  }
+
+  /* ── Slide base ── */
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: calc(100vh - var(--nav-h));
+    display: none;
+    flex-direction: column;
+    padding: 52px 88px 32px;
+    background: var(--card-bg);
+    overflow-y: auto;
+  }
+
+  .slide.active { display: flex; }
+
+  .slide.dark {
+    background: linear-gradient(135deg, var(--ceu-dark) 0%, var(--ceu-navy) 50%, var(--ceu-blue) 100%);
+    color: #fff;
+  }
+
+  .slide.divider {
+    background: linear-gradient(160deg, #091B36 0%, #0B2545 60%, #134074 100%);
+    color: #fff;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 52px 88px;
+  }
+
+  .slide.red-full {
+    background: var(--ember-red);
+    color: #fff;
+    justify-content: center;
+  }
+
+  /* ── Typography ── */
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 6px;
+  }
+  .slide.dark .slide-label,
+  .slide.divider .slide-label { color: var(--ceu-teal); }
+
+  h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 14px; letter-spacing: -1px; }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.5px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 680px;
+  }
+  .slide.dark .subtitle,
+  .slide.divider .subtitle { color: rgba(255,255,255,0.6); }
+
+  /* ── Stats row ── */
+  .stats-row { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 160px;
+  }
+  .slide.dark .stat-card,
+  .slide.divider .stat-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); }
+
+  .stat-value { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.teal { color: var(--ceu-teal); }
+  .stat-value.sky { color: var(--ceu-sky); }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); margin-top: 4px; }
+  .slide.dark .stat-value,
+  .slide.divider .stat-value { color: #fff; }
+
+  /* ── Annotations ── */
+  .annotation {
+    background: #FFF8E1;
+    border-left: 3px solid var(--ember-red);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 10px 0;
+    color: var(--text);
+  }
+  .annotation strong { color: var(--ceu-navy); }
+  .annotation.info { background: #E3F2FD; border-color: var(--ceu-teal); }
+  .annotation.info strong { color: var(--ceu-blue); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--ceu-teal); }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th {
+    text-align: left; padding: 8px 12px;
+    background: var(--light-bg);
+    font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-light); border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+
+  .th-red { background: var(--ember-red) !important; color: #fff !important; border-bottom: none !important; }
+
+  /* ── Utility ── */
+  .mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .teal { color: var(--ceu-teal); }
+  .bold { font-weight: 700; }
+  .dim { opacity: 0.45; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col { display: flex; flex-direction: column; }
+
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .pill.p1 { background: #FFEBEE; color: #C62828; }
+  .pill.p2 { background: #FFF3E0; color: #E65100; }
+  .pill.p3 { background: #E8F5E9; color: #2E7D32; }
+  .pill.p4 { background: #E3F2FD; color: #1565C0; }
+  .pill.tech { background: #E3F2FD; color: #1565C0; }
+  .pill.content { background: #FFF3E0; color: #E65100; }
+
+  /* ── Bar chart ── */
+  .bar-chart { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 130px; font-size: 12px; font-weight: 500; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 5px; overflow: hidden; }
+  .slide.dark .bar-track { background: rgba(255,255,255,0.07); }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.teal-fill { background: linear-gradient(90deg, var(--ceu-teal), #0096c7); }
+  .bar-fill.ember-fill { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+  .bar-fill.green-fill { background: linear-gradient(90deg, var(--green), #219a52); }
+  .bar-value { width: 70px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+  /* ── Code block ── */
+  .code-block {
+    background: #f4f6f8; border-radius: 8px; padding: 14px 18px;
+    font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; line-height: 1.9;
+  }
+
+  /* ── Divider slide elements ── */
+  .divider-box {
+    display: inline-block;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 20px 32px;
+    margin-bottom: 20px;
+  }
+
+  .divider-box h2 { font-size: 40px; color: #fff; margin-bottom: 0; }
+
+  /* ── 3 Pillars (red slide) ── */
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+  }
+
+  .pillar-card {
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+  }
+
+  .pillar-card.light { background: #fff; color: var(--text); }
+  .pillar-card .pillar-tag { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; margin-bottom: 12px; }
+  .pillar-card h3 { font-size: 22px; color: #fff; margin-bottom: 10px; }
+  .pillar-card.light h3 { color: var(--text); }
+  .pillar-card p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+  .pillar-card.light p { color: var(--text-light); }
+  .pillar-icon { font-size: 36px; margin-top: 16px; display: block; }
+
+  /* ── Concept / flow ── */
+  .flow-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; margin: 28px 0;
+  }
+
+  .flow-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: center;
+    min-width: 150px;
+  }
+  .flow-box.active { background: rgba(0,180,216,0.15); border-color: var(--ceu-teal); }
+  .flow-box .fb-icon { font-size: 28px; margin-bottom: 8px; }
+  .flow-box .fb-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .flow-box .fb-sub { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+  .flow-arrow { font-size: 24px; color: rgba(255,255,255,0.2); padding: 0 10px; }
+
+  /* ── Pyramid ── */
+  .pyramid { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 20px auto; }
+  .pyramid-tier {
+    border-radius: 8px; display: flex; align-items: center;
+    justify-content: space-between; padding: 14px 28px; color: #fff;
+  }
+  .pt-left .pt-title { font-size: 14px; font-weight: 700; }
+  .pt-left .pt-desc { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+  .pt-left .pt-status { font-size: 11px; font-weight: 600; margin-top: 6px; }
+  .pt-right { font-size: 20px; font-weight: 800; text-align: right; white-space: nowrap; }
+  .pt-right span { display: block; font-size: 11px; font-weight: 400; opacity: 0.6; }
+
+  /* ── Hub diagram ── */
+  .hub-wrap { position: relative; width: 520px; height: 300px; margin: 0 auto; }
+  .hub-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 100px; height: 100px; background: var(--ceu-teal); border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 2; box-shadow: 0 0 32px rgba(0,180,216,0.35);
+  }
+  .hub-center .hc-title { font-size: 13px; font-weight: 800; color: #fff; text-align: center; }
+  .hub-center .hc-sub { font-size: 9px; color: rgba(255,255,255,0.65); text-align: center; margin-top: 2px; }
+
+  .spoke {
+    position: absolute; width: 74px; height: 74px; border-radius: 50%;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2;
+  }
+  .spoke.t1 { background: rgba(0,180,216,0.12); border-color: rgba(0,180,216,0.35); }
+  .spoke.t2 { background: rgba(39,174,96,0.1); border-color: rgba(39,174,96,0.3); }
+  .spoke .sp-name { font-size: 11px; font-weight: 700; color: #fff; text-align: center; }
+  .spoke .sp-cred { font-size: 9px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 1px; }
+
+  /* ── 4-pillar EEAT ── */
+  .eeat-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-top: 24px;
+  }
+  .eeat-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px; padding: 20px; text-align: center;
+  }
+  .eeat-card .ec-icon { font-size: 32px; margin-bottom: 10px; }
+  .eeat-card .ec-label { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .eeat-card .ec-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* ── Roadmap grid ── */
+  .roadmap-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0; margin-top: 24px;
+  }
+  .rp {
+    padding: 18px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .rp:first-child { border-radius: 10px 0 0 10px; }
+  .rp:last-child { border-radius: 0 10px 10px 0; }
+  .rp .rp-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--ceu-teal); text-transform: uppercase; margin-bottom: 4px; }
+  .rp .rp-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+  .rp ul { list-style: none; padding: 0; font-size: 12px; line-height: 1.7; color: rgba(255,255,255,0.65); }
+  .rp ul li { padding: 1px 0 1px 12px; position: relative; }
+  .rp ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--ceu-teal); }
+
+  /* ── Content engine tabs ── */
+  .ctab {
+    padding: 8px 20px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--light-bg); color: var(--text-light); font-size: 13px;
+    font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s;
+  }
+  .ctab:hover { background: #e9ecef; color: var(--text); }
+  .ctab.ctab-active {
+    background: var(--ceu-navy); color: #fff; border-color: var(--ceu-navy);
+  }
+
+  /* ── Nav bar ── */
+  #nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(9,27,54,0.98);
+    border-top: 1px solid rgba(0,180,216,0.2);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200;
+    user-select: none;
+  }
+
+  #nav-bar .nb-brand {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.35);
+  }
+
+  #nav-bar .nb-controls {
+    display: flex; align-items: center; gap: 20px;
+  }
+
+  #nav-bar button {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  #nav-bar button:hover { background: rgba(255,255,255,0.18); color: #fff; }
+
+  #slide-counter {
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45);
+    min-width: 56px; text-align: center;
+  }
+
+  .nb-dots {
+    display: flex; gap: 5px; align-items: center;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.15s;
+  }
+  .dot.active { background: var(--ceu-teal); }
+
+  /* click zones: handled via JS to avoid intercepting tab buttons */
+</style>
+</head>
+<body>
+
+
+<!-- ============================= SLIDES ============================= -->
+
+<!-- 1: Cover -->
+<div class="slide dark active">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="slide-label">Month 1 Deliverable: April 2026</div>
+    <h1 style="font-size:60px; margin-bottom:16px;">SEO Foundation</h1>
+    <p class="subtitle" style="max-width:700px; font-size:20px;">Technical audit · Keyword architecture · State priority matrix · Ohio hub blueprint · Content strategy · E-E-A-T signal plan</p>
+    <div class="stats-row" style="margin-top:36px;">
+      <div class="stat-card">
+        <div class="stat-value red">~700</div>
+        <div class="stat-label">Monthly organic traffic today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value sky">51</div>
+        <div class="stat-label">State pages to build &amp; rank</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value sky">5,000+</div>
+        <div class="stat-label">Month 12 traffic target</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value sky">20+</div>
+        <div class="stat-label">Years of authority to activate</div>
+      </div>
+    </div>
+    <p style="margin-top:36px; font-size:13px; opacity:0.35;">CEU Matrix / Everett Wolf</p>
+  </div>
+</div>
+
+<!-- 2: Section divider: Where We Start -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 1</div>
+    <h2>Where We Start</h2>
+  </div>
+  <p class="subtitle">Your current traffic baseline, what's declining, and what we're measuring against going forward.</p>
+</div>
+
+<!-- 3: Baseline -->
+<div class="slide">
+  <div class="slide-label">Baseline</div>
+  <h2>Current State Snapshot</h2>
+  <p class="subtitle" style="margin-bottom:16px;">Everything measured before the first optimization.</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-value red">~700</div><div class="stat-label">Monthly organic sessions (Apr 2026)</div></div>
+    <div class="stat-card"><div class="stat-value red">~920</div><div class="stat-label">Ranking keywords</div></div>
+    <div class="stat-card"><div class="stat-value orange">~47%</div><div class="stat-label">Traffic that is branded</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--text-light);font-size:22px;">GA4 pending</div><div class="stat-label">Domain rating / full traffic data</div></div>
+  </div>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div class="col">
+      <h3>12-Month Traffic Trend</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><div class="bar-label">May '25 (peak)</div><div class="bar-track"><div class="bar-fill teal-fill" style="width:100%;">1,067</div></div></div>
+        <div class="bar-row"><div class="bar-label">Nov '25</div><div class="bar-track"><div class="bar-fill" style="width:78%;background:linear-gradient(90deg,var(--yellow),#e67e22);">~830</div></div></div>
+        <div class="bar-row"><div class="bar-label">Jan '26 (new site)</div><div class="bar-track"><div class="bar-fill" style="width:90%;background:linear-gradient(90deg,#3498db,#2980b9);">~956</div></div></div>
+        <div class="bar-row"><div class="bar-label">Apr '26 (now)</div><div class="bar-track"><div class="bar-fill ember-fill" style="width:66%;">~700</div></div><div class="bar-value red bold">&minus;35%</div></div>
+      </div>
+      <div class="annotation danger" style="margin-top:8px;">
+        <strong>The new site got a brief bump, then fell again.</strong> A redesign alone doesn't drive rankings. This Foundation is what stops the slide.
+      </div>
+    </div>
+    <div class="col">
+      <h3>Traffic by Source</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><div class="bar-label">Branded</div><div class="bar-track"><div class="bar-fill ember-fill" style="width:47%;">~47%</div></div><div class="bar-value red bold">~329/mo</div></div>
+        <div class="bar-row"><div class="bar-label">Non-branded</div><div class="bar-track"><div class="bar-fill teal-fill" style="width:53%;">~53%</div></div><div class="bar-value bold">~371/mo</div></div>
+      </div>
+      <div class="annotation danger" style="margin-top:8px;">
+        <strong>Goal: flip this ratio.</strong> By Month 12, 70%+ of organic traffic should come from people who didn't already know CEU Matrix, new customers found through search.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4: Section divider: Technical -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 2</div>
+    <h2>Technical Audit</h2>
+  </div>
+  <p class="subtitle">Before we publish a single article, we need Google to be able to fully crawl, index, and understand what's already on the site.</p>
+  <div class="flow-row" style="margin-top:40px;">
+    <div class="flow-box active"><div class="fb-icon">🔍</div><div class="fb-title">Crawl</div><div class="fb-sub">Googlebot discovers your pages</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box active"><div class="fb-icon">📂</div><div class="fb-title">Index</div><div class="fb-sub">Google stores &amp; understands content</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box active"><div class="fb-icon">📊</div><div class="fb-title">Rank</div><div class="fb-sub">Google decides position in results</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box active" style="background:rgba(39,174,96,0.15);border-color:var(--green);"><div class="fb-icon">🚦</div><div class="fb-title">Traffic</div><div class="fb-sub">Searchers click through</div></div>
+  </div>
+  <p style="font-size:13px;color:rgba(255,255,255,0.45);text-align:center;margin-top:12px;">Technical fixes remove barriers at every step. We address them first, in parallel with content production.</p>
+</div>
+
+<!-- 5: Technical findings -->
+<div class="slide">
+  <div class="slide-label">Technical Audit: 100-Page Crawl</div>
+  <h2>Issues Found</h2>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div class="col">
+      <table>
+        <thead><tr><th class="th-red">Count</th><th class="th-red">Issue</th><th class="th-red">Impact</th><th class="th-red">Fix</th></tr></thead>
+        <tbody>
+          <tr><td class="bold red">59</td><td>Broken internal links</td><td class="red">High</td><td><span class="pill tech">M1</span></td></tr>
+          <tr><td class="bold red">30</td><td>Missing meta descriptions (incl. homepage)</td><td class="red">High</td><td><span class="pill tech">M1</span></td></tr>
+          <tr><td class="bold red">19</td><td>Multiple H1 tags per page</td><td class="red">High</td><td><span class="pill tech">M1</span></td></tr>
+          <tr><td class="bold orange">58</td><td>Low text-to-HTML ratio (thin content)</td><td class="orange">Med</td><td><span class="pill content">M2–3</span></td></tr>
+          <tr><td class="bold orange">31</td><td>Pages with only 1 internal link</td><td class="orange">Med</td><td><span class="pill content">M2–3</span></td></tr>
+          <tr><td class="bold orange">6</td><td>Duplicate title tags</td><td class="orange">Med</td><td><span class="pill tech">M1</span></td></tr>
+          <tr><td class="bold red">0</td><td>Schema markup / llms.txt</td><td class="red">High</td><td><span class="pill tech">M1</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3>Month 1 Fix Queue</h3>
+      <table>
+        <thead><tr><th>#</th><th>Fix</th><th>Scope</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">1</td><td>Resolve 59 broken internal links</td><td class="dim">Site-wide</td></tr>
+          <tr><td class="bold">2</td><td>Fix 19 duplicate H1 tags</td><td class="dim">19 pages</td></tr>
+          <tr><td class="bold">3</td><td>Fix 6 duplicate title tags</td><td class="dim">6 pages</td></tr>
+          <tr><td class="bold">4</td><td>Write + implement 30 meta descriptions</td><td class="dim">30 pages</td></tr>
+          <tr><td class="bold">5</td><td>WebPage + BreadcrumbList JSON-LD on Ohio pages</td><td class="dim">Ohio hub</td></tr>
+          <tr><td class="bold">6</td><td>FAQPage JSON-LD on Ohio FAQ</td><td class="dim">/ohio-faq/</td></tr>
+          <tr><td class="bold">7</td><td>Create + publish llms.txt</td><td class="dim">Root</td></tr>
+          <tr><td class="bold">8</td><td>Organization schema on homepage</td><td class="dim">Homepage</td></tr>
+          <tr><td class="bold">9</td><td>Canonical tags: /course/ vs /product/ credential pairs (4 pairs) + WooCommerce pagination</td><td class="dim">Product + category pages</td></tr>
+          <tr><td class="bold">10</td><td>Add missing alt text</td><td class="dim">Site-wide</td></tr>
+          <tr><td class="bold">11</td><td>Course schema on credential product pages</td><td class="dim">Product pages</td></tr>
+          <tr><td class="bold">12</td><td>HowTo + FAQPage schema on Ohio hub</td><td class="dim">Ohio hub</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 6: Section divider: Keyword Strategy -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 3</div>
+    <h2>Keyword Strategy</h2>
+  </div>
+  <p class="subtitle">Not all searches are the same. Your customers move through three distinct stages, and CEU Matrix only shows up at one of them today.</p>
+
+  <div class="pyramid" style="margin-top:32px; width:100%;">
+    <div class="pyramid-tier" style="width:380px;background:rgba(0,180,216,0.15);border:1px solid rgba(0,180,216,0.35);">
+      <div class="pt-left"><div class="pt-title">Tier 1: Transactional</div><div class="pt-desc">"Buy CDCA renewal courses" · "NAADAC CEUs online"</div><div class="pt-status" style="color:var(--ceu-teal);">✓ CEU Matrix shows up here</div></div>
+      <div class="pt-right" style="color:var(--ceu-sky);">Low vol<span>High intent</span></div>
+    </div>
+    <div class="pyramid-tier" style="width:540px;background:rgba(243,156,18,0.12);border:1px solid rgba(243,156,18,0.3);">
+      <div class="pt-left"><div class="pt-title" style="color:var(--yellow);">Tier 2: Credential Research</div><div class="pt-desc">"Ohio CDCA requirements" · "LCDC requirements Texas"</div><div class="pt-status" style="color:var(--red);">Missing: CASR dominates this tier</div></div>
+      <div class="pt-right" style="color:var(--yellow);">Med vol<span>Med intent</span></div>
+    </div>
+    <div class="pyramid-tier" style="width:700px;background:rgba(255,51,61,0.1);border:1px solid rgba(255,51,61,0.25);">
+      <div class="pt-left"><div class="pt-title" style="color:#ff6b74;">Tier 3: Career Exploration</div><div class="pt-desc">"How to become a substance abuse counselor in Ohio" · "Addiction counselor salary"</div><div class="pt-status" style="color:var(--red);">Invisible: zero content targeting this tier</div></div>
+      <div class="pt-right" style="color:#ff6b74;">High vol<span>Top-of-funnel</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7: Keyword map -->
+<div class="slide">
+  <div class="slide-label">Keyword Research</div>
+  <h2>Credential Keyword Map</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Each credential is its own keyword cluster. This drives every URL we build and every article we write.</p>
+
+  <table>
+    <thead><tr><th class="th-red">Credential</th><th class="th-red">Primary State(s)</th><th class="th-red">Core Keywords</th><th class="th-red">Monthly Vol.</th><th class="th-red">Current Rank</th><th class="th-red">Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="bold">CDCA</td><td class="bold">Ohio</td><td>cdca certification ohio, ohio cdca requirements</td><td>50–120</td><td class="red bold">Not ranking</td><td><span class="pill p1">Critical</span></td></tr>
+      <tr><td class="bold">LCDC</td><td class="bold">Texas</td><td>lcdc requirements texas, online lcdc programs texas</td><td>300–400</td><td class="green bold">#3–#14</td><td><span class="pill p1">Critical</span></td></tr>
+      <tr><td class="bold">LICDC</td><td class="bold">Ohio</td><td>licdc ohio, licdc renewal, ohio licdc requirements</td><td>30–80</td><td class="red bold">Not ranking</td><td><span class="pill p1">Critical</span></td></tr>
+      <tr><td class="bold">CADC</td><td>PA, CA, NV, IL</td><td>cadc certification, cadc meaning, cadc ii</td><td>600–3,600</td><td class="orange bold">#10–#40 mixed</td><td><span class="pill p2">High</span></td></tr>
+      <tr><td class="bold">CJCA / CCJP</td><td>Multi-state (IC&amp;RC)</td><td>criminal justice counselor certification, ccjp cert</td><td>100–400</td><td class="red bold">Not ranking</td><td><span class="pill p2">High: differentiator</span></td></tr>
+      <tr><td class="bold">NAADAC / NCC AP</td><td>Multi-state</td><td>naadac approved ceu courses, naadac provider</td><td>80–200</td><td class="orange bold">#29</td><td><span class="pill p2">High</span></td></tr>
+      <tr><td class="bold">CASAC</td><td>New York</td><td>casac certification, casac meaning, casac license</td><td>300–1,200</td><td class="red bold">Not ranking</td><td><span class="pill p2">High: M1 articles</span></td></tr>
+      <tr><td class="bold">CAC</td><td>PA, CO</td><td>cac certification pennsylvania, cac 1 certification pa</td><td>100–300</td><td class="orange bold">#10 (PA)</td><td><span class="pill p2">High: M1 articles · M2</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="annotation success" style="margin-top:12px;">
+    <strong>Criminal justice (CJCA/CCJP) is uncontested.</strong> No competitor (including CASR) produces content targeting these keywords. CEU Matrix's IC&amp;RC alignment makes this a defensible content moat.
+  </div>
+</div>
+
+<!-- 8: Section divider: Content Architecture -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 4</div>
+    <h2>Content Architecture</h2>
+  </div>
+  <p class="subtitle">How we structure content so every page we build reinforces every other page, and Google understands CEU Matrix as the authoritative source on addiction counselor certification.</p>
+
+  <!-- Hub diagram -->
+  <div class="hub-wrap" style="margin-top:36px;">
+    <svg style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;" viewBox="0 0 520 300">
+      <line x1="260" y1="150" x2="72" y2="56" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+      <line x1="260" y1="150" x2="448" y2="56" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+      <line x1="260" y1="150" x2="468" y2="170" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+      <line x1="260" y1="150" x2="60" y2="240" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+      <line x1="260" y1="150" x2="440" y2="264" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+      <line x1="260" y1="150" x2="256" y2="278" stroke="rgba(0,180,216,0.25)" stroke-width="1.5" stroke-dasharray="4"/>
+    </svg>
+    <div class="hub-center"><div class="hc-title">Ohio Hub</div><div class="hc-sub">Tier 1 Priority</div></div>
+    <div class="spoke t1" style="top:18px;left:34px;"><div class="sp-name">Texas</div><div class="sp-cred">LCDC</div></div>
+    <div class="spoke t1" style="top:18px;right:44px;"><div class="sp-name">Penn.</div><div class="sp-cred">CAC/CADC</div></div>
+    <div class="spoke t2" style="top:132px;right:12px;"><div class="sp-name">Florida</div><div class="sp-cred">CAP/CCJP</div></div>
+    <div class="spoke t2" style="bottom:34px;left:22px;"><div class="sp-name">California</div><div class="sp-cred">CATC</div></div>
+    <div class="spoke t2" style="bottom:18px;right:44px;"><div class="sp-name">New York</div><div class="sp-cred">CASAC</div></div>
+    <div class="spoke" style="bottom:6px;left:50%;transform:translateX(-50%);background:rgba(0,180,216,0.1);border-color:rgba(0,180,216,0.25);width:80px;"><div class="sp-name" style="font-size:9px;">Criminal Justice</div><div class="sp-cred">CJCA/CCJP</div></div>
+  </div>
+</div>
+
+<!-- 9: State priority matrix -->
+<div class="slide">
+  <div class="slide-label">State Strategy</div>
+  <h2>State Priority Matrix</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Build order ranked by: existing authority + market size + keyword volume + accreditation held.</p>
+
+  <table>
+    <thead><tr><th class="th-red">Tier</th><th class="th-red">State</th><th class="th-red">Primary Credential</th><th class="th-red">CEU Matrix Position</th><th class="th-red">CASR</th><th class="th-red">KW Volume</th><th class="th-red">Build</th></tr></thead>
+    <tbody>
+      <tr style="background:#FFF5F5;"><td><span class="pill p1">1</span></td><td class="bold">Ohio</td><td>CDCA, LCDC II/III, LICDC</td><td class="red bold">Not ranking (key terms)</td><td class="orange">Top 5–10</td><td>300–500/mo</td><td class="bold teal">Architecture M1 / Build M2</td></tr>
+      <tr style="background:#FFF5F5;"><td><span class="pill p1">1</span></td><td class="bold">Texas</td><td>LCDC</td><td class="green bold">#3–#14 (some terms)</td><td class="orange">Top 10</td><td>400–600/mo</td><td class="bold teal">Build M2</td></tr>
+      <tr style="background:#FFF5F5;"><td><span class="pill p1">1</span></td><td class="bold">Pennsylvania</td><td>CAC I/II, CADC</td><td class="orange bold">#10</td><td class="orange">Top 5</td><td>200–350/mo</td><td class="bold teal">Build M2</td></tr>
+      <tr style="background:#FFFAF0;"><td><span class="pill p2">2</span></td><td class="bold">Florida</td><td>CAP, CCJP</td><td class="red bold">Not ranking</td><td class="orange">Ranking</td><td>200–400/mo</td><td>M3</td></tr>
+      <tr style="background:#FFFAF0;"><td><span class="pill p2">2</span></td><td class="bold">California</td><td>CATC, CADC</td><td class="red bold">Not ranking</td><td class="green">Top 5</td><td>200–400/mo</td><td>M3</td></tr>
+      <tr style="background:#FFFAF0;"><td><span class="pill p2">2</span></td><td class="bold">New York</td><td>CASAC</td><td class="red bold">Not ranking</td><td class="green">Top 5</td><td>200–300/mo</td><td>M4</td></tr>
+      <tr><td><span class="pill p3">3</span></td><td>Illinois, Georgia, Michigan, NC</td><td>State-specific</td><td class="red">Not ranking</td><td class="orange">Ranking</td><td>80–200/mo each</td><td class="dim">M4+</td></tr>
+      <tr><td><span class="pill p4">4</span></td><td>Remaining 41 states</td><td>Varies</td><td class="red">Minimal</td><td class="orange">Ranking</td><td>30–100/mo each</td><td class="dim">M6–18</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 10: Ohio Hub Architecture -->
+<div class="slide">
+  <div class="slide-label">Ohio Hub Blueprint</div>
+  <h2>Ohio Page Architecture</h2>
+  <p class="subtitle" style="margin-bottom:14px;">The full structure for Ohio: M1 mapping, M2 build. Every subsequent state inherits this template.</p>
+
+  <div class="two-col">
+    <div class="col">
+      <h3>URL Structure</h3>
+      <div class="code-block">
+        <div style="color:var(--ceu-navy);font-weight:700;">/ohio-substance-abuse-certification/</div>
+        <div style="padding-left:18px;color:var(--text-light);">Hub: 3,500+ words, all Ohio credentials</div>
+        <div style="padding-left:18px;color:var(--text-light);">H1: <span style="color:var(--ember-red);">"Ohio Substance Abuse Certification"</span></div>
+        <div style="padding-left:18px;color:var(--text-light);">H2: <span style="color:var(--ember-red);">"How to Become a Substance Abuse Counselor in Ohio"</span></div>
+        <div style="padding-left:18px;margin-top:6px;color:var(--ceu-mid);font-weight:700;">/ohio-cdca-certification-requirements/</div>
+        <div style="padding-left:36px;color:var(--text-light);">CDCA: Preliminary + Renewable tracks</div>
+        <div style="padding-left:36px;color:var(--text-light);">OCDP Provider #50-19236 cited</div>
+        <div style="padding-left:18px;margin-top:6px;color:var(--ceu-mid);font-weight:700;">/ohio-licdc-certification-requirements/</div>
+        <div style="padding-left:36px;color:var(--text-light);">LICDC: II, III, and Independent tracks</div>
+        <div style="padding-left:18px;margin-top:6px;color:var(--ceu-mid);font-weight:700;">/ohio-substance-abuse-counselor-salary/</div>
+        <div style="padding-left:36px;color:var(--text-light);">Informational: salary data, career paths</div>
+      </div>
+      <div class="annotation danger" style="margin-top:10px; font-size:12px;">
+        <strong>These are new pages</strong>, separate from the WooCommerce product category at <code>/product-category/oh/</code>. The existing purchase pages stay intact and are linked from the hub.
+      </div>
+    </div>
+    <div class="col">
+      <h3>Hub Page Content Outline</h3>
+      <table>
+        <thead><tr><th>Section</th><th>Content</th><th>Target Query</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">H1</td><td>Ohio Substance Abuse Certification</td><td class="mono teal">ohio substance abuse certification</td></tr>
+          <tr><td class="bold">Intro</td><td>OCDP board overview, CEU Matrix provider #</td><td class="dim">E-E-A-T</td></tr>
+          <tr><td class="bold">H2 #1</td><td>Ohio Credential Overview + table</td><td class="mono teal">ohio addiction counselor credentials</td></tr>
+          <tr><td class="bold">H2 #2</td><td>How to Become a Substance Abuse Counselor</td><td class="mono teal">how to become substance abuse counselor ohio</td></tr>
+          <tr><td class="bold">H2 #3</td><td>CDCA Certification Requirements Ohio</td><td class="mono teal">cdca certification requirements ohio</td></tr>
+          <tr><td class="bold">H2 #4</td><td>LICDC Certification Requirements Ohio</td><td class="mono teal">licdc certification requirements ohio</td></tr>
+          <tr><td class="bold">H2 #5</td><td>Ohio Continuing Education Requirements</td><td class="mono teal">ohio cdca renewal ceu requirements</td></tr>
+          <tr><td class="bold">CTA block</td><td>Inline links to purchase pages per credential</td><td class="dim">Conversion</td></tr>
+          <tr><td class="bold">FAQ</td><td>8–12 Q&amp;As · FAQPage JSON-LD · PAA targets</td><td class="dim">SERP features</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 11: Section divider: Content Strategy -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 5</div>
+    <h2>Content Strategy</h2>
+  </div>
+  <p class="subtitle">Three types of content, each targeting a different search audience. Together they turn strangers into paying customers.</p>
+</div>
+
+<!-- 12: 3 Key Initiatives -->
+<div class="slide red-full">
+  <h2 style="text-align:center; font-size:36px; letter-spacing:2px; font-weight:900; text-transform:uppercase; margin-bottom:28px;">3 Key Initiatives</h2>
+  <div class="pillar-grid">
+    <div class="pillar-card">
+      <div class="pillar-tag">Defense</div>
+      <h3>Optimize &amp; Organize</h3>
+      <p>Establish a solid foundation: fix technical issues, optimize existing pages, implement schema markup, and build internal linking architecture.</p>
+      <span class="pillar-icon">🏗️</span>
+    </div>
+    <div class="pillar-card light">
+      <div class="pillar-tag" style="color:var(--text-light);">Growth Engine</div>
+      <h3>Publish</h3>
+      <p>Build state hub pages and informational articles that capture the searches addiction counselors make before they're ready to buy.</p>
+      <span class="pillar-icon">✍️</span>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-tag">Offense</div>
+      <h3>Acquire Links</h3>
+      <p>Build backlinks from state boards, accreditation bodies, and addiction counseling directories, the same sources CASR uses to outrank you.</p>
+      <span class="pillar-icon">🔗</span>
+    </div>
+  </div>
+</div>
+
+<!-- 13: Month 1 Article Plan -->
+<div class="slide">
+  <div class="slide-label">Month 1 Deliverables</div>
+  <h2>Month 1: Research + 10 Articles</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Ohio-first, criminal justice differentiator, and high-volume terms CEU Matrix has zero presence for today.</p>
+
+  <div class="two-col" style="margin-bottom:16px;">
+    <div style="background:#FFF8E1;border-left:3px solid var(--ember-red);border-radius:0 8px 8px 0;padding:14px 16px;">
+      <div class="bold" style="font-size:13px;color:var(--ceu-navy);margin-bottom:4px;">Competitor Analysis Report</div>
+      <div style="font-size:12px;color:var(--text-light);line-height:1.6;">Keyword gap, backlink gap, and content gap vs. CASR + 4 other competitors. Identifies every search term CASR ranks for where CEU Matrix does not, every domain linking to CASR but not CEU Matrix, and content types CEU Matrix is missing entirely. Basis for all outreach and content prioritization in M2+.</div>
+    </div>
+    <div style="background:#FFF8E1;border-left:3px solid var(--ember-red);border-radius:0 8px 8px 0;padding:14px 16px;">
+      <div class="bold" style="font-size:13px;color:var(--ceu-navy);margin-bottom:4px;">Backlink Gap Report</div>
+      <div style="font-size:12px;color:var(--text-light);line-height:1.6;">Full list of every domain linking to CASR, CE4Less, or Sober College that does not link to CEU Matrix. Each domain annotated with DA, relevance, and outreach pathway (state board directory, NAADAC affiliate, CJ org, etc.). This is the outreach hit list that drives the 6 links/month acquisition in M2–M4.</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th class="th-red">#</th><th class="th-red">Title</th><th class="th-red">Target Keyword</th><th class="th-red">Vol.</th><th class="th-red">Stage</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>CADC Certification: Requirements, Cost &amp; How to Get Certified (2026)</td><td class="mono teal">cadc certification</td><td>3,600</td><td>Mid-funnel</td></tr>
+      <tr><td>2</td><td>CASAC Certification in New York: Requirements, Cost &amp; How to Apply</td><td class="mono teal">casac certification</td><td>300–1,200</td><td>Mid-funnel</td></tr>
+      <tr><td>3</td><td>CAC Certification in Pennsylvania: Requirements, Application &amp; Renewal</td><td class="mono teal">cac certification pennsylvania</td><td>100–200</td><td>Mid-funnel</td></tr>
+      <tr><td>4</td><td>NAADAC Approved CEU Courses: Complete Provider Guide for Addiction Counselors</td><td class="mono teal">naadac approved ceu courses</td><td>80–200</td><td>Mid-funnel</td></tr>
+      <tr><td>5</td><td>CJCA Certification: Requirements, Renewal Steps &amp; Exam Prep</td><td class="mono teal">cjca certification</td><td>100–400</td><td>Mid-funnel</td></tr>
+      <tr><td>6</td><td>CDCA Certification in Ohio: Requirements, Application Steps &amp; Timeline</td><td class="mono teal">cdca certification ohio</td><td>50–120</td><td>Mid-funnel</td></tr>
+      <tr><td>7</td><td>LCDC Certification in Texas: Requirements, Application Steps &amp; Exam Guide</td><td class="mono teal">lcdc certification texas</td><td>300–400</td><td>Mid-funnel</td></tr>
+      <tr><td>8</td><td>How to Get Your Drug and Alcohol Counselor Certification: Step-by-Step</td><td class="mono teal">how to become a drug and alcohol counselor</td><td>1,000</td><td>Top-of-funnel</td></tr>
+      <tr><td>9</td><td>CDCA vs. LCDC: Which Ohio Addiction Counselor Credential Is Right for You?</td><td class="mono teal">cdca vs lcdc</td><td>100–200</td><td>Mid-funnel</td></tr>
+      <tr><td>10</td><td>Substance Abuse Counselor Salary: 2026 Data by State, Setting &amp; Credential</td><td class="mono teal">substance abuse counselor salary</td><td>1,900–6,600</td><td>Top-of-funnel</td></tr>
+    </tbody>
+  </table>
+
+  <div class="annotation info" style="margin-top:10px;">
+    <strong>Article #1 is the highest-intent play in Month 1.</strong> "CADC certification" gets 3,600 searches/month. The cluster has 10 easy-win secondary keywords under KD 26. A comprehensive guide from an IC&amp;RC-approved provider can reach page 1 within 60–90 days.
+  </div>
+</div>
+
+<!-- Competitor Analysis Report -->
+<div class="slide">
+  <div class="slide-label">Month 1 Deliverable</div>
+  <h2>Competitor Analysis Report</h2>
+  <p class="subtitle" style="margin-bottom:16px;">Keyword gap, backlink gap, and content gap vs. CASR + 4 competitors. Delivered end of Week 2. Every strategic decision in M2+ flows from these findings.</p>
+
+  <div class="two-col" style="gap:24px;margin-bottom:20px;align-items:start;">
+    <div>
+      <h3 style="margin-bottom:10px;">Competitors Analyzed</h3>
+      <table>
+        <thead><tr><th class="th-red">Competitor</th><th class="th-red">Primary Threat</th></tr></thead>
+        <tbody>
+          <tr><td><strong>CASR</strong></td><td class="dim">Ranks top 3 for all Ohio CDCA, LICDC, and renewal terms</td></tr>
+          <tr><td><strong>CE4Less</strong></td><td class="dim">High-DA national competitor; ranks for NAADAC/IC&amp;RC CEU terms</td></tr>
+          <tr><td><strong>Sober College</strong></td><td class="dim">Backlink profile from 200+ addiction treatment directories</td></tr>
+          <tr><td><strong>NAADAC.org</strong></td><td class="dim">Dominates "NAADAC CEU" and branded provider searches</td></tr>
+          <tr><td><strong>AddictionCounselor.com</strong></td><td class="dim">Captures "how to become" top-of-funnel traffic in OH, TX, PA</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px;">What the Report Covers</h3>
+      <table>
+        <thead><tr><th class="th-red">Section</th><th class="th-red">What It Finds</th><th class="th-red">How It Gets Used</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Keyword Gap</strong></td><td>Terms CASR/CE4Less rank for where CEU Matrix has zero presence</td><td class="dim">Seeds M2–M4 content calendar</td></tr>
+          <tr><td><strong>Backlink Gap</strong></td><td>Domains linking to competitors but not CEU Matrix</td><td class="dim">Drives 18 backlinks over M2–M4</td></tr>
+          <tr><td><strong>Content Gap</strong></td><td>Content types competitors publish that CEU Matrix lacks entirely</td><td class="dim">Informs hub page structure + topic clusters</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px;">Known Keyword Gaps (Pre-Analysis Preview)</h3>
+  <table style="font-size:12px;">
+    <thead><tr><th class="th-red">Term</th><th class="th-red">Vol./mo</th><th class="th-red">CASR</th><th class="th-red">CEU Matrix</th><th class="th-red">Action</th></tr></thead>
+    <tbody>
+      <tr><td class="mono teal">cadc certification</td><td>3,600</td><td>Top 10</td><td class="red">Not ranking</td><td class="dim">Article #1, M1</td></tr>
+      <tr><td class="mono teal">ohio substance abuse certification</td><td>300–600</td><td>Top 3</td><td class="red">Not ranking</td><td class="dim">Ohio hub page, M2</td></tr>
+      <tr><td class="mono teal">cdca certification ohio</td><td>120–200</td><td>Top 3</td><td class="red">Not ranking</td><td class="dim">CDCA credential page, M3</td></tr>
+      <tr><td class="mono teal">casac certification</td><td>1,200</td><td>Top 10</td><td class="red">Not ranking</td><td class="dim">Article #2, M1</td></tr>
+      <tr><td class="mono teal">substance abuse counselor salary</td><td>1,900–6,600</td><td>Top 10</td><td class="red">Not ranking</td><td class="dim">Article #10, M1</td></tr>
+    </tbody>
+  </table>
+  <div class="annotation info" style="margin-top:10px;">
+    <strong>This is a living document.</strong> The full analysis will surface 50+ additional keyword gaps once CASR's complete profile is pulled in SEMrush. The preview above reflects confirmed gaps from our keyword bank — CASR dominates every Ohio term CEU Matrix should own.
+  </div>
+</div>
+
+<!-- Backlink Gap Report -->
+<div class="slide">
+  <div class="slide-label">Month 1 Deliverable</div>
+  <h2>Backlink Gap Report</h2>
+  <p class="subtitle" style="margin-bottom:16px;">Every domain linking to CASR, CE4Less, or Sober College that does not link to CEU Matrix — annotated with DA, relevance, and outreach pathway. The acquisition hit list for 18 backlinks over M2–M4.</p>
+
+  <div class="two-col" style="gap:24px;margin-bottom:20px;align-items:start;">
+    <div>
+      <h3 style="margin-bottom:10px;">Domain Categories in the Gap</h3>
+      <table>
+        <thead><tr><th class="th-red">Domain Type</th><th class="th-red">Why CASR Has It</th><th class="th-red">How CEU Matrix Gets In</th></tr></thead>
+        <tbody>
+          <tr><td><strong>State board directories</strong></td><td class="dim">CASR is OCDP-listed in Ohio</td><td>CEU Matrix is OCDP #50-19236 — submit listing update</td></tr>
+          <tr><td><strong>NAADAC chapter sites</strong></td><td class="dim">CASR is an active NAADAC affiliate</td><td>CEU Matrix holds Provider #619 (since 2005) — request partner listing</td></tr>
+          <tr><td><strong>IC&amp;RC member board pages</strong></td><td class="dim">CASR is IC&amp;RC approved and listed</td><td>CEU Matrix is IC&amp;RC approved — request board directory entry</td></tr>
+          <tr><td><strong>Addiction treatment directories</strong></td><td class="dim">CASR actively submits to niche directories</td><td>Manual outreach to 20+ addiction resource directories</td></tr>
+          <tr><td><strong>State counseling associations</strong></td><td class="dim">CASR sponsors state-level orgs</td><td>Outreach to TX, PA, OH counseling associations</td></tr>
+          <tr><td><strong>Criminal justice resource sites</strong></td><td class="dim">Minimal — gap exists for CASR too</td><td>First-mover advantage via IC&amp;RC CJ-affiliated outreach</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px;">Monthly Acquisition Plan</h3>
+      <table>
+        <thead><tr><th class="th-red">Month</th><th class="th-red">Links</th><th class="th-red">Domain Focus</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Month 2</strong></td><td>6</td><td class="dim">State board directories, NAADAC affiliates, OH/TX/PA counseling associations</td></tr>
+          <tr><td><strong>Month 3</strong></td><td>6</td><td class="dim">IC&amp;RC member boards, addiction treatment orgs, CJ-adjacent resource sites</td></tr>
+          <tr><td><strong>Month 4</strong></td><td>6</td><td class="dim">Higher-DA directories, TX/PA board resources, top-performing pages from GSC data</td></tr>
+        </tbody>
+      </table>
+      <div style="background:#E8F5E9;border-left:3px solid var(--green);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;margin-top:12px;">
+        <strong style="color:#2E7D32;">Why this beats cold outreach:</strong> Every domain in the report already links to competitors in this exact vertical. Relevance is pre-qualified. Acquisition rate is 3x higher than non-gap prospecting.
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation info">
+    <strong>Report format:</strong> Domain name · DA score · page that links to CASR · recommended anchor text for CEU Matrix · outreach pathway (directory submission, partner request, or editorial). Your link vendor works from this list directly starting in M2.
+  </div>
+</div>
+
+<!-- 14: Content Engine by Month (tabbed) -->
+<div class="slide">
+  <div class="slide-label">Content Engine</div>
+  <h2>Month-by-Month Content Plan</h2>
+  <p class="subtitle" style="margin-bottom:16px;">Full delivery breakdown for Months 2-4: every article, implementation, and backlink target.</p>
+
+  <div style="display:flex; gap:4px; margin-bottom:20px;">
+    <button class="ctab ctab-active" onclick="showCTab(0,this)">Month 2</button>
+    <button class="ctab" onclick="showCTab(1,this)">Month 3</button>
+    <button class="ctab" onclick="showCTab(2,this)">Month 4</button>
+  </div>
+
+  <!-- Month 2 -->
+  <div class="ctab-panel" id="ct0">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+      <span style="background:#FFEBEE;color:#C62828;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 Tech Implementations</span>
+      <span style="background:#E8F5E9;color:#2E7D32;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 On-Page Optimizations</span>
+      <span style="background:#E3F2FD;color:#1565C0;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">20 Articles</span>
+      <span style="background:#F3E5F5;color:#6A1B9A;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">3 Page Builds: Ohio hub · Texas hub · Pennsylvania hub</span>
+      <span style="background:#FFF3E0;color:#E65100;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">6 Backlinks</span>
+    </div>
+
+    <h3 style="margin-bottom:8px;">Technical Implementations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Implementation</th><th class="th-red">Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>WebPage + BreadcrumbList schema: Ohio unified hub</td><td class="dim">Rich SERP appearance for new hub page</td></tr>
+        <tr><td>2</td><td>FAQPage JSON-LD: Ohio unified hub</td><td class="dim">PAA + AI Overview citation targeting</td></tr>
+        <tr><td>3</td><td>WebPage + BreadcrumbList schema: Texas unified hub</td><td class="dim">Consistent schema across all 3 state hubs</td></tr>
+        <tr><td>4</td><td>WebPage + BreadcrumbList schema: Pennsylvania unified hub</td><td class="dim">Consistent schema across all 3 state hubs</td></tr>
+        <tr><td>5</td><td>Canonical tags: /course/ vs /product/ credential pairs (4 pairs)</td><td class="dim">Consolidates duplicate ranking signal into one URL per credential</td></tr>
+        <tr><td>6</td><td>Internal linking: OH cluster (hub to CDCA/LICDC pages to courses)</td><td class="dim">Passes authority down through hub architecture</td></tr>
+        <tr><td>7</td><td>Broken internal links: Batch 1 (20+ of 59 resolved)</td><td class="dim">59 total flagged in technical audit</td></tr>
+        <tr><td>8</td><td>Missing meta descriptions: Batch 1 (30 pages, Ohio + high-traffic priority)</td><td class="dim">30 pages missing meta identified in audit</td></tr>
+        <tr><td>9</td><td>Multiple H1 tag fixes: all 19 flagged pages</td><td class="dim">One H1 per page, keyword-aligned</td></tr>
+        <tr><td>10</td><td>llms.txt / AEO foundation file</td><td class="dim">AI crawler routing — currently zero on site</td></tr>
+        <tr><td>11</td><td>XML sitemap rebuild: prioritize hub pages, exclude thin duplicates</td><td class="dim">Removes low-value URLs from crawl budget</td></tr>
+        <tr><td>12</td><td>Internal linking: TX + PA clusters (hub to credential products)</td><td class="dim">Mirrors OH cluster architecture for all 3 state hubs</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Page Builds</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">Page</th><th class="th-red">URL</th><th class="th-red">Scope</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ohio Unified Hub</strong></td><td class="mono teal">/ohio-substance-abuse-certification/</td><td>3,000+ words · OCDP #50-19236 cited · all Ohio credentials · FAQs + anchor nav · internal links to course pages</td></tr>
+        <tr><td><strong>Texas Unified Hub</strong></td><td class="mono teal">/texas-substance-abuse-certification/</td><td>3,000+ words · TCBAP cited · all TX credentials · LCDC table · FAQ schema · internal links to TX course pages</td></tr>
+        <tr><td><strong>Pennsylvania Unified Hub</strong></td><td class="mono teal">/pennsylvania-substance-abuse-certification/</td><td>3,000+ words · PCBDD cited · CAC I/II + CADC tables · FAQ schema · internal links to PA course pages</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">On-Page Optimizations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Page / Target</th><th class="th-red">What Changes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="mono">/courses-by-state/oh/</td><td>Rewrite H1/H2, meta title, expand intro copy, add internal links to credential sub-pages</td></tr>
+        <tr><td>2</td><td class="mono">/product-category/oh/</td><td>Update title tag, meta description, add canonical pointing to Ohio hub</td></tr>
+        <tr><td>3</td><td class="mono">/ohio-faq/</td><td>Optimize + consolidate FAQ content into Ohio hub strategy, update internal linking</td></tr>
+        <tr><td>4</td><td class="mono">/ohio-cdca-preliminary-phase-i/</td><td>Rewrite title (target: "Ohio CDCA Preliminary CEUs"), H1, meta, add informational context + internal links</td></tr>
+        <tr><td>5</td><td class="mono">/ohio-cdca-phase-ii/</td><td>Rewrite title (target: "Ohio CDCA Renewable CEUs"), H1, meta, add credential context + internal links</td></tr>
+        <tr><td>6</td><td class="mono">/ohio-lcdc-ii-iii-and-licdc/</td><td>Rewrite title, H1, meta, add LICDC II/III/LICDC requirement tables + internal links</td></tr>
+        <tr><td>7</td><td class="mono">/ohio-lcdc-ii-iii-and-licdc-for-those-holding-a-cdca/</td><td>Rewrite title, H1, meta to target "Ohio LCDC from CDCA" keyword cluster</td></tr>
+        <tr><td>8</td><td>Homepage</td><td>Add strategic internal links to Ohio, Texas, and PA hubs</td></tr>
+        <tr><td>9</td><td>Texas hub (existing)</td><td>Refresh title, H1, meta — currently ranks top 10 for LCDC TX; defend and improve</td></tr>
+        <tr><td>10</td><td class="mono">/ohio-20-hour-renewal-package/</td><td>Rewrite title, H1, meta, add renewal requirement context + internal links</td></tr>
+        <tr><td>11</td><td>New M2 articles (20)</td><td>Internal linking pass: inject links from articles to relevant course + product pages</td></tr>
+        <tr><td>12</td><td>Top 5 Ohio credential product pages</td><td>Add Course schema markup</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">20 Articles</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Title</th><th class="th-red">Target Keyword</th><th class="th-red">Vol</th><th class="th-red">Stage</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>CCJP Certification: Criminal Justice Professional Requirements, Cost &amp; Exam Guide</td><td class="mono teal">ccjp certification</td><td>200–600</td><td>Mid-funnel</td></tr>
+        <tr><td>2</td><td>DOT Substance Abuse Professional (SAP) Certification: Qualifications &amp; How to Apply</td><td class="mono teal">dot substance abuse testing</td><td>200–500</td><td>Mid-funnel</td></tr>
+        <tr><td>3</td><td>Substance Abuse Counselor Career Outlook: Job Growth, Demand &amp; 2026 Projections</td><td class="mono teal">substance abuse counselor jobs</td><td>1,900</td><td>Top-of-funnel</td></tr>
+        <tr><td>4</td><td>Addiction Counselor Salary: What You'll Earn at Every Career Level</td><td class="mono teal">addiction counselor salary</td><td>2,900</td><td>Top-of-funnel</td></tr>
+        <tr><td>5</td><td>Criminal Justice Addictions Professional: Career Path, CEU Requirements &amp; Credentials</td><td class="mono teal">substance abuse course</td><td>200–300</td><td>Top-of-funnel</td></tr>
+        <tr><td>6</td><td>Online Drug Counseling Certification: Best Programs, Costs &amp; What to Expect</td><td class="mono teal">drug counseling certification online</td><td>590</td><td>Top-of-funnel</td></tr>
+        <tr><td>7</td><td>CDCA vs. LCDC vs. CADC: Credential Comparison for Ohio and Texas Counselors</td><td class="mono teal">cdca vs lcdc vs cadc</td><td>100–400</td><td>Mid-funnel</td></tr>
+        <tr><td>8</td><td>Free CEUs for Addiction Counselors: Where to Find Approved Courses by Credential</td><td class="mono teal">free ceus for counselors</td><td>480</td><td>Bottom-funnel</td></tr>
+        <tr><td>9</td><td>How to Become a Licensed Addiction Counselor: Degrees, Credentials &amp; Timeline</td><td class="mono teal">how to become a licensed clinical counselor</td><td>320</td><td>Top-of-funnel</td></tr>
+        <tr><td>10</td><td>Addiction Counselor Certifications Compared: CADC, CDCA, CASAC, LCDC &amp; More</td><td class="mono teal">certified addiction counselor certification</td><td>300–500</td><td>Mid-funnel</td></tr>
+        <tr><td>11</td><td>ACA Code of Ethics for Addiction Counselors: Key Requirements for 2026</td><td class="mono teal">aca code of ethics</td><td>varies</td><td>Mid-funnel</td></tr>
+        <tr><td>12</td><td>What Does a Substance Abuse Counselor Do? Job Duties, Settings &amp; Day-to-Day Work</td><td class="mono teal">substance abuse counselor</td><td>9,900</td><td>Top-of-funnel</td></tr>
+        <tr><td>13</td><td>Addiction Counselor Continuing Education: CEU Requirements by Credential &amp; State</td><td class="mono teal">counselor training</td><td>1,000</td><td>Mid-funnel</td></tr>
+        <tr><td>14</td><td>Ohio CDCA Renewal: CEU Requirements &amp; Approved Providers</td><td class="mono teal">cdca renewal ohio</td><td>30–60</td><td>Bottom-funnel</td></tr>
+        <tr><td>15</td><td>Ohio LICDC Certification: Requirements, Costs &amp; Timeline</td><td class="mono teal">licdc ohio</td><td>30–80</td><td>Mid-funnel</td></tr>
+        <tr><td>16</td><td>Texas LCDC Renewal: CEU Requirements &amp; Renewal Process</td><td class="mono teal">lcdc renewal texas</td><td>50–100</td><td>Bottom-funnel</td></tr>
+        <tr><td>17</td><td>Best Online CEUs for Addiction Counselors (2026)</td><td class="mono teal">online ceus addiction counselors</td><td>200–350</td><td>Bottom-funnel</td></tr>
+        <tr><td>18</td><td>IC&amp;RC Exam Prep: What to Study for the ADC Written Exam</td><td class="mono teal">ic&amp;rc adc exam prep</td><td>50–100</td><td>Mid-funnel</td></tr>
+        <tr><td>19</td><td>How Many CEUs Do Addiction Counselors Need? State-by-State Guide</td><td class="mono teal">how many ceus addiction counselors</td><td>150–300</td><td>Bottom-funnel</td></tr>
+        <tr><td>20</td><td>CEUs That Count for Both NAADAC and IC&amp;RC: A Crosswalk Guide</td><td class="mono teal">naadac ic&amp;rc dual credit ceus</td><td>30–70</td><td>Bottom-funnel</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Backlink Plan: 6 Links</h3>
+    <table style="margin-bottom:16px;font-size:12px;">
+      <thead><tr><th class="th-red">Target Page</th><th class="th-red">Anchor Text</th><th class="th-red">Domain Type</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">/ohio-substance-abuse-certification/</td><td>Ohio CDCA requirements</td><td class="dim">State counseling directory</td></tr>
+        <tr><td class="mono">/ohio-substance-abuse-certification/</td><td>Ohio addiction counselor certification</td><td class="dim">OCDP board resource page</td></tr>
+        <tr><td class="mono">/texas-lcdc-certification/</td><td>Texas LCDC requirements</td><td class="dim">TX counseling association</td></tr>
+        <tr><td class="mono">/pennsylvania-cadc-certification/</td><td>Pennsylvania CADC requirements</td><td class="dim">PA counseling board resource</td></tr>
+        <tr><td class="mono">/texas-lcdc-certification/</td><td>LCDC license Texas</td><td class="dim">Addiction treatment resource</td></tr>
+        <tr><td class="mono">/</td><td>addiction counselor continuing education</td><td class="dim">IC&amp;RC partner listing</td></tr>
+      </tbody>
+    </table>
+
+    <div style="background:#E3F2FD;border-left:3px solid var(--ceu-teal);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;">
+      <strong style="color:var(--ceu-blue);">M2 milestone:</strong> Ohio, Texas, and Pennsylvania hub pages indexed. GSC shows new keywords entering the index across all three priority states. First non-branded rankings begin to appear.
+    </div>
+  </div>
+
+  <!-- Month 3 -->
+  <div class="ctab-panel" id="ct1" style="display:none;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+      <span style="background:#FFEBEE;color:#C62828;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 Tech Implementations</span>
+      <span style="background:#E8F5E9;color:#2E7D32;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 On-Page Optimizations</span>
+      <span style="background:#E3F2FD;color:#1565C0;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">20 Articles</span>
+      <span style="background:#F3E5F5;color:#6A1B9A;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">3 Page Builds: Ohio CDCA credential page · Ohio LICDC credential page · Criminal Justice hub</span>
+      <span style="background:#FFF3E0;color:#E65100;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">6 Backlinks</span>
+    </div>
+
+    <h3 style="margin-bottom:8px;">Technical Implementations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Implementation</th><th class="th-red">Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Course + FAQPage schema: Ohio CDCA credential page</td><td class="dim">PAA + rich results for CDCA certification queries</td></tr>
+        <tr><td>2</td><td>Course + FAQPage schema: Ohio LICDC credential page</td><td class="dim">PAA + rich results for LICDC certification queries</td></tr>
+        <tr><td>3</td><td>WebPage + FAQPage + HowTo schema: Criminal Justice hub</td><td class="dim">HowTo targets AI Overviews for CJ counselor career queries</td></tr>
+        <tr><td>4</td><td>BreadcrumbList schema: Ohio credential sub-pages + CJ hub</td><td class="dim">Consistent breadcrumb trail for all new credential pages</td></tr>
+        <tr><td>5</td><td>Internal linking: Ohio sub-pages (hub to CDCA/LICDC to products)</td><td class="dim">Bidirectional — hub links down, credentials link back up</td></tr>
+        <tr><td>6</td><td>Internal linking: CJ cluster (hub to CCJP/CJCA products)</td><td class="dim">Builds internal topical authority around CJ counseling</td></tr>
+        <tr><td>7</td><td>Broken internal links: Batch 2 (remaining of 59)</td><td class="dim">Completes audit batch; all 59 resolved by end of M3</td></tr>
+        <tr><td>8</td><td>Thin content fixes: Batch 1 (15+ highest-priority pages)</td><td class="dim">58 thin pages flagged; targeting worst text-to-HTML ratio offenders</td></tr>
+        <tr><td>9</td><td>Internal link density: 31 pages with only 1 internal link</td><td class="dim">Improves crawlability and authority distribution sitewide</td></tr>
+        <tr><td>10</td><td>Site speed + Core Web Vitals: audit on all M2 hub pages</td><td class="dim">Image compression, render-blocking resources, CWV scores</td></tr>
+        <tr><td>11</td><td>GSC: submit all new M2 + M3 pages via URL Inspection</td><td class="dim">Force crawl to accelerate indexing of all new pages</td></tr>
+        <tr><td>12</td><td>M2 articles: cross-link injection into all 3 priority state hubs</td><td class="dim">Passes article authority back into hub pages</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Page Builds</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">Page</th><th class="th-red">URL</th><th class="th-red">Scope</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ohio CDCA Credential Page</strong></td><td class="mono teal">/ohio-cdca-certification-requirements/</td><td>3,000+ words · Preliminary + Renewable tracks · hour tables · FAQ schema · OCDP cited · links to course purchases</td></tr>
+        <tr><td><strong>Ohio LICDC Credential Page</strong></td><td class="mono teal">/ohio-licdc-certification-requirements/</td><td>3,000+ words · 180hr new entrant + 110hr from CDCA tracks · FAQ schema · links to LICDC course packages</td></tr>
+        <tr><td><strong>Criminal Justice Hub</strong></td><td class="mono teal">/criminal-justice-counselor-certification/</td><td>3,000+ words · CCJP + CJCA · IC&amp;RC aligned · FAQ + HowTo schema · links to CJ course products</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">On-Page Optimizations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Page / Target</th><th class="th-red">What Changes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="mono">/ohio-30-hour-renewal-package/</td><td>Rewrite title, H1, meta, add renewal requirement context + internal links</td></tr>
+        <tr><td>2</td><td class="mono">/ohio-40-hour-renewal-package/</td><td>Rewrite title, H1, meta, add renewal requirement context + internal links</td></tr>
+        <tr><td>3</td><td>Pennsylvania hub (existing)</td><td>Expand content depth — CEU Matrix ranks #10 for PA addiction counselor certification; defend and push to top 5</td></tr>
+        <tr><td>4</td><td>Texas LCDC product pages</td><td>Strengthen title tags, H1s, meta on all TX LCDC product + course pages</td></tr>
+        <tr><td>5</td><td>Ohio hub to Ohio credential pages</td><td>Enforce bidirectional internal linking — hub links down, credential pages link back up</td></tr>
+        <tr><td>6</td><td>New M3 articles (20)</td><td>Internal linking pass to relevant course + credential pages</td></tr>
+        <tr><td>7</td><td>All Ohio pages</td><td>OCDP Provider #50-19236 citation pass — cited prominently on every Ohio page (CASR does this on every page)</td></tr>
+        <tr><td>8</td><td>All state + credential pages</td><td>NAADAC Provider #619 citation pass — all relevant state pages and credential pages</td></tr>
+        <tr><td>9</td><td>All CJ content</td><td>Tag + internally link all CJ content to new Criminal Justice hub — build topical cluster</td></tr>
+        <tr><td>10</td><td>Ohio CDCA + LICDC credential pages</td><td>Cross-link pass back to Ohio hub — enforce bidirectional linking</td></tr>
+        <tr><td>11</td><td>Texas hub</td><td>Add internal links to M3 articles covering TX topics</td></tr>
+        <tr><td>12</td><td>6 pages with duplicate title tags</td><td>Resolve remaining duplicate titles from audit — unique, keyword-targeted titles for each</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">20 Articles</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Title</th><th class="th-red">Target Keyword</th><th class="th-red">Vol</th><th class="th-red">Stage</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Ohio Counseling Supervision Hours: What Counts Toward LICDC</td><td class="mono teal">ohio counseling supervision hours</td><td>20–50</td><td>Mid-funnel</td></tr>
+        <tr><td>2</td><td>Pennsylvania CADC: Requirements, Cost &amp; Provider Guide</td><td class="mono teal">cadc certification pennsylvania</td><td>80–150</td><td>Mid-funnel</td></tr>
+        <tr><td>3</td><td>How to Get Your CAC I in Pennsylvania: Step-by-Step</td><td class="mono teal">cac 1 certification pennsylvania</td><td>30–60</td><td>Mid-funnel</td></tr>
+        <tr><td>4</td><td>Medication-Assisted Treatment Training: MAT Certification for Addiction Counselors</td><td class="mono teal">medication assisted treatment training</td><td>200–500</td><td>Mid-funnel</td></tr>
+        <tr><td>5</td><td>Certified Addiction Professional (CAP): Training, Requirements &amp; Exam Guide</td><td class="mono teal">certified addiction professional</td><td>1,000</td><td>Mid-funnel</td></tr>
+        <tr><td>6</td><td>Criminal Justice Counselor CEU Requirements by Credential</td><td class="mono teal">criminal justice counselor ceu requirements</td><td>40–80</td><td>Bottom-funnel</td></tr>
+        <tr><td>7</td><td>Addiction Counselor Salary in Pennsylvania (2026)</td><td class="mono teal">addiction counselor salary pennsylvania</td><td>80–150</td><td>Top-of-funnel</td></tr>
+        <tr><td>8</td><td>How to Become an Addiction Counselor in Pennsylvania</td><td class="mono teal">how to become addiction counselor pennsylvania</td><td>50–100</td><td>Top-of-funnel</td></tr>
+        <tr><td>9</td><td>PA CADC Renewal: State Board Approved CEUs</td><td class="mono teal">pa cadc renewal requirements</td><td>30–60</td><td>Bottom-funnel</td></tr>
+        <tr><td>10</td><td>What Is the IC&amp;RC? A Guide for Addiction Counselors</td><td class="mono teal">what is ic&amp;rc</td><td>50–100</td><td>Top-of-funnel</td></tr>
+        <tr><td>11</td><td>Addiction Counselor License Reciprocity Between States</td><td class="mono teal">counselor license reciprocity states</td><td>80–150</td><td>Mid-funnel</td></tr>
+        <tr><td>12</td><td>NAADAC vs. IC&amp;RC: Which Certification Body Is Right for You?</td><td class="mono teal">naadac vs ic&amp;rc</td><td>50–120</td><td>Mid-funnel</td></tr>
+        <tr><td>13</td><td>How Long Does It Take to Become a Certified Addiction Counselor?</td><td class="mono teal">how long to become addiction counselor</td><td>200–400</td><td>Top-of-funnel</td></tr>
+        <tr><td>14</td><td>CAC II Pennsylvania: Upgrading from CAC I: Requirements</td><td class="mono teal">cac 2 pennsylvania requirements</td><td>20–40</td><td>Mid-funnel</td></tr>
+        <tr><td>15</td><td>Criminal Justice Counselor Salary: What to Expect in 2026</td><td class="mono teal">criminal justice counselor salary</td><td>50–100</td><td>Top-of-funnel</td></tr>
+        <tr><td>16</td><td>Best Online CADC Renewal Courses (2026)</td><td class="mono teal">online cadc renewal courses</td><td>80–150</td><td>Bottom-funnel</td></tr>
+        <tr><td>17</td><td>Substance Use Disorder Counselor vs. Mental Health Counselor</td><td class="mono teal">substance use disorder vs mental health counselor</td><td>80–150</td><td>Top-of-funnel</td></tr>
+        <tr><td>18</td><td>IC&amp;RC AODA Written Exam: Study Guide &amp; Prep Tips</td><td class="mono teal">ic&amp;rc aoda exam</td><td>30–60</td><td>Mid-funnel</td></tr>
+        <tr><td>19</td><td>NAADAC NCC AP Certification: Full Requirements Guide</td><td class="mono teal">ncc ap certification requirements</td><td>30–60</td><td>Mid-funnel</td></tr>
+        <tr><td>20</td><td>Ethics CEUs for Addiction Counselors: What Counts by Credential</td><td class="mono teal">ethics ceus addiction counselors</td><td>30–80</td><td>Bottom-funnel</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Backlink Plan: 6 Links</h3>
+    <table style="margin-bottom:16px;font-size:12px;">
+      <thead><tr><th class="th-red">Target Page</th><th class="th-red">Anchor Text</th><th class="th-red">Domain Type</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">/pennsylvania-cadc-certification/</td><td>Pennsylvania CADC requirements</td><td class="dim">PA counseling board resource</td></tr>
+        <tr><td class="mono">/criminal-justice-counselor-certification/</td><td>CCJP certification requirements</td><td class="dim">IC&amp;RC affiliate site</td></tr>
+        <tr><td class="mono">/criminal-justice-counselor-certification/</td><td>criminal justice counselor certification</td><td class="dim">CJ treatment directory</td></tr>
+        <tr><td class="mono">/ohio-substance-abuse-certification/</td><td>CDCA certification Ohio</td><td class="dim">Ohio workforce development resource</td></tr>
+        <tr><td class="mono">/texas-lcdc-certification/</td><td>LCDC requirements Texas</td><td class="dim">Texas counseling association</td></tr>
+        <tr><td class="mono">[top M2 article by GSC clicks]</td><td>determined by performance data</td><td class="dim">Addiction treatment org</td></tr>
+      </tbody>
+    </table>
+
+    <div style="background:#E8F5E9;border-left:3px solid var(--green);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;">
+      <strong style="color:#2E7D32;">M3 milestone:</strong> Ohio CDCA + LICDC sub-pages indexed. Criminal justice hub establishes a content cluster no competitor has. Ohio, Texas, and Pennsylvania M2 hubs gaining authority. First non-branded page 1 appearances expected.
+    </div>
+  </div>
+
+  <!-- Month 4 -->
+  <div class="ctab-panel" id="ct2" style="display:none;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+      <span style="background:#FFEBEE;color:#C62828;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 Tech Implementations</span>
+      <span style="background:#E8F5E9;color:#2E7D32;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">12 On-Page Optimizations</span>
+      <span style="background:#E3F2FD;color:#1565C0;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">20 Articles</span>
+      <span style="background:#F3E5F5;color:#6A1B9A;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">3 Page Builds: PA credential sub-page · Texas LCDC sub-page · Ohio Renewal Landing</span>
+      <span style="background:#FFF3E0;color:#E65100;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;">6 Backlinks</span>
+    </div>
+
+    <h3 style="margin-bottom:8px;">Technical Implementations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Implementation</th><th class="th-red">Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>FAQPage JSON-LD + BreadcrumbList: Pennsylvania credential sub-page</td><td class="dim">Rich results for PA CADC certification queries</td></tr>
+        <tr><td>2</td><td>FAQPage JSON-LD + BreadcrumbList: Texas LCDC credential sub-page</td><td class="dim">Rich results for TX LCDC certification queries</td></tr>
+        <tr><td>3</td><td>FAQPage schema + HowTo JSON-LD: Ohio Renewal Landing Page</td><td class="dim">HowTo targets "how to renew Ohio CDCA" AI Overviews</td></tr>
+        <tr><td>4</td><td>Internal linking: PA credential page to PA hub to PA course products</td><td class="dim">Completes PA hub architecture, mirrors OH structure</td></tr>
+        <tr><td>5</td><td>Internal linking: TX LCDC sub-page to TX hub to TX course products</td><td class="dim">Completes TX hub architecture</td></tr>
+        <tr><td>6</td><td>Internal linking: Ohio Renewal page to Ohio hub to renewal course packages</td><td class="dim">Consolidates renewal intent into one authoritative page</td></tr>
+        <tr><td>7</td><td>Thin content fixes: Batch 2 (remaining low text-to-HTML pages)</td><td class="dim">Completes thin content work from audit</td></tr>
+        <tr><td>8</td><td>Redirect audit: 302 to 301 cleanup from site redesign</td><td class="dim">Preserves link equity — temporary redirects bleed authority</td></tr>
+        <tr><td>9</td><td>GSC coverage report: verify all new pages indexed, fix crawl errors</td><td class="dim">Confirms all M2–M4 pages indexed and appearing in search</td></tr>
+        <tr><td>10</td><td>Internal link audit: hub pages 10+ inbound, credential pages 5+</td><td class="dim">Verifies internal link targets are met across all new pages</td></tr>
+        <tr><td>11</td><td>Structured data validation: Rich Results Test on all hub + credential pages</td><td class="dim">Confirms zero schema errors before engagement close</td></tr>
+        <tr><td>12</td><td>Core Web Vitals review: Lighthouse on all hub + credential pages</td><td class="dim">Address any CWV regressions introduced during the engagement</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Page Builds</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">Page</th><th class="th-red">URL</th><th class="th-red">Scope</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Pennsylvania Credential Sub-Page</strong></td><td class="mono teal">/pennsylvania-cadc-certification-requirements/</td><td>3,000+ words · CAC I + CAC II tracks · PCBDD cited · FAQ schema · links to PA course packages</td></tr>
+        <tr><td><strong>Texas LCDC Credential Sub-Page</strong></td><td class="mono teal">/texas-lcdc-certification-requirements/</td><td>3,000+ words · all LCDC tracks · TCBAP cited · FAQ schema · links to TX LCDC course packages</td></tr>
+        <tr><td><strong>Ohio Renewal Landing Page</strong></td><td class="mono teal">/ohio-substance-abuse-ceu-renewal/</td><td>Consolidated renewal hub · 20hr/30hr/40hr packages · FAQ schema · replaces thin individual renewal pages</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">On-Page Optimizations</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Page / Target</th><th class="th-red">What Changes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Ohio hub</td><td>Content depth expansion to 4,000+ words — exam prep tips, salary data, career path section, school pathways. Go deeper than CASR.</td></tr>
+        <tr><td>2</td><td>All Texas credential pages</td><td>Optimize title tags, H1s, meta on all TX credential sub-pages. Internal link to new Texas hub.</td></tr>
+        <tr><td>3</td><td>Salary + career articles (M2–M3)</td><td>Optimize for featured snippets — direct-answer openings, structured data, internal links to course pages</td></tr>
+        <tr><td>4</td><td>New M4 articles (20)</td><td>Internal linking pass: inject links to hub pages, credential pages, and course purchase pages</td></tr>
+        <tr><td>5</td><td>Ohio renewal pages (/20hr/ /30hr/ /40hr/)</td><td>Assess consolidation vs. keep separate. Implement recommendation aligned with Ohio Renewal Landing Page.</td></tr>
+        <tr><td>6</td><td>New M4 articles (20)</td><td>Cross-link injection into PA + TX hub pages from relevant new articles</td></tr>
+        <tr><td>7</td><td>Competitor keyword gap re-run</td><td>Re-run keyword gap vs. CASR. Flag remaining M5+ opportunities. Quantify how much ground CEU Matrix has closed.</td></tr>
+        <tr><td>8</td><td>Texas hub to Texas credential pages</td><td>Enforce bidirectional linking — hub links down, credential pages link back up</td></tr>
+        <tr><td>9</td><td>Homepage</td><td>Full refresh: title tag, meta description, H1 alignment, add links to all tier 1 state hubs</td></tr>
+        <tr><td>10</td><td>Pennsylvania hub to PA credential sub-page</td><td>Bidirectional linking pass — enforce hub architecture consistency across all 3 states</td></tr>
+        <tr><td>11</td><td>Full site E-E-A-T pass</td><td>Final check: NAADAC #619 + all state board approval citations on every relevant page</td></tr>
+        <tr><td>12</td><td>Ohio CDCA + LICDC credential pages</td><td>Content depth review vs. CASR — expand any pages that fall short of CASR's word count or depth</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">20 Articles</h3>
+    <table style="margin-bottom:18px;font-size:12px;">
+      <thead><tr><th class="th-red">#</th><th class="th-red">Title</th><th class="th-red">Target Keyword</th><th class="th-red">Vol</th><th class="th-red">Stage</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Florida CAP Certification Requirements: 2026 Guide</td><td class="mono teal">cap certification florida</td><td>50–100</td><td>Mid-funnel</td></tr>
+        <tr><td>2</td><td>How to Get Your CAP in Florida: Step-by-Step</td><td class="mono teal">florida cap license requirements</td><td>30–70</td><td>Mid-funnel</td></tr>
+        <tr><td>3</td><td>Florida Addiction Counselor CEU Requirements by Credential</td><td class="mono teal">florida addiction counselor ceu</td><td>40–80</td><td>Bottom-funnel</td></tr>
+        <tr><td>4</td><td>California CATC Certification: Requirements &amp; Renewal</td><td class="mono teal">catc certification california</td><td>50–100</td><td>Mid-funnel</td></tr>
+        <tr><td>5</td><td>California CADC Requirements: Steps to Certification</td><td class="mono teal">cadc certification california</td><td>80–150</td><td>Mid-funnel</td></tr>
+        <tr><td>6</td><td>Addiction Counselor Salary in California (2026)</td><td class="mono teal">addiction counselor salary california</td><td>150–300</td><td>Top-of-funnel</td></tr>
+        <tr><td>7</td><td>New York CASAC Certification Requirements: 2026 Guide</td><td class="mono teal">casac certification new york</td><td>100–200</td><td>Mid-funnel</td></tr>
+        <tr><td>8</td><td>How to Get CASAC Certified in New York</td><td class="mono teal">how to become casac certified</td><td>50–100</td><td>Mid-funnel</td></tr>
+        <tr><td>9</td><td>CASAC Renewal: New York CEU Requirements</td><td class="mono teal">casac renewal requirements</td><td>40–80</td><td>Bottom-funnel</td></tr>
+        <tr><td>10</td><td>OASAS Approved CEU Providers in New York</td><td class="mono teal">oasas approved ceu providers</td><td>30–60</td><td>Bottom-funnel</td></tr>
+        <tr><td>11</td><td>How to Become an Addiction Counselor in California</td><td class="mono teal">how to become addiction counselor california</td><td>80–150</td><td>Top-of-funnel</td></tr>
+        <tr><td>12</td><td>Addiction Counselor Salary in Florida (2026)</td><td class="mono teal">addiction counselor salary florida</td><td>100–150</td><td>Top-of-funnel</td></tr>
+        <tr><td>13</td><td>How to Become an Addiction Counselor in New York</td><td class="mono teal">how to become addiction counselor new york</td><td>50–100</td><td>Top-of-funnel</td></tr>
+        <tr><td>14</td><td>CATC vs. CADC: Which California Credential Is Right for You?</td><td class="mono teal">catc vs cadc california</td><td>20–40</td><td>Mid-funnel</td></tr>
+        <tr><td>15</td><td>IC&amp;RC Member Boards: Full State-by-State Directory</td><td class="mono teal">ic&amp;rc member boards by state</td><td>40–80</td><td>Top-of-funnel</td></tr>
+        <tr><td>16</td><td>Ethics in Addiction Counseling: CE Requirements by Credential</td><td class="mono teal">ethics continuing education addiction counseling</td><td>40–80</td><td>Bottom-funnel</td></tr>
+        <tr><td>17</td><td>Telehealth CEUs for Addiction Counselors: What Counts?</td><td class="mono teal">telehealth ceus addiction counselors</td><td>30–60</td><td>Bottom-funnel</td></tr>
+        <tr><td>18</td><td>How to Transfer Your Addiction Counselor Certification to Another State</td><td class="mono teal">transfer addiction counselor certification</td><td>50–100</td><td>Mid-funnel</td></tr>
+        <tr><td>19</td><td>Dual Diagnosis CEUs: Requirements for Addiction &amp; Mental Health Counselors</td><td class="mono teal">dual diagnosis ceu requirements</td><td>30–70</td><td>Bottom-funnel</td></tr>
+        <tr><td>20</td><td>How to Choose the Right Addiction Counselor Certification Program</td><td class="mono teal">how to choose addiction counselor certification</td><td>50–100</td><td>Top-of-funnel</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-bottom:8px;">Backlink Plan: 6 Links</h3>
+    <table style="margin-bottom:16px;font-size:12px;">
+      <thead><tr><th class="th-red">Target Page</th><th class="th-red">Anchor Text</th><th class="th-red">Domain Type</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">/florida-substance-abuse-certification/</td><td>Florida CAP certification requirements</td><td class="dim">FADAA resource listing</td></tr>
+        <tr><td class="mono">/california-addiction-counselor-certification/</td><td>California CADC requirements</td><td class="dim">CCAPP affiliate page</td></tr>
+        <tr><td class="mono">/new-york-casac-certification/</td><td>New York CASAC certification</td><td class="dim">OASAS-adjacent resource</td></tr>
+        <tr><td class="mono">/ohio-substance-abuse-certification/</td><td>Ohio substance abuse certification</td><td class="dim">OCDP workforce resource</td></tr>
+        <tr><td class="mono">[top article by M3 GSC data]</td><td>determined by performance data</td><td class="dim">Addiction treatment org</td></tr>
+        <tr><td class="mono">/</td><td>addiction counselor continuing education</td><td class="dim">Higher-DA general directory</td></tr>
+      </tbody>
+    </table>
+
+    <div style="background:#FFF8E1;border-left:3px solid var(--ember-red);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13px;">
+      <strong style="color:var(--ceu-navy);">M4 milestone:</strong> Ohio, Texas, and Pennsylvania fully built out: hubs + credential sub-pages + renewal landing. Non-branded traffic exceeds branded. 60+ articles ranking. M5 strategy review: Florida, California, and New York expansion.
+    </div>
+  </div>
+</div>
+
+<!-- 14: Section divider: Authority & AI -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 6</div>
+    <h2>Authority &amp; AI Optimization</h2>
+  </div>
+  <p class="subtitle">CEU Matrix has 20+ years of real credentials that aren't showing up on-page. We surface them and add the AI infrastructure competitors are missing entirely.</p>
+
+  <div class="eeat-grid" style="margin-top:40px;">
+    <div class="eeat-card"><div class="ec-icon">🏆</div><div class="ec-label" style="color:var(--ceu-teal);">Experience</div><div class="ec-desc">20+ years · Course catalog depth · Publishing history</div></div>
+    <div class="eeat-card"><div class="ec-icon">🎓</div><div class="ec-label" style="color:var(--ceu-sky);">Expertise</div><div class="ec-desc">NAADAC Provider #619 since 2005 · Credential-specific content · Author credentials</div></div>
+    <div class="eeat-card"><div class="ec-icon">⚡</div><div class="ec-label" style="color:var(--green);">Authoritativeness</div><div class="ec-desc">State board approvals in 15+ states · Board provider numbers cited on-page</div></div>
+    <div class="eeat-card"><div class="ec-icon">🔒</div><div class="ec-label" style="color:var(--yellow);">Trustworthiness</div><div class="ec-desc">Board-sourced requirements · Last-updated dates · Direct citations to state boards</div></div>
+  </div>
+</div>
+
+<!-- 15: Authority + AI plan -->
+<div class="slide">
+  <div class="slide-label">E-E-A-T &amp; AI Optimization</div>
+  <h2>Authority Signal Plan</h2>
+
+  <div class="two-col" style="margin-top:16px;">
+    <div class="col">
+      <h3>Where Each Credential Gets Deployed</h3>
+      <table>
+        <thead><tr><th class="th-red">Asset</th><th class="th-red">Where It Goes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>NAADAC Provider #619</strong> (among oldest registered)</td><td>Homepage hero, all state pages, footer</td></tr>
+          <tr><td><strong>OCDP Provider #50-19236</strong></td><td>Ohio hub, Ohio credential pages, Ohio product pages</td></tr>
+          <tr><td><strong>IC&amp;RC approved</strong></td><td>Criminal justice content, CCJP/CJCA pages</td></tr>
+          <tr><td><strong>NBCC approved</strong></td><td>Counselor CE content, relevant state pages</td></tr>
+          <tr><td><strong>20+ years in business</strong></td><td>Homepage, About, every state page trust section</td></tr>
+          <tr><td><strong>State board approvals</strong></td><td>Each state page: cite board name + provider #</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3>AI Overview Infrastructure</h3>
+      <div class="stats-row" style="margin-top:4px; margin-bottom:8px;">
+        <div class="stat-card" style="min-width:auto;"><div class="stat-value red" style="font-size:26px;">0</div><div class="stat-label">llms.txt today</div></div>
+        <div class="stat-card" style="min-width:auto;"><div class="stat-value red" style="font-size:26px;">0</div><div class="stat-label">FAQPage schema</div></div>
+        <div class="stat-card" style="min-width:auto;"><div class="stat-value red" style="font-size:26px;">0</div><div class="stat-label">HowTo schema</div></div>
+      </div>
+      <table>
+        <thead><tr><th class="th-red">Asset</th><th class="th-red">Purpose</th><th class="th-red">When</th></tr></thead>
+        <tbody>
+          <tr><td class="bold">llms.txt</td><td>Routes AI crawlers (Perplexity, Gemini, ChatGPT) through CEU Matrix content</td><td><span class="pill tech">M1 Wk 1</span></td></tr>
+          <tr><td class="bold">FAQPage JSON-LD</td><td>Targets "People Also Ask" + AI Overview citations. 8–12 Q&amp;As per state page.</td><td><span class="pill tech">M1 with Ohio</span></td></tr>
+          <tr><td class="bold">HowTo JSON-LD</td><td>Career path steps eligible for rich results in AI Overviews</td><td><span class="pill tech">M1 with Ohio</span></td></tr>
+          <tr><td class="bold">Direct-answer openings</td><td>Every article opens with a 2–3 sentence answer, the format AI Overviews pull from</td><td><span class="pill content">All M1+ content</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 16: Section divider: Roadmap -->
+<div class="slide divider">
+  <div class="divider-box">
+    <div class="slide-label">Section 7</div>
+    <h2>90-Day Roadmap</h2>
+  </div>
+  <p class="subtitle">What gets built, when it ships, and what Google should see at each milestone.</p>
+</div>
+
+<!-- 17: Roadmap -->
+<div class="slide dark">
+  <div class="slide-label">Execution Plan</div>
+  <h2>Month-by-Month Deliverables</h2>
+
+  <div class="roadmap-grid" style="margin-top:20px;">
+    <div class="rp">
+      <div class="rp-label">Month 1</div>
+      <div class="rp-title">Foundation</div>
+      <ul>
+        <li>Technical audit complete</li>
+        <li>12 technical fixes live</li>
+        <li>llms.txt + homepage schema</li>
+        <li>Ohio hub architecture mapped</li>
+        <li>Ohio page schema implemented</li>
+        <li>10 articles published</li>
+        <li>Keyword map + state matrix locked</li>
+        <li>12 on-page optimizations</li>
+      </ul>
+    </div>
+    <div class="rp">
+      <div class="rp-label">Month 2</div>
+      <div class="rp-title">Build &amp; Publish</div>
+      <ul>
+        <li>Ohio hub page live</li>
+        <li>Texas hub page live</li>
+        <li>Pennsylvania hub page live</li>
+        <li>20 articles published</li>
+        <li>12 on-page optimizations</li>
+        <li>12 technical implementations</li>
+        <li>6 backlinks (vendor)</li>
+        <li>GSC indexing confirmed</li>
+      </ul>
+    </div>
+    <div class="rp">
+      <div class="rp-label">Month 3</div>
+      <div class="rp-title">Rankings Move</div>
+      <ul>
+        <li>Ohio CDCA sub-page live</li>
+        <li>Ohio LICDC sub-page live</li>
+        <li>Criminal justice hub live</li>
+        <li>20 articles published</li>
+        <li>Priority state rankings climbing</li>
+        <li>12 on-page optimizations</li>
+        <li>6 backlinks (vendor)</li>
+        <li>M3 progress report delivered</li>
+      </ul>
+    </div>
+    <div class="rp">
+      <div class="rp-label">Month 4</div>
+      <div class="rp-title">Scale</div>
+      <ul>
+        <li>PA credential sub-page live</li>
+        <li>TX LCDC credential sub-page live</li>
+        <li>Ohio Renewal Landing Page live</li>
+        <li>20 articles published</li>
+        <li>Non-branded &gt; branded traffic</li>
+        <li>6 backlinks (vendor)</li>
+        <li>Next-90 strategy review</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:24px;">Traffic Trajectory</h3>
+  <div class="bar-chart" style="margin-top:10px;">
+    <div class="bar-row"><div class="bar-label" style="color:rgba(255,255,255,0.6);">Apr '26 (today)</div><div class="bar-track"><div class="bar-fill ember-fill" style="width:14%;">~700/mo</div></div><div class="bar-value" style="color:rgba(255,255,255,0.4);">Declining</div></div>
+    <div class="bar-row"><div class="bar-label" style="color:rgba(255,255,255,0.6);">Month 3</div><div class="bar-track"><div class="bar-fill" style="width:24%;background:linear-gradient(90deg,var(--yellow),#e67e22);">~1,200/mo</div></div><div class="bar-value" style="color:rgba(255,255,255,0.4);">Indexing</div></div>
+    <div class="bar-row"><div class="bar-label" style="color:rgba(255,255,255,0.6);">Month 6</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:linear-gradient(90deg,var(--yellow),#e67e22);">~2,500/mo</div></div><div class="bar-value" style="color:rgba(255,255,255,0.4);">Climbing</div></div>
+    <div class="bar-row"><div class="bar-label" style="color:rgba(255,255,255,0.6);">Month 12</div><div class="bar-track"><div class="bar-fill green-fill" style="width:100%;">5,000+/mo</div></div><div class="bar-value" style="color:rgba(255,255,255,0.4);">Compounding</div></div>
+  </div>
+
+  <div class="annotation" style="margin-top:14px;">
+    <strong>Directional, not guaranteed.</strong> Rankings compound: content we publish in Month 1 gains authority through Month 12. Trajectory assumes conservative backlink acquisition. With vendor delivering 6 links/month from M2, the curve steepens.
+  </div>
+</div>
+
+<!-- ============================= NAV BAR ============================= -->
+<div id="nav-bar">
+  <div class="nb-brand">EmberTribe · CEU Matrix SEO Foundation</div>
+  <div class="nb-controls">
+    <button onclick="navigate(-1)" title="Previous (←)">&#8592;</button>
+    <div id="slide-counter">1 / 17</div>
+    <button onclick="navigate(1)" title="Next (→)">&#8594;</button>
+  </div>
+  <div class="nb-dots" id="dot-container"></div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+
+  function buildDots() {
+    const container = document.getElementById('dot-container');
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      container.appendChild(d);
+    });
+  }
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    document.querySelectorAll('.dot')[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    document.querySelectorAll('.dot')[cur].classList.add('active');
+    document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + slides.length;
+    slides[cur].scrollTop = 0;
+  }
+
+  function navigate(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  });
+
+  function showCTab(idx, btn) {
+    document.querySelectorAll('.ctab-panel').forEach((p, i) => p.style.display = i === idx ? 'block' : 'none');
+    document.querySelectorAll('.ctab').forEach(b => b.classList.remove('ctab-active'));
+    btn.classList.add('ctab-active');
+  }
+
+  buildDots();
+  document.getElementById('slide-counter').textContent = '1 / ' + slides.length;
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('button, a, input, select, .ctab, .dot, #nav-bar')) return;
+    const ratio = e.clientX / window.innerWidth;
+    if (ratio < 0.12) navigate(-1);
+    else if (ratio > 0.88) navigate(1);
+  });
+</script>
+</body>
+</html>
