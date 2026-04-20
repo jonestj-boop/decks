@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Glass No Brakes — Shopify Theme Build Proposal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #09051A;
+  --primary-mid: #100820;
+  --primary-light: #5B2098;
+  --accent: #00CEC9;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+  --pink: #E91E8C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #007bb5; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 160px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, #008580, var(--accent)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.pink   { background: linear-gradient(90deg, #b5146e, var(--pink)); }
+.bar-fill.purple { background: linear-gradient(90deg, #3a1260, var(--primary-light)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+
+.bar-value {
+  width: 60px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.pink    { background: #FCE4EC; color: var(--pink); }
+.pill.teal    { background: #E0F7FA; color: #007bb5; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--accent); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.pink-text { color: var(--pink); }
+.purple-text { color: var(--primary-light); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--pink), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Shopify Theme Build Proposal</p>
+      <h1>All Glass No Brakes</h1>
+      <p class="subtitle">Your vision. Built for Shopify. — A custom theme built from your design, pixel-perfect and store-ready.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">10</div>
+          <div class="stat-label">Pages &amp; Templates</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--pink);">24+</div>
+          <div class="stat-label">Custom Sections</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--yellow);">3.5 wks</div>
+          <div class="stat-label">Estimated Timeline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$3,500</div>
+          <div class="stat-label">Flat Project Investment</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for All Glass No Brakes &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROJECT OVERVIEW -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Project Overview</p>
+    <h2>What We're Building</h2>
+    <p class="subtitle">You've already done the hard part — the design exists. We build the Shopify theme around it.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="teal">What You Have</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">✓ Complete HTML/CSS mockup — all 10 pages</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">✓ Custom CSS brand mark and logo system</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">✓ Full design system (colors, fonts, animations)</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">✓ Mobile-responsive layouts already designed</li>
+          <li style="padding:8px 0; font-size:14px;">✓ Glass-float animations, collection heroes, lightbox</li>
+        </ul>
+        <div class="annotation info mt-16">
+          <strong>No redesign fees.</strong> We work from what you have — your brand stays exactly as you envisioned it.
+        </div>
+      </div>
+      <div>
+        <h3 class="pink-text">What We Deliver</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">→ Full Shopify theme in Liquid template format</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">→ 10 templates: Homepage, 6 Collections, About, Commissions, Contact, Events, Blog, Cart</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">→ All CSS animations and interactions ported intact</li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">→ Theme editor — update copy &amp; images without code</li>
+          <li style="padding:8px 0; font-size:14px;">→ Live Shopify store, connected to your collections</li>
+        </ul>
+        <div class="annotation success mt-16">
+          <strong>Goal:</strong> Your design goes live on Shopify with a fully functional store — cart, checkout, collections, and all.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: WHAT'S INCLUDED -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Scope of Work</p>
+    <h2>Full Theme Structure</h2>
+    <p class="subtitle">Every file needed for a complete, production-ready Shopify theme.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Folder / File</th>
+              <th>What It Does</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill setup">layout</span> &nbsp;theme.liquid</td>
+              <td>Global shell — fonts, head, body wrappers</td>
+            </tr>
+            <tr>
+              <td><span class="pill paid">templates</span> &nbsp;10 files</td>
+              <td>Homepage, 6 collections, product, cart, about, commissions, contact, events, blog, article</td>
+            </tr>
+            <tr>
+              <td><span class="pill seo">sections</span> &nbsp;24+ files</td>
+              <td>Every visual block: hero, nav, collection grid, product grid, lightbox, forms, testimonials, footer…</td>
+            </tr>
+            <tr>
+              <td><span class="pill content">snippets</span> &nbsp;4 files</td>
+              <td>Brand mark, product card, collection card, lightbox modal</td>
+            </tr>
+            <tr>
+              <td><span class="pill green">assets</span> &nbsp;base.css + theme.js</td>
+              <td>Full design system CSS + mobile menu, lightbox, cart AJAX, toast</td>
+            </tr>
+            <tr>
+              <td><span class="pill pink">config</span> &nbsp;settings schema</td>
+              <td>Theme editor fields — client can update colors, copy, images without code</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation mt-16">
+          <strong>Theme editor ready.</strong> Every section has configurable settings so the client owns updates post-launch.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:16px;">Pages &amp; Templates Included</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Homepage</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:100%;">Hero + Collection Grid</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Collections (×6)</span>
+            <div class="bar-track"><div class="bar-fill pink" style="width:95%;">Pets, Memorials, Jewelry, Home, Botanica, Ember</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Product Page</span>
+            <div class="bar-track"><div class="bar-fill purple" style="width:80%;">Gallery, Variants, Add to Cart</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">About</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:90%;">7 Sections + Stats + Videos</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Commissions</span>
+            <div class="bar-track"><div class="bar-fill pink" style="width:75%;">Form + 3-Step Process</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Events</span>
+            <div class="bar-track"><div class="bar-fill purple" style="width:65%;">Event Cards Listing</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Blog + Article</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:70%;">Grid + Full Post View</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Cart</span>
+            <div class="bar-track"><div class="bar-fill pink" style="width:60%;">On-brand Cart Page</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Contact</span>
+            <div class="bar-track"><div class="bar-fill purple" style="width:55%;">Form + Glass Hero</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: WHAT WE'RE BUILDING FRESH -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Beyond the Mockup</p>
+    <h2>What We're Building From Scratch</h2>
+    <p class="subtitle">Your mockup covers the design — but a live store needs more. Here's what we add.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Why It's Needed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">Cart page</td>
+              <td>Not in mockup — built in AGNB brand style with AJAX updates</td>
+            </tr>
+            <tr>
+              <td class="bold">Full product page</td>
+              <td>Variant selects, image gallery, quantity, Add to Cart button wired to Shopify</td>
+            </tr>
+            <tr>
+              <td class="bold">Commission form handling</td>
+              <td>Form submissions routed to email + Klaviyo or Shopify inbox</td>
+            </tr>
+            <tr>
+              <td class="bold">Shopify navigation</td>
+              <td>Nav menus wired to Shopify admin so client can edit links without code</td>
+            </tr>
+            <tr>
+              <td class="bold">Collection → Liquid loop</td>
+              <td>Static collection cards replaced with live Shopify collections data</td>
+            </tr>
+            <tr>
+              <td class="bold">Search results page</td>
+              <td>Branded search template matching the design system</td>
+            </tr>
+            <tr>
+              <td class="bold">404 page</td>
+              <td>On-brand error page so nothing breaks the experience</td>
+            </tr>
+            <tr>
+              <td class="bold">Theme settings schema</td>
+              <td>Config file exposing editable fields in the Shopify theme editor</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="annotation info">
+          <strong>Shopify checkout:</strong> Checkout is controlled by Shopify — we style the thank you page and match as much as possible, but full checkout customization requires Shopify Plus.
+        </div>
+        <div class="annotation success">
+          <strong>Newsletter:</strong> We wire the newsletter form to Klaviyo (recommended) or Shopify's native email capture — your choice.
+        </div>
+        <div class="annotation">
+          <strong>Instagram embeds:</strong> The process videos page uses live Instagram embeds. We'll configure these with your account during QA.
+        </div>
+        <div class="annotation danger">
+          <strong>Not included:</strong> Product photography, copywriting, Shopify subscription fees, ongoing maintenance, or paid app subscriptions.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: BUILD PHASES & TIMELINE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Timeline</p>
+    <h2>Build Phases — 3.5 Weeks</h2>
+    <p class="subtitle">Structured in logical phases so you can review and provide feedback as we go.</p>
+    <div class="two-col flex-grow mt-8">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Phase</th>
+            <th>Days</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold" style="color:var(--accent);">1</td>
+            <td><strong>Foundation</strong> — theme.liquid, CSS port, brand tokens, global JS</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--accent);">2</td>
+            <td><strong>Header + Footer</strong> — sticky nav, dropdown, hamburger, brand mark</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--accent);">3</td>
+            <td><strong>Homepage</strong> — hero, collection grid, animations, newsletter, tagline bar</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--pink);">4</td>
+            <td><strong>Collections + Product</strong> — 6 collection heroes, product grid, lightbox, Add to Cart</td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--pink);">5</td>
+            <td><strong>About Page</strong> — all 7 sections, stats bar, video grid, testimonials, CTA</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--accent);">6</td>
+            <td><strong>Commissions + Contact</strong> — forms, 3-step process, form handling</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--accent);">7</td>
+            <td><strong>Events + Blog</strong> — listings, blog grid, article template</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--pink);">8</td>
+            <td><strong>Cart Page</strong> — on-brand cart in AGNB design system</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--accent);">9</td>
+            <td><strong>Shopify Wiring</strong> — nav menus, collections data, metafields, theme editor</td>
+            <td>1.5</td>
+          </tr>
+          <tr style="background: rgba(0,206,201,0.04);">
+            <td class="bold" style="color:var(--primary-light);">10</td>
+            <td><strong>QA + Client Revisions</strong> — mobile pass, cross-browser, feedback round</td>
+            <td>2</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="font-weight:700; border-top:2px solid var(--border);">
+            <td colspan="2">Total</td>
+            <td>~17 days / 3.5 weeks</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="timeline" style="flex-direction:column; margin:0;">
+          <div class="timeline-phase" style="border-radius:12px 12px 0 0;">
+            <span class="phase-label">Week 1</span>
+            <h4>Foundation to Homepage</h4>
+            <ul>
+              <li>Phases 1–3 complete</li>
+              <li>Theme skeleton live on dev store</li>
+              <li>Homepage fully built</li>
+            </ul>
+          </div>
+          <div class="timeline-phase">
+            <span class="phase-label">Week 2</span>
+            <h4>Collections to Blog</h4>
+            <ul>
+              <li>Phases 4–7 complete</li>
+              <li>All 10 pages built</li>
+              <li>Client review checkpoint</li>
+            </ul>
+          </div>
+          <div class="timeline-phase" style="border-radius:0 0 12px 12px;">
+            <span class="phase-label">Week 3–3.5</span>
+            <h4>Wiring, QA &amp; Launch</h4>
+            <ul>
+              <li>Phases 8–10 complete</li>
+              <li>Live on your Shopify store</li>
+              <li>30 days post-launch support</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: INVESTMENT -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Investment</p>
+    <h2>Project Pricing &amp; Terms</h2>
+    <p class="subtitle">One-time website build + optional ongoing content — two services, one partner.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--accent); margin-bottom:8px;">One-Time &mdash; Custom Shopify Theme</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Deliverable</th>
+              <th>Included</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Complete custom Shopify theme</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>10 pages &amp; templates</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>24+ custom sections</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>All CSS animations ported intact</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>Mobile-responsive — all breakpoints</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>Theme editor (update copy/images without code)</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>Cart + AJAX add-to-cart</td>
+              <td class="bold teal">✓</td>
+            </tr>
+            <tr>
+              <td>1 round of revision + 30 days post-launch support</td>
+              <td class="bold teal">✓</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr style="font-weight:700; border-top:2px solid var(--border); font-size:16px;">
+              <td>Website Build — One-Time</td>
+              <td style="color:var(--accent); font-size:20px;">$3,500</td>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="annotation success" style="margin-top:8px;">
+          <strong>One-time payment of $3,500.</strong> Build begins within 3 business days of payment.
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--pink); margin-bottom:4px;">Monthly Ongoing &mdash; ClusterMagic Content</p>
+        <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:20px;">
+          <h4 style="margin-bottom:12px;">What You Get Each Month</h4>
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:6px;">
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> 25 ready-to-publish articles (1,000–1,500 words each)</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> Quarterly keyword research + content plan (KD 0–49)</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> TOFU &amp; MOFU content — informational &amp; commercial intent</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> H1 tags, meta descriptions, images &amp; alt tags, internal links</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> FAQ section per article</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> Published directly to your Shopify store on your behalf</li>
+            <li style="font-size:13px; display:flex; gap:8px;"><span style="color:var(--pink); font-weight:700;">✓</span> Product tagging, category tagging</li>
+          </ul>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <div style="flex:1; background:#FFF0F8; border:1px solid rgba(233,30,140,.2); border-radius:10px; padding:18px; text-align:center;">
+            <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--pink); margin-bottom:6px;">Month-to-Month</div>
+            <div style="font-size:28px; font-weight:900; color:var(--primary-dark);">$700</div>
+            <div style="font-size:12px; color:var(--text-light); margin-top:4px;">per month</div>
+          </div>
+          <div style="flex:1; background:linear-gradient(135deg, #F3E5F5, #FCE4EC); border:2px solid var(--pink); border-radius:10px; padding:18px; text-align:center; position:relative;">
+            <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--pink); color:#fff; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:3px 10px; border-radius:20px; white-space:nowrap;">March 2026 Promo</div>
+            <div style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--pink); margin-bottom:6px;">Quarterly Prepay</div>
+            <div style="font-size:28px; font-weight:900; color:var(--primary-dark);">$1,750</div>
+            <div style="font-size:12px; color:var(--text-light); margin-top:4px;">per quarter (~$583/mo)</div>
+          </div>
+        </div>
+        <div class="annotation info" style="margin:0;">
+          <strong>Quarterly bonuses:</strong> Backlink plan + site audit included (implementation available for an additional fee).
+        </div>
+        <div class="annotation danger" style="margin:0;">
+          <strong>Not included in ClusterMagic:</strong> Backlinks, embedded data, or blog template changes — your Shopify blog template must already support product tagging.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: WHY EMBERTRIBE -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Why EmberTribe</p>
+    <h2>We Work From What You Have</h2>
+    <p class="subtitle">No templates. No redesign fees. No generic themes. Your brand, built right.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card">
+        <div class="channel-icon">🎨</div>
+        <h3>Your Design, Respected</h3>
+        <ul>
+          <li>We build from your mockup exactly — no suggesting "improvements"</li>
+          <li>Every animation, color token, and layout detail is preserved</li>
+          <li>You review at each milestone before we proceed</li>
+          <li>One round of revisions built into the price</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🛒</div>
+        <h3>Shopify Specialists</h3>
+        <ul>
+          <li>We build in Shopify's Liquid template language natively — no page builders</li>
+          <li>Theme editor wired so you own updates post-launch</li>
+          <li>Collections, products, and nav all wired to Shopify admin</li>
+          <li>Cart and checkout optimized for conversion</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🚀</div>
+        <h3>Fast Without Cutting Corners</h3>
+        <ul>
+          <li>3.5 week turnaround on a full custom theme</li>
+          <li>Clear phases with client checkpoints — no surprises</li>
+          <li>30 days of post-launch support included</li>
+          <li>We stay available if you want to grow after launch</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Our promise:</strong> When we hand over the theme, you'll be able to update copy, swap images, and add new products without ever opening a code file.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">All Glass No Brakes &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: NEXT STEPS -->
+  <div class="slide dark" data-slide="8">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Launch?</h1>
+      <p class="subtitle" style="text-align:center; max-width:600px; margin:0 auto 32px;">Your design is done. Your store is next. Here's how we get started.</p>
+      <div style="display:flex; flex-direction:column; gap:16px; max-width:500px; width:100%; text-align:left;">
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#09051A;">1</div>
+          <div>
+            <p style="font-weight:600; font-size:16px;">Approve this proposal</p>
+            <p style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">Reply by email or book a call — we'll send a simple agreement.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--pink); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff;">2</div>
+          <div>
+            <p style="font-weight:600; font-size:16px;">Sign + one-time payment ($3,500)</p>
+            <p style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">Secures your spot and starts the clock on the timeline.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#09051A;">3</div>
+          <div>
+            <p style="font-weight:600; font-size:16px;">Kickoff call</p>
+            <p style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">We review the mockup together, confirm scope, and build begins within 3 business days.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--pink); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff;">4</div>
+          <div>
+            <p style="font-weight:600; font-size:16px;">Launch in 3.5 weeks</p>
+            <p style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">Your Shopify store, live — with your design, your brand, your products.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-24">
+        <p style="font-size:16px; font-weight:600; color:var(--accent);">tj@embertribe.com &mdash; or reply directly to this deck link</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 8</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
