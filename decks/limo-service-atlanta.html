@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cowry Classic Limousines — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0D0D0D;
+  --primary-mid: #1C1C1C;
+  --primary-light: #2E2E2E;
+  --accent: #C9A84C;
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 19px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 20px; }
+
+.slide-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1; min-width: 130px;
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 11px 16px;
+  font-size: 13.5px; margin: 10px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.5px; color: var(--text-light);
+  text-align: left; padding: 9px 12px; border-bottom: 2px solid var(--border);
+}
+td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.center { text-align: center; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 7px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 130px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px; display: flex; align-items: center;
+  justify-content: flex-end; padding-right: 10px; font-size: 12px;
+  font-weight: 700; color: white; transition: width 0.8s ease;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.gold   { background: linear-gradient(90deg, #a07728, var(--accent)); }
+.bar-fill.gray   { background: linear-gradient(90deg, #888, #aaa); }
+.bar-value { width: 80px; text-align: right; font-size: 12px; font-weight: 600; }
+
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.gold    { background: #FFF8E1; color: #8B6914; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 22px;
+}
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 15px; margin-bottom: 6px;
+  font-size: 13.5px; line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 13px; margin-bottom: 4px; font-size: 13px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.gold { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100; transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed; bottom: 22px; right: 28px;
+  display: flex; align-items: center; gap: 10px; z-index: 100;
+}
+.nav button {
+  width: 38px; height: 38px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);
+  color: white; font-size: 17px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 5px 13px; border-radius: 6px; }
+
+/* ── Google Maps Pack Mockup ── */
+.gmaps-shell {
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.gmaps-searchbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e8eaed;
+  background: #f1f3f4;
+  gap: 10px;
+}
+
+.gmaps-searchbar .g-logo {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+.gmaps-searchbar .g-logo span:nth-child(1) { color: #4285F4; }
+.gmaps-searchbar .g-logo span:nth-child(2) { color: #EA4335; }
+.gmaps-searchbar .g-logo span:nth-child(3) { color: #FBBC05; }
+.gmaps-searchbar .g-logo span:nth-child(4) { color: #4285F4; }
+.gmaps-searchbar .g-logo span:nth-child(5) { color: #34A853; }
+.gmaps-searchbar .g-logo span:nth-child(6) { color: #EA4335; }
+
+.gmaps-query {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 24px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: #202124;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gmaps-query .search-icon { color: #4285F4; font-size: 14px; }
+
+.gmaps-map-strip {
+  height: 72px;
+  background: linear-gradient(180deg, #e8f0f7 0%, #d4e3f0 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #dadce0;
+  overflow: hidden;
+}
+
+.gmaps-map-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 60%, rgba(66,133,244,0.08) 0%, transparent 40%),
+    radial-gradient(circle at 70% 40%, rgba(52,168,83,0.06) 0%, transparent 35%);
+}
+
+.map-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(180,200,220,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,200,220,0.4) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.map-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #5f6368;
+  background: rgba(255,255,255,0.85);
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.map-pins {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 30px;
+}
+
+.map-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pin-icon {
+  width: 22px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.pin-icon.blue { background: #4285F4; }
+.pin-icon.red-pin { background: #EA4335; }
+.pin-icon.absent { background: #bdc3c7; }
+
+.pin-number {
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  transform: rotate(45deg);
+}
+
+.pin-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: #202124;
+  background: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.gmaps-results { padding: 0; }
+
+.gmaps-result {
+  display: flex;
+  align-items: flex-start;
+  padding: 11px 14px;
+  border-bottom: 1px solid #f1f3f4;
+  gap: 10px;
+  cursor: pointer;
+}
+.gmaps-result:hover { background: #f8f9fa; }
+.gmaps-result:last-child { border-bottom: none; }
+
+.result-rank {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #4285F4;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.result-rank.red-rank { background: #EA4335; }
+
+.result-info { flex: 1; }
+.result-name { font-size: 13.5px; font-weight: 600; color: #1a0dab; line-height: 1.3; }
+.result-meta { font-size: 12px; color: #4d5156; margin-top: 2px; }
+.result-stars { color: #F9AB00; font-size: 11px; }
+.result-reviews { color: #70757a; font-size: 11px; }
+.result-badge { font-size: 10px; background: #e8f5e9; color: #1b5e20; padding: 1px 6px; border-radius: 3px; font-weight: 600; }
+
+.gmaps-footer {
+  padding: 8px 14px;
+  background: #f8f9fa;
+  border-top: 1px solid #e8eaed;
+  font-size: 11px;
+  color: #70757a;
+  text-align: center;
+}
+
+/* Keyword visibility grid */
+.kw-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
+
+.kw-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 100px;
+  align-items: center;
+  padding: 7px 12px;
+  background: var(--light-bg);
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.kw-row.header {
+  background: var(--primary-dark);
+  color: rgba(255,255,255,0.7);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-color: transparent;
+}
+
+.kw-term { font-weight: 500; color: var(--text); }
+.kw-vol { font-weight: 700; color: var(--text-light); font-size: 12px; }
+.kw-status { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+.kw-status.missing { color: var(--red); }
+.kw-status.partial { color: var(--orange); }
+.kw-status .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.kw-status.missing .dot { background: var(--red); }
+.kw-status.partial .dot { background: var(--orange); }
+
+/* Pricing cards */
+.price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.price-card {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.price-card.featured {
+  border-color: var(--ember-red);
+  box-shadow: 0 0 0 4px rgba(255,51,61,0.06);
+}
+
+.price-header {
+  background: var(--primary-dark);
+  color: white;
+  padding: 14px 18px;
+  text-align: center;
+}
+
+.price-header.ember-header {
+  background: linear-gradient(135deg, var(--ember-dark), var(--ember-red));
+}
+
+.price-tier { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.7; margin-bottom: 3px; }
+.price-name { font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+.price-amount { font-size: 32px; font-weight: 900; }
+.price-amount span { font-size: 15px; font-weight: 500; opacity: 0.7; }
+.price-radius { font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 12px; margin-top: 6px; display: inline-block; }
+
+.price-body { padding: 14px 18px; }
+
+.price-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: 13px;
+}
+.price-feature .check { color: var(--green); font-size: 14px; flex-shrink: 0; font-weight: 700; }
+.price-feature strong { font-weight: 700; }
+
+.price-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+
+.best-for {
+  font-size: 11px;
+  color: var(--text-light);
+  font-style: italic;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Outcome projection */
+.outcome-timeline {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+}
+
+.outcome-phase {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.outcome-phase .phase-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.outcome-phase h3 { font-size: 15px; margin-bottom: 12px; color: var(--primary-dark); }
+
+.outcome-metric {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.outcome-metric .o-val {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.outcome-metric .o-label {
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Audit issue cards */
+.issue-list { display: flex; flex-direction: column; gap: 8px; }
+.issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--light-bg);
+}
+.issue-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.issue-content {}
+.issue-title { font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.issue-desc { font-size: 12px; color: var(--text-light); line-height: 1.4; }
+
+/* "Not appearing" callout */
+.not-in-pack {
+  background: #fff3cd;
+  border: 2px dashed #ffc107;
+  border-radius: 8px;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #856404;
+  margin-top: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 30px 36px; }
+  h1 { font-size: 34px; }
+  h2 { font-size: 26px; }
+  .two-col, .three-col, .price-grid, .outcome-timeline { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 1: TITLE
+       ══════════════════════════════════════════════ -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Local SEO Growth Audit</p>
+      <h1 style="max-width:800px;">Cowry Classic<br>Limousines</h1>
+      <p class="subtitle" style="color:rgba(255,255,255,0.7); max-width:700px;">
+        Your competitors are showing up every time someone Googles <em>"limo service atlanta"</em> — and claiming every booking. Here's exactly what it takes to own the Map Pack.
+      </p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">~420</div>
+          <div class="stat-label">Est. Monthly Organic Visits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0</div>
+          <div class="stat-label">Map Pack Positions Held</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">~90</div>
+          <div class="stat-label">Keywords Ranking (est.)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">~14</div>
+          <div class="stat-label">Domain Authority Score</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Cowry Classic Limousines &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 2: CURRENT STATE
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Stand Today</h2>
+    <p class="subtitle">A solid foundation with real gaps keeping you out of the high-intent searches that drive bookings.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">10+</div>
+        <div class="stat-label">Indexed Service Pages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">Weak</div>
+        <div class="stat-label">GBP Optimization Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">None</div>
+        <div class="stat-label">Local Business Schema</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">~45</div>
+        <div class="stat-label">Referring Domains (est.)</div>
+      </div>
+    </div>
+
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green" style="margin-bottom:12px;">✓ What's Working</h3>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-icon">🌐</div>
+            <div class="issue-content">
+              <div class="issue-title">Keyword-rich domain name</div>
+              <div class="issue-desc">limoserviceatlanta.com carries strong topical relevance for Atlanta-based searches.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">🚗</div>
+            <div class="issue-content">
+              <div class="issue-title">Diverse service portfolio</div>
+              <div class="issue-desc">Airport, corporate, weddings, events — broad fleet and 24/7 availability.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">📄</div>
+            <div class="issue-content">
+              <div class="issue-title">Multiple indexed pages</div>
+              <div class="issue-desc">Airport page, fleet page, service pages, and a blog — good content foundation to build on.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="red" style="margin-bottom:12px;">✗ What's Holding You Back</h3>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-icon">🗺️</div>
+            <div class="issue-content">
+              <div class="issue-title">Not in Google's Map Pack</div>
+              <div class="issue-desc">Zero visibility on the highest-value local SERP real estate. Competitors are capturing 44–58% of all clicks here.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">⚠️</div>
+            <div class="issue-content">
+              <div class="issue-title">Thin content + keyword stuffing</div>
+              <div class="issue-desc">Footer stuffed with limo variations; page bodies are repetitive and thin — Google penalizes both.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">🔗</div>
+            <div class="issue-content">
+              <div class="issue-title">Weak backlink profile</div>
+              <div class="issue-desc">~45 referring domains vs. competitors at 100–300+. Low domain authority limits ranking ability.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 3: MAP PACK KEYWORD OPPORTUNITY
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Map Pack Visibility</p>
+    <h2>The Keywords That Drive Bookings — And Who's Winning Them</h2>
+    <p class="subtitle" style="margin-bottom:12px;">Search "limo service atlanta" right now. You won't find Cowry. Your competitors will.</p>
+
+    <div class="two-col flex-grow" style="gap:20px;">
+
+      <!-- Left: Google Maps Pack mockup -->
+      <div>
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:8px;">Current Google Local Pack</div>
+        <div class="gmaps-shell">
+          <div class="gmaps-searchbar">
+            <div class="g-logo">
+              <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+            </div>
+            <div class="gmaps-query">
+              <span class="search-icon">🔍</span>
+              <span>limo service atlanta</span>
+            </div>
+          </div>
+
+          <div class="gmaps-map-strip">
+            <div class="map-grid-lines"></div>
+            <div class="map-pins">
+              <div class="map-pin">
+                <div class="pin-icon blue"><span class="pin-number">1</span></div>
+                <div class="pin-label">Action Limos</div>
+              </div>
+              <div class="map-pin">
+                <div class="pin-icon blue"><span class="pin-number">2</span></div>
+                <div class="pin-label">May's Limo</div>
+              </div>
+              <div class="map-pin">
+                <div class="pin-icon blue"><span class="pin-number">3</span></div>
+                <div class="pin-label">NP Limo</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gmaps-results">
+            <div class="gmaps-result">
+              <div class="result-rank">1</div>
+              <div class="result-info">
+                <div class="result-name">Action Limousines</div>
+                <div class="result-meta">
+                  <span class="result-stars">★★★★★</span>
+                  <span class="result-reviews"> 4.7 (180 reviews) · Limo Service</span>
+                </div>
+                <div class="result-meta" style="margin-top:2px;">
+                  <span class="result-badge">Open 24 hours</span>
+                </div>
+              </div>
+            </div>
+            <div class="gmaps-result">
+              <div class="result-rank">2</div>
+              <div class="result-info">
+                <div class="result-name">May's Limousine Service</div>
+                <div class="result-meta">
+                  <span class="result-stars">★★★★★</span>
+                  <span class="result-reviews"> 4.8 (520 reviews) · Limo Service</span>
+                </div>
+                <div class="result-meta" style="margin-top:2px;">
+                  <span class="result-badge">Est. 1993</span>
+                </div>
+              </div>
+            </div>
+            <div class="gmaps-result">
+              <div class="result-rank">3</div>
+              <div class="result-info">
+                <div class="result-name">NP Limo</div>
+                <div class="result-meta">
+                  <span class="result-stars">★★★★☆</span>
+                  <span class="result-reviews"> 4.6 (140 reviews) · Car Service</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="not-in-pack">⚠ Cowry Classic Limousines — Not appearing in Map Pack</div>
+
+          <div class="gmaps-footer">More limo services in Atlanta &rsaquo;</div>
+        </div>
+        <div class="annotation danger mt-8" style="font-size:12px;">
+          <strong>The Map Pack captures 44–58% of all clicks.</strong> If you're not in the top 3, you're invisible to the majority of searchers.
+        </div>
+      </div>
+
+      <!-- Right: Keyword grid -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:2px;">Target Keywords — Your Map Pack Visibility</div>
+
+        <div class="kw-grid">
+          <div class="kw-row header">
+            <div>Keyword</div>
+            <div>Vol/mo</div>
+            <div>Map Pack</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">limo service atlanta</div>
+            <div class="kw-vol">2,400</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">atlanta limo service</div>
+            <div class="kw-vol">1,900</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">car service atlanta</div>
+            <div class="kw-vol">1,600</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">limousine service atlanta</div>
+            <div class="kw-vol">1,300</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">airport car service atlanta</div>
+            <div class="kw-vol">1,100</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">atlanta airport limo service</div>
+            <div class="kw-vol">880</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">black car service atlanta</div>
+            <div class="kw-vol">720</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">corporate car service atlanta</div>
+            <div class="kw-vol">590</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">atlanta limo rental</div>
+            <div class="kw-vol">590</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row">
+            <div class="kw-term">wedding limo atlanta</div>
+            <div class="kw-vol">390</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+          <div class="kw-row" style="background:#fff8e1; border-color:#ffc107;">
+            <div class="kw-term" style="font-weight:700;">limo service near me <span style="font-size:10px;color:var(--text-light);">*Atlanta</span></div>
+            <div class="kw-vol" style="color:var(--orange); font-weight:800;">60,500*</div>
+            <div class="kw-status missing"><div class="dot"></div>Not Ranking</div>
+          </div>
+        </div>
+
+        <div style="font-size:10.5px; color:var(--text-light); font-style:italic; margin-top:2px;">
+          *National volume; localized intent makes this highly valuable for Atlanta. Sources: SEMrush est., SerpWars 2026.
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 4: COMPETITOR LANDSCAPE
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up Against Atlanta's Pack Leaders</h2>
+    <p class="subtitle">Three competitors have locked up Google's top 3 local positions across high-value terms.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th style="color:var(--ember-red);">Cowry Classic <small>(You)</small></th>
+          <th>Action Limousines</th>
+          <th>May's Limo Service</th>
+          <th>NP Limo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Est. Monthly Traffic</strong></td>
+          <td class="ember bold">~420</td>
+          <td>~1,400</td>
+          <td>~2,800</td>
+          <td>~900</td>
+        </tr>
+        <tr>
+          <td><strong>Domain Authority</strong></td>
+          <td class="ember bold">~14</td>
+          <td>~22</td>
+          <td>~31</td>
+          <td>~19</td>
+        </tr>
+        <tr>
+          <td><strong>Referring Domains</strong></td>
+          <td class="ember bold">~45</td>
+          <td>~120</td>
+          <td>~280</td>
+          <td>~95</td>
+        </tr>
+        <tr>
+          <td><strong>GBP Reviews</strong></td>
+          <td class="ember bold">Fewer</td>
+          <td>180+ ⭐4.7</td>
+          <td>520+ ⭐4.8</td>
+          <td>140+ ⭐4.6</td>
+        </tr>
+        <tr>
+          <td><strong>In Map Pack?</strong></td>
+          <td class="red bold">✗ No</td>
+          <td class="green bold">✓ Yes</td>
+          <td class="green bold">✓ Yes</td>
+          <td class="green bold">✓ Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Local Schema</strong></td>
+          <td class="red bold">✗ Missing</td>
+          <td class="green bold">✓ Present</td>
+          <td class="green bold">✓ Present</td>
+          <td class="orange bold">Partial</td>
+        </tr>
+        <tr>
+          <td><strong>GBP Posts Active?</strong></td>
+          <td class="red bold">✗ Inactive</td>
+          <td class="green bold">✓ Weekly</td>
+          <td class="green bold">✓ Regular</td>
+          <td class="orange bold">Occasional</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="annotation danger mt-16">
+      <strong>The gap is closeable.</strong> May's Limo built their authority over 30 years — but their GBP weaknesses and content gaps are exploitable. Action Limousines is beatable within 90 days with the right strategy.
+    </div>
+
+    <div class="bar-chart mt-12" style="gap:6px;">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:4px;">Estimated Monthly Organic Traffic</div>
+      <div class="bar-row">
+        <span class="bar-label">May's Limo</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:100%;">2,800</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Action Limos</span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:50%;">1,400</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">NP Limo</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:32%;">900</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Cowry (You)</span>
+        <div class="bar-track"><div class="bar-fill gray" style="width:15%;">~420</div></div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 5: ROOT CAUSES
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Audit Findings</p>
+    <h2>Why You're Not in the Map Pack</h2>
+    <p class="subtitle">Google's local ranking algorithm comes down to three pillars: Relevance, Proximity, and Prominence. Here's where the gaps are.</p>
+
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="color:var(--ember-red); margin-bottom:10px; text-transform:uppercase; font-size:11px; letter-spacing:1px;">GBP & Local Signals</h4>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-icon">📋</div>
+            <div class="issue-content">
+              <div class="issue-title">Incomplete Google Business Profile</div>
+              <div class="issue-desc">Missing service attributes, Q&A, photo uploads, and business categories — GBP completeness is the #1 Map Pack ranking factor.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">💬</div>
+            <div class="issue-content">
+              <div class="issue-title">Low review velocity</div>
+              <div class="issue-desc">Google rewards recency AND volume. Competitors actively generate new reviews weekly. Review count is the #2 local ranking signal.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">📸</div>
+            <div class="issue-content">
+              <div class="issue-title">Inactive GBP posting</div>
+              <div class="issue-desc">No regular posts, new photos, or offers on GBP. Active profiles signal trust and recency to Google's algorithm.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">📍</div>
+            <div class="issue-content">
+              <div class="issue-title">Citation inconsistencies</div>
+              <div class="issue-desc">NAP (Name, Address, Phone) mismatches across directories confuse Google and suppress local rankings.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--ember-red); margin-bottom:10px; text-transform:uppercase; font-size:11px; letter-spacing:1px;">Technical & Content</h4>
+        <div class="issue-list">
+          <div class="issue-item">
+            <div class="issue-icon">🔧</div>
+            <div class="issue-content">
+              <div class="issue-title">No Local Business Schema markup</div>
+              <div class="issue-desc">Schema tells Google exactly what your business is and where. Without it, you're invisible to structured data indexing.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">📝</div>
+            <div class="issue-content">
+              <div class="issue-title">Thin content + footer keyword stuffing</div>
+              <div class="issue-desc">Pages lack depth; footer stuffed with repetitive limo variations. Google penalizes both — it reads as low-quality.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">🔗</div>
+            <div class="issue-content">
+              <div class="issue-title">Weak backlink profile</div>
+              <div class="issue-desc">~45 referring domains vs. May's 280+. Low domain authority caps how far you can rank, even with good on-page SEO.</div>
+            </div>
+          </div>
+          <div class="issue-item">
+            <div class="issue-icon">🗺️</div>
+            <div class="issue-content">
+              <div class="issue-title">No Google Map embed on site</div>
+              <div class="issue-desc">Embedding your GMB map on key pages reinforces geo-relevance signals — a quick win that's currently missing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 6: STRATEGY
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We Get Cowry Into the Map Pack</h2>
+    <p class="subtitle">A three-pillar approach targeting Relevance, Prominence, and Authority — the exact factors Google uses to rank local businesses.</p>
+
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card">
+        <div class="channel-icon">🗺️</div>
+        <h3>GBP Dominance</h3>
+        <ul>
+          <li>Full Google Business Profile build-out and optimization</li>
+          <li>Consistent weekly posts, photos, and offers</li>
+          <li>Review generation strategy — velocity + recency</li>
+          <li>Q&A seeding with high-value keyword responses</li>
+          <li>Service category optimization for map pack eligibility</li>
+          <li>Google Map embed on homepage and key service pages</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">⚙️</div>
+        <h3>Technical Foundation</h3>
+        <ul>
+          <li>Local Business + Service schema markup implementation</li>
+          <li>NAP consistency audit across 50+ directories</li>
+          <li>Sitemap and robots.txt optimization</li>
+          <li>Footer cleanup — remove keyword stuffing penalties</li>
+          <li>Meta descriptions and H1 alignment for target terms</li>
+          <li>Core Web Vitals and mobile performance fixes</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📍</div>
+        <h3>Content + Authority</h3>
+        <ul>
+          <li>Localized service pages for Atlanta neighborhoods &amp; suburbs</li>
+          <li>Service area pages (Buckhead, Midtown, Marietta, etc.)</li>
+          <li>DR 30+ backlinks from local &amp; transportation-niche sites</li>
+          <li>Citation building across top directories (Yelp, YP, BBB)</li>
+          <li>Blog content targeting "airport limo" + seasonal events</li>
+          <li>Rank tracking across all target Map Pack terms</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation success mt-16">
+      <strong>Guaranteed outcome:</strong> Map Pack visibility for your target keywords within 90 days — or we keep working until you're there. Backed by EmberTribe's ranking guarantee.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 7: ROADMAP
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Implementation Roadmap</p>
+    <h2>Your First 90 Days With EmberTribe</h2>
+    <p class="subtitle">Structured to deliver Map Pack visibility fast — foundation first, then momentum, then scale.</p>
+
+    <div class="timeline flex-grow mt-16">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Google Business Profile creation &amp; full optimization</li>
+          <li>Full technical SEO audit + site changes</li>
+          <li>Local Business Schema implementation</li>
+          <li>Google Map embed on key pages</li>
+          <li>Sitemap, robots.txt, and crawl setup</li>
+          <li>Keyword research &amp; site mapping</li>
+          <li>NAP citation audit — 50+ directories</li>
+          <li>Foundational backlinks + manual indexing</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="border-left:none; border-right:none; background:var(--light-bg);">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Launch</h4>
+        <ul>
+          <li>GBP management begins — weekly posts &amp; photos</li>
+          <li>Review generation campaign launches</li>
+          <li>First localized service pages published</li>
+          <li>Service area pages (Buckhead, Midtown, Marietta)</li>
+          <li>DR 30+ backlink acquisition — round 1</li>
+          <li>Technical SEO changes implemented on-site</li>
+          <li>Footer cleanup + meta description refresh</li>
+          <li>Map Pack rank tracking begins</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Optimize &amp; Own</h4>
+        <ul>
+          <li>Map Pack ranking confirmation for target terms</li>
+          <li>Ongoing GBP posts, photos, &amp; monitoring</li>
+          <li>New localized content — blogs &amp; seasonal pages</li>
+          <li>DR 30+ backlinks — round 2</li>
+          <li>Competitor gap analysis — next keyword targets</li>
+          <li>Monthly ranking report + strategy review</li>
+          <li>Expand to 10-mile radius if on upgraded plan</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation info mt-16">
+      <strong>Milestone:</strong> By Day 90 you should be visible in Google's Map Pack for core terms like "limo service atlanta," "atlanta airport limo," and "car service atlanta" — guaranteed on eligible plans.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 8: INVESTMENT — GUARANTEED MAPS ONLY
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>Guaranteed Map Pack Packages</h2>
+    <p class="subtitle">All packages include Month 1 Foundation + ongoing GBP management + a guaranteed Maps ranking in 90 days.*</p>
+
+    <div class="price-grid flex-grow mt-12">
+
+      <!-- 5-Mile Package 1 -->
+      <div class="price-card">
+        <div class="price-header">
+          <div class="price-tier">Local SEO + Guaranteed Maps</div>
+          <div class="price-name">5-Mile Coverage &mdash; Package 1</div>
+          <div class="price-amount">$1,800<span>/mo</span></div>
+          <div class="price-radius">📍 Guaranteed within 5 miles</div>
+        </div>
+        <div class="price-body">
+          <div class="price-feature"><span class="check">✓</span><span>Month 1 Foundation (GBP, schema, sitemap, citations)</span></div>
+          <div class="price-feature"><span class="check">✓</span><span>GBP Management — posts, photos, monitoring</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>Guaranteed Map Pack ranking in 90 days</strong> (10–20 keywords)</span></div>
+          <hr class="price-divider">
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> Technical SEO changes/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>2</strong> Localized content pieces/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>2</strong> DR 30+ backlinks/mo</span></div>
+          <div class="best-for">Best for: Airport runs + downtown Atlanta</div>
+        </div>
+      </div>
+
+      <!-- 5-Mile Package 2 -->
+      <div class="price-card featured">
+        <div class="price-header ember-header">
+          <div class="price-tier">Local SEO + Guaranteed Maps</div>
+          <div class="price-name">5-Mile Coverage &mdash; Package 2</div>
+          <div class="price-amount">$2,150<span>/mo</span></div>
+          <div class="price-radius">📍 Guaranteed within 5 miles</div>
+        </div>
+        <div class="price-body">
+          <div class="price-feature"><span class="check">✓</span><span>Month 1 Foundation (GBP, schema, sitemap, citations)</span></div>
+          <div class="price-feature"><span class="check">✓</span><span>GBP Management — posts, photos, monitoring</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>Guaranteed Map Pack ranking in 90 days</strong> (10–20 keywords)</span></div>
+          <hr class="price-divider">
+          <div class="price-feature"><span class="check">✓</span><span><strong>10</strong> Technical SEO changes/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> Localized content pieces/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> DR 30+ backlinks/mo</span></div>
+          <div class="best-for" style="color:var(--ember-red); font-weight:700;">⭐ Most popular for competitive markets</div>
+        </div>
+      </div>
+
+      <!-- 10-Mile Package 1 -->
+      <div class="price-card">
+        <div class="price-header" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+          <div class="price-tier">Local SEO + Guaranteed Maps</div>
+          <div class="price-name">10-Mile Coverage &mdash; Package 1</div>
+          <div class="price-amount">$4,800<span>/mo</span></div>
+          <div class="price-radius">📍 Guaranteed within 10 miles</div>
+        </div>
+        <div class="price-body">
+          <div class="price-feature"><span class="check">✓</span><span>Month 1 Foundation (GBP, schema, sitemap, citations)</span></div>
+          <div class="price-feature"><span class="check">✓</span><span>GBP Management — posts, photos, monitoring</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>Guaranteed Map Pack ranking in 90 days</strong> (10–20 keywords, 10-mi)</span></div>
+          <hr class="price-divider">
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> Technical SEO changes/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>2</strong> Localized content pieces/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>2</strong> DR 30+ backlinks/mo</span></div>
+          <div class="best-for">Best for: Airport transfers + wide suburban coverage</div>
+        </div>
+      </div>
+
+      <!-- 10-Mile Package 2 -->
+      <div class="price-card">
+        <div class="price-header" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+          <div class="price-tier">Local SEO + Guaranteed Maps</div>
+          <div class="price-name">10-Mile Coverage &mdash; Package 2</div>
+          <div class="price-amount">$5,150<span>/mo</span></div>
+          <div class="price-radius">📍 Guaranteed within 10 miles</div>
+        </div>
+        <div class="price-body">
+          <div class="price-feature"><span class="check">✓</span><span>Month 1 Foundation (GBP, schema, sitemap, citations)</span></div>
+          <div class="price-feature"><span class="check">✓</span><span>GBP Management — posts, photos, monitoring</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>Guaranteed Map Pack ranking in 90 days</strong> (10–20 keywords, 10-mi)</span></div>
+          <hr class="price-divider">
+          <div class="price-feature"><span class="check">✓</span><span><strong>10</strong> Technical SEO changes/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> Localized content pieces/mo</span></div>
+          <div class="price-feature"><span class="check">✓</span><span><strong>5</strong> DR 30+ backlinks/mo</span></div>
+          <div class="best-for">Best for: Full metro domination + maximum link velocity</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="font-size:11px; color:var(--text-light); margin-top:8px;">*Guaranteed Map Pack ranking available in select plans. 1 location. Content revision: 1 round per article included.</div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 9: PROJECTED OUTCOMES
+       ══════════════════════════════════════════════ -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What You Can Expect</h2>
+    <p class="subtitle">Conservative projections based on comparable Atlanta local service businesses in competitive markets.</p>
+
+    <div class="outcome-timeline flex-grow mt-16">
+      <div class="outcome-phase">
+        <div class="phase-tag">Month 1–3</div>
+        <h3>Foundation &amp; Traction</h3>
+        <div class="outcome-metric">
+          <div class="o-val teal">Top 3</div>
+          <div class="o-label">Map Pack positions for core terms</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val green">+40%</div>
+          <div class="o-label">GBP profile views increase</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val orange">10–20</div>
+          <div class="o-label">Keywords ranking in Maps Pack</div>
+        </div>
+        <div style="margin-top:auto; padding-top:10px;">
+          <div class="pill seo">Schema live</div>&nbsp;
+          <div class="pill setup">GBP optimized</div>&nbsp;
+          <div class="pill content">Citations built</div>
+        </div>
+      </div>
+
+      <div class="outcome-phase" style="background: #f0faf4; border-color:#a8ddb9;">
+        <div class="phase-tag" style="color:var(--green);">Month 4–6</div>
+        <h3>Momentum</h3>
+        <div class="outcome-metric">
+          <div class="o-val green">+65%</div>
+          <div class="o-label">Estimated organic traffic growth</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val teal">3–5×</div>
+          <div class="o-label">GBP direction requests increase</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val green">30–50</div>
+          <div class="o-label">Total Map Pack keyword coverage</div>
+        </div>
+        <div style="margin-top:auto; padding-top:10px;">
+          <div class="pill green">Outranking NP Limo</div>&nbsp;
+          <div class="pill seo">Competing with Action Limos</div>
+        </div>
+      </div>
+
+      <div class="outcome-phase" style="background: #fff8e1; border-color:#ffd54f;">
+        <div class="phase-tag" style="color:#8B6914;">Month 7–12</div>
+        <h3>Market Authority</h3>
+        <div class="outcome-metric">
+          <div class="o-val" style="color:#8B6914;">2–3×</div>
+          <div class="o-label">Organic bookings vs. today</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val green">DA 25+</div>
+          <div class="o-label">Domain Authority target</div>
+        </div>
+        <div class="outcome-metric">
+          <div class="o-val teal">50+</div>
+          <div class="o-label">Map Pack keyword positions held</div>
+        </div>
+        <div style="margin-top:auto; padding-top:10px;">
+          <div class="pill gold">Top 3 Map Pack — major terms</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation mt-16">
+      <strong>The math:</strong> The Map Pack captures 44–58% of local search clicks. "Limo service atlanta" alone drives ~2,400 searches/mo. Even 1% conversion on captured impressions = meaningful new monthly bookings for a premium service.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Cowry Classic Limousines &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SLIDE 10: NEXT STEPS
+       ══════════════════════════════════════════════ -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1 style="max-width:700px; line-height:1.15;">Ready to Own<br>Atlanta's Map Pack?</h1>
+      <p class="subtitle" style="text-align:center; color:rgba(255,255,255,0.7); max-width:580px;">
+        Your competitors are getting every booking that starts with a Google search. It's fixable — and we guarantee it in 90 days.
+      </p>
+
+      <div class="stats-row mt-24" style="justify-content:center; max-width:640px;">
+        <div class="stat-card" style="text-align:center; min-width:160px;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Step 1</div>
+          <div class="stat-label">Pick your package<br>(5-mi or 10-mi)</div>
+        </div>
+        <div class="stat-card" style="text-align:center; min-width:160px;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Step 2</div>
+          <div class="stat-label">We kick off Month 1<br>Foundation immediately</div>
+        </div>
+        <div class="stat-card" style="text-align:center; min-width:160px;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Day 90</div>
+          <div class="stat-label">You're in the Map Pack<br>— guaranteed</div>
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:700; color:white;">Let's get started — reach out to your EmberTribe rep today</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-top:8px;">tj@embertribe.com &nbsp;·&nbsp; embertribe.com</p>
+      </div>
+
+      <div class="logo-row" style="width:100%; max-width:900px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
