@@ -60,6 +60,7 @@ python3 scripts/gsc-import.py --files exported-queries.csv exported-pages.csv --
 
 **Prerequisites:** `pip install -r scripts/requirements.txt` (google-auth, google-api-python-client)
 
+
 ---
 
 ## Process
