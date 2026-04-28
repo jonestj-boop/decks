@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sora Care — Growth Roadmap</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1A4A54;
+  --primary-mid:  #2A6E7E;
+  --primary-light: #3D96A8;
+  --accent: #5BBCAD;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #5BBCAD;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #1A4A54; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 180px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, #2A6E7E, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--primary-dark), var(--accent)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.teal    { background: #E0F4F2; color: #1A4A54; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red   { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal  { color: var(--teal); }
+.blue  { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+/* Keyword table priority indicators */
+.priority-high   { color: var(--green);  font-weight: 700; }
+.priority-medium { color: var(--yellow); font-weight: 700; }
+.priority-low    { color: var(--text-light); font-weight: 500; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col   { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline  { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 120px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- =========================================================
+       SLIDE 1: TITLE
+       ========================================================= -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">A Growth Roadmap</p>
+      <h1>Sora Care</h1>
+      <p class="subtitle" style="font-size:22px; color:rgba(255,255,255,0.8); max-width:700px;">
+        Your blueprint for reaching more families who deserve to be paid for the care they're already giving.
+      </p>
+      <div class="stats-row" style="margin-top:32px;">
+        <div class="stat-card">
+          <div class="stat-value teal">53M</div>
+          <div class="stat-label">Unpaid family caregivers in the US</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">6M+</div>
+          <div class="stat-label">Potentially eligible for Medicaid caregiver pay</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:rgba(255,255,255,0.9);">4</div>
+          <div class="stat-label">States served today — a foundation to scale from</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#F9C74F;">~5%</div>
+          <div class="stat-label">Estimated awareness among eligible caregivers</div>
+        </div>
+      </div>
+      <div class="logo-row" style="margin-top:48px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Hilary &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 2: THE OPPORTUNITY
+       ========================================================= -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Market</p>
+    <h2>The Awareness Gap Is the Business</h2>
+    <p class="subtitle">Most eligible caregivers have never heard of Sora Care — or that they can be paid at all. That's not a problem. That's the growth engine.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="color: var(--primary-dark); margin-bottom:16px;">The Reality of Family Caregiving</h3>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:28px; font-weight:800; color:var(--primary-dark);">$600B+</div>
+            <div style="font-size:13px; color:var(--text-light); margin-top:2px;">Economic value of unpaid family caregiving annually (AARP estimate)</div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:28px; font-weight:800; color:var(--primary-dark);">$0</div>
+            <div style="font-size:13px; color:var(--text-light); margin-top:2px;">What most of those caregivers receive — despite existing Medicaid programs that could pay them</div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:28px; font-weight:800; color:var(--green);">$1,200–$2,400</div>
+            <div style="font-size:13px; color:var(--text-light); margin-top:2px;">Typical monthly Medicaid stipend a family caregiver can receive through programs Sora Care navigates</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color: var(--primary-dark); margin-bottom:16px;">Why Sora Care Wins in This Market</h3>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+          <div class="channel-card" style="padding:16px 20px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:4px;">🧭 One dedicated specialist</div>
+            <div style="font-size:13px; color:var(--text-light);">No call centers. No repeating yourself. The experience matches the emotional weight of what caregivers are going through.</div>
+          </div>
+          <div class="channel-card" style="padding:16px 20px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:4px;">📋 Process clarity in a confusing system</div>
+            <div style="font-size:13px; color:var(--text-light);">Medicaid is bureaucratic and fragmented by state. Sora Care removes that friction — that's rare and defensible.</div>
+          </div>
+          <div class="channel-card" style="padding:16px 20px;">
+            <div style="font-size:15px; font-weight:700; margin-bottom:4px;">🏠 Post-approval compliance support</div>
+            <div style="font-size:13px; color:var(--text-light);">Competitors stop at approval. Sora Care stays — creating retention, referrals, and loyalty.</div>
+          </div>
+        </div>
+        <div class="annotation info">
+          <strong>The strategic frame:</strong> Sora Care doesn't need to create demand. 6M+ eligible caregivers are already doing the work. The job is to find them before they give up trying to navigate this alone.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 3: GO-TO-MARKET STRATEGY
+       ========================================================= -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Go-to-Market Strategy</p>
+    <h2>Three Levers to Drive Growth</h2>
+    <p class="subtitle">State expansion, referral networks, and owned digital channels — layered in sequence for compounding returns.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🗺️</div>
+        <h3>State Expansion</h3>
+        <ul>
+          <li>Prioritize states with strong HCBS Medicaid programs and high caregiver populations: Pennsylvania, Ohio, Illinois, Florida, Texas</li>
+          <li>Enter one new state per quarter — build the referral network before the content machine</li>
+          <li>Position each state launch with a dedicated landing page + referral outreach sprint</li>
+          <li>Use existing Michigan/Arizona playbooks as repeatable templates</li>
+          <li>Target states where competitor presence is thin — less noise, faster trust</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🤝</div>
+        <h3>Referral Partnerships</h3>
+        <ul>
+          <li>Area Agencies on Aging (600+ across the US) — the single highest-leverage referral source</li>
+          <li>Hospital discharge planners and social workers — catch families at the moment of need</li>
+          <li>Elder law attorneys — serve the same demographic, zero direct overlap</li>
+          <li>Home health agencies — can't themselves be paid through these programs, but refer freely</li>
+          <li>Primary care physicians and geriatricians — trusted authority in the caregiving decision</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📱</div>
+        <h3>Digital Owned Channels</h3>
+        <ul>
+          <li>SEO: rank for high-intent caregiver keywords before paying for clicks</li>
+          <li>Google Ads: capture caregivers actively searching for relief or income</li>
+          <li>Facebook/Meta: reach sandwich-generation adults (35–60) not yet searching but open</li>
+          <li>Email nurture: long consideration cycle — stay present without being pushy</li>
+          <li>Retargeting: site visitors who didn't convert are your warmest audience</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Sequencing matters:</strong> Launch referral partnerships in a new state first. They deliver free leads while SEO builds. Paid ads bridge the gap during months 2–3 as referral velocity grows.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 4: REFERRAL PARTNER ECOSYSTEM
+       ========================================================= -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Go-to-Market — Referral Partnerships</p>
+    <h2>Build the Referral Network First</h2>
+    <p class="subtitle">These partners already talk to your prospects daily. A warm referral from a trusted source converts at 5–10x the rate of a cold click.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:14px;">Referral Source Priority</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Area Agencies on Aging</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:92%;">Tier 1</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Hospital Social Workers</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:85%;">Tier 1</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Elder Law Attorneys</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:72%;">Tier 2</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Home Health Agencies</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:65%;">Tier 2</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Primary Care / Geriatrics</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:55%;">Tier 3</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Disability Advocacy Orgs</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:48%;">Tier 3</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Faith Communities</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:38%;">Tier 3</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:14px;">What the Outreach Looks Like</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Partner Type</th>
+              <th>Ask</th>
+              <th>Give</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Area Agencies on Aging</strong></td>
+              <td>Referral when a family asks about caregiver pay</td>
+              <td>Free resource guides for their clients, co-branded materials</td>
+            </tr>
+            <tr>
+              <td><strong>Hospital Social Workers</strong></td>
+              <td>Mention Sora Care at discharge for home-care patients</td>
+              <td>One-pager to hand families, free eligibility check line</td>
+            </tr>
+            <tr>
+              <td><strong>Elder Law Attorneys</strong></td>
+              <td>Refer clients who ask about caregiver compensation</td>
+              <td>Reciprocal referrals when clients need estate/Medicaid planning</td>
+            </tr>
+            <tr>
+              <td><strong>Home Health Agencies</strong></td>
+              <td>Refer families where a family member is the primary caregiver</td>
+              <td>Education on which Medicaid programs don't conflict with their services</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-16">
+          <strong>Goal:</strong> 10 signed referral partners per active state within 90 days of launch. One partner producing 3 referrals/month compounds fast.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 5: SEO PILLAR STRATEGY
+       ========================================================= -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">SEO Strategy</p>
+    <h2>Three Content Pillars That Compound Over Time</h2>
+    <p class="subtitle">SEO for Sora Care isn't about traffic volume — it's about showing up at the exact moment a caregiver types their first desperate question into Google.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">💡</div>
+        <div style="margin-bottom:6px;"><span class="pill teal">Pillar 1</span></div>
+        <h3>Awareness</h3>
+        <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:10px;">Can I get paid to care for my family?</div>
+        <ul>
+          <li>"Can I get paid to take care of my parents?"</li>
+          <li>"How do family members get compensated as caregivers?"</li>
+          <li>"Medicaid caregiver pay — what is it and who qualifies?"</li>
+          <li>"What is the HCBS waiver and can my family use it?"</li>
+          <li>"Family caregiver stipend — state-by-state guide"</li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; color:var(--text-light);">Goal: Capture top-of-funnel caregivers who don't know what to search for yet</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📍</div>
+        <div style="margin-bottom:6px;"><span class="pill seo">Pillar 2</span></div>
+        <h3>State Program Pages</h3>
+        <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:10px;">One definitive page per state, per program</div>
+        <ul>
+          <li>Michigan Home Help Program — complete guide</li>
+          <li>Arizona ALTCS caregiver compensation guide</li>
+          <li>Missouri Medicaid family caregiver pay</li>
+          <li>South Dakota caregiver Medicaid programs</li>
+          <li><em>[New state pages as you expand]</em></li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; color:var(--text-light);">Goal: Own the highest-converting searches — people already know their state, need the playbook</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🙋</div>
+        <div style="margin-bottom:6px;"><span class="pill content">Pillar 3</span></div>
+        <h3>Caregiver FAQ & Support</h3>
+        <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:10px;">Trust-building content that converts over time</div>
+        <ul>
+          <li>"What documents do I need to apply?"</li>
+          <li>"How long does Medicaid caregiver approval take?"</li>
+          <li>"Can I be paid if I live with the person I care for?"</li>
+          <li>"What happens after approval — what do I have to report?"</li>
+          <li>"Spouse as caregiver — does Medicaid pay spouses?"</li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; color:var(--text-light);">Goal: Rank for every question a prospect asks during a 4–8 week consideration journey</div>
+      </div>
+    </div>
+    <div class="annotation mt-16">
+      <strong>Content format:</strong> Long-form guides (1,500–2,500 words) optimized for featured snippets. Each state page is its own conversion asset with an embedded eligibility check CTA.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 6: SEO KEYWORD TARGETS
+       ========================================================= -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">SEO Strategy — Keyword Targets</p>
+    <h2>Where to Rank First</h2>
+    <p class="subtitle">High-intent searches where Sora Care should own the first result. These are the queries where ranking means a direct increase in qualified leads.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Est. Monthly Searches</th>
+          <th>Intent</th>
+          <th>Pillar</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">get paid to care for family member medicaid</td>
+          <td>6,600</td>
+          <td>Conversion</td>
+          <td><span class="pill teal">Awareness</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td class="bold">can family members get paid as caregivers</td>
+          <td>5,400</td>
+          <td>Conversion</td>
+          <td><span class="pill teal">Awareness</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td class="bold">medicaid caregiver stipend</td>
+          <td>4,400</td>
+          <td>Conversion</td>
+          <td><span class="pill teal">Awareness</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td class="bold">paid caregiver family member</td>
+          <td>3,600</td>
+          <td>Conversion</td>
+          <td><span class="pill teal">Awareness</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td>michigan home help program eligibility</td>
+          <td>2,900</td>
+          <td>Conversion</td>
+          <td><span class="pill seo">State</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td>arizona altcs family caregiver</td>
+          <td>2,400</td>
+          <td>Conversion</td>
+          <td><span class="pill seo">State</span></td>
+          <td class="priority-high">High</td>
+        </tr>
+        <tr>
+          <td>how long does medicaid caregiver approval take</td>
+          <td>1,800</td>
+          <td>Research</td>
+          <td><span class="pill content">FAQ</span></td>
+          <td class="priority-medium">Medium</td>
+        </tr>
+        <tr>
+          <td>can spouse be paid medicaid caregiver</td>
+          <td>1,600</td>
+          <td>Research</td>
+          <td><span class="pill content">FAQ</span></td>
+          <td class="priority-medium">Medium</td>
+        </tr>
+        <tr>
+          <td>family caregiver pay ohio (expansion target)</td>
+          <td>1,400</td>
+          <td>Conversion</td>
+          <td><span class="pill seo">State</span></td>
+          <td class="priority-medium">Medium</td>
+        </tr>
+        <tr>
+          <td>documents needed for medicaid caregiver application</td>
+          <td>900</td>
+          <td>Research</td>
+          <td><span class="pill content">FAQ</span></td>
+          <td class="priority-low">Build later</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation info">
+      <strong>Note:</strong> Search volume estimates are directional. The four high-priority awareness keywords alone represent ~20K searches/month from caregivers actively looking for a path forward — and almost no strong competitors rank on them yet.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 7: PAID ADS STRATEGY
+       ========================================================= -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Paid Ads Strategy</p>
+    <h2>Two Channels. One Goal: Find the Caregiver Before They Give Up.</h2>
+    <p class="subtitle">Google Search captures intent. Meta creates it. Together they cover the full awareness-to-conversion journey.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="font-size:24px;">🔍</span>
+          <h3>Google Search Ads</h3>
+        </div>
+        <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Targeting Strategy</div>
+        <div class="channel-card" style="margin-bottom:12px; padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Campaign 1: Branded Intent</div>
+          <div style="font-size:13px; color:var(--text-light);">Keywords like "paid family caregiver program," "get paid to care for parent medicaid," "family caregiver stipend near me." Highest intent, best close rate.</div>
+        </div>
+        <div class="channel-card" style="margin-bottom:12px; padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Campaign 2: State-Specific Programs</div>
+          <div style="font-size:13px; color:var(--text-light);">"Michigan Home Help program," "Arizona ALTCS caregiver," "Missouri Medicaid family caregiver." One campaign per active state — tightly geo-targeted.</div>
+        </div>
+        <div class="channel-card" style="padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Campaign 3: Competitor + Alternative</div>
+          <div style="font-size:13px; color:var(--text-light);">Capture caregivers researching other options: "Medicaid consultant," "how to apply for caregiver pay," "home care Medicaid help." Broad match with negative keywords.</div>
+        </div>
+        <div class="annotation success" style="margin-top:14px;">
+          <strong>Target CPC:</strong> $3–$8 for caregiver keywords. Expected conversion rate: 8–15% from click to eligibility check submission.
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="font-size:24px;">📱</span>
+          <h3>Meta (Facebook + Instagram)</h3>
+        </div>
+        <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">Targeting Strategy</div>
+        <div class="channel-card" style="margin-bottom:12px; padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Audience 1: Sandwich Generation</div>
+          <div style="font-size:13px; color:var(--text-light);">Adults 35–60, interests in elder care, caregiving, aging parents. Geo-targeted to active states. Lead-gen ad format with instant eligibility quiz.</div>
+        </div>
+        <div class="channel-card" style="margin-bottom:12px; padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Audience 2: Lookalike from Existing Clients</div>
+          <div style="font-size:13px; color:var(--text-light);">Upload client list to Meta → build 1–2% lookalike audience. Best signal for who actually converts. Start here once you have 100+ approved clients in the list.</div>
+        </div>
+        <div class="channel-card" style="padding:14px 18px;">
+          <div style="font-weight:700; font-size:14px; margin-bottom:6px;">Retargeting: Site Visitors + Video Views</div>
+          <div style="font-size:13px; color:var(--text-light);">Anyone who visited soracare.io without submitting. 30-day window. Ad copy: "Still figuring out if you qualify? Let's check together — takes 3 minutes."</div>
+        </div>
+        <div class="annotation" style="margin-top:14px;">
+          <strong>Ad creative:</strong> Real caregiver testimonials outperform polished graphics by 3–5x in this category. Start with authentic story-driven video (60–90 sec) shot on phone.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 8: PAID ADS BUDGET FRAMEWORK
+       ========================================================= -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Paid Ads Strategy — Budget Framework</p>
+    <h2>How to Allocate Your First Ad Dollars</h2>
+    <p class="subtitle">Start lean, prove the channels, then scale what converts. This framework is built for a 4-state operation ready to grow.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:14px;">Recommended Channel Mix</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Google Search</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:50%;">50%</div></div>
+            <span class="bar-value teal">$1,500</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Meta Ads</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:35%;">35%</div></div>
+            <span class="bar-value" style="color:var(--accent);">$1,050</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Retargeting</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:15%;">15%</div></div>
+            <span class="bar-value blue">$450</span>
+          </div>
+        </div>
+        <div style="margin-top:8px; font-size:12px; color:var(--text-light);">Based on $3,000/mo starting budget. Scale proportionally.</div>
+
+        <h3 style="margin-top:28px; margin-bottom:14px;">Budget Tiers by Stage</h3>
+        <table>
+          <thead>
+            <tr><th>Stage</th><th>Monthly Budget</th><th>Expected Leads/Mo</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Proving the model</strong><br><span style="font-size:12px;color:var(--text-light);">Months 1–3</span></td>
+              <td>$2,000–$3,000</td>
+              <td>15–30</td>
+            </tr>
+            <tr>
+              <td><strong>Scaling what works</strong><br><span style="font-size:12px;color:var(--text-light);">Months 4–6</span></td>
+              <td>$4,000–$6,000</td>
+              <td>40–80</td>
+            </tr>
+            <tr>
+              <td><strong>Full growth mode</strong><br><span style="font-size:12px;color:var(--text-light);">Month 7+</span></td>
+              <td>$8,000–$12,000</td>
+              <td>100–180</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-bottom:14px;">What Good Looks Like (Targets)</h3>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light); margin-bottom:4px;">Google Search</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                <div style="font-size:22px; font-weight:800; color:var(--primary-dark);">$25–$45</div>
+                <div style="font-size:12px; color:var(--text-light);">Target cost per lead</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:22px; font-weight:800; color:var(--green);">10–15%</div>
+                <div style="font-size:12px; color:var(--text-light);">Form conversion rate</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light); margin-bottom:4px;">Meta / Facebook</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                <div style="font-size:22px; font-weight:800; color:var(--primary-dark);">$40–$70</div>
+                <div style="font-size:12px; color:var(--text-light);">Target cost per lead</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:22px; font-weight:800; color:var(--green);">4–7%</div>
+                <div style="font-size:12px; color:var(--text-light);">Lead form conversion</div>
+              </div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:16px 20px;">
+            <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light); margin-bottom:4px;">Retargeting</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+              <div>
+                <div style="font-size:22px; font-weight:800; color:var(--primary-dark);">$15–$25</div>
+                <div style="font-size:12px; color:var(--text-light);">Target cost per lead</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:22px; font-weight:800; color:var(--green);">12–20%</div>
+                <div style="font-size:12px; color:var(--text-light);">Conversion rate (warmest)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation success" style="margin-top:16px;">
+          <strong>Unit economics target:</strong> If an approved client generates $1,200–$2,400/mo for Sora Care's business model, a $50–$70 blended cost per lead with a 30–40% lead-to-approval rate = strong positive ROI from day one.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 9: 90-DAY ROADMAP
+       ========================================================= -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Execution Plan</p>
+    <h2>Your First 90 Days as COO</h2>
+    <p class="subtitle">Foundation before scale. Referral network before ad spend. Organic content before you pay for every click.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Know the Numbers &amp; Build the Network</h4>
+        <ul>
+          <li>Audit current site: technical SEO, page speed, conversion funnel</li>
+          <li>Install GA4 + conversion tracking if not already in place</li>
+          <li>Define ideal client profile — which caregiver converts fastest?</li>
+          <li>Map all 4 state programs: gaps in content, referral coverage</li>
+          <li>Identify 20 target referral partners per state (AAA, social workers, elder law)</li>
+          <li>Begin outreach to top 20 referral partners in highest-volume state</li>
+          <li>Brief a content writer or agency on Pillar 1 awareness content</li>
+          <li>Set up Google Ads account + campaign 1 (branded intent)</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Launch</span>
+        <h4>Go Live Across All Channels</h4>
+        <ul>
+          <li>Publish first 3 Pillar 1 awareness articles (1,500+ words each)</li>
+          <li>Launch state-specific SEO pages for Michigan + Arizona (highest traffic)</li>
+          <li>Go live with Google Search campaigns (campaigns 1 + 2)</li>
+          <li>Launch Meta awareness campaign — sandwich generation targeting</li>
+          <li>Activate retargeting pixel and launch retargeting campaign</li>
+          <li>Host first referral partner webinar or lunch-and-learn (virtual ok)</li>
+          <li>Begin tracking: CPL by channel, lead-to-approval rate, referral volume</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Optimize &amp; Expand</span>
+        <h4>Double Down on What Works</h4>
+        <ul>
+          <li>Review ad performance — kill underperformers, scale winners</li>
+          <li>A/B test ad creative: testimonial video vs. text-based lead ads</li>
+          <li>Publish state pages for Missouri + South Dakota</li>
+          <li>Begin expansion planning: select next state, start referral outreach</li>
+          <li>Launch lookalike audience campaign if client list is large enough</li>
+          <li>Publish 3–5 FAQ articles targeting mid-funnel research queries</li>
+          <li>Build email nurture sequence for leads who don't convert in week 1</li>
+          <li>Establish monthly reporting cadence: leads, CPL, approvals, revenue</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>The flywheel:</strong> Referral partners produce free leads → SEO builds organic volume → Paid ads fill gaps and prove new states → More approved clients → stronger lookalike audiences → lower CPL. Each layer makes the others cheaper.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sora Care — Growth Roadmap</span>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SLIDE 10: CLOSING
+       ========================================================= -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">For Hilary</p>
+      <h1 style="font-size:52px; max-width:700px; margin:0 auto 24px;">
+        Caring is Personal.<br>Growth Should Be Too.
+      </h1>
+      <p class="subtitle" style="text-align:center; color:rgba(255,255,255,0.75); max-width:640px; margin:0 auto 32px; font-size:20px; line-height:1.7;">
+        What Sora Care is building matters — 53 million people are doing the hardest work of their lives without the support they deserve. You're stepping into a role where you get to change that at scale.
+      </p>
+      <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:28px 48px; max-width:580px; margin-bottom:32px;">
+        <p style="font-size:16px; color:rgba(255,255,255,0.6); margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">This roadmap belongs to you.</p>
+        <p style="font-size:17px; color:rgba(255,255,255,0.9); line-height:1.7;">
+          Use any of it, all of it, or none of it — it was built with care for someone who clearly brings that same energy to everything she does.
+        </p>
+        <p style="font-size:17px; color:rgba(255,255,255,0.9); line-height:1.7; margin-top:12px;">
+          Congratulations, Hilary. Go build something great.
+        </p>
+      </div>
+      <div class="logo-row" style="width:100%; max-width:700px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">With appreciation &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
