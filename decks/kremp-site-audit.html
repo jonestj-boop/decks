@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kremp.com — EmberTribe Site Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1B3A2D;
+  --primary-mid: #2D5A3D;
+  --primary-light: #3D7550;
+  --accent: #C44569;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 860px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: #f0a0b5; }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 15px;
+  font-size: 13px;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277bd; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: #1a7a3f; }
+.annotation.warn { background: #FFF8E1; border-left-color: var(--yellow); }
+.annotation.warn strong { color: #b8780a; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 11px;
+  border-bottom: 2px solid var(--border);
+}
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 160px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.rose   { background: linear-gradient(90deg, #a33058, var(--accent)); }
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.orange { background: linear-gradient(90deg, #b8590a, var(--orange)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-value { width: 70px; text-align: right; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.pill.green  { background: #E8F5E9; color: #1B5E20; }
+.pill.red    { background: #FFEBEE; color: var(--red); }
+.pill.blue   { background: #E3F2FD; color: var(--blue); }
+.pill.orange { background: #FFF3E0; color: var(--orange); }
+.pill.rose   { background: #FCE4EC; color: var(--accent); }
+.pill.yellow { background: #FFFDE7; color: #b8780a; }
+.pill.teal   { background: #E0F7FA; color: #00838F; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; font-size: 17px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 12px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; }
+.timeline-phase h4 { margin-bottom: 8px; font-size: 15px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 12px; margin-bottom: 4px; font-size: 12px; line-height: 1.4; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.phase-outcome { font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 22px; right: 28px; display: flex; align-items: center; gap: 10px; z-index: 100; }
+.nav button { width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 6px; }
+
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.flex-grow { flex: 1; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.rose   { color: var(--accent); }
+.yellow { color: var(--yellow); }
+
+.ctr-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ctr-bad  { background: #FFEBEE; color: var(--red); }
+.ctr-ok   { background: #FFF3E0; color: var(--orange); }
+.ctr-good { background: #E8F5E9; color: var(--green); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 28px 36px; }
+  h1 { font-size: 34px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Google Search Console Audit &mdash; 180 Days</p>
+      <h1>Kremp.com Is Getting Seen.<br>It's Not Getting Clicked.</h1>
+      <p class="subtitle">14 million impressions. 64,000 clicks. A 0.45% CTR that's leaving hundreds of thousands of dollars in revenue on the table every month.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#f0a0b5;">14.1M</div>
+          <div class="stat-label">Impressions in last 180 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#f0a0b5;">64,181</div>
+          <div class="stat-label">Total clicks received (0.45% CTR)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#f4c542;">7,491</div>
+          <div class="stat-label">Unique pages indexed in Google</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#f4c542;">97,464</div>
+          <div class="stat-label">Unique search queries with impressions</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Chad Kremp &mdash; April 2026 &mdash; Data: GSC Oct 2025–Apr 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where Kremp.com Stands Today</h2>
+    <p class="subtitle">The data shows a site with real ranking power and a serious conversion problem — not a visibility problem.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green" style="margin-bottom:12px;">What's Working</h3>
+        <div class="annotation success">
+          <strong>Strong brand search:</strong> "Kremp florist" drives 5,336 clicks at a healthy 5.1% CTR and position 2.1. Brand awareness is real and growing.
+        </div>
+        <div class="annotation success">
+          <strong>Massive content reach:</strong> Informational pages generate millions of impressions. Pages on flower meanings, corsages, rare flowers, and prom etiquette all rank on page 1.
+        </div>
+        <div class="annotation success">
+          <strong>Non-brand traffic dominates:</strong> 88.3% of all clicks (56,675) come from non-brand queries — people finding Kremp who didn't already know it.
+        </div>
+        <div class="annotation success">
+          <strong>Niche category wins:</strong> Fig tree cuttings (7.7% CTR), glass flowers (0.9%), and prom corsages are driving real transactional traffic with high intent.
+        </div>
+      </div>
+      <div>
+        <h3 class="red" style="margin-bottom:12px;">What's Holding Kremp Back</h3>
+        <div class="annotation danger">
+          <strong>0.45% site-wide CTR:</strong> E-commerce benchmarks sit at 2–3%. Kremp is getting 5–7x fewer clicks than it should for the same impressions.
+        </div>
+        <div class="annotation danger">
+          <strong>Informational pages eating commercial traffic:</strong> The site ranks #2 for "corsage" (335K impressions) and earns only 156 clicks. The ranking exists — the click doesn't.
+        </div>
+        <div class="annotation danger">
+          <strong>Commerce pages buried:</strong> "Flower delivery" is at position 12.8. "Funeral flowers" is at position 24.6. The highest-intent buyer queries are on page 2 or 3.
+        </div>
+        <div class="annotation danger">
+          <strong>Homepage has no grip:</strong> The homepage averages position 26.5 — virtually invisible for any non-brand query. It should anchor page 1 for "flower delivery."
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE CTR CRISIS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Core Problem</p>
+    <h2>Page 1 Rankings That Aren't Converting</h2>
+    <p class="subtitle">Kremp holds top-3 positions for queries with over 1.3 million combined impressions — and earns almost no clicks from them. This is the leak.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:10px;">Top-Ranking Pages with Broken CTR</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Page / Query</th>
+              <th class="right">Impr.</th>
+              <th class="right">Pos.</th>
+              <th class="right">CTR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="mono">/pages/rarest-flowers-in-the-world</span></td>
+              <td class="right bold">444,946</td>
+              <td class="right">3.2</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.5%</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">/pages/25-flower-meanings-articles</span></td>
+              <td class="right bold">421,260</td>
+              <td class="right">6.1</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.5%</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">/pages/most-common-birthday-month</span></td>
+              <td class="right bold">409,064</td>
+              <td class="right">5.2</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.2%</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">/pages/boutonniere-corsage-faq</span></td>
+              <td class="right bold">315,704</td>
+              <td class="right">2.6</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.1%</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">/pages/flower-anatomy-and-functions</span></td>
+              <td class="right bold">275,345</td>
+              <td class="right">7.3</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.1%</span></td>
+            </tr>
+            <tr>
+              <td><span class="mono">/collections/prom-corsages</span></td>
+              <td class="right bold">259,034</td>
+              <td class="right">4.3</td>
+              <td class="right"><span class="ctr-pill ctr-bad">0.2%</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation danger mt-12">
+          <strong>Why this happens:</strong> Google shows these pages to millions of searchers, but the meta titles and descriptions signal "read an article" rather than "buy flowers." Searchers skip past.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">The Corsage Case Study</h3>
+        <div style="background:#fff8f9; border:1px solid #f0c0cc; border-radius:10px; padding:16px; margin-bottom:12px;">
+          <div style="font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:8px;">Google Search Result</div>
+          <div style="font-size:14px; color:#1a0dab; font-weight:600; margin-bottom:4px;">Corsage Guide: Types, Etiquette &amp; How to Wear ...</div>
+          <div style="font-size:12px; color:var(--green); margin-bottom:4px;">kremp.com › pages › boutonniere-corsage-faq</div>
+          <div style="font-size:12px; color:var(--text-light);">Learn about corsage types, pinning etiquette, and prom traditions with our comprehensive FAQ guide...</div>
+        </div>
+        <div style="background:#f0fff4; border:1px solid #a8e6b8; border-radius:10px; padding:16px; margin-bottom:12px;">
+          <div style="font-size:11px; font-weight:700; color:var(--green); text-transform:uppercase; margin-bottom:8px;">What It Should Say</div>
+          <div style="font-size:14px; color:#1a0dab; font-weight:600; margin-bottom:4px;">Prom Corsages — Fresh, Custom &amp; Shipped Free | Kremp Florist</div>
+          <div style="font-size:12px; color:var(--green); margin-bottom:4px;">kremp.com › collections › prom-corsages</div>
+          <div style="font-size:12px; color:var(--text-light);">Shop 30+ prom corsage styles. Fresh flowers, custom colors, delivered in 1–2 days. Order by [date] for prom weekend.</div>
+        </div>
+        <div class="annotation warn">
+          <strong>Impact if CTR improves from 0.1% to 2%:</strong> The corsage FAQ alone would go from ~315 clicks to ~6,300 clicks from the same impressions — a 20x increase with zero new ranking needed.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: BURIED BUYER QUERIES -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Revenue Gap</p>
+    <h2>The Highest-Intent Queries Are Buried</h2>
+    <p class="subtitle">These are the searches made by people ready to buy — and Kremp.com is invisible for nearly all of them.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:10px;">Buyer-Intent Queries — Current Performance</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">flower delivery</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:64%;">Pos. 12.8</div></div>
+            <span class="bar-value" style="color:var(--red);">124K impr.</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">flowers near me</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:47%;">Pos. 9.5</div></div>
+            <span class="bar-value" style="color:var(--red);">119K impr.</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">florist near me</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:55%;">Pos. 11.1</div></div>
+            <span class="bar-value" style="color:var(--red);">67K impr.</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">flower shop near me</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:55%;">Pos. 11.1</div></div>
+            <span class="bar-value" style="color:var(--red);">40K impr.</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">funeral flowers</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:100%;">Pos. 24.6</div></div>
+            <span class="bar-value" style="color:var(--red);">26K impr.</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">birthday flowers</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:100%;">Pos. 21.5</div></div>
+            <span class="bar-value" style="color:var(--red);">10K impr.</span>
+          </div>
+        </div>
+        <div class="annotation danger mt-12">
+          <strong>Combined impressions for these 6 queries: 386,000</strong> — but Kremp earns fewer than 1,500 clicks from them total because it's buried on pages 2 and 3.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">What Moving to Page 1 Would Mean</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Query</th>
+              <th class="right">Monthly Impr.</th>
+              <th class="right">Current Clicks</th>
+              <th class="right">Page 1 Clicks*</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>flower delivery</td>
+              <td class="right">~20,000</td>
+              <td class="right red">55</td>
+              <td class="right green bold">~600</td>
+            </tr>
+            <tr>
+              <td>flowers near me</td>
+              <td class="right">~20,000</td>
+              <td class="right red">70</td>
+              <td class="right green bold">~500</td>
+            </tr>
+            <tr>
+              <td>florist near me</td>
+              <td class="right">~11,000</td>
+              <td class="right red">51</td>
+              <td class="right green bold">~280</td>
+            </tr>
+            <tr>
+              <td>funeral flowers</td>
+              <td class="right">~4,500</td>
+              <td class="right red">54</td>
+              <td class="right green bold">~180</td>
+            </tr>
+            <tr>
+              <td>birthday flowers</td>
+              <td class="right">~1,800</td>
+              <td class="right red">42</td>
+              <td class="right green bold">~90</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:11px; color:var(--text-light); margin-top:6px;">*Estimated at avg. 3% CTR for position 5–8 on page 1</p>
+        <div class="annotation success mt-12">
+          <strong>Conservative estimate:</strong> Moving these 5 queries to page 1 adds ~1,650 clicks/month of high-intent buyer traffic — before any CTR optimization.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: QUICK WIN PAGES -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Quick Wins — Page 2 Breakouts</p>
+    <h2>These Pages Are One Push From Page 1</h2>
+    <p class="subtitle">Seven high-impression collection pages are sitting in positions 11–20. A targeted content and link push could move them to page 1 within 60–90 days.</p>
+    <table style="flex:1;">
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th class="right">Impressions</th>
+          <th class="right">Clicks</th>
+          <th class="right">Avg. Position</th>
+          <th class="right">CTR</th>
+          <th class="center">Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="bold">/collections/funeral</span><br>
+            <span style="font-size:11px; color:var(--text-light);">funeral flowers, sympathy arrangements</span>
+          </td>
+          <td class="right bold">147,708</td>
+          <td class="right">417</td>
+          <td class="right"><span style="color:var(--red);">13.5</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.3%</span></td>
+          <td class="center"><span class="pill red">Highest</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/prom-flowers</span><br>
+            <span style="font-size:11px; color:var(--text-light);">prom flowers, corsage, boutonniere</span>
+          </td>
+          <td class="right bold">82,003</td>
+          <td class="right">227</td>
+          <td class="right"><span style="color:var(--red);">11.1</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.3%</span></td>
+          <td class="center"><span class="pill red">Highest</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/valentines-day-teddy-bears</span><br>
+            <span style="font-size:11px; color:var(--text-light);">valentine's day gifts, teddy bears</span>
+          </td>
+          <td class="right bold">65,260</td>
+          <td class="right">58</td>
+          <td class="right"><span style="color:var(--red);">13.6</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.1%</span></td>
+          <td class="center"><span class="pill orange">High</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/baby-gifts</span><br>
+            <span style="font-size:11px; color:var(--text-light);">baby shower gifts, new baby flowers</span>
+          </td>
+          <td class="right bold">51,660</td>
+          <td class="right">47</td>
+          <td class="right"><span style="color:var(--red);">15.3</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.1%</span></td>
+          <td class="center"><span class="pill orange">High</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/anniversary</span><br>
+            <span style="font-size:11px; color:var(--text-light);">anniversary flowers, anniversary gifts</span>
+          </td>
+          <td class="right bold">42,761</td>
+          <td class="right">12</td>
+          <td class="right"><span style="color:var(--red);">19.2</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.0%</span></td>
+          <td class="center"><span class="pill orange">High</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/exotic-tropical-arrangements</span><br>
+            <span style="font-size:11px; color:var(--text-light);">tropical flowers, exotic bouquets</span>
+          </td>
+          <td class="right bold">27,478</td>
+          <td class="right">53</td>
+          <td class="right"><span style="color:var(--yellow);">15.8</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.2%</span></td>
+          <td class="center"><span class="pill yellow">Medium</span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="bold">/collections/roses</span><br>
+            <span style="font-size:11px; color:var(--text-light);">roses, red roses, rose bouquets</span>
+          </td>
+          <td class="right bold">85,556</td>
+          <td class="right">30</td>
+          <td class="right"><span style="color:var(--red);">24.5</span></td>
+          <td class="right"><span class="ctr-pill ctr-bad">0.0%</span></td>
+          <td class="center"><span class="pill red">Highest</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-12">
+      <strong>Roses at position 24.5:</strong> This is Kremp's flagship category. It has 85K impressions and 30 clicks. A focused push on <code>/collections/roses</code> alone could be the highest-revenue SEO win on the entire site.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: CONTENT-COMMERCE DISCONNECT -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Content Strategy Diagnosis</p>
+    <h2>The Site Ranks Like an Encyclopedia, Not a Florist</h2>
+    <p class="subtitle">Kremp has built a powerful informational content engine — but it's not connected to the store. Visitors arrive, read, and leave without buying.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:10px;">Top Traffic Pages vs. Revenue Intent</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th class="center">Type</th>
+              <th class="right">Impr.</th>
+              <th class="center">Buy CTA?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-size:12px;">Rarest flowers in the world</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">444K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Flower meanings (25 articles)</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">421K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Most common birthday month</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">409K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Prom etiquette guide</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">336K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Boutonniere &amp; corsage FAQ</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">315K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Flowers that kill (toxic plants)</td>
+              <td class="center"><span class="pill blue">Info</span></td>
+              <td class="right">250K</td>
+              <td class="center red bold">✗</td>
+            </tr>
+            <tr>
+              <td style="font-size:12px;">Prom corsages collection</td>
+              <td class="center"><span class="pill green">Commerce</span></td>
+              <td class="right">259K</td>
+              <td class="center green bold">✓</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation danger mt-12">
+          <strong>6 of the 7 highest-impression pages are informational</strong> with no clear path to purchase. Traffic arrives with curiosity and leaves without a CTA.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">The Fix: Content-to-Commerce Bridges</h3>
+        <div class="channel-card" style="margin-bottom:10px;">
+          <h3 style="font-size:15px; margin-bottom:8px;">&#x1F517; Add Product CTAs Inside Informational Pages</h3>
+          <ul>
+            <li>"Most common birthday month" page → inline CTA to birthday flower collection</li>
+            <li>"Prom etiquette guide" → CTA to prom corsage shop</li>
+            <li>"Boutonniere FAQ" → direct link to corsage + boutonniere products</li>
+            <li>"Rarest flowers" → CTA to exotic tropical arrangements</li>
+          </ul>
+        </div>
+        <div class="channel-card" style="margin-bottom:10px;">
+          <h3 style="font-size:15px; margin-bottom:8px;">&#x270F;&#xFE0F; Rewrite Meta Titles + Descriptions</h3>
+          <ul>
+            <li>Shift informational pages from "Guide to X" to "Buy X — [Kremp Brand Differentiator]"</li>
+            <li>Add urgency signals: delivery dates, free shipping thresholds</li>
+            <li>Collection pages need price ranges and product counts in meta descriptions</li>
+          </ul>
+        </div>
+        <div class="channel-card">
+          <h3 style="font-size:15px; margin-bottom:8px;">&#x1F4CA; Build Intent-Matched Landing Pages</h3>
+          <ul>
+            <li>Create dedicated commercial pages for "flower delivery [city]" queries</li>
+            <li>Separate funeral flowers transactional page from informational content</li>
+            <li>Roses collection needs its own SEO-targeted landing page at position 1</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three Levers to Grow Kremp.com</h2>
+    <p class="subtitle">The site already has the rankings. The work is converting them — and then capturing the commercial queries that aren't ranking yet.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F3AF;</div>
+        <h3>CTR Optimization</h3>
+        <ul>
+          <li>Rewrite meta titles and descriptions for the top 20 high-impression pages</li>
+          <li>Shift informational page titles to transactional framing</li>
+          <li>Add structured data (product schema, review stars) to collection pages</li>
+          <li>A/B test title formulas — urgency vs. benefit vs. price-lead</li>
+          <li>Target: lift site CTR from 0.45% to 1.5%+ within 60 days</li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; font-weight:700; color:var(--accent);">Expected impact: +8,000–14,000 clicks/month from same impressions</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F4C8;</div>
+        <h3>Commercial Page Authority</h3>
+        <ul>
+          <li>Push funeral, roses, anniversary, and prom collections to page 1</li>
+          <li>Target "flower delivery" and "florist near me" with optimized landing pages</li>
+          <li>Internal link audit: route informational traffic to collection pages</li>
+          <li>DA50+ backlinks targeting /collections/funeral and /collections/roses</li>
+          <li>Target: 5+ collection pages on page 1 within 90 days</li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; font-weight:700; color:var(--accent);">Expected impact: +1,500–3,000 high-intent clicks/month</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F916;</div>
+        <h3>AI Search Visibility</h3>
+        <ul>
+          <li>8 targeted Reddit placements (6 regional + 2 general) for AI citation pickup</li>
+          <li>Target queries: flower delivery by city, funeral flowers, anniversary bouquets</li>
+          <li>Subreddits: r/Houston, r/Nashville, r/flowers, r/giftideas, r/weddingplanning</li>
+          <li>AEO content: 10 articles structured for ChatGPT and Perplexity retrieval</li>
+          <li>Target: cited in AI answers for 3+ city-specific flower delivery queries by month 3</li>
+        </ul>
+        <div style="margin-top:12px; font-size:12px; font-weight:700; color:var(--accent);">Expected impact: AI-driven demand capture in target cities</div>
+      </div>
+    </div>
+    <div class="annotation info mt-12">
+      <strong>The sequencing matters:</strong> CTR optimization delivers results in weeks (no new rankings needed). Commercial page authority takes 60–90 days. AI citation pickup compounds over months 2–6.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days — Prioritized by Impact</h2>
+    <p class="subtitle">Every deliverable in month 1 is verifiable. No waiting 6 months to see if something worked.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Fix the Leaks</h4>
+        <ul>
+          <li>Full CTR audit: rewrite meta titles + descriptions for top 30 pages</li>
+          <li>Add product schema to all collection pages</li>
+          <li>Internal link audit — map info pages to commerce pages</li>
+          <li>Subreddit landscape map delivered for review</li>
+          <li>First 4 Reddit placements live (2 regional markets)</li>
+          <li>Homepage SEO audit + on-page fixes for "flower delivery"</li>
+        </ul>
+        <div class="phase-outcome">&#x2714; CTR lift visible in GSC within 3–4 weeks</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Build</span>
+        <h4>Push Collections to Page 1</h4>
+        <ul>
+          <li>Funeral flowers landing page built + optimized</li>
+          <li>Roses collection full on-page overhaul</li>
+          <li>Anniversary + baby gifts pages targeted</li>
+          <li>Remaining 4 Reddit placements live (market 3 + general)</li>
+          <li>2 DA50+ backlinks pointing to funeral + roses collections</li>
+          <li>10 AEO articles published targeting ChatGPT retrieval</li>
+        </ul>
+        <div class="phase-outcome">&#x2714; Collection pages moving toward page 1; AI indexing starts</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Optimize</span>
+        <h4>Scale What's Working</h4>
+        <ul>
+          <li>Review GSC data: confirm CTR improvements, identify next wave</li>
+          <li>Test AI citation pickup — screenshot evidence from ChatGPT / Perplexity</li>
+          <li>Build city-specific flower delivery landing pages (top 3 markets)</li>
+          <li>Prom corsage + boutonniere pages: structured data + CTA optimization</li>
+          <li>Birthday month page: add inline product CTAs and birthday collection links</li>
+        </ul>
+        <div class="phase-outcome">&#x2714; First measurable AI citation lift; commercial page 1 breakouts</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Months 4–6 — Scale</span>
+        <h4>Compound &amp; Dominate</h4>
+        <ul>
+          <li>Expand Reddit + AEO to additional markets based on Month 3 data</li>
+          <li>Ongoing backlink building for roses, anniversary, and regional pages</li>
+          <li>Build content-to-commerce funnel for top informational pages</li>
+          <li>Target position 1 for "funeral flowers" and "flower delivery"</li>
+          <li>Competitive displacement in AI search answers across target cities</li>
+        </ul>
+        <div class="phase-outcome">&#x2714; Compounding authority, category ownership in AI + Google</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Recommended Package for Kremp.com</h2>
+    <p class="subtitle">Built around the three levers identified in this audit. Start with the highest-impact work first.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th class="right">Monthly</th>
+              <th>Includes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>CTR &amp; On-Page Optimization</strong><br><span style="font-size:11px;color:var(--text-light);">Fastest ROI lever</span></td>
+              <td class="right bold" style="color:var(--accent); font-size:16px;">$1,500</td>
+              <td style="font-size:12px;">Meta rewrites for top 30 pages, schema markup, internal link audit, monthly GSC reporting</td>
+            </tr>
+            <tr>
+              <td><strong>SEO Content &amp; Authority</strong><br><span style="font-size:11px;color:var(--text-light);">Collection page push</span></td>
+              <td class="right bold" style="color:var(--accent); font-size:16px;">$2,000</td>
+              <td style="font-size:12px;">10 AEO articles, landing pages for funeral/roses/anniversary, 2 DA50+ backlinks</td>
+            </tr>
+            <tr>
+              <td><strong>Reddit + AI Visibility</strong><br><span style="font-size:11px;color:var(--text-light);">AI citation engine</span></td>
+              <td class="right bold" style="color:var(--accent); font-size:16px;">$2,250</td>
+              <td style="font-size:12px;">8 targeted Reddit placements (6 regional + 2 general), monthly citation reporting</td>
+            </tr>
+            <tr style="background:#f8f9fa;">
+              <td><strong>Full-Service Bundle</strong><br><span style="font-size:11px;color:var(--green);">All three levers, discounted</span></td>
+              <td class="right bold" style="color:var(--primary-dark); font-size:18px;">$4,950</td>
+              <td style="font-size:12px;">Everything above — CTR optimization + content authority + AI visibility. Save $800/mo vs. individual</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-12">
+          <strong>Start small if preferred:</strong> CTR optimization at $1,500/mo delivers measurable results within 30 days from existing rankings — no new work required. Add services as results compound.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Projected Outcomes</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Timeframe</th>
+              <th>Metric</th>
+              <th class="right">Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>30 days</td>
+              <td>Site-wide CTR</td>
+              <td class="right green bold">0.45% → 1.0%</td>
+            </tr>
+            <tr>
+              <td>30 days</td>
+              <td>Monthly clicks</td>
+              <td class="right green bold">~10K → ~22K</td>
+            </tr>
+            <tr>
+              <td>90 days</td>
+              <td>Collection pages on p.1</td>
+              <td class="right green bold">1 → 5+</td>
+            </tr>
+            <tr>
+              <td>90 days</td>
+              <td>AI citations (target cities)</td>
+              <td class="right green bold">0 → 3+ queries</td>
+            </tr>
+            <tr>
+              <td>6 months</td>
+              <td>Monthly organic clicks</td>
+              <td class="right green bold">~10K → 30K+</td>
+            </tr>
+            <tr>
+              <td>6 months</td>
+              <td>Site-wide CTR</td>
+              <td class="right green bold">0.45% → 2%+</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation warn mt-12">
+          <strong>Honest baseline:</strong> CTR targets are conservative — they assume improving from 0.45% to ~1% in month 1 with meta rewrites alone, not full-page redesigns. Actual results depend on Shopify theme flexibility and product page depth.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Kremp.com — Site Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>14 Million Impressions.<br>Let's Start Converting Them.</h1>
+      <p class="subtitle" style="text-align:center; max-width:680px; margin:0 auto 32px;">The data is clear. Kremp.com has the traffic and rankings to drive 3–5x more revenue from organic search — without waiting for new rankings to build. The leaks just need to be fixed first.</p>
+      <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap; max-width:720px;">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:22px 26px; flex:1; min-width:180px;">
+          <div style="font-size:26px; margin-bottom:8px;">&#x31;&#xFE0F;&#x20E3;</div>
+          <div style="font-weight:700; margin-bottom:6px; font-size:15px;">This week</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55);">Reply with your top 3 target cities and your preferred starting package</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:22px 26px; flex:1; min-width:180px;">
+          <div style="font-size:26px; margin-bottom:8px;">&#x32;&#xFE0F;&#x20E3;</div>
+          <div style="font-weight:700; margin-bottom:6px; font-size:15px;">Day 1–5</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55);">We deliver the full CTR audit: 30 rewritten meta titles and descriptions for your review and approval</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:22px 26px; flex:1; min-width:180px;">
+          <div style="font-size:26px; margin-bottom:8px;">&#x33;&#xFE0F;&#x20E3;</div>
+          <div style="font-weight:700; margin-bottom:6px; font-size:15px;">Day 30</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55);">Review GSC together — confirm CTR lift, identify next moves, and you decide whether to continue</div>
+        </div>
+      </div>
+      <div style="margin-top:36px;">
+        <p style="font-size:17px; font-weight:600;">Ready to start? Reply or book a call.</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.5); margin-top:6px;">tj@embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:36px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; Data source: Google Search Console sc-domain:kremp.com &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
