@@ -2,6 +2,10 @@
 
 This repo powers `decks.embertribe.com` — sales pitch decks and audit presentations for prospects.
 
+## Git workflow — no worktree isolation
+
+**Never** spawn agents, background tasks, scheduled tasks, or subagents with `isolation: "worktree"`. Always work directly in the main checkout on the `main` branch. Changes made inside `.claude/worktrees/` don't appear in the user's local folders and don't land on `main` unless explicitly merged — the user wants every change visible locally and every commit pushed to `origin` before a session ends.
+
 ## How It Works
 
 1. Run the `pitch-deck` skill to generate a deck from prospect data
