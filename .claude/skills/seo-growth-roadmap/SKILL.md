@@ -1,6 +1,6 @@
-# SEO Opportunity Assessment Skill
+# SEO Growth Roadmap Skill
 
-Produce a tripwire-priced ($97–$197) opportunity assessment for a prospect —
+Produce a tripwire-priced ($97–$197) SEO growth roadmap for a prospect —
 **two deliverables** that the sales team presents on a strategy call:
 
 1. **Opportunity deck** (13-slide HTML) — opportunity-first narrative including the integrated 90-day content plan; ends on the projected trajectory
@@ -26,7 +26,7 @@ designed to be presented on a sales call — not handed off as a finished plan.
 
 - Sales team running a report ahead of a discovery call ("warm" mode, has call notes)
 - Self-serve from the GHL landing page after a buyer pays $97/$197 ("cold" mode)
-- User says "run an opportunity assessment for {prospect}"
+- User says "run an SEO growth roadmap for {prospect}"
 - User says "build a tripwire deck for {prospect}"
 
 ---
@@ -40,16 +40,16 @@ embertribe-decks/decks/                                ← SALES-FACING DELIVERA
 ├── images/
 │   └── casestudy-500k.jpg                               shared case-study screenshot (used by every client)
 └── {client-slug}/                                       per-client folder
-    ├── opportunity-assessment.html                      the 13-slide deck (includes content plan)
+    ├── growth-roadmap.html                      the 13-slide deck (includes content plan)
     └── keyword-research.xlsx                            the full keyword workbook (NOT linked publicly)
 
-The deck deploys to decks.embertribe.com/{client-slug}/opportunity-assessment.html.
+The deck deploys to decks.embertribe.com/{client-slug}/growth-roadmap.html.
 The xlsx lives in the same folder for organizational reasons but isn't linked
 from anywhere public — sales team grabs it via the repo or shares directly
 with the prospect via email/GHL.
 
 EmberTribe/site/clients/{prospect-slug}/               ← WORKING DATA (internal)
-└── opportunity-assessment/
+└── growth-roadmap/
     ├── intake.json                  Prospect inputs (URL, brand, competitors, services)
     ├── crawl-results.json
     ├── pagespeed-results.json
@@ -98,7 +98,7 @@ If `cold` mode and the buyer connects analytics, run the enrichment path
 python3 scripts/site-crawl.py \
   --site "{site_url}" \
   --max-pages 100 \
-  --output site/clients/{slug}/opportunity-assessment/crawl-results.json
+  --output site/clients/{slug}/growth-roadmap/crawl-results.json
 ```
 
 100 pages is the cap for tripwire-tier — the full 500-page Foundation crawl
@@ -115,7 +115,7 @@ python3 scripts/pagespeed-api.py \
   --url "{top-product-page}" \
   --url "{top-content-page}" \
   --api-key "{PAGESPEED_API_KEY}" \
-  --output site/clients/{slug}/opportunity-assessment/pagespeed-results.json
+  --output site/clients/{slug}/growth-roadmap/pagespeed-results.json
 ```
 
 Homepage + 2 top pages. Identify mobile + desktop scores, LCP/FID/CLS, top
@@ -123,7 +123,7 @@ diagnostic flags.
 
 ### 1c. SEMrush exports (always required — manual upload)
 
-Prompt the operator to export and drop into `site/clients/{slug}/opportunity-assessment/semrush/`:
+Prompt the operator to export and drop into `site/clients/{slug}/growth-roadmap/semrush/`:
 
 | Report | SEMrush path | File name |
 |--------|-------------|-----------|
@@ -137,7 +137,7 @@ from the Organic Research → Competitors tab and use those.
 
 **v1.5 path:** swap the manual SEMrush exports for programmatic DataForSEO
 calls — see Section "Future: DataForSEO" at the bottom. Wire this when buyer
-volume justifies the API spend (~$0.50 per assessment).
+volume justifies the API spend (~$0.50 per roadmap).
 
 ### 1d. GA4 + GSC (optional enrichment)
 
@@ -148,8 +148,8 @@ The prospect adds `embertribe-content-tools@embertribe-content-tools.iam.gservic
 as Viewer in GA4 and Restricted in GSC. Then:
 
 ```bash
-python3 scripts/ga4-baseline.py --property {ga4_id} --months 6 --output site/clients/{slug}/opportunity-assessment/ga4-baseline.json
-python3 scripts/gsc-baseline.py --site "{gsc_url}" --brand "{brand1}" --brand "{brand2}" --days 90 --output site/clients/{slug}/opportunity-assessment/gsc-baseline.json
+python3 scripts/ga4-baseline.py --property {ga4_id} --months 6 --output site/clients/{slug}/growth-roadmap/ga4-baseline.json
+python3 scripts/gsc-baseline.py --site "{gsc_url}" --brand "{brand1}" --brand "{brand2}" --days 90 --output site/clients/{slug}/growth-roadmap/gsc-baseline.json
 ```
 
 **Path B — Windsor.ai (planned, v1.5):**
@@ -285,7 +285,7 @@ GA4 + GSC are connected at run-time:
 - Slide 4 layout: SEMrush traffic estimate trend (left col) + Site Health Snapshot stat cards: DA Score, ranking kw count, refdomains, pages driving traffic (right col). Bottom annotation pitches the value of connecting analytics during onboarding.
 - Slide 13 baseline: SEMrush organic traffic estimate; legend reads "Confirmed (SEMrush)".
 
-The Coastal Crate dial-in deck (`embertribe-decks/decks/coastal-crate-pet-co-opportunity-assessment.html`)
+The Coastal Crate dial-in deck (`embertribe-decks/decks/coastal-crate-pet-co-growth-roadmap.html`)
 is the **Path A reference** — copy its slide 4 structure when GA4 + GSC are connected.
 
 ### Companion deliverable: Keyword research workbook (xlsx)
@@ -324,7 +324,7 @@ All charts must be 0-based axes. No truncated y-axis.
 
 Save both deliverables to `embertribe-decks/decks/{client-slug}/`:
 
-1. **Deck** → `embertribe-decks/decks/{client-slug}/opportunity-assessment.html` (13 slides — content plan integrated as slides 10–12)
+1. **Deck** → `embertribe-decks/decks/{client-slug}/growth-roadmap.html` (13 slides — content plan integrated as slides 10–12)
 2. **Keyword research** → `embertribe-decks/decks/{client-slug}/keyword-research.xlsx` (run the per-client generator script — the script's output path must point at the new client folder)
 
 Slug: lowercase, hyphens, no special chars (e.g. `coastal-crate-pet-co`).
@@ -337,11 +337,11 @@ Commit + push both repos:
 - `EmberTribe` — for working data + the keyword-research generator script
 
 Report:
-- **Public deck URL:** `https://decks.embertribe.com/{client-slug}/opportunity-assessment.html`
+- **Public deck URL:** `https://decks.embertribe.com/{client-slug}/growth-roadmap.html`
 - **xlsx path** (internal — not linked publicly): `embertribe-decks/decks/{client-slug}/keyword-research.xlsx`. The xlsx is technically reachable at `https://decks.embertribe.com/{client-slug}/keyword-research.xlsx` but isn't surfaced anywhere — share directly with the prospect via email or GHL.
 
 In `cold` mode, post the deck URL back to the buyer's GHL contact record
-(custom field: `opportunity_assessment_url`) and attach the xlsx file
+(custom field: `growth_roadmap_url`) and attach the xlsx file
 directly to the contact / send via email — don't post the xlsx URL publicly.
 
 ---
@@ -384,7 +384,7 @@ Before pushing the deck:
 - [ ] If GA4 + GSC connected: slide 4 shows GA4 trend + GSC click-mix donut + top non-branded queries (verified data path)
 - [ ] If GA4 + GSC NOT connected: slide 4 shows SEMrush traffic + site health stat cards + connect-analytics annotation
 - [ ] xlsx: 4 sheets present (Article Plan, Keyword Universe, Excluded, Read Me); KD bands and pillars color-coded
-- [ ] Deck saved to `embertribe-decks/decks/{client-slug}/opportunity-assessment.html`
+- [ ] Deck saved to `embertribe-decks/decks/{client-slug}/growth-roadmap.html`
 - [ ] xlsx saved to `embertribe-decks/decks/{client-slug}/keyword-research.xlsx`
 - [ ] Image references in deck use `../images/casestudy-500k.jpg` (one level up to shared folder)
 - [ ] Both repos pushed before reporting delivery
@@ -403,7 +403,7 @@ These are the master figures. Use them on every deck unless updated:
 - Site improves with each Google update
 - Asset: `images/casestudy-500k.jpg` (live SEMrush screenshot — Organic Traffic + Keywords climbing together)
 
-**AEO benchmark (NOT in this deck — kept for reference; the AEO case is for the AEO Benchmark deliverable, not the Opportunity Assessment):**
+**AEO benchmark (NOT in this deck — kept for reference; the AEO case is for the AEO Benchmark deliverable, not the SEO Growth Roadmap):**
 - 0% → 32.7% AI visibility in 30 days, 0% → 67% citation rate, category rank #30+ → #5
 
 **Positioning:**
@@ -429,7 +429,7 @@ extend with:
 - `/backlinks/summary/live` — backlink profile
 - `/backlinks/competitors/live` — competitor backlink gap
 
-Estimated cost per assessment: ~$0.30–$0.50.
+Estimated cost per roadmap: ~$0.30–$0.50.
 
 Wire this when buyer volume > 20/mo (point at which SEMrush manual lift outweighs DataForSEO API spend).
 
@@ -447,7 +447,7 @@ Account: Basic plan ($23/mo annual), purchased April 2026.
 **Integration shape:**
 1. GHL form → buyer clicks "Connect Google" → Windsor external-auth link
 2. Buyer OAuths into their Google account → connection appears in our Windsor workspace
-3. Webhook to our system on connect → triggers assessment skill
+3. Webhook to our system on connect → triggers roadmap skill
 4. `analytics.fetch_baseline(prospect)` calls Windsor API → returns parsed GA4 + GSC data
 5. Skill assembles deck with enriched data
 
@@ -461,25 +461,25 @@ If Windsor's external-auth doesn't pan out, fallback to manual service-account-a
 ### Warm mode
 
 ```
-User: Run an opportunity assessment for Coastal Crate Pet Co. (coastalcrate.com).
+User: Run an SEO growth roadmap for Coastal Crate Pet Co. (coastalcrate.com).
       Mode: warm. Brand terms: "coastal crate", "coastalcrate".
       Competitors: The Farmer's Dog, Nom Nom, Open Farm.
       They mentioned struggling with content velocity and AEO is a new priority.
 
 Skill:
-  Phase 0: Intake captured to site/clients/coastal-crate-pet-co/opportunity-assessment/intake.json
+  Phase 0: Intake captured to site/clients/coastal-crate-pet-co/growth-roadmap/intake.json
   Phase 1: Crawl + PageSpeed running. Prompting for SEMrush exports for the 4 domains.
   Phase 2: Analysis — opportunity sized at 28K monthly searches across 10 missing keywords;
            5 striking-distance keywords; LCP mobile = 4.1s flagged P1.
   Phase 3: Deck assembled, 12 slides. Brand colors pulled from coastalcrate.com (ocean blue + sand).
-  Phase 4: Saved to embertribe-decks/decks/coastal-crate-pet-co-opportunity-assessment.html.
-           Live at https://decks.embertribe.com/coastal-crate-pet-co-opportunity-assessment.html
+  Phase 4: Saved to embertribe-decks/decks/coastal-crate-pet-co-growth-roadmap.html.
+           Live at https://decks.embertribe.com/coastal-crate-pet-co-growth-roadmap.html
 ```
 
 ### Cold mode
 
 ```
-GHL webhook: POST /opportunity-assessment with payload {
+GHL webhook: POST /growth-roadmap with payload {
   email, prospect_name, url, services, competitors, ga4_connected, gsc_connected
 }
 

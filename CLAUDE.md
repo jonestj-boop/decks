@@ -19,13 +19,13 @@ embertribe-decks/
 ├── decks/                                        # Deploy root
 │   ├── {prospect-slug}.html                      # legacy flat-file pitch decks
 │   ├── images/                                   # shared images (case study screenshots, logos)
-│   └── {client-slug}/                            # SEO opportunity assessments — one folder per client
-│       ├── opportunity-assessment.html           # 13-slide deck (deploys publicly)
+│   └── {client-slug}/                            # SEO growth roadmaps — one folder per client
+│       ├── growth-roadmap.html           # 13-slide deck (deploys publicly)
 │       └── keyword-research.xlsx                 # companion workbook (in repo, NOT linked publicly)
 ├── .claude/
 │   └── skills/
 │       ├── pitch-deck/                           # original pitch-deck skill
-│       └── seo-opportunity-assessment/           # tripwire opportunity assessment skill
+│       └── seo-growth-roadmap/           # tripwire SEO growth roadmap skill
 └── CLAUDE.md                                     # This file
 ```
 
@@ -34,12 +34,12 @@ embertribe-decks/
 | Skill | Purpose |
 |-------|---------|
 | `pitch-deck` | Generate branded audit/pitch decks from prospect data — output to `decks/{slug}.html` |
-| `seo-opportunity-assessment` | Generate SEO opportunity assessment bundle (deck + xlsx) — output to `decks/{client-slug}/` |
+| `seo-growth-roadmap` | Generate SEO growth roadmap bundle (deck + xlsx) — output to `decks/{client-slug}/` |
 
 ## Rules
 
-1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO opportunity assessments → `decks/{client-slug}/opportunity-assessment.html`** (nested)
+1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO growth roadmaps → `decks/{client-slug}/growth-roadmap.html`** (nested)
 2. **xlsx companions live in the client folder** but aren't linked from anywhere public — sales team grabs them from the repo or shares directly with prospects
 3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/`, referenced as `../images/...` from inside a client folder)
 4. **`pitch-deck` skill** — if something needs changing, flag it for Josh
-5. **`seo-opportunity-assessment` skill** — canonical copy is mirrored in both `embertribe-decks` and `EmberTribe`; supporting scripts (site crawl, PageSpeed, GA4/GSC pulls, xlsx generators) live in `EmberTribe/scripts/`. Keep both copies in sync when editing.
+5. **`seo-growth-roadmap` skill** — canonical copy is mirrored in both `embertribe-decks` and `EmberTribe`; supporting scripts (site crawl, PageSpeed, GA4/GSC pulls, xlsx generators) live in `EmberTribe/scripts/`. Keep both copies in sync when editing.
