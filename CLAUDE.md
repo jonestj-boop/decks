@@ -16,26 +16,30 @@ This repo powers `decks.embertribe.com` — sales pitch decks and audit presenta
 
 ```
 embertribe-decks/
-├── decks/                    # Published HTML decks (auto-deployed)
-│   └── {prospect-slug}.html
-├── images/                   # Shared images (logos, screenshots)
+├── decks/                                        # Deploy root
+│   ├── {prospect-slug}.html                      # legacy flat-file pitch decks
+│   ├── images/                                   # shared images (case study screenshots, logos)
+│   └── {client-slug}/                            # SEO growth roadmaps — one folder per client
+│       ├── growth-roadmap.html           # 13-slide deck (deploys publicly)
+│       └── keyword-research.xlsx                 # companion workbook (in repo, NOT linked publicly)
 ├── .claude/
 │   └── skills/
-│       └── pitch-deck/       # Deck generation skill
-│           ├── SKILL.md
-│           └── template.html
-└── CLAUDE.md                 # This file
+│       ├── pitch-deck/                           # original pitch-deck skill
+│       └── seo-growth-roadmap/           # tripwire SEO growth roadmap skill
+└── CLAUDE.md                                     # This file
 ```
 
 ## Skills
 
 | Skill | Purpose |
 |-------|---------|
-| `pitch-deck` | Generate branded audit/pitch decks from prospect data |
+| `pitch-deck` | Generate branded audit/pitch decks from prospect data — output to `decks/{slug}.html` |
+| `seo-growth-roadmap` | Generate SEO growth roadmap bundle (deck + xlsx) — output to `decks/{client-slug}/` |
 
 ## Rules
 
-1. **All decks go in `decks/`** — this is the deploy root
-2. **Single-file HTML** — no external dependencies, everything inline
-3. **Don't modify the skill** — if something needs changing, flag it for Josh
-4. **Images in `images/`** — reference with relative paths from `decks/`
+1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO growth roadmaps → `decks/{client-slug}/growth-roadmap.html`** (nested)
+2. **xlsx companions live in the client folder** but aren't linked from anywhere public — sales team grabs them from the repo or shares directly with prospects
+3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/`, referenced as `../images/...` from inside a client folder)
+4. **`pitch-deck` skill** — if something needs changing, flag it for Josh
+5. **`seo-growth-roadmap` skill** — canonical copy is mirrored in both `embertribe-decks` and `EmberTribe`; supporting scripts (site crawl, PageSpeed, GA4/GSC pulls, xlsx generators) live in `EmberTribe/scripts/`. Keep both copies in sync when editing.
