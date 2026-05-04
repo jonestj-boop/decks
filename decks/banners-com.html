@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banners.com — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1A0505;
+  --primary-mid: #8B1111;
+  --primary-light: #C72828;
+  --accent: #FF6B35;
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+
+.bar-row { display: flex; align-items: center; gap: 12px; }
+
+.bar-label { width: 160px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+
+.bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--primary-mid), var(--accent)); }
+.bar-fill.orange { background: linear-gradient(90deg, #c0392b, var(--orange)); }
+
+.bar-value { width: 80px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.aeo     { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date  { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* Pricing cards */
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; margin-top: 16px; }
+
+.pricing-card {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(160deg, #FFF5F0 0%, #ffffff 100%);
+}
+
+.pricing-card .badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.pricing-tier { font-size: 13px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.pricing-price { font-size: 38px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--primary-dark); }
+.pricing-price span { font-size: 16px; font-weight: 400; color: var(--text-light); }
+.pricing-desc { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+
+.pricing-features { list-style: none; padding: 0; margin: 0; flex: 1; }
+.pricing-features li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.pricing-features li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* AEO platform grid */
+.platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+
+.platform-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.platform-icon { font-size: 24px; flex-shrink: 0; }
+.platform-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.platform-stat { font-size: 22px; font-weight: 800; }
+.platform-label { font-size: 12px; color: var(--text-light); }
+
+/* Outcome cards */
+.outcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin: 20px 0; }
+.outcome-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+.outcome-card h4 { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.outcome-value { font-size: 42px; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+.outcome-label { font-size: 13px; color: var(--text-light); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col, .three-col, .pricing-grid, .outcome-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 100px; }
+  .platform-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 1: TITLE (Dark)                                        -->
+  <!-- ============================================================ -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">SEO &amp; AI Visibility Audit</p>
+      <h1>Banners.com</h1>
+      <p class="subtitle">8 million impressions. 0.53% CTR. Here&rsquo;s the playbook to capture what&rsquo;s already yours.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#FF6B35;">7,171</div>
+          <div class="stat-label">Monthly Clicks (GSC)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#48CAE4;">1.35M</div>
+          <div class="stat-label">Monthly Impressions (GSC)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0.53%</div>
+          <div class="stat-label">CTR &mdash; 6&times; Below Industry Avg</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">+21%</div>
+          <div class="stat-label">Click Growth (Nov &rsquo;25 &rarr; Apr &rsquo;26)</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Banners.com &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 2: CURRENT STATE (Light)                               -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where Banners.com Stands Today</h2>
+    <p class="subtitle">Traffic is growing and search visibility is massive &mdash; the opportunity is converting impressions into clicks.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">7,171</div>
+        <div class="stat-label">Avg Monthly Clicks (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value blue">1.35M</div>
+        <div class="stat-label">Avg Monthly Impressions (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">0.53%</div>
+        <div class="stat-label">Overall CTR (industry avg: 3%)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">+21%</div>
+        <div class="stat-label">Click Growth Nov &rsquo;25 &rarr; Apr &rsquo;26</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What&rsquo;s Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--green);font-weight:700;">&#10003;</span>Click traffic growing +21% in 6 months &mdash; momentum is real</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--green);font-weight:700;">&#10003;</span>/vinyl-banner-templates: 1,968 clicks at pos 11.7 &mdash; high-performer to push to top 5</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--green);font-weight:700;">&#10003;</span>/championship-banners: pos 9.6 &mdash; one push from page 1 dominance</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--green);font-weight:700;">&#10003;</span>Strong category coverage with 30+ indexed product pages generating real impressions</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What&rsquo;s Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--red);font-weight:700;">&#10007;</span>0.53% CTR vs. 3% industry avg &mdash; leaving ~33,000 clicks/month uncaptured</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--red);font-weight:700;">&#10007;</span>Homepage: 1.69M impressions in 6 months at pos 30.2 &mdash; nearly invisible on head terms</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--red);font-weight:700;">&#10007;</span>/vinyl-banners: 754K impressions, pos 19.9 &mdash; massive page stuck on page 2</li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:14px; line-height:1.5;"><span style="position:absolute;left:0;color:var(--red);font-weight:700;">&#10007;</span>AI visibility lagging BannerBuzz &mdash; competitors are getting recommended, you&rsquo;re not</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console, Nov 2025 &ndash; Apr 2026</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 3: TRAFFIC TRENDS (Light)                              -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>Growing Clicks. Untapped Impressions.</h2>
+    <p class="subtitle">Monthly clicks are climbing &mdash; but at 0.53% CTR, 99.5% of search impressions leave without a click. That gap is the opportunity.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:4px;">Monthly Organic Clicks &mdash; Google Search Console</h4>
+        <p style="font-size:12px; color:var(--text-light); margin-bottom:16px;">Nov 2025 &ndash; Apr 2026 &nbsp;|&nbsp; +21% growth over period</p>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Nov 2025</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:81%;">6,664</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Dec 2025</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:71%;">5,790</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Jan 2026</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:94%;">7,721</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Feb 2026</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:83%;">6,823</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Mar 2026</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:100%;">8,196</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Apr 2026</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:98%;">8,072</div></div>
+          </div>
+        </div>
+        <div class="annotation success mt-16">
+          <strong>Trend is positive.</strong> Clicks hit a new 6-month high in March 2026. The trajectory is up &mdash; now is the time to pour fuel on it.
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <h4>The CTR Gap &mdash; Where the Real Growth Lives</h4>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:4px;">1,349,254 monthly impressions &times; CTR scenario:</p>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:20px;">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:6px;">Today &mdash; 0.53% CTR</div>
+          <div style="font-size:32px; font-weight:900; color:var(--orange);">7,171<span style="font-size:16px; font-weight:400; color:var(--text-light);"> clicks/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light);">Capturing less than 1% of search impressions</div>
+        </div>
+        <div style="border:2px solid var(--accent); border-radius:12px; padding:20px; background:linear-gradient(160deg,#FFF5F0,#fff);">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:6px;">Industry Average &mdash; 3% CTR (Target)</div>
+          <div style="font-size:32px; font-weight:900; color:var(--primary-dark);">40,478<span style="font-size:16px; font-weight:400; color:var(--text-light);"> clicks/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light);">+33,307 clicks/month from same impressions</div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:20px;">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--green); margin-bottom:6px;">Top-Quartile &mdash; 5% CTR</div>
+          <div style="font-size:32px; font-weight:900; color:var(--green);">67,463<span style="font-size:16px; font-weight:400; color:var(--text-light);"> clicks/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light);">Where category leaders operate</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console, Nov 2025 &ndash; Apr 2026</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 4: KEYWORD OPPORTUNITY (Light)                         -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Keyword Opportunity</p>
+    <h2>189,000 Impressions on &ldquo;Banners.&rdquo; Pos 10. 0.5% CTR.</h2>
+    <p class="subtitle">These are the terms Google is already showing you for &mdash; and where moving up a few positions unlocks thousands of clicks.</p>
+
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:12px;">Top Keywords by Impressions <span style="font-weight:400; color:var(--text-light); font-size:13px;">(from GSC &mdash; what you&rsquo;re already showing for)</span></h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">banners</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:100%;">188,993 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 10.3</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">banner</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:34%;">65,137 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 18.0</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">custom banners</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:34%;">63,522 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 16.4</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">vinyl banners</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:19%;">36,395 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 17.3</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">custom banner</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:17%;">31,702 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 15.4</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">birthday banner</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:11%;">20,783 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 10.4</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">yard signs</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:11%;">20,049 imps</div></div>
+            <span class="bar-value" style="color:var(--text-light); font-size:11px;">pos 22.2</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <h4 style="margin-bottom:4px;">Click Unlock &mdash; Moving &ldquo;banners&rdquo; to Top 3</h4>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">188,993 impressions/6mo &mdash; one head term</p>
+        <div style="border:1px solid var(--border); border-radius:12px; padding:20px;">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:6px;">Today &mdash; Pos 10, 0.5% CTR</div>
+          <div style="font-size:32px; font-weight:900; color:var(--orange);">~158<span style="font-size:16px; font-weight:400; color:var(--text-light);"> clicks/mo</span></div>
+        </div>
+        <div style="border:2px solid var(--accent); border-radius:12px; padding:20px; background:linear-gradient(160deg,#FFF5F0,#fff);">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:6px;">Top 3 &mdash; ~8% CTR (Target)</div>
+          <div style="font-size:32px; font-weight:900; color:var(--primary-dark);">~2,520<span style="font-size:16px; font-weight:400; color:var(--text-light);"> clicks/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light);">+2,362 clicks/mo from one keyword</div>
+        </div>
+        <div class="annotation info">
+          <strong>And that&rsquo;s just one term.</strong> Across the top 7 keywords, the combined impression pool is 425,000+/6mo. Moving from page 2 to top 3 on these terms alone could add 15,000&ndash;25,000 clicks per month.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console, Nov 2025 &ndash; Apr 2026</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 5: COMPETITOR LANDSCAPE (Light)                        -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>BannerBuzz Is Setting the Benchmark</h2>
+    <p class="subtitle">Competitors outperform on every major SEO metric &mdash; but the gap is closeable with the right strategy.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Banners.com <span style="font-weight:400; font-size:10px; text-transform:none;">(Today)</span></th>
+          <th>BannerBuzz.com</th>
+          <th>HalfPriceBanners.com</th>
+          <th>Gap to Close</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Authority Score</td>
+          <td><span class="orange bold">34</span></td>
+          <td><span class="bold">45</span></td>
+          <td><span class="bold">38</span></td>
+          <td><span class="red">+11 pts vs. BannerBuzz</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Est. Monthly Organic Traffic</td>
+          <td><span class="orange bold">~27K</span></td>
+          <td><span class="bold">129K</span></td>
+          <td><span class="bold">~45K</span></td>
+          <td><span class="red">4.7&times; behind leader</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Total Backlinks</td>
+          <td><span class="orange bold">13.4K</span></td>
+          <td><span class="bold">64.4K</span></td>
+          <td><span class="bold">~28K</span></td>
+          <td><span class="red">4.8&times; behind leader</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Referring Domains</td>
+          <td><span class="orange bold">~900</span></td>
+          <td><span class="bold">4.6K</span></td>
+          <td><span class="bold">~1.8K</span></td>
+          <td><span class="red">+3,700 domains needed</span></td>
+        </tr>
+        <tr>
+          <td class="bold">AI Mentions</td>
+          <td><span class="orange bold">1.2K</span></td>
+          <td><span class="bold">2.8K</span></td>
+          <td><span class="bold">~600</span></td>
+          <td><span class="red">2.3&times; behind leader</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>Priority target: BannerBuzz.com.</strong> With 64.4K backlinks and 4.6K referring domains, they&rsquo;ve set the benchmark. The path to their 129K monthly organic traffic runs through closing this backlink and authority gap &mdash; which is exactly the lever our strategy pulls.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: SEMrush &amp; Semrush data, May 2026</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 6: AI SEARCH GAP (Light)                               -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">AI Search Visibility</p>
+    <h2>AI Is the New Search. Banners.com Needs to Own It.</h2>
+    <p class="subtitle">Buyers now ask ChatGPT, Gemini, and Google AI Mode for recommendations. If you&rsquo;re not in those answers, you&rsquo;re invisible at the moment of decision.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:16px;">Current AI Platform Mentions &mdash; Banners.com</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px;">Gemini</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:71%;">409</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px;">Google AI Mode</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:67%;">384</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px;">ChatGPT</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:43%;">249</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px;">Google AI Overview</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:19%;">109</div></div>
+          </div>
+        </div>
+        <div class="annotation info mt-16">
+          <strong>Total: 1,151 AI mentions</strong> across all platforms &mdash; moderate presence, but BannerBuzz has 2.8K. That gap is closing the door on recommendation traffic.
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="background:var(--light-bg); border-radius:12px; padding:24px; text-align:center;">
+          <div style="font-size:56px; font-weight:900; color:var(--orange);">34<span style="font-size:24px;">/100</span></div>
+          <div style="font-size:14px; font-weight:600; margin-bottom:4px;">AI Visibility Score</div>
+          <div style="font-size:13px; color:var(--text-light);">Moderate &mdash; significant room to grow</div>
+        </div>
+        <div style="background:var(--light-bg); border-radius:12px; padding:20px;">
+          <h4 style="margin-bottom:10px;">Google pays Reddit $60M/yr to train AI.</h4>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.6;">Reddit content shapes what ChatGPT, Gemini, and Google AI recommend. Brands that appear in Reddit discussions with consistent positive signals get surfaced as the go-to recommendation. Banners.com has a significant opportunity here.</p>
+        </div>
+        <div style="background:#F3E5F5; border-radius:10px; padding:16px;">
+          <div style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:#6A1B9A; margin-bottom:4px;">529 Cited Pages</div>
+          <div style="font-size:13px; line-height:1.5;">vs. BannerBuzz&rsquo;s 1.7K &mdash; more citable, structured content = more AI recommendations.</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Banners.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 7: STRATEGY OVERVIEW (Light)                           -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three Levers. One Compounding Flywheel.</h2>
+    <p class="subtitle">Higher authority unlocks harder keywords. More keywords drive more traffic. AI visibility turns that traffic into brand recommendations. Together, they compound.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">&#129302;</div>
+        <h3>AEO + Reddit</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill aeo">AI Visibility</span></p>
+        <ul>
+          <li>Strategic placement in AI-cited subreddits</li>
+          <li>Thread creation targeting &ldquo;best banner printing&rdquo; queries</li>
+          <li>Community-driven brand signals across r/smallbusiness, r/marketing, r/eventplanning</li>
+          <li>Targets ChatGPT, Gemini, Google AI Mode, Perplexity</li>
+          <li>Google pays Reddit $60M/yr &mdash; your brand needs to be in those threads</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#9998;&#65039;</div>
+        <h3>ClusterMagic Content</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill seo">SEO Content</span></p>
+        <ul>
+          <li>Topical authority across banner/sign category clusters</li>
+          <li>Buying guides, FAQs, comparison pages AI models cite</li>
+          <li>CTR optimization for high-impression pages (vinyl banners, birthday banners)</li>
+          <li>Structured data markup for AI snippet eligibility</li>
+          <li>AI-assisted drafting refined to EmberTribe quality standards</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#128279;</div>
+        <h3>Authority Backlinks</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill content">Link Building</span></p>
+        <ul>
+          <li>Target 500+ quality referring domains in 12 months</li>
+          <li>Industry directories, relevant blogs, PR placements</li>
+          <li>Priority: /vinyl-banners (pos 19.9 &rarr; page 1 = +3,000 clicks/mo)</li>
+          <li>/birthday-banners &amp; /outdoor-banners next in queue</li>
+          <li>Raise authority score from 34 &rarr; 45+ to unlock harder keywords</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Banners.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 8: QUICK WIN PAGES (Light)                             -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Quick Win Opportunities</p>
+    <h2>These Pages Have the Impressions. They Need the Positions.</h2>
+    <p class="subtitle">Real GSC data &mdash; pages already generating hundreds of thousands of impressions but stuck in positions that produce single-digit CTRs.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th>6-Mo Impressions</th>
+          <th>Current Pos</th>
+          <th>Current CTR</th>
+          <th>Click Unlock at Pos 5</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--teal); font-size:12px; font-family:monospace;">/vinyl-banners</td>
+          <td class="bold">754,765</td>
+          <td class="bold red">19.9</td>
+          <td class="red">0.2%</td>
+          <td class="bold green">+3,100/mo</td>
+          <td><span class="pill red">Critical</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--teal); font-size:12px; font-family:monospace;">/fabric-banners</td>
+          <td class="bold">214,912</td>
+          <td class="bold orange">11.1</td>
+          <td class="red">0.1%</td>
+          <td class="bold green">+1,400/mo</td>
+          <td><span class="pill red">Critical</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--teal); font-size:12px; font-family:monospace;">/birthday-banners</td>
+          <td class="bold">216,092</td>
+          <td class="bold orange">10.6</td>
+          <td class="orange">0.5%</td>
+          <td class="bold green">+1,200/mo</td>
+          <td><span class="pill red">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--teal); font-size:12px; font-family:monospace;">/outdoor-banners</td>
+          <td class="bold">214,925</td>
+          <td class="bold orange">14.4</td>
+          <td class="orange">0.4%</td>
+          <td class="bold green">+1,900/mo</td>
+          <td><span class="pill red">High</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--teal); font-size:12px; font-family:monospace;">/championship-banners</td>
+          <td class="bold">89,281</td>
+          <td class="bold" style="color:var(--teal);">9.6</td>
+          <td class="orange">0.9%</td>
+          <td class="bold green">+800/mo</td>
+          <td><span class="pill orange">Near Page 1</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>Biggest opportunity: /vinyl-banners.</strong> 754,765 impressions in 6 months at position 19.9 with a 0.2% CTR &mdash; this page is generating massive search visibility and almost no clicks. Moving it from page 2 to page 1 (pos ~5) could add 3,000+ clicks per month from this one page alone.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console, Nov 2025 &ndash; Apr 2026</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 9: ROADMAP (Light)                                     -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Roadmap</p>
+    <h2>6 Months to AI Dominance</h2>
+    <p class="subtitle">A phased build &mdash; early wins in months 1&ndash;2, measurable visibility lift by month 3, compounding authority and competitive displacement in months 4&ndash;6.</p>
+    <div class="timeline flex-grow" style="margin-top:20px;">
+      <div class="timeline-phase" style="background:#FFFDE7;">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Full technical SEO audit</li>
+          <li>Keyword cluster mapping</li>
+          <li>Subreddit landscape analysis</li>
+          <li>Content calendar build-out</li>
+          <li>Backlink target prioritization</li>
+          <li>Baseline AI visibility benchmark</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:#FFF3E0;">
+        <span class="phase-label">Month 2</span>
+        <h4>Launch</h4>
+        <ul>
+          <li>First AEO placements live</li>
+          <li>Initial content batch published</li>
+          <li>Priority backlink outreach begins</li>
+          <li>Thread seeding in target subreddits</li>
+          <li>On-page CTR optimizations deployed</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:#E8F5E9;">
+        <span class="phase-label">Month 3</span>
+        <h4>Momentum</h4>
+        <ul>
+          <li>Measurable AI mention lift</li>
+          <li>/vinyl-banners climbing from pos 19.9</li>
+          <li>First DA40+ links secured</li>
+          <li>Content momentum building</li>
+          <li>Reddit citation tracking begins</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:#E3F2FD;">
+        <span class="phase-label">Months 4&ndash;6</span>
+        <h4>Scale &amp; Dominate</h4>
+        <ul>
+          <li>Authority score climbing toward 45+</li>
+          <li>Competitive keyword displacement</li>
+          <li>AI recommendations increasing</li>
+          <li>CTR trend improving across top pages</li>
+          <li>12-month roadmap refinement</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Banners.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 10: INVESTMENT (Light)                                 -->
+  <!-- ============================================================ -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Investment</p>
+    <h2>Choose Your AI Visibility Package</h2>
+    <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Visibility Starter</div>
+        <div class="pricing-price">$1,750<span>/mo</span></div>
+        <div class="pricing-desc">Get your brand into AI conversations</div>
+        <ul class="pricing-features">
+          <li>5 AEO Placements / month</li>
+          <li>10 SEO Articles / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Monthly performance report</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured">
+        <div class="badge">Most Popular</div>
+        <div class="pricing-tier">AI Growth Engine</div>
+        <div class="pricing-price">$3,450<span>/mo</span></div>
+        <div class="pricing-desc">Accelerate authority + content velocity</div>
+        <ul class="pricing-features">
+          <li>8 AEO Placements / month</li>
+          <li>25 SEO Articles / month</li>
+          <li>2 DA40+ Authority Backlinks / month</li>
+          <li>Full thread seeding + new post creation</li>
+          <li>Backlink target prioritization</li>
+          <li>Bi-weekly strategy calls</li>
+          <li>Keyword cluster expansion</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Authority Accelerator</div>
+        <div class="pricing-price">$5,250<span>/mo</span></div>
+        <div class="pricing-desc">Dominate your category in AI search</div>
+        <ul class="pricing-features">
+          <li>12 AEO Placements / month</li>
+          <li>40 SEO Articles / month</li>
+          <li>2 DA50+ Authority Backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Weekly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, Reddit optimization process, and monthly AI visibility benchmarking vs. BannerBuzz.
+    </div>
+
+    <div style="margin-top:20px;">
+      <h4 style="margin-bottom:4px;">&#43; Add-On: ClusterMagic Level Up <span style="font-weight:400; font-size:13px; color:var(--text-light);">May &mdash; 10 slots available</span></h4>
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Need more content velocity? Stack ClusterMagic articles on top of any package.</p>
+      <table style="margin:0;">
+        <thead>
+          <tr>
+            <th style="width:120px;"># of Articles</th>
+            <th>One-Time / Monthly</th>
+            <th>3-Month Commitment <span style="font-weight:400; text-transform:none; letter-spacing:0;">(monthly total)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">25</td>
+            <td>$700</td>
+            <td><span class="bold">$1,750</span> <span style="color:var(--green); font-size:13px;">&#8722;$350 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">40</td>
+            <td>$1,100</td>
+            <td><span class="bold">$2,700</span> <span style="color:var(--green); font-size:13px;">&#8722;$600 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">50</td>
+            <td>$1,350</td>
+            <td><span class="bold">$3,400</span> <span style="color:var(--green); font-size:13px;">&#8722;$650 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">100</td>
+            <td>$2,700</td>
+            <td><span class="bold">$7,000</span> <span style="color:var(--green); font-size:13px;">&#8722;$1,100 savings</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Banners.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SLIDE 11: NEXT STEPS (Dark)                                  -->
+  <!-- ============================================================ -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Turn 8M Impressions into Real Traffic?</h1>
+      <p class="subtitle" style="text-align:center; max-width:640px;">The search visibility is already there &mdash; 1.35 million impressions per month. The work is converting them. Every month without a strategy is another month at 0.53% CTR.</p>
+      <div class="mt-24" style="display:flex; flex-direction:column; gap:16px; align-items:center;">
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 40px;">
+          <p style="font-size:16px; font-weight:600; margin-bottom:6px;">1. Book Your Free AEO Benchmark Call</p>
+          <p style="font-size:14px; color:rgba(255,255,255,0.5);">We&rsquo;ll benchmark your current AI visibility and show you exactly what it takes to surpass BannerBuzz.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 40px;">
+          <p style="font-size:16px; font-weight:600; margin-bottom:6px;">2. Choose Your Package + Start Onboarding</p>
+          <p style="font-size:14px; color:rgba(255,255,255,0.5);">Month 1 foundation work begins within 5 business days of signing.</p>
+        </div>
+      </div>
+      <div style="margin-top:32px;">
+        <p style="font-size:18px; font-weight:700; color:var(--accent);">embertribe.com</p>
+        <p style="font-size:14px; color:rgba(255,255,255,0.4); margin-top:4px;">Let&rsquo;s build the system that makes AI recommend Banners.com first.</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
