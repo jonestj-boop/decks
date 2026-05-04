@@ -1574,6 +1574,40 @@ This eliminates a key objection before it becomes a reason to abandon the page.<
         </div>
       </div>
 
+      <!-- M13 -->
+      <div class="issue-card">
+        <div class="issue-header">
+          <div class="issue-header-left">
+            <div class="issue-number">M-13</div>
+            <div class="issue-title">Checkout address field requires fully manual entry -no autocomplete increases errors and friction</div>
+          </div>
+          <div class="issue-badges">
+            <span class="badge badge-page">Checkout</span>
+            <span class="badge badge-effort-med">Med Effort</span>
+          </div>
+        </div>
+        <div class="issue-body">
+          <div>
+            <div class="issue-section-title">The Problem</div>
+            <div class="issue-text">The checkout delivery address field requires customers to type their full address by hand — no autocomplete, no address suggestions, no validation. For a delivery business where the address determines whether service is even possible, this is a meaningful friction point. Customers mistype street names, forget zip codes, or enter partial addresses that create fulfillment problems. Typing friction also slows down the checkout flow, particularly on mobile where a full address entry on a small keyboard is a real obstacle. Google Places Autocomplete reduces address entry to 2-3 keystrokes and auto-populates city, state, and zip — eliminating both friction and data quality issues in one change.</div>
+          </div>
+          <div class="issue-fix">
+            <div class="issue-section-title">The Fix</div>
+            <div class="issue-text">Inject Google Places Autocomplete into the checkout address field via ERS's custom code editor. When a customer starts typing their street address, Google suggests matching addresses with full formatting — they select it, and city, state, and zip populate automatically. Requires a Google Maps API key with the Places API enabled (~$200/month free credit covers roughly 8,000–10,000 lookups; at current Party Kids volume this stays free or near-free). One prerequisite: confirm the ERS checkout form is not rendered in an iframe — if it is, injected JS won't reach the field and ERS support would need to be involved.</div>
+          </div>
+        </div>
+        <div class="issue-ghl">
+          <div class="issue-section-title">How to implement in ERS</div>
+          <ol>
+            <li>First, inspect the checkout page: right-click the delivery address input field and choose "Inspect." Check whether the input is inside an <code>&lt;iframe&gt;</code> tag. If yes, contact ERS support about native autocomplete options before proceeding. If no, continue.</li>
+            <li>In the Inspector, note the <code>id</code> or <code>name</code> attribute on the address input field (e.g., <code>id="delivery_address"</code> or <code>name="address1"</code>). You'll need this exact selector.</li>
+            <li>Get a Google Maps API key: visit <strong>console.cloud.google.com</strong>, create a project, enable the <strong>Places API</strong>, and generate a key. Restrict the key to your domain for security.</li>
+            <li>Go to <strong>/cp/source_code/</strong> in ERS and paste the autocomplete script (full ready-to-use code is in the implementation workbook). Replace <code>YOUR_API_KEY</code> with your actual key and update the selector to match the field ID you found in step 2.</li>
+            <li>Test on both desktop and mobile: type a partial address and confirm the dropdown appears. Confirm that selecting a suggestion fills city, state, and zip correctly.</li>
+          </ol>
+        </div>
+      </div>
+
     </div><!-- /medium -->
 
     <!-- LOW PRIORITY -->
@@ -1773,6 +1807,7 @@ This eliminates a key objection before it becomes a reason to abandon the page.<
             <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-01</span>Add "Booked Together" upsell to product pages</li>
             <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-02</span>Add email capture with value offer</li>
             <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-04</span>Add breadcrumb navigation</li>
+            <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--yellow); font-weight:700; flex-shrink:0;">M-13</span>Add address autocomplete to checkout</li>
             <li style="font-size:14px; color:var(--text-muted); padding:6px 0; border-bottom:1px solid var(--border); display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--accent); font-weight:700; flex-shrink:0;">L-01</span>Embed Instagram feed on homepage</li>
             <li style="font-size:14px; color:var(--text-muted); padding:6px 0; display:flex; gap:8px; align-items:flex-start;"><span style="color:var(--text-dim); font-weight:700; flex-shrink:0;">+</span>Fix ecommerce event tracking in GA4</li>
           </ul>
@@ -1919,6 +1954,11 @@ This eliminates a key objection before it becomes a reason to abandon the page.<
         <div class="check-box"></div>
         <span class="check-priority cp-medium">Medium</span>
         <div class="check-text"><strong>M-12 -Replace popup navigation with standard dropdown menus</strong>Current popup nav is unconventional and creates friction. Replace with hover dropdowns organized by category. Activate on hover (desktop) and tap (mobile).</div>
+      </li>
+      <li>
+        <div class="check-box"></div>
+        <span class="check-priority cp-medium">Medium</span>
+        <div class="check-text"><strong>M-13 -Add Google Places Autocomplete to checkout address field</strong>Reduces address entry to 2-3 keystrokes and auto-populates city, state, and zip. Inject via /cp/source_code/ using Google Maps API key. Confirm address field is not inside an iframe before implementing.</div>
       </li>
       <li>
         <div class="check-box"></div>

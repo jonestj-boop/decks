@@ -204,7 +204,7 @@
 
   <!-- TOC -->
   <div class="toc-wrap">
-    <div class="toc-title">Contents — 19 Items</div>
+    <div class="toc-title">Contents — 20 Items</div>
     <div class="toc-grid">
       <a href="#c01" class="toc-item"><span class="toc-badge tb-critical tc">C-01</span>FAQ payment methods copy</a>
       <a href="#c02" class="toc-item"><span class="toc-badge tb-critical tc">C-02</span>Google Reviews widget</a>
@@ -225,6 +225,7 @@
       <a href="#m06" class="toc-item"><span class="toc-badge tb-medium tc">M-06</span>"What Happens Next" page</a>
       <a href="#m10" class="toc-item"><span class="toc-badge tb-medium tc">M-10</span>Chat widget + FAQ workflow</a>
       <a href="#m11" class="toc-item"><span class="toc-badge tb-medium tc">M-11</span>About Us copy</a>
+      <a href="#m13" class="toc-item"><span class="toc-badge tb-medium tc">M-13</span>Address autocomplete</a>
       <a href="#l01" class="toc-item"><span class="toc-badge tb-low tc">L-01</span>Instagram feed section</a>
       <a href="#l03" class="toc-item"><span class="toc-badge tb-low tc">L-03</span>Footer contact block</a>
       <a href="#l04" class="toc-item"><span class="toc-badge tb-low tc">L-04</span>Mega menu CSS/JS</a>
@@ -1723,6 +1724,112 @@ We show up so your event is unforgettable. That's the whole job.
 CTA BUTTON:
 Browse Our Rentals  →  /  (link to homepage or /categories/)</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-13 -->
+  <div class="item-card" id="m13">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-13</span>
+        <div class="item-card-title">Address Autocomplete — Google Places Checkout Integration</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li><strong>Check for iframe first:</strong> Go to your checkout page, right-click the delivery address input field, and choose "Inspect." Look at the surrounding HTML — if the input is inside an <code>&lt;iframe&gt;</code> tag, stop here and contact ERS support to ask about native autocomplete options. If the input is in the main page DOM, continue.</li>
+          <li>Note the exact <code>id</code> or <code>name</code> attribute on the address input field (e.g. <code>id="delivery_address"</code> or <code>name="address1"</code>). Update the selector in the script below before pasting.</li>
+          <li>Get a Google Maps API key: visit <strong>console.cloud.google.com</strong>, create a project, enable the <strong>Places API</strong>, and generate a key. Under "API restrictions," limit the key to Places API only. Under "Website restrictions," add your domain.</li>
+          <li>Go to <strong>/cp/source_code/</strong> in ERS. Paste the full script below into the custom code area. Replace <code>YOUR_API_KEY</code> with your actual key and update the selector if needed.</li>
+          <li>Go through checkout on desktop and mobile: type a partial address and confirm the dropdown appears. Select a suggestion and confirm city, state, and zip populate correctly.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Google Places Autocomplete Script</div>
+        <div class="copy-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code><span class="cm">/* ── Google Places Autocomplete ──────────────────────────
+   Paste into ERS /cp/source_code/
+   Replace YOUR_API_KEY and update the selector (#delivery_address)
+   to match the actual address field id on your checkout page.
+────────────────────────────────────────────────────────── */</span>
+
+<span class="kw">&lt;script&gt;</span>
+<span class="fn">function</span> <span class="fn">initAddressAutocomplete</span>() {
+  <span class="cm">// Update this selector to match your checkout address field</span>
+  <span class="kw">const</span> input = document.<span class="fn">getElementById</span>(<span class="str">'delivery_address'</span>);
+  <span class="kw">if</span> (!input) <span class="kw">return</span>; <span class="cm">// Field not found — check selector</span>
+
+  <span class="kw">const</span> options = {
+    types: [<span class="str">'address'</span>],
+    componentRestrictions: { country: <span class="str">'us'</span> }
+  };
+
+  <span class="kw">const</span> autocomplete = <span class="kw">new</span> google.maps.places.<span class="fn">Autocomplete</span>(input, options);
+
+  autocomplete.<span class="fn">addListener</span>(<span class="str">'place_changed'</span>, <span class="fn">function</span>() {
+    <span class="kw">const</span> place = autocomplete.<span class="fn">getPlace</span>();
+    <span class="kw">if</span> (!place.address_components) <span class="kw">return</span>;
+
+    <span class="cm">// Auto-fill city, state, zip if those fields exist</span>
+    place.address_components.<span class="fn">forEach</span>(<span class="fn">function</span>(component) {
+      <span class="kw">const</span> type = component.types[<span class="num">0</span>];
+      <span class="kw">if</span> (type === <span class="str">'locality'</span>) {
+        <span class="kw">const</span> cityField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_city'</span>);
+        <span class="kw">if</span> (cityField) cityField.value = component.long_name;
+      }
+      <span class="kw">if</span> (type === <span class="str">'administrative_area_level_1'</span>) {
+        <span class="kw">const</span> stateField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_state'</span>);
+        <span class="kw">if</span> (stateField) stateField.value = component.short_name;
+      }
+      <span class="kw">if</span> (type === <span class="str">'postal_code'</span>) {
+        <span class="kw">const</span> zipField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_zip'</span>);
+        <span class="kw">if</span> (zipField) zipField.value = component.long_name;
+      }
+    });
+  });
+}
+<span class="kw">&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- Load Google Places API — replace YOUR_API_KEY --&gt;</span>
+<span class="kw">&lt;script</span> src=<span class="str">"https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;libraries=places&amp;callback=initAddressAutocomplete"</span> async defer<span class="kw">&gt;&lt;/script&gt;</span></code></pre>
+        </div>
+      </div>
+      <div class="deliverable" style="margin-top:16px;">
+        <div class="deliverable-label">Field Selector Reference — Common ERS Patterns</div>
+        <div class="copy-block" style="padding:0;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.04);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text-dim);font-weight:600;border-bottom:1px solid var(--border);">Field</th>
+                <th style="text-align:left;padding:10px 14px;color:var(--text-dim);font-weight:600;border-bottom:1px solid var(--border);">Likely ERS selector (verify by inspecting)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">Street address</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_address"</code> or <code style="color:var(--accent);font-size:12px;">name="address1"</code></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">City</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_city"</code> or <code style="color:var(--accent);font-size:12px;">name="city"</code></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">State</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_state"</code> or <code style="color:var(--accent);font-size:12px;">name="state"</code></td>
+              </tr>
+              <tr>
+                <td style="padding:9px 14px;color:var(--text-muted);">Zip code</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_zip"</code> or <code style="color:var(--accent);font-size:12px;">name="zip"</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:10px;">Update all four selectors in the script to match what you find in the inspector. If ERS uses a single combined address field (no separate city/state/zip), remove the forEach block and just leave the Autocomplete initialization.</p>
       </div>
     </div>
   </div>
