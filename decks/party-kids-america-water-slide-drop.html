@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party Kids America — Water Slide Rankings Drop Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --navy:      #0B2545;
+    --dark:      #091B36;
+    --blue:      #13315C;
+    --mid:       #134074;
+    --teal:      #00B4D8;
+    --sky:       #48CAE4;
+    --ember:     #ff333d;
+    --green:     #27AE60;
+    --yellow:    #F39C12;
+    --red:       #E74C3C;
+    --orange:    #E67E22;
+    --light-bg:  #f8f9fa;
+    --text:      #2c3e50;
+    --muted:     #7f8c8d;
+    --border:    #e9ecef;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--dark); color:var(--text); }
+  .report { width:100%; }
+
+  /* ── Sections ── */
+  .section { width:100%; display:flex; flex-direction:column; padding:64px 96px; background:#fff; }
+  .section.dark { background:linear-gradient(135deg,var(--dark) 0%,var(--navy) 50%,var(--blue) 100%); color:#fff; }
+  .section.light { background:var(--light-bg); }
+  .section + .section { border-top:1px solid var(--border); }
+  .section.dark + .section { border-top:none; }
+
+  /* ── Type ── */
+  .eyebrow { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ember); margin-bottom:8px; }
+  .section.dark .eyebrow { color:var(--teal); }
+  h1 { font-size:44px; font-weight:900; line-height:1.1; letter-spacing:-1px; margin-bottom:12px; }
+  h2 { font-size:30px; font-weight:800; line-height:1.2; letter-spacing:-0.5px; margin-bottom:10px; }
+  h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+  .lead { font-size:17px; color:var(--muted); font-weight:400; line-height:1.6; max-width:780px; }
+  .section.dark .lead { color:rgba(255,255,255,0.65); }
+  p { font-size:14px; line-height:1.7; color:var(--text); }
+  .section.dark p { color:rgba(255,255,255,0.8); }
+  strong { font-weight:700; }
+
+  /* ── Divider ── */
+  .divider { height:4px; background:linear-gradient(90deg,var(--teal),var(--mid)); width:100%; }
+
+  /* ── Stats row ── */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .stat-card { background:var(--light-bg); border-radius:12px; padding:18px 20px; border:1px solid var(--border); }
+  .section.dark .stat-card { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); }
+  .stat-value { font-size:30px; font-weight:800; line-height:1.1; color:var(--text); }
+  .stat-label { font-size:11px; font-weight:500; color:var(--muted); margin-top:4px; line-height:1.4; }
+  .stat-delta { font-size:12px; font-weight:700; margin-top:6px; }
+  .section.dark .stat-value { color:#fff; }
+  .section.dark .stat-label { color:rgba(255,255,255,0.5); }
+  .stat-value.red    { color:var(--red); }
+  .stat-value.green  { color:var(--green); }
+  .stat-value.yellow { color:var(--yellow); }
+  .stat-value.teal   { color:var(--teal); }
+  .delta-bad  { color:var(--red); }
+  .delta-good { color:var(--green); }
+  .delta-warn { color:var(--yellow); }
+
+  /* ── Two / three col grids ── */
+  .two-col   { display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+  .col { display:flex; flex-direction:column; gap:12px; }
+
+  /* ── Cards ── */
+  .card { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .section.dark .card { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); }
+
+  /* ── Annotations ── */
+  .note { background:#FFF8E1; border-left:3px solid var(--ember); padding:12px 16px; border-radius:0 8px 8px 0; font-size:14px; line-height:1.6; margin:12px 0; }
+  .note strong { color:var(--navy); }
+  .note.info    { background:#E3F2FD; border-color:var(--teal); }
+  .note.info strong { color:var(--blue); }
+  .note.danger  { background:#FFEBEE; border-color:var(--red); }
+  .note.danger strong { color:var(--red); }
+  .note.success { background:#E8F5E9; border-color:var(--green); }
+  .note.success strong { color:var(--green); }
+  .note.warning { background:#FFF3E0; border-color:var(--orange); }
+  .note.warning strong { color:#E65100; }
+  .section.dark .note { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.85); }
+  .section.dark .note strong { color:var(--teal); }
+
+  /* ── Callout banner ── */
+  .callout { background:linear-gradient(135deg,#0B2545 0%,#134074 100%); border-radius:12px; padding:20px 24px; display:flex; align-items:flex-start; gap:16px; margin:16px 0; }
+  .callout .icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+  .callout h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .callout p  { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6; margin:0; }
+  .callout p strong { color:var(--teal); }
+
+  /* ── Tables ── */
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  .data-table thead tr { background:var(--navy); }
+  .data-table th { text-align:left; padding:9px 12px; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.75); border-bottom:2px solid rgba(255,255,255,0.1); }
+  .data-table td { padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .data-table tr:last-child td { border-bottom:none; }
+  .data-table tbody tr:hover td { background:rgba(0,0,0,0.02); }
+  td.r  { text-align:right; }
+  td.mono { font-family:'SF Mono','Fira Code',monospace; font-size:11px; color:var(--navy); }
+  td.pos-good { text-align:right; font-weight:700; color:var(--green); }
+  td.pos-warn { text-align:right; font-weight:700; color:var(--yellow); }
+  td.pos-bad  { text-align:right; font-weight:700; color:var(--red); }
+  td.pos-ugly { text-align:right; font-weight:800; color:#B71C1C; }
+
+  /* ── Pills ── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .pill.high   { background:#FFEBEE; color:#C62828; }
+  .pill.medium { background:#FFF3E0; color:#E65100; }
+  .pill.low    { background:#E8F5E9; color:#2E7D32; }
+  .pill.info   { background:#E3F2FD; color:#1565C0; }
+
+  /* ── Priority action list ── */
+  .action-list { list-style:none; padding:0; counter-reset:steps; }
+  .action-list li { counter-increment:steps; font-size:14px; padding:14px 0 14px 48px; border-bottom:1px solid var(--border); position:relative; line-height:1.7; }
+  .action-list li:last-child { border-bottom:none; }
+  .action-list li::before { content:counter(steps); position:absolute; left:0; top:14px; width:28px; height:28px; background:var(--navy); color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .action-list li.urgent::before { background:var(--red); }
+  .action-list li.medium-p::before { background:var(--orange); }
+  .tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:2px 8px; border-radius:20px; margin-left:6px; vertical-align:middle; }
+  .tag.now    { background:#FFEBEE; color:#C62828; }
+  .tag.week   { background:#FFF3E0; color:#E65100; }
+  .tag.next   { background:#E3F2FD; color:#1565C0; }
+  .tag.ongoing { background:#E8F5E9; color:#2E7D32; }
+
+  /* ── Position timeline bars ── */
+  .timeline-wrap { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .tl-row { display:flex; align-items:center; gap:12px; }
+  .tl-label { font-size:11px; font-weight:600; color:var(--muted); width:80px; flex-shrink:0; }
+  .tl-bar-bg { flex:1; background:var(--border); border-radius:4px; height:20px; position:relative; }
+  .tl-bar { height:100%; border-radius:4px; display:flex; align-items:center; padding:0 8px; font-size:10px; font-weight:700; color:#fff; white-space:nowrap; min-width:24px; transition:width 0.3s; }
+  .tl-meta { font-size:11px; color:var(--muted); width:90px; flex-shrink:0; text-align:right; }
+
+  /* ── Cause cards ── */
+  .cause-card { border:1px solid var(--border); border-radius:12px; padding:20px; background:#fff; }
+  .cause-card .cause-num { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:4px; }
+  .cause-card h4 { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:8px; }
+  .cause-card p { font-size:13px; line-height:1.7; color:var(--text); }
+
+  /* ── Footer ── */
+  .footer { background:var(--dark); padding:40px 96px; display:flex; align-items:center; justify-content:space-between; }
+  .footer .brand { font-size:12px; color:rgba(255,255,255,0.4); }
+  .footer .brand strong { color:var(--teal); font-size:13px; }
+  .footer .date { font-size:11px; color:rgba(255,255,255,0.3); }
+
+  .mt-sm { margin-top:16px; }
+  .mt-md { margin-top:28px; }
+  .mt-lg { margin-top:40px; }
+  .mb-sm { margin-bottom:16px; }
+  .mb-md { margin-bottom:28px; }
+
+  @media(max-width:1024px){
+    .section { padding:40px 32px; }
+    h1 { font-size:32px; }
+    .two-col,.three-col { grid-template-columns:1fr; }
+    .stats-row { grid-template-columns:1fr 1fr; }
+    .footer { flex-direction:column; gap:12px; padding:32px; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ── COVER ─────────────────────────────────────────────────────────────── -->
+<div class="section dark">
+  <div class="eyebrow">SEO Analysis · May 2026</div>
+  <h1>Water Slide Rankings<br>Drop Analysis</h1>
+  <p class="lead">What really happened to "water slide rentals near me" — and what we're doing about it.</p>
+  <div style="margin-top:32px; padding-top:32px; border-top:1px solid rgba(255,255,255,0.1);">
+    <p style="font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:6px;">Prepared for</p>
+    <p style="font-size:16px; font-weight:700; color:#fff;">Kirk &amp; the Party Kids America Team</p>
+    <p style="font-size:13px; color:rgba(255,255,255,0.45); margin-top:2px;">partykidsamerica.com · Data through May 5, 2026</p>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ── EXECUTIVE SUMMARY ──────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="eyebrow">Executive Summary</div>
+  <h2>The short version</h2>
+  <p class="lead">The ranking drop is real — but it's not a penalty, a technical failure, or a sign the site is broken. It's a seasonal local competition surge hitting a keyword that was already in a volatile position.</p>
+
+  <div class="stats-row mt-md">
+    <div class="stat-card">
+      <div class="stat-value red">+6.8</div>
+      <div class="stat-label">Position drop, "water slide rentals near me" — March avg vs. April avg</div>
+      <div class="stat-delta delta-bad">↑ Pos 13.9 → 20.7 (lower is better)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">−69%</div>
+      <div class="stat-label">CTR collapse as position slipped — clicks fell from 7 to 4 while impressions tripled</div>
+      <div class="stat-delta delta-bad">3.9% CTR → 1.2% CTR</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value yellow">+89%</div>
+      <div class="stat-label">Impressions growth — more people are searching, but competition got stiffer</div>
+      <div class="stat-delta delta-warn">180 → 340 impressions/mo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value green">Stable</div>
+      <div class="stat-label">Overall organic traffic — the site as a whole is not declining</div>
+      <div class="stat-delta delta-good">641 organic sessions in April</div>
+    </div>
+  </div>
+
+  <div class="note warning mt-md">
+    <strong>About that "76 position" figure from SEMrush:</strong> SEMrush measures a single snapshot per day. The data shows position swings from 3 to 52 on different days in March/April. SEMrush likely caught a great day early in March (pos ~3–6) and a terrible day in late April (pos ~52). The actual monthly averages tell a more accurate story — and while the situation is serious, it's far from a total disappearance.
+  </div>
+</div>
+
+<!-- ── POSITION TIMELINE ───────────────────────────────────────────────────── -->
+<div class="section light">
+  <div class="eyebrow">Ranking Timeline</div>
+  <h2>"Water slide rentals near me" — Position by Month</h2>
+  <p class="lead">GSC monthly averages show a gradual seasonal slide, not a cliff. The January–February baseline was sporadic (low season), then impressions exploded in March as summer booking season opened — bringing more competition along with it.</p>
+
+  <div class="mt-md">
+    <div class="timeline-wrap">
+
+      <div class="tl-row">
+        <div class="tl-label">Jan–Feb</div>
+        <div class="tl-bar-bg">
+          <div class="tl-bar" style="width:30%; background:#27AE60;">Pos 14.8</div>
+        </div>
+        <div class="tl-meta">10 impressions</div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-label">March</div>
+        <div class="tl-bar-bg">
+          <div class="tl-bar" style="width:28%; background:#27AE60;">Pos 13.9</div>
+        </div>
+        <div class="tl-meta">180 impressions</div>
+      </div>
+
+      <div class="tl-row">
+        <div class="tl-label">April</div>
+        <div class="tl-bar-bg">
+          <div class="tl-bar" style="width:41%; background:#E74C3C;">Pos 20.7</div>
+        </div>
+        <div class="tl-meta">340 impressions</div>
+      </div>
+
+    </div>
+    <p style="font-size:11px; color:var(--muted); margin-top:8px;">Bar length represents average position (longer = lower ranking). Lower position numbers = better.</p>
+  </div>
+
+  <div class="mt-md">
+    <h3>Weekly Position Detail — April 2026</h3>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">"Water slide rentals near me" — day-by-day position tells the real story: high daily volatility, not a clean downward trend.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th style="text-align:right">Position</th>
+          <th style="text-align:right">Impressions</th>
+          <th style="text-align:right">Clicks</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Apr 1–7 avg</td><td class="pos-good">~8.9</td><td class="r">44</td><td class="r">0</td><td><span class="pill low">Normal</span></td></tr>
+        <tr><td>Apr 8 (Tue)</td><td class="pos-warn">9.2</td><td class="r">12</td><td class="r">1</td><td><span class="pill low">Normal</span></td></tr>
+        <tr><td>Apr 9 (Wed)</td><td class="pos-warn">10.1</td><td class="r">16</td><td class="r">0</td><td><span class="pill low">Normal</span></td></tr>
+        <tr><td>Apr 10 (Thu)</td><td class="pos-warn">14.1</td><td class="r">10</td><td class="r">0</td><td><span class="pill medium">Slipping</span></td></tr>
+        <tr><td>Apr 11 (Fri)</td><td class="pos-warn">24.5</td><td class="r">10</td><td class="r">1</td><td><span class="pill medium">Slipping</span></td></tr>
+        <tr><td>Apr 12 (Sat)</td><td class="pos-bad">29.7</td><td class="r">14</td><td class="r">0</td><td><span class="pill high">Spike</span></td></tr>
+        <tr><td>Apr 13 (Sun)</td><td class="pos-bad">37.2</td><td class="r">8</td><td class="r">0</td><td><span class="pill high">Spike</span></td></tr>
+        <tr><td>Apr 14 (Mon)</td><td class="pos-warn">12.0</td><td class="r">13</td><td class="r">2</td><td><span class="pill low">Recovered</span></td></tr>
+        <tr><td>Apr 15–18 avg</td><td class="pos-warn">~10.4</td><td class="r">39</td><td class="r">0</td><td><span class="pill low">Normal</span></td></tr>
+        <tr><td>Apr 19 (Sun)</td><td class="pos-bad">27.8</td><td class="r">19</td><td class="r">0</td><td><span class="pill high">Spike</span></td></tr>
+        <tr><td>Apr 21 (Tue)</td><td class="pos-bad">29.0</td><td class="r">11</td><td class="r">0</td><td><span class="pill high">Spike</span></td></tr>
+        <tr><td>Apr 22 (Wed)</td><td class="pos-ugly">52.3</td><td class="r">29</td><td class="r">0</td><td><span class="pill high">Worst day</span></td></tr>
+        <tr><td>Apr 23–24</td><td class="pos-bad">~36.3</td><td class="r">10</td><td class="r">0</td><td><span class="pill high">Spike</span></td></tr>
+        <tr><td>Apr 25 (Sat)</td><td class="pos-warn">10.3</td><td class="r">6</td><td class="r">0</td><td><span class="pill low">Recovered</span></td></tr>
+        <tr><td>Apr 26–27</td><td class="pos-bad">~22.4</td><td class="r">28</td><td class="r">0</td><td><span class="pill medium">Slipping</span></td></tr>
+        <tr><td>Apr 28–30 avg</td><td class="pos-bad">~19.0</td><td class="r">56</td><td class="r">0</td><td><span class="pill medium">Slipping</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note info mt-md">
+    <strong>What this volatility pattern means:</strong> The site is not being penalized. Google is actively "testing" Party Kids America in different ranking positions against local competitors on different days. This is classic local ranking flux behavior — especially common at the start of a high-demand season when new competitors enter the SERP or existing ones refresh their optimization.
+  </div>
+</div>
+
+<!-- ── ROOT CAUSES ─────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="eyebrow">Root Cause Analysis</div>
+  <h2>What's actually driving this</h2>
+  <p class="lead">The data points to four compounding factors — none of which require a major site overhaul to address.</p>
+
+  <div class="three-col mt-md">
+
+    <div class="cause-card">
+      <div class="cause-num">Cause #1 · Most Likely</div>
+      <h4>Seasonal Competition Surge</h4>
+      <p>April marks the start of Texas summer booking season. Every competitor in the Houston area optimized for water slide queries simultaneously. The surge in impressions (180 → 340/mo) confirms the demand is real — but PKA is now fighting a crowded SERP for it. Rankings will stabilize once Google re-establishes authority signals.</p>
+    </div>
+
+    <div class="cause-card">
+      <div class="cause-num">Cause #2 · High Impact</div>
+      <h4>Weak Local Signals for "Near Me"</h4>
+      <p>"Near me" queries are heavily influenced by Google Business Profile signals: proximity, category tags, recent reviews mentioning specific services, and photo activity. If competitors in Pearland/Houston added water slide content to their GBP while PKA's profile is static, Google will favor them for proximity-intent searches.</p>
+    </div>
+
+    <div class="cause-card">
+      <div class="cause-num">Cause #3 · Fixable</div>
+      <h4>Page Fragmentation / Cannibalization</h4>
+      <p>There are 10+ location pages (League City, Sugar Land, Alvin, Friendswood, Missouri City, Rosharon, Iowa Colony, Sienna, Manvel…) plus a main <code>/category/water-slides/</code> page — all competing for the same "water slide rentals near me" queries. Google doesn't know which URL to send searchers to, so it rotates, causing the volatile position swings.</p>
+    </div>
+
+  </div>
+
+  <div class="two-col mt-md">
+
+    <div class="cause-card">
+      <div class="cause-num">Cause #4 · Quick Win</div>
+      <h4>CTR Death Spiral</h4>
+      <p>When position slips past page 2, CTR drops toward zero. Low CTR signals to Google that the page isn't satisfying the query, reinforcing a lower rank. The data is clear: at position 20+ with 340 impressions in April, the site got just 4 clicks. The page needs stronger title tags and meta descriptions to win clicks even when ranking lower — which then signals relevance back to Google.</p>
+    </div>
+
+    <div class="cause-card">
+      <div class="cause-num">Cause #5 · Important</div>
+      <h4>No Organic Conversion Signals</h4>
+      <p>GA4 shows zero tracked conversions from organic sessions on water slides pages across all three months. Google uses engagement and conversion signals to assess page quality. Without booking form completions, phone clicks, or quote requests being tracked, PKA is missing an important trust signal that tells Google "people who land here become customers."</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── WHAT'S WORKING ─────────────────────────────────────────────────────── -->
+<div class="section dark">
+  <div class="eyebrow">Bright Spots</div>
+  <h2>What the data also shows</h2>
+  <p class="lead">It's not all bad news. Several pages are actually improving — and the site's overall organic health is stable.</p>
+
+  <div class="stats-row mt-md">
+    <div class="stat-card">
+      <div class="stat-value teal">Pos 10.2</div>
+      <div class="stat-label">Category page <code style="color:var(--teal)">/category/water-slides/</code> in April — up from 15.9 in Jan–Feb</div>
+      <div class="stat-delta delta-good">↑ Improving month over month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value teal">Pos 7.4</div>
+      <div class="stat-label">League City page — strongest location page, consistent top-10 performer</div>
+      <div class="stat-delta delta-good">↑ Was 15.3 in Jan–Feb</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value teal">641</div>
+      <div class="stat-label">Organic sessions in April — site-wide organic traffic is holding steady</div>
+      <div class="stat-delta delta-good">Healthy baseline</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value teal">+55%</div>
+      <div class="stat-label">More clicks from water slides pages in April vs. March (9 clicks vs. 5 on category page)</div>
+      <div class="stat-delta delta-good">↑ CTR improving on category page</div>
+    </div>
+  </div>
+
+  <div class="note mt-md">
+    <strong>Key insight:</strong> The main <code>/category/water-slides/</code> page moved from position 15.9 → 9.9 → 10.2 over three months. This tells us Google is beginning to recognize this as the authority page for water slides. The battle is specifically for <strong>"near me"</strong> intent — which requires local signals that category pages alone can't win.
+  </div>
+</div>
+
+<!-- ── PAGE PERFORMANCE TABLE ─────────────────────────────────────────────── -->
+<div class="section light">
+  <div class="eyebrow">Page Performance</div>
+  <h2>Water slides pages — Jan–Feb vs. April</h2>
+  <p class="lead mb-md">GSC data for all pages with "water-slide" in the URL. Green = improving, yellow = stable, red = declining.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th style="text-align:right">Jan–Feb Pos</th>
+        <th style="text-align:right">March Pos</th>
+        <th style="text-align:right">April Pos</th>
+        <th style="text-align:right">Apr Impr</th>
+        <th style="text-align:right">Apr Clicks</th>
+        <th>Trend</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mono">/category/water-slides/</td>
+        <td class="pos-warn">15.9</td>
+        <td class="pos-warn">9.9</td>
+        <td class="pos-warn">10.2</td>
+        <td class="r">613</td>
+        <td class="r">9</td>
+        <td><span class="pill low">↑ Improving</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-league-city/</td>
+        <td class="pos-warn">15.3</td>
+        <td class="pos-good">7.8</td>
+        <td class="pos-good">7.4</td>
+        <td class="r">211</td>
+        <td class="r">5</td>
+        <td><span class="pill low">↑ Strong</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-sugarland/</td>
+        <td class="r">—</td>
+        <td class="pos-warn">12.7</td>
+        <td class="pos-bad">24.3</td>
+        <td class="r">157</td>
+        <td class="r">3</td>
+        <td><span class="pill high">↓ Dropping</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-alvin/</td>
+        <td class="r">—</td>
+        <td class="pos-warn">10.4</td>
+        <td class="pos-warn">10.9</td>
+        <td class="r">38</td>
+        <td class="r">2</td>
+        <td><span class="pill low">→ Stable</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-friendswood/</td>
+        <td class="r">—</td>
+        <td class="pos-warn">15.1</td>
+        <td class="pos-warn">11.3</td>
+        <td class="r">40</td>
+        <td class="r">2</td>
+        <td><span class="pill low">↑ Improving</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-missouri-city/</td>
+        <td class="r">—</td>
+        <td class="pos-bad">29.0</td>
+        <td class="pos-bad">22.1</td>
+        <td class="r">96</td>
+        <td class="r">2</td>
+        <td><span class="pill medium">↑ Gaining</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slide-rentals-rosharon/</td>
+        <td class="pos-warn">11.3</td>
+        <td class="pos-bad">20.9</td>
+        <td class="pos-good">7.8</td>
+        <td class="r">36</td>
+        <td class="r">1</td>
+        <td><span class="pill low">↑ Recovered</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/houston-water-slide-rentals/</td>
+        <td class="pos-bad">46.7</td>
+        <td class="pos-good">7.7</td>
+        <td class="pos-good">8.4</td>
+        <td class="r">11</td>
+        <td class="r">1</td>
+        <td><span class="pill low">↑ Major recovery</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slides-rentals-manvel/</td>
+        <td class="r">—</td>
+        <td class="pos-bad">20.6</td>
+        <td class="pos-bad">26.1</td>
+        <td class="r">49</td>
+        <td class="r">0</td>
+        <td><span class="pill high">↓ Declining</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/water-slide-rentals-sienna/</td>
+        <td class="pos-warn">15.7</td>
+        <td class="pos-good">6.0</td>
+        <td class="pos-warn">13.5</td>
+        <td class="r">29</td>
+        <td class="r">1</td>
+        <td><span class="pill medium">→ Volatile</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note info mt-md">
+    <strong>The key tension:</strong> Having 10 location pages for a single service area creates a signal-dilution problem. Each page earns a fraction of the authority that would go to one strong page. The strongest performers (League City, Houston) are individually powerful — but the weaker pages (Manvel, Iowa Colony) are diluting the overall water slides signal with thin content.
+  </div>
+</div>
+
+<!-- ── ACTION PLAN ─────────────────────────────────────────────────────────── -->
+<div class="section">
+  <div class="eyebrow">Action Plan</div>
+  <h2>What we're fixing and when</h2>
+  <p class="lead">Prioritized by speed of impact. The GBP and title tag updates can show results within 2–4 weeks. The page consolidation work will compound over 60–90 days.</p>
+
+  <div class="two-col mt-md">
+    <div class="col">
+
+      <h3>🔴 Immediate (This Week)</h3>
+      <ol class="action-list">
+
+        <li class="urgent">
+          <strong>Google Business Profile — Water Slide Service Optimization</strong>
+          <span class="tag now">This Week</span>
+          <br>Add "water slide rentals" explicitly to GBP services list. Upload 5–10 new photos of water slide setups tagged with Houston-area location data. Confirm all service cities include water slides. This directly improves "near me" ranking signal.
+        </li>
+
+        <li class="urgent">
+          <strong>Rewrite Title Tags + Meta Descriptions on Category Page</strong>
+          <span class="tag now">This Week</span>
+          <br>Current title likely misses local signal. Change to format: <em>"Water Slide Rentals in [Houston Area, TX] — Party Kids America"</em>. Meta description should include a CTA and mention delivery area. This improves CTR even at lower positions, breaking the CTR death spiral.
+        </li>
+
+        <li class="urgent">
+          <strong>Fix Trailing Slash Canonicalization</strong>
+          <span class="tag now">This Week</span>
+          <br>GSC data shows the same pages indexed with and without trailing slashes (e.g., <code>/category/water-slides</code> and <code>/category/water-slides/</code>). This splits link authority. Add canonical tags or 301 redirects to enforce consistency — trailing slash preferred.
+        </li>
+
+      </ol>
+    </div>
+
+    <div class="col">
+
+      <h3>🟠 Short Term (Next 2–3 Weeks)</h3>
+      <ol class="action-list" style="counter-reset:steps 3">
+
+        <li class="medium-p">
+          <strong>Strengthen /category/water-slides/ with Local Trust Signals</strong>
+          <span class="tag week">2 Weeks</span>
+          <br>Add a "Service Area" section listing all cities served (Pearland, League City, Sugar Land, etc.). Add 3–5 customer testimonials specifically mentioning water slides. Include FAQ section answering "water slide rentals near me" intent questions. This reinforces local relevance for the main ranking page.
+        </li>
+
+        <li class="medium-p">
+          <strong>Consolidate or Strengthen Thin Location Pages</strong>
+          <span class="tag week">2–3 Weeks</span>
+          <br>Manvel, Iowa Colony, and Sienna pages have under 50 monthly impressions and 0 clicks. Either expand them with unique local content (event venues, local landmarks, service details) or 301-redirect them to the category page. Redirecting 3–4 thin pages will concentrate authority on the pages that are actually ranking.
+        </li>
+
+        <li class="medium-p">
+          <strong>Set Up GA4 Conversion Tracking</strong>
+          <span class="tag week">1 Week</span>
+          <br>Water slides organic sessions showed zero conversions in all three months. This almost certainly means tracking is broken, not that no one is converting. Set up events for: booking form submission, phone number clicks, quote request completions. This data helps Google understand page quality and gives us actual ROI data.
+        </li>
+
+      </ol>
+    </div>
+  </div>
+
+  <div class="mt-lg">
+    <h3>📈 Ongoing (60–90 Day Impact)</h3>
+    <ol class="action-list" style="counter-reset:steps 6">
+
+      <li>
+        <strong>Build Local Citations for Water Slide Rentals Specifically</strong>
+        <span class="tag ongoing">Ongoing</span>
+        <br>Ensure Party Kids America is listed in local party rental directories (PartySlate, GigSalad, Yelp, Thumbtack) with "water slide rentals" in the business description. Citations that explicitly mention water slides reinforce the service category signal for Google's local algorithm.
+      </li>
+
+      <li>
+        <strong>Review Solicitation — Water Slide Keywords</strong>
+        <span class="tag ongoing">Ongoing</span>
+        <br>Ask customers who rented water slides to mention it in their Google review ("the water slide was amazing at our backyard party"). Reviews with service-specific keywords in them are a known GBP ranking signal for local "near me" queries.
+      </li>
+
+      <li>
+        <strong>Monitor Competitor GBPs in Core Service Area</strong>
+        <span class="tag next">Monthly</span>
+        <br>The seasonal competition surge likely came from 2–3 competitors adding water slides to their GBP or refreshing their on-page content. Identify who is outranking PKA for "water slide rentals near me" and audit their GBP for signals PKA is missing.
+      </li>
+
+    </ol>
+  </div>
+</div>
+
+<!-- ── WHAT TO WATCH ───────────────────────────────────────────────────────── -->
+<div class="section dark">
+  <div class="eyebrow">Monitoring Plan</div>
+  <h2>How we'll know it's working</h2>
+
+  <div class="two-col mt-md">
+
+    <div class="col">
+      <div class="card">
+        <h3>Early Signals (2–4 weeks)</h3>
+        <ul style="font-size:14px; line-height:2; padding-left:18px; color:rgba(255,255,255,0.8);">
+          <li>"Water slide rentals near me" avg position stabilizes below 15</li>
+          <li>CTR on category page exceeds 2% consistently</li>
+          <li>GBP water slide photos begin getting views</li>
+          <li>GSC impressions continue upward (seasonal tailwind)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <h3>Confirmation Signals (60–90 days)</h3>
+        <ul style="font-size:14px; line-height:2; padding-left:18px; color:rgba(255,255,255,0.8);">
+          <li>Category page reaches and holds position 6–8 for "water slide rentals near me"</li>
+          <li>Organic clicks from water slides pages exceed 25/mo (vs. 9 in April)</li>
+          <li>GA4 conversion tracking confirms organic bookings</li>
+          <li>Location pages consolidated and surviving pages show position improvement</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note mt-md">
+    <strong>Summer is the window:</strong> June and July are peak booking months for water slides in Texas. Every week of delay costs real bookings. The GBP update and title tag changes should be live within 7 days to catch the peak search window.
+  </div>
+</div>
+
+<!-- ── APPENDIX ────────────────────────────────────────────────────────────── -->
+<div class="section light">
+  <div class="eyebrow">Appendix</div>
+  <h2>Supporting Data</h2>
+
+  <div class="two-col mt-md">
+    <div class="col">
+      <h3>Top Water Slide Queries — April 2026</h3>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Source: Google Search Console. Sorted by impressions.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Query</th>
+            <th style="text-align:right">Avg Pos</th>
+            <th style="text-align:right">Impr</th>
+            <th style="text-align:right">Clicks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>water slide rentals</td><td class="pos-bad">17.8</td><td class="r">521</td><td class="r">5</td></tr>
+          <tr><td>water slide rentals near me</td><td class="pos-bad">20.7</td><td class="r">340</td><td class="r">4</td></tr>
+          <tr><td>water slide rentals houston</td><td class="pos-warn">9.7</td><td class="r">127</td><td class="r">1</td></tr>
+          <tr><td>water slide rentals under $200 near me</td><td class="pos-warn">9.0</td><td class="r">24</td><td class="r">2</td></tr>
+          <tr><td>water slide rental</td><td class="pos-good">6.3</td><td class="r">23</td><td class="r">2</td></tr>
+          <tr><td>waterslide for rent</td><td class="pos-warn">9.6</td><td class="r">19</td><td class="r">1</td></tr>
+          <tr><td>waterslides for rent</td><td class="pos-warn">11.7</td><td class="r">21</td><td class="r">1</td></tr>
+          <tr><td>how much is it to rent a waterslide</td><td class="pos-good">6.4</td><td class="r">7</td><td class="r">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col">
+      <h3>GA4 — Water Slides Organic Sessions</h3>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Organic search channel only. April 2026.</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Landing Page</th>
+            <th style="text-align:right">Sessions</th>
+            <th style="text-align:right">Eng. Rate</th>
+            <th style="text-align:right">Bounce</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">/category/water-slides</td><td class="r">22</td><td class="r">50%</td><td class="r">50%</td></tr>
+          <tr><td class="mono">/water-slides-rentals-league-city</td><td class="r">7</td><td class="r">100%</td><td class="r">0%</td></tr>
+          <tr><td class="mono">/water-slides-rentals-alvin</td><td class="r">2</td><td class="r">100%</td><td class="r">0%</td></tr>
+          <tr><td class="mono">/water-slides-rentals-missouri-city</td><td class="r">2</td><td class="r">100%</td><td class="r">0%</td></tr>
+          <tr><td class="mono">/how-much-are-water-slides-to-rent</td><td class="r">2</td><td class="r">100%</td><td class="r">0%</td></tr>
+          <tr><td class="mono">/items/purple-crush-water-slide</td><td class="r">2</td><td class="r">50%</td><td class="r">50%</td></tr>
+          <tr><td class="mono">/water-slide-rentals-rosharon</td><td class="r">1</td><td class="r">100%</td><td class="r">0%</td></tr>
+          <tr><td class="mono">/water-slides-rentals-sugarland</td><td class="r">1</td><td class="r">100%</td><td class="r">0%</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note info" style="margin-top:12px;">
+        <strong>Engagement quality is actually strong</strong> — pages that get clicks see 100% engagement rate (League City, Alvin, Missouri City). Users who land are genuinely interested. The problem is getting them there in the first place.
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-md">
+    <h3>Site-Wide Organic Sessions — Monthly Trend</h3>
+    <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">Source: GA4. All channels shown for context. Note: Jan–Feb spans two months.</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Channel</th>
+          <th style="text-align:right">Jan–Feb Total</th>
+          <th style="text-align:right">March</th>
+          <th style="text-align:right">April</th>
+          <th>Trend</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Organic Search</td><td class="r">698</td><td class="r">553</td><td class="r">641</td><td><span class="pill low">Stable</span></td></tr>
+        <tr><td>Direct</td><td class="r">1,489</td><td class="r">797</td><td class="r">1,207</td><td><span class="pill low">Recovered</span></td></tr>
+        <tr><td>Cross-network (Paid)</td><td class="r">1,177</td><td class="r">892</td><td class="r">1,009</td><td><span class="pill low">Stable</span></td></tr>
+        <tr><td>Paid Search</td><td class="r">605</td><td class="r">407</td><td class="r">548</td><td><span class="pill low">Recovered</span></td></tr>
+        <tr><td>Referral</td><td class="r">45</td><td class="r">65</td><td class="r">107</td><td><span class="pill low">Growing</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note success" style="margin-top:12px;">
+      <strong>The site is healthy overall.</strong> Organic sessions in April (641) are tracking right alongside January–February monthly average (~349/mo). There is no site-wide penalty or collapse. The water slide keyword is a specific local ranking competition issue, not a domain-level problem.
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<div class="footer">
+  <div class="brand">
+    Prepared by <strong>EmberTribe</strong> · Ranking analysis for partykidsamerica.com
+  </div>
+  <div class="date">Data sources: Google Search Console + GA4 · Through May 5, 2026</div>
+</div>
+
+</div><!-- /report -->
+</body>
+</html>
