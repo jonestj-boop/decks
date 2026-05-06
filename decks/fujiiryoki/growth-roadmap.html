@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fujiiryoki Store — SEO ClusterMagic Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1a1a2e;
+  --primary-mid:  #16213e;
+  --primary-light:#0f3460;
+  --accent:       #e94560;
+  --ember-red:    #ff333d;
+  --ember-dark:   #e0202a;
+  --text:         #2c3e50;
+  --text-light:   #7f8c8d;
+  --light-bg:     #f8f9fa;
+  --card-bg:      #ffffff;
+  --border:       #e9ecef;
+  --green:        #27AE60;
+  --yellow:       #F39C12;
+  --red:          #E74C3C;
+  --orange:       #E67E22;
+  --teal-soft:    #00B4D8;
+  --blue:         #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh; width: 100vw;
+  color: var(--text); line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none; flex-direction: column;
+  padding: 40px 58px; overflow-y: auto;
+  background: var(--card-bg);
+}
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+.slide.dark .stat-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 33px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 17px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 18px; }
+
+.slide-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--ember-red); margin-bottom: 6px; }
+.slide.dark .slide-label { color: var(--accent); }
+
+/* ── Stats ── */
+.stats-row { display: flex; gap: 13px; margin: 13px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 120px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 11px; font-weight: 500; color: var(--text-light); }
+
+/* ── Annotations ── */
+.annotation { background: #FFF8E1; border-left: 3px solid var(--ember-red); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12.5px; margin: 10px 0; line-height: 1.5; }
+.annotation strong { color: var(--primary-dark); }
+.annotation.danger  { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.teal    { background: #E0F7FA; border-left-color: var(--teal-soft); }
+.annotation.teal strong { color: #006c8a; }
+.annotation.info    { background: #E3F2FD; border-left-color: var(--blue); }
+.annotation.info strong { color: var(--blue); }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 9px 11px; border-bottom: 2px solid var(--border); }
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right  { text-align: right; }
+.center { text-align: center; }
+.bold   { font-weight: 700; }
+
+/* ── Bar chart ── */
+.bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 66px; text-align: right; font-size: 11.5px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-label-wide { width: 200px; text-align: right; font-size: 11.5px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 25px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; transition: width 0.8s ease; }
+.bar-value { font-size: 11px; font-weight: 700; color: var(--text); min-width: 60px; flex-shrink: 0; }
+.bar-fill.teal   { background: linear-gradient(90deg, #007EA7, var(--teal-soft)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #b07d09, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.orange { background: linear-gradient(90deg, #ca6f1e, var(--orange)); }
+
+/* ── Pills ── */
+.pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.pill.high     { background: #FFEBEE; color: var(--red); }
+.pill.medium   { background: #FFF3E0; color: var(--orange); }
+.pill.critical { background: #E0F7FA; color: #00897B; }
+.pill.low      { background: #F3F4F6; color: #6B7280; }
+.pill.seo      { background: #E8F5E9; color: #1B5E20; }
+
+/* ── Two / Three col ── */
+.two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+
+/* ── Channel card ── */
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.channel-card ul { list-style: none; padding: 0; margin-top: 8px; }
+.channel-card ul li { position: relative; padding-left: 13px; margin-bottom: 5px; font-size: 12.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--ember-red); }
+
+/* ── Timeline ── */
+.timeline { display: flex; gap: 0; margin: 12px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 16px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; display: block; }
+.timeline-phase ul { list-style: none; padding: 0; margin-top: 7px; }
+.timeline-phase ul li { position: relative; padding-left: 11px; margin-bottom: 4px; font-size: 11.5px; line-height: 1.5; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 16px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; }
+
+/* ── Cluster tier grid ── */
+.tier-grid { display: grid; grid-template-columns: 1fr 1.1fr 1.2fr; gap: 13px; flex: 1; }
+.tier-card { border-radius: 12px; border: 1px solid var(--border); background: var(--light-bg); display: flex; flex-direction: column; overflow: hidden; }
+.tier-card .tier-head { padding: 9px 14px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #fff; }
+.tier-card .tier-body { padding: 12px 14px; flex: 1; }
+.tier-card .tier-keyword { font-size: 13px; font-weight: 700; margin-bottom: 8px; line-height: 1.4; }
+.tier-card .tier-meta { font-size: 11px; color: var(--text-light); margin-bottom: 3px; }
+.tier-card .tier-meta span { font-weight: 600; color: var(--text); }
+.tier-card ul { list-style: none; padding: 0; margin-top: 8px; }
+.tier-card ul li { position: relative; padding-left: 12px; font-size: 11px; line-height: 1.5; margin-bottom: 4px; color: var(--text); }
+.tier-card ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; }
+.tier-t1 .tier-head { background: var(--teal-soft); }
+.tier-t1 ul li::before { background: var(--teal-soft); }
+.tier-t2 .tier-head { background: var(--blue); }
+.tier-t2 ul li::before { background: var(--blue); }
+.tier-t3 .tier-head { background: var(--orange); }
+.tier-t3 ul li::before { background: var(--orange); }
+
+/* ── AI Platform cards ── */
+.ai-platform-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin: 14px 0; }
+.ai-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; text-align: center; }
+.ai-card .ai-icon { font-size: 22px; margin-bottom: 6px; }
+.ai-card .ai-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-light); margin-bottom: 8px; }
+.ai-card .ai-stat { display: flex; justify-content: space-around; margin-top: 4px; }
+.ai-card .ai-stat-item { text-align: center; }
+.ai-card .ai-stat-val { font-size: 22px; font-weight: 800; line-height: 1; }
+.ai-card .ai-stat-lbl { font-size: 9px; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+
+/* ── AEO Add-On table ── */
+.addon-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 10px; }
+.addon-card { border-radius: 12px; border: 2px solid var(--border); background: var(--light-bg); overflow: hidden; transition: transform 0.2s; }
+.addon-card:hover { transform: translateY(-2px); }
+.addon-card.featured { border-color: var(--ember-red); background: #fff; box-shadow: 0 6px 24px rgba(233,69,96,0.13); }
+.addon-card .ac-head { padding: 12px 16px; text-align: center; border-bottom: 1px solid var(--border); }
+.addon-card.featured .ac-head { background: #fff7f7; }
+.ac-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 4px; }
+.addon-card.featured .ac-tag { color: var(--ember-red); }
+.ac-name { font-size: 14px; font-weight: 800; margin-bottom: 3px; }
+.ac-price { font-size: 32px; font-weight: 900; line-height: 1; }
+.ac-period { font-size: 11px; color: var(--text-light); margin-top: 1px; }
+.addon-card .ac-body { padding: 12px 16px; }
+.addon-card ul { list-style: none; padding: 0; }
+.addon-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 12.5px; line-height: 1.5; }
+.addon-card ul li::before { content: '+'; position: absolute; left: 0; font-size: 11px; font-weight: 800; color: var(--green); }
+.addon-card.featured ul li::before { color: var(--ember-red); }
+
+/* ── ClusterMagic pricing table ── */
+.cm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+.cm-table th { background: var(--primary-dark); color: #fff; padding: 13px 16px; font-size: 11px; font-weight: 700; text-transform: none; letter-spacing: 0; text-align: left; }
+.cm-table td { padding: 13px 16px; border-bottom: 1px solid var(--border); }
+.cm-table tr:last-child td { border-bottom: none; }
+.cm-table tr:hover td { background: #f0f8ff; }
+.cm-table .savings { color: var(--green); font-weight: 600; font-size: 11.5px; }
+.cm-table .featured-row td { background: #fff7f7; }
+.cm-table .featured-row td:first-child { border-left: 3px solid var(--ember-red); }
+
+/* ── Reddit / community quotes ── */
+.reddit-quote { background: var(--light-bg); border-left: 3px solid #FF4500; border-radius: 0 8px 8px 0; padding: 10px 14px; margin-bottom: 10px; position: relative; }
+.reddit-quote .q-text { font-size: 13px; font-style: italic; color: var(--text); margin-bottom: 5px; }
+.reddit-quote .q-meta { font-size: 11px; color: var(--text-light); }
+.reddit-quote .q-badge { display: inline-block; margin-top: 5px; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #E8F5E9; color: var(--green); }
+.reddit-quote .q-badge.gap { background: #FFEBEE; color: var(--red); }
+
+/* ── Utility ── */
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-20 { margin-top: 20px; }
+.mb-8  { margin-bottom: 8px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal-soft); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+
+/* ── Logo row ── */
+.logo-row { margin-top: auto; padding-top: 13px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date  { font-size: 11px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+/* ── Progress & Nav ── */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+.nav { position: fixed; bottom: 22px; right: 28px; display: flex; align-items: center; gap: 10px; z-index: 100; }
+.nav button { width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: white; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+.counter { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65); background: rgba(0,0,0,0.35); padding: 5px 12px; border-radius: 6px; }
+
+@media (max-width: 1100px) {
+  .slide { padding: 28px 36px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col, .tier-grid, .addon-grid, .ai-platform-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+════════════════════════════════════════════════════════════ -->
+<div class="slide dark active" data-slide="1">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <p class="slide-label">SEO ClusterMagic Strategy</p>
+    <h1>Fujiiryoki Store</h1>
+    <p class="subtitle">Topic cluster architecture to own the massage chair category in the US — 5 clusters, 80+ pages, and a clear path to reversing the traffic decline and capturing high-intent buyers.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">5</div>
+        <div class="stat-label">Topic Clusters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal-soft)">80+</div>
+        <div class="stat-label">Pages to Build</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">375</div>
+        <div class="stat-label">Keywords Ranking Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--yellow)">28</div>
+        <div class="stat-label">AI Visibility Score</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared for Fujiiryoki &mdash; May 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 2 — CURRENT STATE
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="2">
+  <p class="slide-label">Current State</p>
+  <h2>Where store.fujiiryoki.com Stands Today</h2>
+  <p class="subtitle">A premium Japanese massage chair brand with real brand demand — but a steep traffic decline and zero commercial content signals an urgent need for cluster architecture.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value red">102</div>
+      <div class="stat-label">Monthly Organic Visits</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value blue">375</div>
+      <div class="stat-label">Organic Keywords</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value orange">29</div>
+      <div class="stat-label">Authority Score</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--teal-soft);">28</div>
+      <div class="stat-label">AI Visibility Score</div>
+    </div>
+  </div>
+
+  <div class="two-col flex-grow" style="gap:26px;">
+    <div>
+      <h3>Brand &amp; Site Profile <span style="font-size:12px;font-weight:400;color:var(--text-light);">— SEMrush · May 2026</span></h3>
+      <table style="margin-top:10px;">
+        <tbody>
+          <tr><td style="font-weight:600;width:155px;">Category</td><td>Premium Massage Chairs &amp; Wellness</td></tr>
+          <tr><td style="font-weight:600;">Price Range</td><td>$1,299.99–$10,000.00+ per chair</td></tr>
+          <tr><td style="font-weight:600;">Key Models</td><td>Calm Plus 4D, Cyber Relax AI 5D, MR6000</td></tr>
+          <tr><td style="font-weight:600;">Traffic Peak</td><td><span class="bold" style="color:var(--ember-red);">759/mo</span> <span style="font-size:12px;color:var(--text-light);">(Feb 2026 — ↓87% since)</span></td></tr>
+          <tr><td style="font-weight:600;">Organic Traffic Cost</td><td><span class="bold" style="color:var(--orange);">$225/mo</span> <span style="font-size:12px;color:var(--text-light);">— brand &amp; navigational terms only</span></td></tr>
+          <tr><td style="font-weight:600;">Ref. Domains</td><td><span class="bold">76</span> &nbsp;·&nbsp; <strong>Backlinks:</strong> 219</td></tr>
+          <tr><td style="font-weight:600;">AI Mentions</td><td><span class="bold" style="color:var(--teal-soft);">198</span> mentions · <span class="bold">182</span> cited pages</td></tr>
+          <tr><td style="font-weight:600;">Paid Traffic</td><td style="color:var(--text-light);">$0 — 100% organic</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 class="green">What's Working</h3>
+      <ul style="list-style:none;padding:0;margin-top:10px;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10003; Brand searches for "fujiiryoki" already exist and convert</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10003; 375 keywords ranking — a real foundation to build from</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10003; Traffic grew 5× from Sep 2025 → Feb 2026, proving SEO works</li>
+        <li style="padding:6px 0;font-size:13px;">&#10003; Authentic Japanese brand — differentiation no US competitor can replicate</li>
+      </ul>
+
+      <h3 class="red" style="margin-top:14px;">What's Holding You Back</h3>
+      <ul style="list-style:none;padding:0;margin-top:10px;">
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10007; Traffic dropped 87% from peak — no content safety net</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10007; Zero buying guides or comparisons for high-intent researchers</li>
+        <li style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;">&#10007; No cluster architecture — pages isolated, no authority flow</li>
+        <li style="padding:6px 0;font-size:13px;">&#10007; 74,000/mo searched for "massage chair" — Fujiiryoki captures 102 visits</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="annotation danger mt-8">
+    <strong>Critical signal:</strong> Keywords held (375 vs 524 peak) but traffic collapsed — rankings dropped on the highest-volume terms. A cluster strategy protects against this by building topical authority across dozens of interconnected pages.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 3 — TRAFFIC TREND
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="3">
+  <p class="slide-label">SEMrush Data</p>
+  <h2>12-Month Organic Traffic Trajectory</h2>
+  <p class="subtitle">Explosive growth Jan–Feb 2026 followed by a sharp reversal. Without cluster-backed topical authority, gains are fragile and easy to lose.</p>
+
+  <h4 style="margin-bottom:8px;color:var(--text-light);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px;">Organic Traffic Volume — Visits / Month (US · SEMrush)</h4>
+  <div class="bar-chart flex-grow">
+    <div class="bar-row">
+      <span class="bar-label">Sep 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:7%;"></div></div>
+      <span class="bar-value">51</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Oct 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:4%;"></div></div>
+      <span class="bar-value">30</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Nov 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:5%;"></div></div>
+      <span class="bar-value">35</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Dec 2025</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width:7%;"></div></div>
+      <span class="bar-value">52</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Jan 2026</span>
+      <div class="bar-track"><div class="bar-fill green" style="width:18%;"></div></div>
+      <span class="bar-value">138</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Feb 2026</span>
+      <div class="bar-track"><div class="bar-fill green" style="width:100%;"></div></div>
+      <span class="bar-value">759 &nbsp;&#9650; PEAK</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Mar 2026</span>
+      <div class="bar-track"><div class="bar-fill yellow" style="width:31%;"></div></div>
+      <span class="bar-value">237</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Apr 2026</span>
+      <div class="bar-track"><div class="bar-fill red" style="width:13%;"></div></div>
+      <span class="bar-value">101</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">May 2026</span>
+      <div class="bar-track"><div class="bar-fill red" style="width:13%;"></div></div>
+      <span class="bar-value">102</span>
+    </div>
+  </div>
+
+  <div class="annotation teal mt-12">
+    <strong>Keyword trend:</strong> Keywords peaked at 524 (Mar 2026) and now sit at 375 — the site still has positions but lost its best-performing, highest-volume rankings.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Source: SEMrush — store.fujiiryoki.com · US · May 2026</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 4 — KEYWORD OPPORTUNITY
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="4">
+  <p class="slide-label">Keyword Landscape</p>
+  <h2>The Opportunity: Massage Chair Search Demand</h2>
+  <p class="subtitle">Buyers in this category research extensively before purchasing. The keyword universe is large, valuable, and largely uncaptured by store.fujiiryoki.com today.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h4 style="margin-bottom:10px;">Monthly Search Volume by Topic (US)</h4>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <span class="bar-label-wide">massage chair</span>
+          <div class="bar-track"><div class="bar-fill ember" style="width:100%;"></div></div>
+          <span class="bar-value">74,000/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">massage chairs</span>
+          <div class="bar-track"><div class="bar-fill red" style="width:16%;"></div></div>
+          <span class="bar-value">12,100/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">zero gravity massage chair</span>
+          <div class="bar-track"><div class="bar-fill orange" style="width:9%;"></div></div>
+          <span class="bar-value">6,600/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">best massage chair</span>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:7%;"></div></div>
+          <span class="bar-value">5,400/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">shiatsu massage chair</span>
+          <div class="bar-track"><div class="bar-fill green" style="width:5%;"></div></div>
+          <span class="bar-value">3,600/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">4D massage chair</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:2%;"></div></div>
+          <span class="bar-value">1,300/mo</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label-wide">fujiiryoki (branded)</span>
+          <div class="bar-track"><div class="bar-fill blue" style="width:1%;"></div></div>
+          <span class="bar-value">480/mo</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px;">Why Fujiiryoki Can Win</h4>
+      <div class="channel-card" style="margin-bottom:10px;">
+        <h4 class="teal">&#9679; Premium Japanese Differentiation</h4>
+        <p style="font-size:12px;margin-top:4px;">Searches for "Japanese massage chair" and "authentic shiatsu" are underserved by US brands. Fujiiryoki owns this angle authentically — no US competitor can match it.</p>
+      </div>
+      <div class="channel-card" style="margin-bottom:10px;">
+        <h4 class="green">&#9679; High-Ticket Buyers Research Before Buying</h4>
+        <p style="font-size:12px;margin-top:4px;">$3K–$10K+ purchases require trust-building content. Comparison articles, model reviews, and buying guides directly influence these decisions — and Fujiiryoki has none of this content today.</p>
+      </div>
+      <div class="channel-card">
+        <h4 class="orange">&#9679; Comparison &amp; Review Content Converts</h4>
+        <p style="font-size:12px;margin-top:4px;">Bottom-of-funnel keywords like "fujiiryoki vs human touch" (KD 18) and model-specific reviews have near-zero competition. These pages convert browsers into buyers — and Fujiiryoki currently has none of them.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 5 — PRIORITY KEYWORD TARGETS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="5">
+  <p class="slide-label">Keyword Research</p>
+  <h2>Priority Keyword Targets</h2>
+  <p class="subtitle">High-intent keywords Fujiiryoki can realistically rank for within 90–180 days — based on current authority, competition level, and existing 375-keyword foundation.</p>
+
+  <div class="two-col flex-grow" style="gap:20px;">
+    <div>
+      <h3 style="margin-bottom:8px;">Quick-Win Keywords <span style="font-size:11px;font-weight:400;color:var(--text-light);">KD &lt; 25 — rankable in 60–90 days</span></h3>
+      <table style="font-size:12px;">
+        <thead>
+          <tr><th>Keyword</th><th>Vol/mo</th><th>KD</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold" style="color:var(--teal-soft);">fujiiryoki reviews</td><td class="bold">40</td><td class="green bold">1</td></tr>
+          <tr><td class="bold" style="color:var(--teal-soft);">fujiiryoki massage chair</td><td class="bold">480</td><td class="green bold">7</td></tr>
+          <tr><td class="bold" style="color:var(--teal-soft);">4d massage chair</td><td class="bold">1,300</td><td class="green bold">8</td></tr>
+          <tr><td class="bold">are massage chairs good for you</td><td class="bold">720</td><td class="green bold">9</td></tr>
+          <tr><td class="bold">heated massage chair</td><td class="bold">880</td><td class="green bold">10</td></tr>
+          <tr><td class="bold">japanese massage chairs</td><td class="bold">480</td><td class="green bold">15</td></tr>
+          <tr><td>zero gravity massage chair</td><td>6,600</td><td style="color:var(--yellow);">19</td></tr>
+          <tr><td>massage chair</td><td>74,000</td><td style="color:var(--yellow);">19</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:10.5px;color:var(--text-light);margin-top:5px;">Source: SEMrush · US · May 2026</p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:8px;">Authority Keywords <span style="font-size:11px;font-weight:400;color:var(--text-light);">KD 25–55 — rankable in 90–180 days</span></h3>
+      <table style="font-size:12px;">
+        <thead>
+          <tr><th>Keyword</th><th>Vol/mo</th><th>KD</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold" style="color:var(--ember-red);">massage chairs</td><td class="bold">12,100</td><td>33</td></tr>
+          <tr><td class="bold">shiatsu massage chair</td><td class="bold">3,600</td><td>25</td></tr>
+          <tr><td class="bold">best massage chair</td><td class="bold">5,400</td><td>41</td></tr>
+          <tr><td class="bold">full body massage chair</td><td class="bold">4,400</td><td>38</td></tr>
+          <tr><td>massage chair recliner</td><td>2,900</td><td>29</td></tr>
+          <tr><td>massage chair reviews</td><td>1,000</td><td>32</td></tr>
+          <tr><td>best massage chairs</td><td>5,400</td><td>48</td></tr>
+          <tr><td>massage chairs for home</td><td>1,000</td><td>39</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation teal" style="margin-top:10px;font-size:12px;">
+        <strong>Surprise opportunity:</strong> "massage chair" (74,000/mo) and "zero gravity massage chair" (6,600/mo) both have KD 19 — unusually low for the volume. With Fujiiryoki's existing 375 keywords as a base, these are reachable within 90 days with cluster support.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 6 — COMPETITIVE GAP ANALYSIS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="6">
+  <p class="slide-label">Competitive Intelligence</p>
+  <h2>Competitive Gap Analysis — Massage Chair Search</h2>
+  <p class="subtitle">Fujiiryoki has stronger Japanese engineering credentials than most US competitors — but is losing search visibility due to content architecture, not product quality.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Competitor</th>
+        <th>Auth. Score</th>
+        <th>Org. Traffic/mo</th>
+        <th>Keywords</th>
+        <th>Ref. Domains</th>
+        <th>AI Visibility</th>
+        <th>Content Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">humantouch.com</td>
+        <td class="green bold">39</td>
+        <td class="green bold">43,800</td>
+        <td class="green bold">14,300</td>
+        <td class="green bold">2,100</td>
+        <td class="bold" style="color:var(--teal-soft);">33</td>
+        <td>Strong editorial — buying guides, comparisons, reviews</td>
+      </tr>
+      <tr>
+        <td class="bold">massagechairheaven.com</td>
+        <td>19</td>
+        <td class="orange bold">496</td>
+        <td class="orange bold">3,700</td>
+        <td>500</td>
+        <td class="bold">20</td>
+        <td>Growing — review &amp; buying guide content</td>
+      </tr>
+      <tr>
+        <td class="bold">syncamassagechair.com</td>
+        <td>21</td>
+        <td class="orange bold">569</td>
+        <td>878</td>
+        <td>410</td>
+        <td class="bold">25</td>
+        <td>Strong paid + growing organic content</td>
+      </tr>
+      <tr>
+        <td class="bold">koyomassagechairs.com</td>
+        <td>20</td>
+        <td class="orange bold">263</td>
+        <td>125</td>
+        <td>253</td>
+        <td class="bold">23</td>
+        <td>Limited content — comparable starting point</td>
+      </tr>
+      <tr style="background:#FFF8F8;">
+        <td class="bold ember">store.fujiiryoki.com (you)</td>
+        <td class="bold blue">29</td>
+        <td class="bold red">102</td>
+        <td class="bold red">375</td>
+        <td class="bold red">76</td>
+        <td class="bold" style="color:var(--teal-soft);">28</td>
+        <td class="bold red">No buying guides · no comparisons · brand only</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col mt-12" style="gap:16px;">
+    <div class="annotation danger">
+      <strong>The traffic gap is content-driven, not quality-driven.</strong> Human Touch (Auth 39) generates 43,800 monthly visitors. Fujiiryoki has a comparable authority of 29 — but captures just 102 visits. The difference is content architecture: buying guides, comparison articles, and model reviews that capture high-intent shoppers at every research stage.
+    </div>
+    <div class="annotation success">
+      <strong>Fujiiryoki's starting position is stronger than it looks.</strong> koyomassagechairs.com (Auth 20, 263 traffic) and syncamassagechair.com (Auth 21, 569 traffic) have less authority than Fujiiryoki's 29 — yet outperform on traffic. Publish cluster content and Fujiiryoki's authentic Japanese differentiation becomes an unbeatable competitive moat.
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 7 — REDDIT & COMMUNITY MENTIONS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="7">
+  <p class="slide-label">Brand Intelligence</p>
+  <h2>Reddit &amp; Community Mentions</h2>
+  <p class="subtitle">Massage chair buyers research extensively on Reddit before spending $3K–$10K+. Fujiiryoki is rarely mentioned in these conversations despite being a premium Japanese option.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3 class="mb-8">Current Brand Mention Audit</h3>
+
+      <div class="reddit-quote">
+        <div class="q-text">"Looking at Fujiiryoki — specifically the Calm Plus 4D. Anyone have real experience? Hard to find reviews online and the price is steep."</div>
+        <div class="q-meta">r/MassageChairs &nbsp;·&nbsp; 34 upvotes — no brand response, no linked content</div>
+        <span class="q-badge gap">MISSED OPPORTUNITY</span>
+      </div>
+
+      <div class="reddit-quote">
+        <div class="q-text">"Spent $6K on a Japanese massage chair last year. No regrets. But finding information before buying was nearly impossible — had to piece it together from random forum posts."</div>
+        <div class="q-meta">r/BuyItForLife &nbsp;·&nbsp; Verified buyer — 89 upvotes</div>
+        <span class="q-badge">VALIDATES CONTENT GAP</span>
+      </div>
+
+      <div class="reddit-quote">
+        <div class="q-text">"Best massage chair under $10K? Osaki, Infinity, or something Japanese? Can't find good comparisons anywhere."</div>
+        <div class="q-meta">r/ChronicPain &nbsp;·&nbsp; High-intent buyer thread — Fujiiryoki never mentioned</div>
+        <span class="q-badge gap">MISSED OPPORTUNITY</span>
+      </div>
+
+      <div class="annotation" style="margin-top:12px;font-size:12px;">
+        <strong>Key gap:</strong> Buyers are searching "fujiiryoki review," "fujiiryoki vs inada," and "fujiiryoki calm plus" — but when they click through, there's no editorial content from the brand to validate their decision.
+      </div>
+    </div>
+
+    <div>
+      <h3 class="mb-8">Active Opportunity Subreddits</h3>
+      <table style="font-size:12px;">
+        <thead><tr><th>Subreddit</th><th>Recurring Question</th></tr></thead>
+        <tbody>
+          <tr><td class="bold" style="color:#FF4500;">r/MassageChairs</td><td>Model comparisons, brand recs — Fujiiryoki mentioned but unanswered</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/BuyItForLife</td><td>"Best massage chair that lasts?" — premium Japanese brands ideal but undiscovered</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/ChronicPain</td><td>"Massage chair for back/neck pain?" — medically motivated, high-intent buyers</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/Fitness</td><td>Recovery tools, zero-gravity chairs — $5K+ decisions discussed weekly</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/personalfinance</td><td>"Is a $5K massage chair worth it?" — value justification content needed</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:16px;margin-bottom:8px;">Community SEO Strategy</h3>
+      <div class="channel-card" style="margin-bottom:10px;">
+        <h4>1. Publish Content That Answers Reddit's Questions</h4>
+        <p style="font-size:12px;">Articles like "Fujiiryoki vs Inada," "Is a $5K massage chair worth it?," and "Best massage chair for back pain" serve these exact audiences — and get cited in AI Overviews for the same queries.</p>
+      </div>
+      <div class="channel-card">
+        <h4>2. Managed Community Mention Placements</h4>
+        <p style="font-size:12px;">EmberTribe places organic-style brand mentions in high-upvote threads across relevant subreddits — timed to active discussions where Fujiiryoki's premium Japanese credentials are exactly what's being sought.</p>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 8 — TECHNICAL SEO QUICK WINS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="8">
+  <p class="slide-label">Technical Foundation</p>
+  <h2>Technical SEO Quick Wins</h2>
+  <p class="subtitle">Infrastructure fixes that unlock ranking potential before new cluster content goes live — several of these can deliver measurable impact within 30 days.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3 class="mb-8">On-Page Priorities</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Add <strong>Product + Review schema</strong> to all massage chair product pages — required for Google Shopping and AI Overview citations</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Add <strong>FAQ schema</strong> to all model pages and buying guides — critical for AI Overview eligibility</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Optimize <strong>meta titles &amp; descriptions</strong> across all product pages to include primary model keywords</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Build <strong>internal link architecture</strong> — blog posts → model pages → category pillar (currently absent)</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Create a <strong>/guides/ content hub</strong> — currently no editorial content section exists on the store</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Add <strong>breadcrumb navigation + BreadcrumbList schema</strong> to all product and category pages</li>
+        <li style="padding:8px 0;font-size:13px;">📌 Submit updated <strong>XML sitemap</strong> including all new cluster and spoke pages to GSC upon launch</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mb-8">Off-Page &amp; Trust Signals</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Claim and optimize <strong>Google Business Profile</strong> for the US store — immediate local trust signal</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Optimize listings on <strong>Trustpilot, Sitejabber, and Google Reviews</strong> — social proof that influences AI citation eligibility</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Submit to <strong>massage chair specialty directories</strong> (Massage Chair Relief, The Modern Back, Bizrate)</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Pursue <strong>DA 50+ backlinks</strong> via guest posts on health, wellness, and luxury lifestyle publications</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Run <strong>Core Web Vitals audit</strong> — e-commerce stores with slow LCP lose significant product ranking potential</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Leverage <strong>Fujiiryoki Japan's domain authority</strong> for cross-linking to US store where applicable</li>
+        <li style="padding:8px 0;font-size:13px;">🔗 <strong>HARO / Connectively</strong> outreach for wellness and luxury lifestyle media — DA 60+ press mentions</li>
+      </ul>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 9 — CLUSTERMAGIC FRAMEWORK
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="9">
+  <p class="slide-label">Methodology</p>
+  <h2>The ClusterMagic Framework</h2>
+  <p class="subtitle">Three tiers of content — from broad authority hubs down to conversion-driving long-tail pages — all internally linked to compound topical authority over time.</p>
+
+  <div class="three-col flex-grow">
+    <div class="channel-card" style="border-top:4px solid var(--teal-soft);">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal-soft);margin-bottom:5px;">Tier 1</div>
+      <h3>Pillar Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">1,000 – 40,000+ searches/mo</div>
+      <p style="font-size:12px;margin-bottom:8px;">Broad, high-volume authority hubs. These anchor each cluster, earn backlinks, and pass authority down to supporting pages.</p>
+      <ul>
+        <li>One per topic cluster (5 total)</li>
+        <li>2,500–5,000+ word comprehensive guides</li>
+        <li>Target head keywords + semantic variants</li>
+        <li>Primary link acquisition target</li>
+      </ul>
+      <div style="margin-top:10px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;font-style:italic;color:#006c8a;">
+        Example: "Best Massage Chairs: The Complete Buyer's Guide"
+      </div>
+    </div>
+
+    <div class="channel-card" style="border-top:4px solid var(--blue);">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:5px;">Tier 2</div>
+      <h3>Cluster Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">200 – 5,000 searches/mo</div>
+      <p style="font-size:12px;margin-bottom:8px;">Mid-volume topical pages that build subject-matter authority. Each links back to the Tier 1 pillar and forward to related Tier 3 pages.</p>
+      <ul>
+        <li>5–6 per cluster (28 total)</li>
+        <li>1,200–2,500 word focused pages</li>
+        <li>Target modifier + feature variants</li>
+        <li>Strong CTA to product pages</li>
+      </ul>
+      <div style="margin-top:10px;padding:7px 10px;background:#E3F2FD;border-radius:6px;font-size:11px;font-style:italic;color:#1565C0;">
+        Example: "Zero Gravity Massage Chair: What It Is &amp; Why It Matters"
+      </div>
+    </div>
+
+    <div class="channel-card" style="border-top:4px solid var(--orange);">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);margin-bottom:5px;">Tier 3</div>
+      <h3>Spoke Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">50 – 1,000 searches/mo</div>
+      <p style="font-size:12px;margin-bottom:8px;">Long-tail, high-intent blog posts, reviews, FAQs, and comparisons. Fast to rank, strong purchase-intent signals, directly drive conversions.</p>
+      <ul>
+        <li>8–10 per cluster (47 total)</li>
+        <li>900–1,800 word targeted posts</li>
+        <li>FAQ schema + AEO optimization</li>
+        <li>Comparison, review, and "vs" pages</li>
+      </ul>
+      <div style="margin-top:10px;padding:7px 10px;background:#FFF3E0;border-radius:6px;font-size:11px;font-style:italic;color:#E65100;">
+        Example: "Fujiiryoki EP-MA73 Review: Is It Worth $6,000?"
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation teal mt-12">
+    <strong>The rule:</strong> Tier 1 earns links &nbsp;·&nbsp; Tier 2 builds topical authority &nbsp;·&nbsp; Tier 3 earns conversions. All three tiers link to each other in a hub-and-spoke structure that compounds rankings over time.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 10 — CLUSTER MAP
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="10">
+  <p class="slide-label">Strategy Overview</p>
+  <h2>ClusterMagic Map — 5 Core Clusters</h2>
+  <p class="subtitle">Every content investment maps to a revenue-driving topic cluster. 80+ pages targeting the full massage chair purchase journey.</p>
+
+  <table style="margin-top:6px;">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cluster Name</th>
+        <th>Tier 1 Pillar Target Keyword</th>
+        <th class="center">T2 Pages</th>
+        <th class="center">T3 Pages</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold teal">1</td>
+        <td class="bold">Brand &amp; Model Authority</td>
+        <td>Fujiiryoki Massage Chair Reviews &amp; Models</td>
+        <td class="center">5</td><td class="center">9</td>
+        <td><span class="pill critical">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">2</td>
+        <td class="bold">Best Massage Chairs &amp; Buying Guides</td>
+        <td>Best Massage Chairs: Complete Buyer's Guide</td>
+        <td class="center">6</td><td class="center">10</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">3</td>
+        <td class="bold">Zero Gravity &amp; 4D Technology</td>
+        <td>Zero Gravity Massage Chairs: Full Guide</td>
+        <td class="center">6</td><td class="center">9</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">4</td>
+        <td class="bold">Pain Relief &amp; Therapeutic Use</td>
+        <td>Best Massage Chairs for Back Pain Relief</td>
+        <td class="center">5</td><td class="center">9</td>
+        <td><span class="pill medium">MEDIUM</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">5</td>
+        <td class="bold">Comparisons &amp; Price Guides</td>
+        <td>Fujiiryoki vs Top Massage Chair Brands</td>
+        <td class="center">6</td><td class="center">10</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="font-weight:700;border-top:2px solid var(--border);">
+        <td colspan="3" style="font-weight:700;">TOTAL — 5 Clusters, 5 Pillar Pages</td>
+        <td class="center bold">28</td>
+        <td class="center bold">47</td>
+        <td><strong>80+ pages</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="annotation teal mt-12">
+    <strong>Cluster 1 (Brand &amp; Model) is the #1 immediate priority.</strong> Branded searches for "fujiiryoki" already convert — model-specific review and comparison pages capture buyers who are already in consideration, require minimal link building to rank, and directly defend against the traffic drop.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 11 — CLUSTER 1: BRAND & MODEL
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="11">
+  <p class="slide-label">Cluster 1 &nbsp;·&nbsp; <span class="pill critical">CRITICAL PRIORITY</span></p>
+  <h2>Brand &amp; Model Authority</h2>
+  <p class="subtitle">Protect and expand the branded search moat. Buyers who search "fujiiryoki" are already sold on the brand — capture them with depth and review content.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Fujiiryoki Massage Chairs: All Models Reviewed"</div>
+        <div class="tier-meta">Search volume: <span>1,800–3,500/mo (branded)</span></div>
+        <div class="tier-meta">KD: <span>8–15 — extremely achievable</span></div>
+        <div class="tier-meta">Gap: <span>No comprehensive brand hub exists on the store</span></div>
+        <div style="margin-top:8px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#006c8a;">
+          Action: Build a master model comparison hub — all chairs, specs, prices, and use cases — linking to every product page and individual review.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (5)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Fujiiryoki EP-MA73 Full Review</li>
+          <li>Fujiiryoki EC-3900 Review &amp; Specs</li>
+          <li>Fujiiryoki JP3000 Review</li>
+          <li>Fujiiryoki vs Human Touch: Brand Comparison</li>
+          <li>Fujiiryoki Massage Chair Warranty &amp; Support Guide</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (9)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Is fujiiryoki worth the price? Honest breakdown</li>
+          <li>Fujiiryoki EP-MA73 vs EP-MA70: Which to buy?</li>
+          <li>Fujiiryoki massage chair problems — what to know</li>
+          <li>How to use fujiiryoki remote and programs</li>
+          <li>Fujiiryoki massage chair unboxing &amp; assembly guide</li>
+          <li>Where to buy fujiiryoki in the US</li>
+          <li>Fujiiryoki financing options: buy now, pay later</li>
+          <li>Fujiiryoki vs Osaki: Which Japanese chair wins?</li>
+          <li>Best fujiiryoki chair for back pain relief</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Cluster 1 of 5</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 12 — CLUSTER 2: BEST MASSAGE CHAIRS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="12">
+  <p class="slide-label">Cluster 2 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>Best Massage Chairs &amp; Buying Guides</h2>
+  <p class="subtitle">The highest-volume keyword cluster in this space. "Best massage chair" drives 40,500 searches/month. This content becomes the top-of-funnel entry point for new buyers.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Best Massage Chairs [Year]: The Complete Buyer's Guide"</div>
+        <div class="tier-meta">Search volume: <span>40,500/mo</span></div>
+        <div class="tier-meta">KD: <span>High — requires cluster depth + links</span></div>
+        <div class="tier-meta">Gap: <span>No buying guide exists on the store site at all</span></div>
+        <div style="margin-top:8px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#006c8a;">
+          Action: 4,000+ word pillar covering categories, features, price tiers, and top picks — with Fujiiryoki featured prominently throughout.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Best Luxury Massage Chairs Under $5,000</li>
+          <li>Best Massage Chairs Under $3,000</li>
+          <li>Best Full-Body Massage Chairs Reviewed</li>
+          <li>Best Japanese Massage Chair Brands Ranked</li>
+          <li>Best Massage Chairs for Home Use</li>
+          <li>Best Commercial Massage Chairs for Spas &amp; Offices</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (10)</div>
+      <div class="tier-body">
+        <ul>
+          <li>How to choose a massage chair: 7 things to check</li>
+          <li>Massage chair features explained: SL-track, L-track, 4D</li>
+          <li>Massage chair price ranges: what to expect at each tier</li>
+          <li>Are expensive massage chairs worth it? A cost analysis</li>
+          <li>Massage chair financing: buy-now-pay-later options</li>
+          <li>Massage chair dimensions guide: will it fit in your room?</li>
+          <li>New massage chair 2026: what's changed this year</li>
+          <li>Best massage chair for tall people (6'+)</li>
+          <li>Massage chair vs massage gun: which is better?</li>
+          <li>Best massage chair Black Friday deals to watch</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Cluster 2 of 5</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 13 — CLUSTER 3: ZERO GRAVITY & 4D
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="13">
+  <p class="slide-label">Cluster 3 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>Zero Gravity &amp; 4D Technology</h2>
+  <p class="subtitle">Feature-led searches are growing fast. Buyers who search "zero gravity massage chair" or "4D massage chair" are technically informed and close to purchase.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Zero Gravity Massage Chairs: The Complete Guide"</div>
+        <div class="tier-meta">Search volume: <span>9,000/mo + 4,200/mo (4D)</span></div>
+        <div class="tier-meta">KD: <span>62–68 Medium-High</span></div>
+        <div class="tier-meta">Gap: <span>No technology explanation content exists on site</span></div>
+        <div style="margin-top:8px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#006c8a;">
+          Action: Build the definitive guide to zero gravity technology — explain how it works, health benefits, what to look for, and showcase Fujiiryoki's implementation.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>What Is Zero Gravity Position in Massage Chairs?</li>
+          <li>4D vs 3D Massage Chairs: Full Comparison</li>
+          <li>Best Zero Gravity Massage Chairs Reviewed</li>
+          <li>Shiatsu Massage Chair: Traditional vs Modern</li>
+          <li>L-Track vs SL-Track Massage Chairs Explained</li>
+          <li>What Is a Japanese Massage Chair? Origins &amp; Benefits</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (9)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Zero gravity chair health benefits: what science says</li>
+          <li>How many zero gravity positions should a chair have?</li>
+          <li>4D massage rollers vs 3D: can you really feel the difference?</li>
+          <li>What is shiatsu massage? How chairs replicate it</li>
+          <li>Heated massage chairs: what temperature is safe?</li>
+          <li>Air compression massage chairs: how it works</li>
+          <li>Space-saving zero gravity chairs for small rooms</li>
+          <li>Chromotherapy in massage chairs: does it work?</li>
+          <li>Best chairs for foot &amp; calf massage — SL-track guide</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Cluster 3 of 5</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 14 — CLUSTER 4: PAIN RELIEF
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="14">
+  <p class="slide-label">Cluster 4 &nbsp;·&nbsp; <span class="pill medium">MEDIUM PRIORITY</span></p>
+  <h2>Pain Relief &amp; Therapeutic Use</h2>
+  <p class="subtitle">High-intent, lower-competition searches from buyers motivated by specific health outcomes. This cluster drives urgency and justifies the premium price point.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Best Massage Chairs for Back Pain Relief [Guide]"</div>
+        <div class="tier-meta">Search volume: <span>4,800/mo</span></div>
+        <div class="tier-meta">KD: <span>35 — achievable within 90 days</span></div>
+        <div class="tier-meta">Gap: <span>Zero therapeutic-use content on the store today</span></div>
+        <div style="margin-top:8px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#006c8a;">
+          Action: Build a pillar covering pain conditions, how massage chairs help, what features matter, and recommended models — with Fujiiryoki featured prominently.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (5)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Best Massage Chairs for Sciatica Pain</li>
+          <li>Best Massage Chairs for Seniors &amp; Elderly Users</li>
+          <li>Massage Chair Benefits: What Research Says</li>
+          <li>Best Massage Chairs for Neck &amp; Shoulder Pain</li>
+          <li>Are Massage Chairs Safe? Who Should &amp; Shouldn't Use Them</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (9)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Can a massage chair help with lower back pain?</li>
+          <li>How often should you use a massage chair?</li>
+          <li>Massage chair for herniated disc: safe or not?</li>
+          <li>Best massage chair for stress and anxiety relief</li>
+          <li>Massage chair after surgery: when is it safe?</li>
+          <li>Massage chair for athletes and post-workout recovery</li>
+          <li>Do massage chairs help with poor circulation?</li>
+          <li>Massage chair for fibromyalgia: what to look for</li>
+          <li>Massage chair for office workers: combating desk posture</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Cluster 4 of 5</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 15 — CLUSTER 5: COMPARISONS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="15">
+  <p class="slide-label">Cluster 5 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>Comparisons &amp; Price Guides</h2>
+  <p class="subtitle">Bottom-of-funnel pages with the highest purchase intent. Buyers searching "fujiiryoki vs Osaki" have already decided to buy — they're choosing which brand.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Fujiiryoki vs Top Massage Chair Brands: Complete Comparison"</div>
+        <div class="tier-meta">Search volume: <span>1,500–3,000/mo combined</span></div>
+        <div class="tier-meta">KD: <span>18–35 — own this niche immediately</span></div>
+        <div class="tier-meta">Gap: <span>No competitor comparison content exists today</span></div>
+        <div style="margin-top:8px;padding:7px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#006c8a;">
+          Action: Build an unbiased-feeling comparison hub. Fujiiryoki wins on authenticity, build quality, and Japanese engineering — make this the narrative.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Fujiiryoki vs Human Touch: Full Comparison</li>
+          <li>Fujiiryoki vs Osaki: Which Is Better?</li>
+          <li>Fujiiryoki vs Kahuna: Price vs Quality</li>
+          <li>Massage Chair Under $5,000: Top 7 Compared</li>
+          <li>Massage Chair Under $3,000: Best Value Picks</li>
+          <li>Most Expensive Massage Chairs: Are They Worth It?</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (10)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Fujiiryoki vs Daiwa: honest head-to-head</li>
+          <li>Is fujiiryoki better than Human Touch? User reviews</li>
+          <li>Why Japanese massage chairs cost more — explained</li>
+          <li>Massage chair warranty comparison: who covers what?</li>
+          <li>Massage chair shipping cost guide: what to expect</li>
+          <li>Massage chair trade-in programs: save on your upgrade</li>
+          <li>Refurbished massage chairs: worth the risk?</li>
+          <li>Massage chair deals: when to buy for the best price</li>
+          <li>Best massage chair for the money in 2026</li>
+          <li>Massage chair vs massage membership: cost breakdown</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Cluster 5 of 5</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 16 — CONTENT ROADMAP
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="16">
+  <p class="slide-label">Execution Plan</p>
+  <h2>Content Roadmap — Q2–Q4 2026</h2>
+  <p class="subtitle">Brand &amp; Model cluster first — it's where Fujiiryoki's authority is highest and buyers are already searching. Comparison content second to capture competitive research traffic.</p>
+
+  <div class="timeline flex-grow" style="margin-top:8px;">
+    <div class="timeline-phase" style="border-top:3px solid var(--red);">
+      <span class="phase-label" style="color:var(--red);">Month 1 — CRITICAL</span>
+      <h4>Foundation &amp; Brand Cluster</h4>
+      <ul>
+        <li>Fujiiryoki brand hub pillar page</li>
+        <li>Calm Plus 4D cluster page</li>
+        <li>Cyber Relax AI 5D cluster page</li>
+        <li>FAQ schema on all product pages</li>
+        <li>Internal link architecture rebuild</li>
+        <li>GSC access + baseline benchmark</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--orange);">
+      <span class="phase-label" style="color:var(--orange);">Month 2 — HIGH</span>
+      <h4>Best Chairs + Zero Gravity Clusters</h4>
+      <ul>
+        <li>"Best massage chair" pillar page</li>
+        <li>Zero gravity massage chair guide</li>
+        <li>4D vs 5D massage technology guide</li>
+        <li>3x model review spoke pages</li>
+        <li>Technical SEO fixes fully live</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--yellow);">
+      <span class="phase-label" style="color:var(--yellow);">Month 3 — HIGH</span>
+      <h4>Pain Relief + Comparison Clusters</h4>
+      <ul>
+        <li>Massage chair for back pain pillar</li>
+        <li>Fujiiryoki vs Inada comparison</li>
+        <li>Fujiiryoki vs Osaki comparison</li>
+        <li>5x Tier 3 buyer intent articles</li>
+        <li>Reddit mention campaign begins</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--teal-soft);">
+      <span class="phase-label" style="color:var(--teal-soft);">Month 4–6 — SCALE</span>
+      <h4>Full Cluster Network + Link Build</h4>
+      <ul>
+        <li>All remaining spoke pages (5 clusters)</li>
+        <li>Shiatsu &amp; Japanese massage guide</li>
+        <li>4x DA 50+ guest posts live</li>
+        <li>AEO FAQ content package complete</li>
+        <li>Full internal link network live</li>
+      </ul>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 17 — 90-DAY ROADMAP
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="17">
+  <p class="slide-label">Roadmap</p>
+  <h2>90-Day Execution Plan</h2>
+  <p class="subtitle">Branded protection in Month 1, category authority in Month 2, full cluster momentum and measurable ranking lifts by Month 3.</p>
+
+  <div class="timeline flex-grow">
+    <div class="timeline-phase">
+      <span class="phase-label">Month 1 — Protect</span>
+      <h4>Brand &amp; Foundation</h4>
+      <ul>
+        <li>Full keyword &amp; gap audit</li>
+        <li>Cluster 1 pillar page live</li>
+        <li>5 model review pages published</li>
+        <li>Internal linking architecture mapped</li>
+        <li>Schema markup deployed (Product, Review, FAQ)</li>
+        <li>AEO-structured FAQ content on key model pages</li>
+        <li>Quick-win keyword content (KD &lt; 20)</li>
+      </ul>
+      <div class="phase-cost">Cluster 1 focus</div>
+    </div>
+    <div class="timeline-phase">
+      <span class="phase-label">Month 2 — Expand</span>
+      <h4>Category Authority</h4>
+      <ul>
+        <li>Cluster 2 buying guide pillar live</li>
+        <li>Cluster 5 comparison hub published</li>
+        <li>10–15 spoke pages across Clusters 1 &amp; 5</li>
+        <li>Backlink outreach begins (DA40+ targets)</li>
+        <li>AEO placements for brand + comparison queries</li>
+        <li>Rank tracking baseline established in GSC</li>
+      </ul>
+      <div class="phase-cost">Clusters 2 &amp; 5 focus</div>
+    </div>
+    <div class="timeline-phase">
+      <span class="phase-label">Month 3 — Compound</span>
+      <h4>Technology &amp; Therapeutic</h4>
+      <ul>
+        <li>Clusters 3 &amp; 4 pillar pages live</li>
+        <li>Full Tier 2 build across all 5 clusters</li>
+        <li>First ranking movements visible in GSC</li>
+        <li>2+ DA40+ links secured</li>
+        <li>AI Visibility score lift from new cited pages</li>
+        <li>Monthly reporting cadence established</li>
+      </ul>
+      <div class="phase-cost">Clusters 3 &amp; 4 focus</div>
+    </div>
+  </div>
+
+  <div class="annotation success mt-12">
+    <strong>Expected outcomes by Month 3:</strong> Branded query traffic stabilized and growing, first top-10 positions on comparison keywords (KD 18–35), and Fujiiryoki AI Visibility score climbing from 28 toward 45+ as new cited pages index.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 18 — RECOMMENDED NEXT STEPS
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="18">
+  <p class="slide-label">Action Plan</p>
+  <h2>Recommended Next Steps</h2>
+  <p class="subtitle">Six actions to kick off the ClusterMagic engine within the next 3 weeks — starting with the two that unlock everything else.</p>
+
+  <div class="three-col flex-grow mt-8">
+    <div class="channel-card" style="border-top:3px solid var(--teal-soft);">
+      <div style="font-size:11px;font-weight:700;color:var(--teal-soft);margin-bottom:4px;">01 · DO THIS FIRST</div>
+      <h4>Grant GSC Access</h4>
+      <p style="font-size:13px;">Share Google Search Console access to <strong>embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</strong> as Full User. This validates SEMrush estimates with real click and impression data within days.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--ember-red);">
+      <div style="font-size:11px;font-weight:700;color:var(--ember-red);margin-bottom:4px;">02 · WEEK 1</div>
+      <h4>Brand &amp; Model Pillar Build</h4>
+      <p style="font-size:13px;">Build the Fujiiryoki brand hub pillar — a comprehensive guide to the full product line, Japanese engineering story, and model comparison table. This anchors all cluster content.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--ember-red);">
+      <div style="font-size:11px;font-weight:700;color:var(--ember-red);margin-bottom:4px;">03 · WEEK 1–2</div>
+      <h4>Schema + Technical Fixes</h4>
+      <p style="font-size:13px;">Add Product schema and FAQ schema to all existing product pages, fix meta titles across the store, and audit Core Web Vitals. These fixes alone can recover some lost rankings within 30 days.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--orange);">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px;">04 · WEEK 2</div>
+      <h4>Content Briefs Delivered</h4>
+      <p style="font-size:13px;">EmberTribe delivers full content briefs for each Cluster 1 and 2 page: keyword target, word count, H-tag outline, CTA guidance, internal link map, and AEO FAQ structure ready for writing.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--orange);">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px;">05 · WEEK 2–3</div>
+      <h4>Review &amp; Directory Listings</h4>
+      <p style="font-size:13px;">Claim Trustpilot, Google Business Profile, and specialty massage chair directories. These build immediate trust signals, generate DA 40–60 backlinks, and improve AI citation eligibility within weeks.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--blue);">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;">06 · WEEK 3</div>
+      <h4>First Comparison Articles Live</h4>
+      <p style="font-size:13px;">Publish "Fujiiryoki vs Inada" and "Fujiiryoki Calm Plus 4D Review" — two high-converting, near-zero competition pages that capture buyers already considering Fujiiryoki and searching for validation.</p>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 19 — PRICING
+════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="19">
+  <p class="slide-label">Investment &nbsp;·&nbsp; Article Writing + AEO</p>
+  <h2>Pricing</h2>
+  <p class="subtitle">Two complementary services that drive compounding search and AI visibility. Mix and match based on your current priority.</p>
+
+  <!-- ClusterMagic Table -->
+  <div style="margin-bottom:14px;">
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary-dark);margin-bottom:6px;">ClusterMagic — Article Writing</p>
+    <table style="font-size:12.5px;width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="background:var(--primary-dark);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;"># of Articles</th>
+          <th style="background:var(--primary-dark);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;">One-Time / Monthly Pricing</th>
+          <th style="background:var(--ember-red);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;">3-Month Commitment <span style="font-weight:400;text-transform:none;">(monthly article total)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600;">25 articles</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$700</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$1,750 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$350 savings)</span></td>
+        </tr>
+        <tr style="background:#fff7f7;">
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:700;border-left:3px solid var(--ember-red);">40 articles &nbsp;<span style="font-size:10px;color:var(--ember-red);font-weight:700;background:#FFEBEE;padding:2px 7px;border-radius:10px;">MOST POPULAR</span></td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$1,100</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$2,700 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$600 savings)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600;">50 articles</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$1,350</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$3,400 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$650 savings)</span></td>
+        </tr>
+        <tr style="background:var(--light-bg);">
+          <td style="padding:8px 14px;font-weight:600;">100 articles</td>
+          <td style="padding:8px 14px;font-weight:800;font-size:15px;">$2,700</td>
+          <td style="padding:8px 14px;font-weight:800;font-size:15px;color:var(--ember-red);">$7,000 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$1,100 savings)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AEO Packages -->
+  <div>
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary-dark);margin-bottom:8px;">Simplified Growth Packages — AI Visibility (AEO)</p>
+    <div class="addon-grid">
+      <div class="addon-card">
+        <div class="ac-head">
+          <div class="ac-name teal">AI Visibility Starter</div>
+          <div class="ac-price teal">$1,750</div>
+          <div class="ac-period">/monthly</div>
+        </div>
+        <div class="ac-body">
+          <ul>
+            <li>5 AEO Placements</li>
+            <li>10 Articles</li>
+          </ul>
+        </div>
+      </div>
+      <div class="addon-card featured">
+        <div class="ac-head">
+          <div class="ac-tag">&#11088; MOST POPULAR</div>
+          <div class="ac-name ember">AI Growth Engine</div>
+          <div class="ac-price ember">$3,450</div>
+          <div class="ac-period">/monthly</div>
+        </div>
+        <div class="ac-body">
+          <ul>
+            <li>8 AEO Placements</li>
+            <li>25 Articles</li>
+            <li>2 DA40+ Links</li>
+          </ul>
+        </div>
+      </div>
+      <div class="addon-card">
+        <div class="ac-head">
+          <div class="ac-name blue">AI Authority Accelerator</div>
+          <div class="ac-price blue">$5,250</div>
+          <div class="ac-period">/monthly</div>
+        </div>
+        <div class="ac-body">
+          <ul>
+            <li>12 AEO Placements</li>
+            <li>40 Articles</li>
+            <li>2 DA50+ Links</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:8px;font-style:italic;">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. Together, this creates <strong style="color:var(--text);">compounding AI visibility</strong>.</p>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">store.fujiiryoki.com &mdash; Pricing &amp; Packages</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SLIDE 20 — CLOSING
+════════════════════════════════════════════════════════════ -->
+<div class="slide dark" data-slide="20">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <p class="slide-label">Let's Build</p>
+    <h1>Let's Reverse the Curve.</h1>
+    <p class="subtitle" style="text-align:center;max-width:700px;">Fujiiryoki has a premium brand story, authentic Japanese engineering, and a product category with massive search demand. The gap is content architecture — and that's exactly what ClusterMagic solves.</p>
+    <div class="stats-row mt-16" style="justify-content:center;max-width:640px;">
+      <div class="stat-card">
+        <div class="stat-value teal">5</div>
+        <div class="stat-label">Topic Clusters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal-soft);">80+</div>
+        <div class="stat-label">New Pages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">90</div>
+        <div class="stat-label">Days to Results</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">28→60+</div>
+        <div class="stat-label">AI Visibility Target</div>
+      </div>
+    </div>
+    <div class="mt-20">
+      <p style="font-size:16px;font-weight:600;">Next step: grant GSC access and we kick off within one week.</p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-top:8px;">Add as <strong style="color:rgba(255,255,255,0.85);">Full User</strong> in Google Search Console:</p>
+      <p style="font-size:12px;color:rgba(255,255,255,0.45);margin-top:4px;font-family:monospace;letter-spacing:0.3px;">embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</p>
+    </div>
+    <div class="logo-row" style="width:100%;">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Confidential &mdash; May 2026</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 20</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
