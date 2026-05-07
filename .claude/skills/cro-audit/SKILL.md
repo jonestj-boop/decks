@@ -45,18 +45,40 @@ Collect at the start of every run. Save to `EmberTribe/site/clients/{slug}/cro-a
 - Platform (WordPress, Shopify, ERS, Webflow, Squarespace, WooCommerce, custom, etc.)
 - GA4 access: Y or N
   - If Y: has the client added `embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com` as Viewer in GA4?
-- Known competitors (2-4 URLs/names — if none provided, surface from site research)
+  - If Y: what is the GA4 property ID? (numeric, found in GA4 Admin → Property Settings)
+- Known competitors (2-4 names/URLs — local/regional competitors preferred over national chains)
+  - If none provided, search for local competitors by city/region — not national franchise brands
+- CTA email for the deck's final slide (default: sales@embertribe.com)
 
-**GA4 pull (if connected):**
+**GA4 pull (if connected) — run both scripts:**
 ```bash
+# 6-month organic session trend
 python3 scripts/ga4-baseline.py \
-  --property {ga4_id} \
+  --key-file embertribe-content-tools-e6776250739e.json \
+  --property {ga4_property_id} \
   --months 6 \
-  --output EmberTribe/site/clients/{slug}/cro-audit/ga4-data.json
+  --output EmberTribe/site/clients/{slug}/cro-audit/ga4-baseline.json
+
+# CRO funnel: conversion events, device split, form completion, new vs returning
+python3 scripts/ga4-cro-funnel.py \
+  --key-file embertribe-content-tools-e6776250739e.json \
+  --property {ga4_property_id} \
+  --funnel-pages "/" "{primary-service-page}" "{booking-or-checkout-page}" \
+  --booking-page "{booking-or-checkout-page}" \
+  --date-range "90daysAgo" \
+  --output EmberTribe/site/clients/{slug}/cro-audit/ga4-cro-funnel.json
 ```
 
-If GA4 is not connected, the deck omits the funnel analytics section and falls back to
-PageSpeed + site crawl findings only. Note the gap explicitly on the relevant slide.
+Key metrics to pull from ga4-cro-funnel.json for the deck:
+- Sessions → booking page → confirmed conversion (step-by-step CVR)
+- `reservation-submit-success` or equivalent completion event (the true conversion count)
+- Device split on the booking/checkout page — mobile % is critical context for performance findings
+- `form_start` vs `form_submit` vs completion event — reveals form abandonment
+- Phone click events — quantifies offline demand
+- New vs. returning breakdown
+
+If GA4 is not connected, the deck falls back to PageSpeed + site crawl only.
+Note the gap explicitly on slide 3 and what GA4 would unlock.
 
 ---
 
@@ -139,13 +161,20 @@ or guesses when real data is available.
 
 ### 1d. Competitor Research
 
-For each named competitor (or top 2-3 surfaced from the site):
-- Browse their homepage and a key product/service page
-- Note: trust signals they use, CTA copy, social proof placement, urgency tactics,
-  checkout friction differences
-- Identify 1-2 things they do materially better than the client on conversion
+For each named competitor (or top 2-3 surfaced from local search):
 
-These surface in the findings slides as "your competitors are doing X" context.
+**Always fetch the actual site — do not write competitor context from assumptions.**
+
+For each competitor, record:
+- **Hero headline**: exact text, not paraphrased
+- **Pricing visibility**: does pricing appear on service/product pages? (Y/N + what they show)
+- **Key offers**: any promotional or new-customer offers visible
+- **Trust signals**: star rating displayed, review count, certifications, awards
+- **Primary CTA**: what action they push visitors toward
+
+Use this data to write specific comparisons in findings (e.g. "Dr. Boyd's shows $94.50/night upfront — DogiZone shows nothing"). Vague competitor mentions without specific observations add no value.
+
+If competitors provided were national chains but the client is a local business, supplement with local competitors found via Google search for "{service} {city}" — local competitors are more relevant for positioning analysis.
 
 ### 1e. Brand Colors
 
@@ -296,7 +325,7 @@ Dark slide gradient: `linear-gradient(135deg, var(--client-dark) 0%, var(--clien
 | 14 | **Pillar 6: De-risking & Social Proof** | Dark (pillar intro) | Education: review conversion lift stat, trust barrier psychology, return policy impact. |
 | 15 | **Social Proof Findings** | Light | Review visibility, trust badge audit, policy accessibility, brand humanization. Priority-tagged action items. |
 | 16 | **Priority Roadmap** | Light | All issues across all pillars in a single ranked list. Critical → High → Medium → Low. Each item: pillar tag, issue name, effort badge. This is the "master checklist" view. |
-| 17 | **Implementation Phases** | Light | Phase 1 (Critical, 0-2 weeks), Phase 2 (High, weeks 3-6), Phase 3 (Medium+, ongoing). Lists which specific items go in each phase. |
+| 17 | **Implementation Phases** | Light | Phase 1 (Critical, no developer needed), Phase 2 (High, dev or plugin work), Phase 3 (Medium+, ongoing optimization). Lists which specific items go in each phase. No week estimates — phasing only. |
 | 18 | **Next Steps** | Dark | CTA. "Here's how we help you execute this." EmberTribe contact + call to action. |
 
 **Minimum viable deck** (sparse data): drop slide 3 (funnel) if no GA4 and site is pre-revenue.
@@ -336,6 +365,14 @@ On findings slides, tailor "how to fix" steps to the client's platform:
 | Webflow | Designer, CMS collections, Interactions, Embed code blocks |
 | Squarespace | Pages panel, Style editor, Commerce settings, Code injection |
 
+### Dark Slide Text Contrast
+
+Text on dark/blue gradient slides must meet minimum opacity thresholds for readability:
+- Stat labels, subtitles, secondary copy: minimum `rgba(255,255,255,0.85)`
+- Body/explanatory paragraphs: minimum `rgba(255,255,255,0.78)`
+- Footer / meta text: minimum `rgba(255,255,255,0.70)`
+- Never go below `0.62` for any readable text element — it fails on blue backgrounds
+
 ### Education Slide Copy Style
 
 Pillar intro slides (dark) follow this pattern:
@@ -355,6 +392,34 @@ Pull from real data only:
 - **Top Priority Pillar**: the pillar with the most Critical + High items
 
 If GA4 not connected, replace CVR card with "Platform: {platform name}".
+
+---
+
+## Phase 3b: QA Verification
+
+After the deck is assembled, spawn a background QA agent to verify the accuracy of findings against the live site before delivery. Do not skip this step.
+
+```
+Spawn a general-purpose agent with this prompt:
+
+"QA the CRO audit deck for [client name] ([url]).
+Read the deck at [path to cro-audit.html].
+Browse the actual website and verify each finding is accurate.
+For each claim, report: VERIFIED / WRONG / PARTIAL / CANT VERIFY.
+Flag any factual errors — wrong step counts, incorrect headlines, misquoted copy,
+offers that don't exist, or features described incorrectly.
+Do not edit any files — research only."
+```
+
+**Common errors to specifically check:**
+- Form step count — walk through the actual checkout/booking form and count steps. Never estimate.
+- Hero headline — quote the exact live text, not brand taglines from image filenames or metadata
+- Pricing claims — verify which specific pages show or hide pricing (don't generalize across all pages)
+- Review placement — check each service page individually; "no reviews on service pages" is often wrong
+- Offer count and descriptions — verify each offer exists and note where it actually appears
+- Competitor comparisons — confirm any specific claims made about competitor sites
+
+Apply all corrections from the QA report before pushing.
 
 ---
 
@@ -380,12 +445,18 @@ Before pushing:
 - [ ] Every finding has a priority tag (Critical / High / Medium / Low)
 - [ ] Platform-specific implementation steps (not generic advice)
 - [ ] Priority roadmap (slide 16) lists ALL findings from all 6 pillars
-- [ ] Phase breakdown (slide 17) assigns every finding to a phase
+- [ ] Phase breakdown (slide 17) assigns every finding to a phase — no week estimates, phases only
 - [ ] Education slides are short — stat + context + "what we look for" only
 - [ ] Brand colors match client website — verified by viewing the site
+- [ ] Dark slide text opacity minimum 0.78 for body copy, 0.85 for labels/subtitles
 - [ ] No em dashes in prose copy
 - [ ] No broken HTML — single file, fully self-contained
 - [ ] Slide counter shows correct total (16-18)
+- [ ] QA agent run and all corrections applied
+- [ ] Hero headline quoted from live site copy — not from image filenames, alt text, or brand docs
+- [ ] Form step count verified by walking through the actual form
+- [ ] Competitor comparisons backed by data from actually fetching their sites
+- [ ] CTA email set to sales@embertribe.com (or client-specified address)
 - [ ] Deck saved to `embertribe-clients/{client-slug}/cro-audit.html`
 - [ ] Both repos pushed before reporting delivery
 
