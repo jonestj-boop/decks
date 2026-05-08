@@ -2,7 +2,7 @@
 
 > **Purpose:** This document defines the approved services, pricing, scope boundaries, and guardrails for the EmberTribe sales team when preparing client pitches. Claude must reference this document when building any pitch materials and must NOT invent services, deliverables, or pricing outside of what is defined here.
 >
-> **Last updated:** 2026-04-09
+> **Last updated:** 2026-05-08
 
 ---
 
@@ -42,24 +42,71 @@ Adding services beyond what's listed above (e.g., social media management, email
 
 ---
 
-### 1B. SEO Content Retainers
+### 1B. Local SEO Packages
 
-For clients who need content and SEO work but not the full AEO/Reddit layer.
+For brick-and-mortar businesses that need to dominate local search and Google Maps. All packages are per-location and include a Month 1 Foundation build + ongoing monthly deliverables.
+
+**Month 1: Foundation (included in all packages)**
+- Google Business Profile creation or optimization
+- Full technical SEO site audit + website changes from audit
+- SEO setup: sitemap, robots.txt, Local Business Schema
+- Google Map embed
+- Foundational links and manual indexing (citations, directories, social profiles)
+- Keyword research & site mapping
+
+**Month 2+ ongoing deliverables vary by package (see tables below).**
+
+#### 1-Location Pricing
+
+| | Local SEO Pkg 1 | Local SEO Pkg 2 | + GMR 5mi Pkg 1 | + GMR 5mi Pkg 2 | + GMR 10mi Pkg 1 | + GMR 10mi Pkg 2 |
+|---|---|---|---|---|---|---|
+| **Guaranteed Maps Ranking (90 days)** | No | No | Yes — 5 miles | Yes — 5 miles | Yes — 10 miles | Yes — 10 miles |
+| **Technical SEO implementations/mo** | 5 | 10 | 5 | 10 | 5 | 10 |
+| **Localized content/mo** | 2 | 5 | 2 | 5 | 2 | 5 |
+| **Backlinks (DR 30+)/mo** | 2 | 5 | 2 | 5 | 2 | 5 |
+| **GBP Management** | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Price** | **$1,000/mo** | **$1,400/mo** | **$1,800/mo** | **$2,150/mo** | **$4,800/mo** | **$5,150/mo** |
+
+#### 2-Location Pricing
+
+| | Local SEO Pkg 1 | Local SEO Pkg 2 | + GMR 5mi Pkg 1 | + GMR 5mi Pkg 2 | + GMR 10mi Pkg 1 | + GMR 10mi Pkg 2 |
+|---|---|---|---|---|---|---|
+| **Guaranteed Maps Ranking (90 days)** | No | No | Yes — 5 miles | Yes — 5 miles | Yes — 10 miles | Yes — 10 miles |
+| **Technical SEO implementations/mo** | 5 | 10 | 5 | 10 | 5 | 10 |
+| **Localized content/mo** | 2 | 5 | 2 | 5 | 2 | 5 |
+| **Backlinks (DR 30+)/mo** | 2 | 5 | 2 | 5 | 2 | 5 |
+| **GBP Management** | Yes | Yes | Yes | Yes | Yes | Yes |
+| **Price** | **$1,400/mo** | **$1,700/mo** | **$3,200/mo** | **$3,500/mo** | **$9,200/mo** | **$9,500/mo** |
+
+#### 3+ Locations
+
+Pricing scales linearly per location. Multiply the per-location rate by the number of locations.
+
+**What's included in GBP Management (Month 2+):**
+- New posts, uploading pictures/videos
+- Ongoing monitoring and recommendations
+- Rank tracking
+- Top 3 guaranteed ranking in maps pack (10–20 keywords) — select plans with GMR only
+
+**What's included in Localized Content:**
+- Local service pages, service area pages, and/or local blog posts
+- 1 round of content revision per article included
+
+**What's included in Backlinks:**
+- DR 30+ or featured in a localized and/or niche site
+
+---
+
+### 1C-alt. SEO Content Retainers
+
+For clients who need content and SEO work without the local/GBP component.
 
 | Component | Approved Price Ranges |
 |---|---|
-| **ClusterMagic content (articles only)** | $1,500–$1,900/mo for 40 articles; scale proportionally for lower volumes |
-| **Local SEO content retainer** | $2,000/mo (month-to-month) or $5,250/quarter (prepay, 12.5% savings) |
+| **ClusterMagic content (articles only)** | See ClusterMagic sell-price floors in Section 3 |
 | **SEO monthly retainer (content + technical)** | $3,000–$6,000/mo depending on scope |
 
-**Local SEO retainer includes (Cascadia model):**
-- Metro hub page refreshes
-- Local pillar page creation (5 per market)
-- Support blog publishing (up to 50/month across markets)
-- Internal linking implementation
-- Monthly rank and conversion reporting
-
-**SEO retainer includes (SteelCo/Ace model):**
+**SEO retainer includes:**
 - 4–6 blog posts/month OR up to 100 content pieces/month (new + optimization)
 - Technical SEO maintenance
 - Internal linking
@@ -105,6 +152,7 @@ These can be added to any package but are never pitched as standalone without a 
 | **Organic social media (2 channels, 16 posts/mo)** | $1,500/mo |
 | **Ad-hoc social posts (beyond included)** | 5-pack: $375 ($75/post), 10-pack: $700 ($70/post), 20-pack: $1,200 ($60/post) |
 | **Email + SMS campaigns** | $2,000/mo (up to 6 campaigns/month at full ramp) |
+| **Local Service Ads (LSA) management** | $500/mo (waived if ongoing local SEO is in scope). Ad spend not included. Contingent on business category qualifying for LSAs. |
 | **GA4 + GTM + GSC setup** | Included in any retainer engagement; not sold standalone |
 
 ---
@@ -222,9 +270,9 @@ No minimum engagement size. If a client needs a smaller scope (e.g., $700/mo for
 - Reference trust logos: Biohm, Breyers, Char-Broil, Cloudflare, Dove Men+Care, Fruit of the Loom, Harvard, Jobcase, Staples, Techstars, Unilever, Y Combinator
 
 **You MUST NOT say:**
-- "Guaranteed results" or any language implying performance guarantees
+- "Guaranteed results" or any language implying performance guarantees — **exception:** guaranteed maps pack ranking (top 3 within 90 days) is approved for Local SEO + GMR packages only (see Section 1B)
 - Specific ROI numbers unless clearly labeled as "directional projections, not guarantees"
-- "We'll get you to #1" or any ranking guarantees
+- "We'll get you to #1" or any organic ranking guarantees
 - Claims about services not included in the engagement
 - References to case studies or results that haven't been verified
 
@@ -257,6 +305,11 @@ This section prevents scope ambiguity. When a deliverable appears in a pitch, it
 | **Hub page refresh** | Content update + SEO optimization of an existing metro/location page | Full page redesign, new URL structure, CMS migration |
 | **Technical SEO implementation** | One discrete fix: schema markup, redirect, canonical tag, speed fix, etc. | Full site audit, CMS platform migration, server configuration |
 | **On-page optimization** | Title tag, meta description, H-tag, and internal link updates for one existing page | Content rewrite, image optimization, page redesign |
+| **GBP Management** | Ongoing Google Business Profile posts, photo/video uploads, monitoring, recommendations, rank tracking | Paid Google Ads, LSA management (separate add-on), review generation |
+| **Guaranteed Maps Ranking (GMR)** | Top 3 ranking in Google Maps pack for 10–20 keywords within 90 days, within the specified mile radius (5mi or 10mi) | Organic search ranking guarantees, rankings outside the specified radius |
+| **Localized content piece** | One local service page, service area page, or local blog post — SEO-optimized, published to CMS, 1 round of revision included | Custom graphics, video, gated content |
+| **Local SEO backlink (DR 30+)** | One link from a DR 30+ site, localized and/or niche-relevant | DA40+/DA50+ editorial links (those are priced separately per Section 1A) |
+| **LSA management** | Bid strategy optimization, lead monitoring via LSA dashboard, monthly performance reporting | Ad spend (billed separately at cost) |
 
 ---
 
@@ -304,9 +357,12 @@ When a prospect needs something outside the standard menu:
 | AI Visibility Starter | $1,750 | 5 AEO + 10 articles |
 | AI Growth Engine | $3,450 | 8 AEO + 25 articles + 2 DA40+ links |
 | AI Authority Accelerator | $5,250 | 12 AEO + 40 articles + 2 DA50+ links |
-| Local SEO retainer | $2,000 (m2m) / $1,750 (prepay) | Per-market content + pillar pages |
-| SEO retainer (mid) | $3,000–$4,500 | Content + technical SEO |
-| SEO retainer (full) | $4,500–$6,000 | High-volume content + technical + backlinks |
+| Local SEO Pkg 1 (1 loc) | $1,000 | No maps guarantee |
+| Local SEO Pkg 2 (1 loc) | $1,400 | No maps guarantee, higher volume |
+| Local SEO + GMR 5mi (1 loc) | $1,800–$2,150 | Guaranteed maps ranking, 5-mile radius |
+| Local SEO + GMR 10mi (1 loc) | $4,800–$5,150 | Guaranteed maps ranking, 10-mile radius |
+| Local Service Ads (LSA) | $500 | Waived if local SEO in scope; ad spend separate |
+| SEO retainer (content + technical) | $3,000–$6,000 | For non-local SEO engagements |
 | Paid media management | $1,500+ | Scales with channels/spend, ad spend separate |
 | Reddit seeding (standalone) | $1,400 | |
 | AmpiFire | $500 | |
