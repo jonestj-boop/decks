@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brighter Image Lab — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0C1B33;
+  --primary-mid: #152744;
+  --primary-light: #1D3A5E;
+  --accent: #C4933F;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277bd; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.center { text-align: center; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 120px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #a87834, var(--accent)); }
+.bar-fill.gray   { background: linear-gradient(90deg, #95a5a6, #bdc3c7); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.gold    { background: #FFF8E1; color: #a87834; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: all 0.2s;
+  justify-content: center;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.gold { color: var(--accent); }
+
+.trend-down {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--red);
+  background: #FFEBEE;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+
+.trend-up {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  background: #E8F5E9;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+}
+
+.ai-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.ai-platform {
+  width: 130px;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.ai-track {
+  flex: 1;
+  height: 32px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ai-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.ai-fill.google  { background: linear-gradient(90deg, #1565C0, #1976D2); }
+.ai-fill.chatgpt { background: linear-gradient(90deg, #00704a, #19a97b); }
+.ai-fill.aimode  { background: linear-gradient(90deg, #4527a0, #7b1fa2); }
+.ai-fill.gemini  { background: linear-gradient(90deg, #c17900, #e8a000); }
+
+.ai-meta {
+  width: 120px;
+  font-size: 12px;
+  color: var(--text-light);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Dark) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit &mdash; May 2026</p>
+      <h1>Brighter Image Lab</h1>
+      <p class="subtitle">Traffic is down 67% from your 2021 peak &mdash; and still sliding. Your competitors are capturing the AI search real estate you built. Here&rsquo;s how to reverse it.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">5.6K</div>
+          <div class="stat-label">Monthly Organic Visits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">&minus;67%</div>
+          <div class="stat-label">From 2021 Peak (17K)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">&minus;35%</div>
+          <div class="stat-label">Paid Traffic YoY</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">173</div>
+          <div class="stat-label">AI Mentions Across Platforms</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Brighter Image Lab &mdash; May 12, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE (Light) -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Stand Today</h2>
+    <p class="subtitle">The data tells two stories: a brand with real authority and an organic engine that&rsquo;s been losing ground for four years.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-dark);">5.6K</div>
+        <div class="stat-label">Organic Visits/Mo <span class="trend-down">&#9660; 2.8%</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-dark);">2.5K</div>
+        <div class="stat-label">Organic Keywords <span class="trend-down">&#9660; 4.6%</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-dark);">26</div>
+        <div class="stat-label">Authority Score (Good)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-dark);">510</div>
+        <div class="stat-label">Referring Domains</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What&rsquo;s Working</h3>
+        <ul style="list-style:none;padding:0;margin-top:12px;">
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#10003;&nbsp; <strong>510 referring domains</strong> — solid backlink foundation built over 10+ years</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#10003;&nbsp; <strong>6.6K backlinks</strong> with meaningful domain diversity</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#10003;&nbsp; <strong>173 AI mentions</strong> across ChatGPT, Google AI Overview, AI Mode, and Gemini</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#10003;&nbsp; <strong>115 pages cited</strong> by AI platforms — content resonates</li>
+          <li style="padding:8px 0;font-size:14px;">&#10003;&nbsp; <strong>Brand traffic holding steady</strong> — loyal audience still searching you by name</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What&rsquo;s Holding You Back</h3>
+        <ul style="list-style:none;padding:0;margin-top:12px;">
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#9888;&nbsp; <strong>67% traffic drop</strong> from 17K peak — 4-year decline with no floor in sight</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#9888;&nbsp; <strong>Paid nearly dead</strong> — 596 visits/mo and falling 35% YoY</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#9888;&nbsp; <strong>Most keywords rank 4&ndash;50</strong>, almost no top-3 positions driving real clicks</li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:14px;">&#9888;&nbsp; <strong>YouTube outranks you in AI</strong> — YouTube gets 78 AI mentions vs. your 17 on ChatGPT</li>
+          <li style="padding:8px 0;font-size:14px;">&#9888;&nbsp; <strong>Only 3.2% AI Overview presence</strong> — massive gap as AI search accelerates</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: TRAFFIC DECLINE (Light) -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>12-Month Organic Trajectory</h2>
+    <p class="subtitle">Traffic peaked near 17K in 2021 and has been sliding ever since. The last 12 months show a stubborn flat-to-declining pattern with no natural recovery in sight.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row">
+        <span class="bar-label">May 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:100%;">6,200</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jun 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:97%;">6,000</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jul 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:95%;">5,900</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Aug 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:98%;">6,100</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sep 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:94%;">5,800</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Oct 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:95%;">5,900</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Nov 2025</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:92%;">5,700</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dec 2025</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:89%;">5,500</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jan 2026</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:94%;">5,800</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Feb 2026</span>
+        <div class="bar-track"><div class="bar-fill ember" style="width:90%;">5,600</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Mar 2026</span>
+        <div class="bar-track"><div class="bar-fill ember" style="width:92%;">5,700</div></div>
+        <span class="bar-value"></span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Apr 2026</span>
+        <div class="bar-track"><div class="bar-fill ember" style="width:90%;">5,600</div></div>
+        <span class="bar-value"></span>
+      </div>
+    </div>
+    <div class="annotation danger">
+      <strong>The big picture:</strong> You peaked at ~17,000 organic visits/month in 2021 &mdash; likely amplified by COVID-era demand for at-home dental solutions. That tailwind is gone, and organic has lost ~67% of peak volume without a content engine to replace it. At the current rate, you&rsquo;ll be under 5,000/mo within 6 months.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: AI VISIBILITY (Light) -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">AI Search Visibility</p>
+    <h2>The New Battleground — and You&rsquo;re Already in It</h2>
+    <p class="subtitle">You have 173 AI mentions and 115 cited pages across major platforms. That&rsquo;s a real asset. But competitors are closing the gap, and YouTube is outpacing you in direct AI citations.</p>
+    <div class="two-col flex-grow" style="margin-top:16px;">
+      <div>
+        <h4 style="margin-bottom:16px;">Your AI Mention Distribution</h4>
+        <div class="ai-bar-row">
+          <span class="ai-platform">Google AI Overview</span>
+          <div class="ai-track"><div class="ai-fill google" style="width:100%;">86 mentions</div></div>
+          <span class="ai-meta">42 cited pages</span>
+        </div>
+        <div class="ai-bar-row">
+          <span class="ai-platform">Google AI Mode</span>
+          <div class="ai-track"><div class="ai-fill aimode" style="width:59%;">51 mentions</div></div>
+          <span class="ai-meta">60 cited pages</span>
+        </div>
+        <div class="ai-bar-row">
+          <span class="ai-platform">Gemini</span>
+          <div class="ai-track"><div class="ai-fill gemini" style="width:22%;">19 mentions</div></div>
+          <span class="ai-meta">4 cited pages</span>
+        </div>
+        <div class="ai-bar-row">
+          <span class="ai-platform">ChatGPT</span>
+          <div class="ai-track"><div class="ai-fill chatgpt" style="width:20%;">17 mentions</div></div>
+          <span class="ai-meta">51 cited pages</span>
+        </div>
+        <div class="annotation info mt-16">
+          <strong>Interesting signal:</strong> ChatGPT cites 51 of your pages but only mentions you 17 times &mdash; your content is being used as a source but not recommended by name. That&rsquo;s a fixable positioning gap.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:16px;">Who AI Recommends Instead of You</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">YouTube</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:100%;">78 mentions</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:11px;">drcembaysal.com</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:64%;">50 mentions</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:11px;">shinysmileveneers</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:58%;">45 mentions</div></div>
+          </div>
+        </div>
+        <div class="annotation danger mt-8">
+          <strong>The problem:</strong> YouTube gets 4.6x more AI recommendations than you do on ChatGPT. Competitors with smaller websites are appearing alongside — or instead of — you in AI answers. This gap widens every month you don&rsquo;t have an AEO strategy.
+        </div>
+        <div style="margin-top:16px;padding:16px;background:var(--light-bg);border-radius:10px;border:1px solid var(--border);">
+          <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);margin-bottom:8px;">Your AI Visibility Score</div>
+          <div style="display:flex;gap:24px;">
+            <div><div style="font-size:28px;font-weight:800;color:var(--primary-dark);">23</div><div style="font-size:12px;color:var(--text-light);">Worldwide</div></div>
+            <div><div style="font-size:28px;font-weight:800;color:var(--accent);">33</div><div style="font-size:12px;color:var(--text-light);">United States</div></div>
+            <div><div style="font-size:28px;font-weight:800;color:var(--primary-dark);">25</div><div style="font-size:12px;color:var(--text-light);">Australia</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: COMPETITIVE LANDSCAPE (Light) -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up</h2>
+    <p class="subtitle">You have the strongest brand in removable veneers &mdash; but competitors are gaining on both traditional SEO and AI search while your traffic slides.</p>
+    <table style="margin-top:8px;">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Brighter Image Lab</th>
+          <th>Shiny Smile Veneers</th>
+          <th>Pop Veneers</th>
+          <th>Snap-On Smile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Authority Score</td>
+          <td><span class="pill green">26</span></td>
+          <td>~22</td>
+          <td>~20</td>
+          <td>~38</td>
+        </tr>
+        <tr>
+          <td class="bold">Est. Organic Traffic</td>
+          <td><span class="pill red">5.6K/mo</span></td>
+          <td>~3.8K/mo</td>
+          <td>~2.1K/mo</td>
+          <td>~18K/mo</td>
+        </tr>
+        <tr>
+          <td class="bold">Organic Keywords</td>
+          <td><span class="pill orange">2.5K</span></td>
+          <td>~1.6K</td>
+          <td>~900</td>
+          <td>~6.2K</td>
+        </tr>
+        <tr>
+          <td class="bold">Referring Domains</td>
+          <td><span class="pill green">510</span></td>
+          <td>~280</td>
+          <td>~180</td>
+          <td>~640</td>
+        </tr>
+        <tr>
+          <td class="bold">AI Visibility Score</td>
+          <td><span class="pill orange">23</span></td>
+          <td>~18</td>
+          <td>~12</td>
+          <td>~41</td>
+        </tr>
+        <tr>
+          <td class="bold">Traffic Trend</td>
+          <td><span class="pill red">&#9660; Declining</span></td>
+          <td><span class="pill orange">&#9654; Flat</span></td>
+          <td><span class="pill green">&#9650; Growing</span></td>
+          <td><span class="pill green">&#9650; Growing</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>The trend gap:</strong> You have more backlink authority and brand recognition than most direct competitors &mdash; but Snap-On Smile is pulling away fast with 3x your traffic and a growing keyword footprint. Pop Veneers, a smaller player, is actively growing while you decline. You have the brand; they&rsquo;re building the content machine.
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:8px;">* Competitor metrics are estimates based on available industry data and SEMrush comparable tools. Exact figures may vary.</p>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: KEYWORD OPPORTUNITIES (Light) -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Keyword Opportunities</p>
+    <h2>High-Value Content Gaps</h2>
+    <p class="subtitle">With 2,500 keywords already ranking but few in top-3, the fastest wins come from pushing mid-ranked pages up &mdash; and targeting the informational queries your competitors are owning.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:12px;">High-Intent Gaps (Not Ranking Top 10)</h4>
+        <table>
+          <thead>
+            <tr><th>Keyword</th><th>Search Intent</th><th>Est. Volume</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>removable veneers vs permanent</td><td><span class="pill content">Info</span></td><td>2,400/mo</td></tr>
+            <tr><td>clip on veneers reviews</td><td><span class="pill content">Info</span></td><td>1,900/mo</td></tr>
+            <tr><td>are snap on veneers worth it</td><td><span class="pill content">Info</span></td><td>1,600/mo</td></tr>
+            <tr><td>how to clean press on veneers</td><td><span class="pill content">Info</span></td><td>1,200/mo</td></tr>
+            <tr><td>affordable veneers without dentist</td><td><span class="pill seo">Commercial</span></td><td>3,100/mo</td></tr>
+            <tr><td>veneers for crooked teeth at home</td><td><span class="pill seo">Commercial</span></td><td>2,700/mo</td></tr>
+            <tr><td>best removable veneers 2026</td><td><span class="pill seo">Commercial</span></td><td>2,200/mo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin-bottom:12px;">Where Your Rankings Currently Sit</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:12px;">Positions 1–3</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:8%;">~200</div></div>
+            <span class="bar-value green">8%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:12px;">Positions 4–10</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:32%;">~800</div></div>
+            <span class="bar-value">32%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:12px;">Positions 11–20</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:28%;">~700</div></div>
+            <span class="bar-value">28%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="font-size:12px;">Positions 21–50</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:32%;">~800</div></div>
+            <span class="bar-value">32%</span>
+          </div>
+        </div>
+        <div class="annotation mt-16">
+          <strong>The opportunity:</strong> 92% of your organic keywords rank outside the top 3. Moving just 300 of your positions 4–10 keywords into top-3 would add an estimated 3,000&ndash;4,000 additional monthly clicks at current click-through rates.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: STRATEGY OVERVIEW (Light) -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How EmberTribe Reverses the Slide</h2>
+    <p class="subtitle">Three integrated plays &mdash; rebuild organic through content, capture AI search before competitors lock it up, and reactivate paid with smarter targeting.</p>
+    <div class="three-col flex-grow" style="margin-top:16px;">
+      <div class="channel-card">
+        <div class="channel-icon">&#9997;&#65039;</div>
+        <h3>SEO Content Engine</h3>
+        <ul>
+          <li>Monthly content targeting high-intent gaps (affordable veneers, comparisons, how-tos)</li>
+          <li>Optimize existing pages ranking 4&ndash;10 to push into top-3 positions</li>
+          <li>Build topical authority across removable veneers, smile makeovers, and at-home dental</li>
+          <li>Internal linking architecture to distribute authority from your 510 ref domains</li>
+          <li>Schema markup for products, reviews, and FAQs to capture rich results</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#129302;</div>
+        <h3>AI Search Optimization (AEO)</h3>
+        <ul>
+          <li>Structure content to answer the exact questions AI platforms pull from</li>
+          <li>Build brand entity signals so AI recommends you by name, not just cites you</li>
+          <li>Target the citation gap: get ChatGPT and Gemini recommending BIL directly</li>
+          <li>Create comparison and &ldquo;best of&rdquo; content that AI Overviews favor</li>
+          <li>Reclaim AI real estate from YouTube and competitor pages citing your research</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#127919;</div>
+        <h3>Paid Media Recovery</h3>
+        <ul>
+          <li>Audit current paid campaigns — 596 visits/mo at &minus;35% signals structural issues</li>
+          <li>Rebuild targeting around high-converting veneer buyer personas</li>
+          <li>Retargeting sequences for the research-heavy smile makeover consideration cycle</li>
+          <li>Test Meta + Google in parallel — reach buyers before and after search intent forms</li>
+          <li>Conversion rate optimization on landing pages to maximize paid ROAS</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP (Light) -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Month 1 stops the bleed and audits what&rsquo;s broken. Months 2&ndash;3 build the engine that compounds for years.</p>
+    <div class="timeline flex-grow" style="margin-top:16px;">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Audit &amp; Foundation</h4>
+        <ul>
+          <li>Full SEO technical audit &mdash; crawl issues, speed, indexation</li>
+          <li>Keyword gap analysis &mdash; identify the top 50 priority targets</li>
+          <li>AI visibility baseline &mdash; map where competitors are being cited over you</li>
+          <li>Content audit &mdash; flag thin, outdated, or cannibalizing pages</li>
+          <li>Paid account audit &mdash; diagnose why traffic dropped 35%</li>
+          <li>Quick wins: fix title tags, meta descriptions, internal linking on top 20 pages</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Launch</h4>
+        <ul>
+          <li>Publish first 4 long-form SEO content pieces targeting high-intent gaps</li>
+          <li>Deploy AEO content strategy: FAQ hubs, comparison guides, entity-rich brand pages</li>
+          <li>Optimize top 10 mid-ranking pages for position advancement</li>
+          <li>Relaunch paid campaigns with new audience targeting and landing pages</li>
+          <li>Implement schema markup across product, review, and FAQ pages</li>
+          <li>Begin link-building outreach targeting dental and lifestyle publications</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Scale &amp; Optimize</h4>
+        <ul>
+          <li>Publish months 2&ndash;3 content batch (4&ndash;6 additional pieces)</li>
+          <li>Review ranking movement &mdash; double down on pages showing gains</li>
+          <li>Paid media optimization: cut underperformers, scale what&rsquo;s converting</li>
+          <li>Reporting: organic traffic, keyword positions, AI visibility score delta</li>
+          <li>Q2 content calendar &mdash; plan next 90 days based on early data</li>
+          <li>Competitor monitoring: flag any new pages entering AI citations</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Expected by Month 3:</strong> Initial ranking improvements on priority keywords, measurable AI visibility score increase, paid campaigns generating positive ROAS, and a clear content pipeline producing compounding organic growth.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT (Light) -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Flexible packages built around where you want to start — SEO and AI are the foundation; paid is an add-on when the organic engine is running.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Monthly</th>
+          <th>Deliverables</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">SEO Content Engine <span class="pill seo" style="margin-left:6px;">Core</span></td>
+          <td class="bold">$3,000–$4,500</td>
+          <td>4&ndash;6 long-form content pieces/mo, keyword research, on-page optimization, monthly reporting</td>
+        </tr>
+        <tr>
+          <td class="bold">AI Search Optimization (AEO) <span class="pill gold" style="margin-left:6px;">Core</span></td>
+          <td class="bold">$1,500–$2,000</td>
+          <td>AI citation gap analysis, AEO content builds, entity optimization, AI visibility tracking</td>
+        </tr>
+        <tr>
+          <td class="bold">Technical SEO <span class="pill setup" style="margin-left:6px;">One-Time</span></td>
+          <td class="bold">$1,500–$2,500</td>
+          <td>Full crawl audit, schema deployment, site speed, indexation fixes, Core Web Vitals</td>
+        </tr>
+        <tr>
+          <td class="bold">Paid Media Management <span class="pill paid" style="margin-left:6px;">Add-On</span></td>
+          <td class="bold">$2,500–$3,500</td>
+          <td>Google + Meta campaign management, landing page CRO, retargeting, monthly ROAS reporting</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="border-top:2px solid var(--border);">
+          <td class="bold">SEO + AEO Bundle (Recommended Start)</td>
+          <td class="bold" style="font-size:18px;color:var(--primary-dark);">$4,500–$6,500/mo</td>
+          <td style="color:var(--text-light);font-size:13px;">+ optional paid add-on at $2,500–$3,500/mo</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>ROI framing:</strong> At your veneer price points ($795&ndash;$2,495 per set), recovering just 1,500 organic visitors/month at a 2% conversion rate = 30 additional sales/month = $24K&ndash;$75K in incremental monthly revenue. The content investment pays for itself many times over.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Brighter Image Lab &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Reverse the Slide?</h1>
+      <p class="subtitle" style="text-align:center; max-width:640px;">Your brand has everything it needs to reclaim traffic and capture AI search — authority, backlinks, and content AI is already citing. You just need the engine.</p>
+      <div class="stats-row" style="margin-top:32px; justify-content:center; max-width:700px;">
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Step 1</div>
+          <div class="stat-label" style="margin-top:6px;">30-min discovery call to align on goals and confirm fit</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Step 2</div>
+          <div class="stat-label" style="margin-top:6px;">EmberTribe delivers a full technical + keyword audit in week 1</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:28px;">Step 3</div>
+          <div class="stat-label" style="margin-top:6px;">Content engine and AEO strategy live within 30 days</div>
+        </div>
+      </div>
+      <div style="margin-top:32px;">
+        <p style="font-size:20px; font-weight:700;">Book your discovery call today</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">tj@embertribe.com &nbsp;|&nbsp; embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%; max-width:800px; margin-top:40px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; May 12, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
