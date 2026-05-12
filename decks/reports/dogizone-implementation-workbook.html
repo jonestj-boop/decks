@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implementation Workbook — DogiZone</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #5b3fd4;
+      --accent-dim: rgba(91,63,212,0.07);
+      --red: #dc2626; --red-dim: #fef2f2; --red-mid: rgba(220,38,38,0.15);
+      --orange: #ea580c; --orange-dim: #fff7ed;
+      --yellow: #d97706; --yellow-dim: #fffbeb;
+      --green: #16a34a; --green-dim: #f0fdf4;
+      --text: #1a1a2e;
+      --text-muted: #374151;
+      --text-dim: #6b7280;
+      --code-bg: #1e1e2e;
+      --code-text: #cdd6f4;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mono: 'JetBrains Mono','Fira Code','Courier New',monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    /* HEADER */
+    .report-header { background: linear-gradient(135deg,#3a2a8a 0%,#5b3fd4 100%); padding: 56px 0 48px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+    .header-tag { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:20px; }
+    .header-title { font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px; }
+    .header-sub { font-size:16px;color:rgba(255,255,255,0.75);max-width:560px; }
+    .header-meta { display:flex;gap:24px;margin-top:28px;flex-wrap:wrap; }
+    .header-meta-item { font-size:13px;color:rgba(255,255,255,0.6); }
+    .header-meta-item strong { color:rgba(255,255,255,0.95); }
+
+    /* PLACEHOLDER ALERT */
+    .placeholder-alert { background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px 24px;margin:32px 0; }
+    .placeholder-alert h3 { font-size:14px;font-weight:700;color:#15803d;margin-bottom:12px;display:flex;align-items:center;gap:8px; }
+    .placeholder-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px; }
+    .placeholder-item { display:flex;gap:8px;align-items:flex-start;font-size:13px; }
+    .placeholder-tag { background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 7px;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;white-space:nowrap; }
+    .placeholder-desc { color:#78350f; }
+
+    /* TOC */
+    .toc-wrap { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-bottom:40px; }
+    .toc-title { font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-dim);margin-bottom:16px; }
+    .toc-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px; }
+    .toc-item { display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;text-decoration:none;font-size:13px;color:var(--text-muted); transition:background 0.15s; }
+    .toc-item:hover { background:var(--accent-dim);color:var(--accent); }
+    .toc-badge { font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;flex-shrink:0; }
+    .tc { color:#fff; }
+    .tb-critical { background:var(--red); }
+    .tb-high { background:var(--orange); }
+    .tb-medium { background:var(--yellow); }
+    .tb-low { background:#6b7280; }
+
+    /* SECTION LABEL */
+    .phase-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin:40px 0 16px; }
+
+    /* ITEM CARD */
+    .item-card { background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px; }
+    .item-card-header { display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid var(--border); }
+    .item-card-left { display:flex;align-items:center;gap:12px;flex:1;min-width:0; }
+    .item-num { font-size:12px;font-weight:800;border-radius:6px;padding:4px 9px;flex-shrink:0;color:#fff; }
+    .in-critical { background:var(--red); }
+    .in-high { background:var(--orange); }
+    .in-medium { background:var(--yellow); }
+    .in-low { background:#6b7280; }
+    .item-card-title { font-size:15px;font-weight:700;color:var(--text); }
+    .effort-tag { font-size:11px;font-weight:600;border-radius:5px;padding:3px 9px;white-space:nowrap;flex-shrink:0; }
+    .et-low { background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0; }
+    .et-med { background:#fff7ed;color:var(--orange);border:1px solid #fed7aa; }
+    .et-high { background:#fef2f2;color:var(--red);border:1px solid #fecaca; }
+    .item-card-body { padding:24px; }
+
+    /* DIRECTIONS */
+    .directions-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:10px; }
+    .directions ol { padding-left:20px;color:var(--text-muted);font-size:14px; }
+    .directions ol li { padding:3px 0; }
+    .directions ol li + li { margin-top:4px; }
+
+    /* DELIVERABLE */
+    .deliverable { margin-top:20px;border-top:1px solid var(--border);padding-top:20px; }
+    .deliverable-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:12px; }
+
+    /* CODE BLOCK */
+    .code-wrap { position:relative;border-radius:8px;overflow:hidden;margin:12px 0; }
+    .code-block { background:var(--code-bg);color:var(--code-text);font-family:var(--mono);font-size:12.5px;line-height:1.7;padding:20px 20px 20px;overflow-x:auto;white-space:pre; }
+    .copy-btn { position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;padding:5px 11px;border-radius:5px;cursor:pointer;font-family:var(--sans);transition:all 0.15s; }
+    .copy-btn:hover { background:rgba(255,255,255,0.2);color:#fff; }
+    .copy-btn.copied { background:rgba(22,163,74,0.3);border-color:rgba(22,163,74,0.5);color:#6ee7b7; }
+
+    /* COPY BLOCK (plain text / prose) */
+    .copy-block { background:#f8f9fb;border:1px solid var(--border);border-radius:8px;padding:18px 20px;font-size:14px;color:var(--text-muted);line-height:1.7;position:relative; }
+    .copy-block-inner { white-space:pre-wrap; }
+    .copy-block .copy-btn-light { position:absolute;top:10px;right:10px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font-size:11px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;font-family:var(--sans);transition:all 0.15s; }
+    .copy-block .copy-btn-light:hover { border-color:var(--accent);color:var(--accent); }
+    .copy-block .copy-btn-light.copied { border-color:var(--green);color:var(--green); }
+
+    /* TABLE */
+    .data-table { width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0; }
+    .data-table th { background:#f1f3f8;color:var(--text-dim);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border); }
+    .data-table td { padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top; }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table .strike { text-decoration:line-through;color:var(--text-dim); }
+    .data-table .arrow { color:var(--accent);font-weight:700; }
+
+    /* TEST CARD */
+    .test-card { border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:10px 0; }
+    .test-card-header { background:#f8f9fb;padding:12px 16px;font-size:13px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border); }
+    .test-card-body { padding:14px 16px;font-size:13.5px;color:var(--text-muted); }
+    .test-row { display:flex;gap:12px;align-items:flex-start;padding:6px 0; }
+    .test-row + .test-row { border-top:1px solid var(--border); }
+    .test-variant { font-size:11px;font-weight:700;border-radius:4px;padding:2px 8px;flex-shrink:0;margin-top:2px; }
+    .tv-a { background:#dbeafe;color:#1e40af; }
+    .tv-b { background:#d1fae5;color:#065f46; }
+    .test-meta { font-size:12px;color:var(--text-dim);margin-top:6px; }
+
+    /* PLACEHOLDER INLINE */
+    .ph { background:#fef3c7;color:#92400e;border-radius:3px;padding:1px 5px;font-family:var(--mono);font-size:11px;font-weight:700; }
+
+    /* BADGE BEFORE/AFTER */
+    .badge-before { background:#fef2f2;color:var(--red);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+    .badge-after { background:#f0fdf4;color:var(--green);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+
+    /* NOTE */
+    .note { background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:12px 16px;font-size:13px;color:#5b21b6;margin:12px 0;display:flex;gap:8px;align-items:flex-start; }
+    .note-icon { flex-shrink:0;font-size:15px; }
+
+    /* FOOTER */
+    .report-footer { background:var(--surface);border-top:1px solid var(--border);padding:32px 0;margin-top:64px;text-align:center; }
+    .report-footer p { font-size:13px;color:var(--text-dim); }
+
+    @media (max-width:640px) {
+      .item-card-header { flex-direction:column; }
+      .toc-grid { grid-template-columns:1fr 1fr; }
+      .placeholder-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="container">
+    <div class="header-tag">⚒ Implementation Workbook</div>
+    <div class="header-title">DogiZone</div>
+    <div class="header-sub">17 ready-to-implement deliverables from the CRO audit — copy, paste, and publish in WordPress + Beaver Builder.</div>
+    <div class="header-meta">
+      <div class="header-meta-item"><strong>17</strong> actionable items</div>
+      <div class="header-meta-item"><strong>Platform:</strong> WordPress + Beaver Builder + Gravity Forms</div>
+      <div class="header-meta-item"><strong>Prepared:</strong> May 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px;">
+
+  <!-- PLACEHOLDER ALERT -->
+  <div class="placeholder-alert">
+    <h3>✓ All client info is pre-filled — only third-party widget IDs remain</h3>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;margin-bottom:8px;">Pre-filled from audit ✓</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">GOOGLE REVIEWS</span><span class="placeholder-desc" style="color:#374151;">1,461 Google reviews on file</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">DOGS TRAINED</span><span class="placeholder-desc" style="color:#374151;">30,000 dogs trained to date</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">DAYCARE PRICE</span><span class="placeholder-desc" style="color:#374151;">As low as $25/day (existing)</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">TRAINING EVAL</span><span class="placeholder-desc" style="color:#374151;">Free eval (valued at $79.95)</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">BOARDING OFFER</span><span class="placeholder-desc" style="color:#374151;">50% off first boarding stay</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">GROOMING OFFER</span><span class="placeholder-desc" style="color:#374151;">10% off first grooming</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">DAYCARE OFFER</span><span class="placeholder-desc" style="color:#374151;">Free first daycare day</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">AWARDS</span><span class="placeholder-desc" style="color:#374151;">Inc. 5000 · Best of Bethesda 2026 · Best for Families</span></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #bbf7d0;padding-top:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#374151;margin-bottom:8px;">Still needs setup — third-party accounts</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="placeholder-tag">[GOOGLE_REVIEW_URL]</span><span class="placeholder-desc">Direct Google Business Profile review link</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[ELFSIGHT_WIDGET_ID]</span><span class="placeholder-desc">From elfsight.com after creating the Google Reviews widget</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[BOARDING_PRICE]</span><span class="placeholder-desc">Boarding nightly rate (or range)</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[TRAINING_PRICE]</span><span class="placeholder-desc">Training package starting price</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[GROOMING_PRICE]</span><span class="placeholder-desc">Grooming starting price</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[STAR_RATING]</span><span class="placeholder-desc">Current Google star rating (e.g. 4.8)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-wrap">
+    <div class="toc-title">Contents — 17 Items</div>
+    <div class="toc-grid">
+      <a href="#c01" class="toc-item"><span class="toc-badge tb-critical tc">C-01</span>Add pricing to service pages</a>
+      <a href="#c02" class="toc-item"><span class="toc-badge tb-critical tc">C-02</span>Live Google Reviews widget</a>
+      <a href="#c03" class="toc-item"><span class="toc-badge tb-critical tc">C-03</span>Star rating + review count in header</a>
+      <a href="#c04" class="toc-item"><span class="toc-badge tb-critical tc">C-04</span>Sitewide offers announcement bar</a>
+      <a href="#c05" class="toc-item"><span class="toc-badge tb-critical tc">C-05</span>Activity package pricing in form</a>
+      <a href="#c06" class="toc-item"><span class="toc-badge tb-critical tc">C-06</span>Booking page mobile performance</a>
+      <a href="#h01" class="toc-item"><span class="toc-badge tb-high tc">H-01</span>Hero headline rewrite</a>
+      <a href="#h02" class="toc-item"><span class="toc-badge tb-high tc">H-02</span>Awards row on service pages</a>
+      <a href="#h03" class="toc-item"><span class="toc-badge tb-high tc">H-03</span>"30,000 dogs trained" stat bar</a>
+      <a href="#h04" class="toc-item"><span class="toc-badge tb-high tc">H-04</span>Elevate "Book Online" CTA</a>
+      <a href="#h05" class="toc-item"><span class="toc-badge tb-high tc">H-05</span>New Client Offers homepage section</a>
+      <a href="#h06" class="toc-item"><span class="toc-badge tb-high tc">H-06</span>Consolidate training submenu</a>
+      <a href="#m01" class="toc-item"><span class="toc-badge tb-medium tc">M-01</span>Pre-booking "What to have ready" checklist</a>
+      <a href="#m02" class="toc-item"><span class="toc-badge tb-medium tc">M-02</span>Post-booking confirmation page copy</a>
+      <a href="#m03" class="toc-item"><span class="toc-badge tb-medium tc">M-03</span>Abandoned form recovery email</a>
+      <a href="#m04" class="toc-item"><span class="toc-badge tb-medium tc">M-04</span>Seasonal availability urgency badge</a>
+      <a href="#l01" class="toc-item"><span class="toc-badge tb-low tc">L-01</span>Availability calendar plugin</a>
+    </div>
+  </div>
+
+  <!-- ==================== CRITICAL ==================== -->
+  <div class="phase-label">Critical Priority</div>
+
+  <!-- C-01 -->
+  <div class="item-card" id="c01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-01</span>
+        <div class="item-card-title">Add Pricing to All Service Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open Beaver Builder on the <strong>Dog Boarding</strong>, <strong>Dog Training</strong>, and <strong>Dog Grooming</strong> pages.</li>
+          <li>Add a new row below the service description on each page. Paste in the pricing callout HTML below — fill in <span class="ph">[BOARDING_PRICE]</span>, <span class="ph">[TRAINING_PRICE]</span>, and <span class="ph">[GROOMING_PRICE]</span> with the real rates before publishing.</li>
+          <li>The dog daycare page already shows "as low as $25/day" — use that exact format as the model. Ranges are fine (e.g. "From $55/night") if exact pricing varies by dog size or service level.</li>
+          <li>Publish all three pages and confirm pricing is visible on mobile.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Pricing Callout Block (paste into Beaver Builder HTML module)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:10px;
+     padding:20px 24px;margin:24px 0;font-size:14px;"&gt;
+  &lt;div style="font-weight:700;color:#1a1a2e;font-size:16px;margin-bottom:14px;"&gt;
+    Pricing
+  &lt;/div&gt;
+  &lt;div style="display:flex;flex-wrap:wrap;gap:12px;"&gt;
+    &lt;div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;
+         padding:14px 20px;flex:1;min-width:160px;"&gt;
+      &lt;div style="font-size:12px;font-weight:600;color:#6b7280;
+           text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;"&gt;
+        Starting at
+      &lt;/div&gt;
+      &lt;div style="font-size:26px;font-weight:800;color:#1a1a2e;"&gt;
+        [SERVICE_PRICE]
+      &lt;/div&gt;
+      &lt;div style="font-size:13px;color:#6b7280;margin-top:4px;"&gt;
+        per night / session
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;
+         padding:14px 20px;flex:1;min-width:160px;display:flex;
+         align-items:center;gap:10px;"&gt;
+      &lt;span style="font-size:22px;"&gt;📞&lt;/span&gt;
+      &lt;div&gt;
+        &lt;div style="font-size:13px;font-weight:600;color:#5b21b6;"&gt;
+          Questions about pricing?
+        &lt;/div&gt;
+        &lt;div style="font-size:13px;color:#6b7280;margin-top:2px;"&gt;
+          Call us — we're happy to walk you through options.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div style="margin-top:16px;"&gt;
+    &lt;a href="/reservations/"
+       style="display:inline-block;background:#5b3fd4;color:#fff;font-size:15px;
+       font-weight:700;padding:12px 28px;border-radius:7px;text-decoration:none;"&gt;
+      Book Online →
+    &lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Pricing to fill in per page</div>
+        <table class="data-table">
+          <thead><tr><th>Page</th><th>Current State</th><th>Fill In</th></tr></thead>
+          <tbody>
+            <tr><td>Dog Boarding</td><td><span class="badge-before">No pricing</span></td><td><span class="ph">[BOARDING_PRICE]</span> per night</td></tr>
+            <tr><td>Dog Training</td><td><span class="badge-before">No pricing</span></td><td><span class="ph">[TRAINING_PRICE]</span> per session / package</td></tr>
+            <tr><td>Dog Grooming</td><td><span class="badge-before">No pricing</span></td><td><span class="ph">[GROOMING_PRICE]</span> starting price</td></tr>
+            <tr><td>Dog Daycare</td><td><span class="badge-after">Already shows "as low as $25/day" ✓</span></td><td>No changes needed</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-02 -->
+  <div class="item-card" id="c02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-02</span>
+        <div class="item-card-title">Embed Live Google Reviews Widget Sitewide</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>elfsight.com</strong>, create a free account, and add a new <strong>Google Reviews</strong> widget. Search for "DogiZone" or paste the Google Business Profile URL.</li>
+          <li>Configure: 5-star filter on, carousel or grid layout, show reviewer name and photo, display review date.</li>
+          <li>Copy your <strong>Elfsight App ID</strong> from the dashboard (looks like <code>elfsight-app-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>) and replace <span class="ph">[ELFSIGHT_WIDGET_ID]</span> in the code below.</li>
+          <li>In WordPress, go to <strong>Appearance → Theme Editor</strong> (or use a plugin like WPCode) and paste the sitewide script just before <code>&lt;/body&gt;</code> in your theme's footer.</li>
+          <li>Open each service page in Beaver Builder and add an <strong>HTML module</strong> in the testimonials section. Replace the hardcoded static testimonials with the widget div tag below.</li>
+          <li>Add the widget to the homepage as well — below the hero or above the footer.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Embed Code</div>
+        <div class="note"><span class="note-icon">💡</span>Paste the script tag sitewide (footer), and place the div tag wherever you want reviews to appear on a specific page.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;!-- STEP 1: Paste in WordPress footer (before &lt;/body&gt;) --&gt;
+&lt;script src="https://static.elfsight.com/platform/platform.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- STEP 2: Paste this in Beaver Builder HTML module where reviews should appear --&gt;
+&lt;div class="elfsight-app-[ELFSIGHT_WIDGET_ID]" data-elfsight-app-lazy&gt;&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Inline Star Rating Badge (for service pages, near the headline)</div>
+        <div class="note"><span class="note-icon">💡</span>Add this just below the page H1 or hero on any service page for immediate trust signaling.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:flex;align-items:center;gap:8px;font-size:14px;
+     color:#374151;margin:8px 0 20px;"&gt;
+  &lt;span style="color:#f59e0b;font-size:18px;letter-spacing:-1px;"&gt;★★★★★&lt;/span&gt;
+  &lt;span&gt;&lt;strong&gt;[STAR_RATING]&lt;/strong&gt; · 1,461 Google reviews&lt;/span&gt;
+  &lt;a href="[GOOGLE_REVIEW_URL]" target="_blank"
+     style="color:#5b3fd4;font-size:13px;text-decoration:none;"&gt;
+    See all reviews →
+  &lt;/a&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-03 -->
+  <div class="item-card" id="c03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-03</span>
+        <div class="item-card-title">Display Star Rating + Review Count in Header</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open your WordPress header template in Beaver Builder (or via Beaver Themer if active).</li>
+          <li>Add an <strong>HTML module</strong> to the header bar — either to the right of the logo or in a top bar above the main nav.</li>
+          <li>Paste in the star badge HTML below, filling in <span class="ph">[STAR_RATING]</span> and <span class="ph">[GOOGLE_REVIEW_URL]</span>.</li>
+          <li>On mobile, this can collapse to just the stars + number to save space — test that it renders cleanly at 375px width.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Header Star Badge HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;a href="[GOOGLE_REVIEW_URL]" target="_blank"
+   style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;
+   background:#fffbeb;border:1px solid #fde68a;border-radius:20px;
+   padding:5px 14px;font-size:13px;color:#374151;"&gt;
+  &lt;span style="color:#f59e0b;font-size:15px;letter-spacing:-1px;"&gt;★★★★★&lt;/span&gt;
+  &lt;span&gt;&lt;strong style="color:#1a1a2e;"&gt;[STAR_RATING]&lt;/strong&gt;
+  &lt;span style="color:#6b7280;"&gt;· 1,461 reviews&lt;/span&gt;&lt;/span&gt;
+&lt;/a&gt;</div>
+        </div>
+        <div class="note" style="margin-top:12px;"><span class="note-icon">💡</span>Update the review count periodically as it grows. You can also pull this dynamically from the Elfsight widget once it's live — check their documentation for aggregate display options.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-04 -->
+  <div class="item-card" id="c04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-04</span>
+        <div class="item-card-title">Add Sitewide Announcement Bar with New-Client Offers</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Install <strong>Hello Bar</strong> (hellobar.com) or <strong>WP Notice Bar</strong> from the WordPress plugin directory — both are free to start.</li>
+          <li>Create a rotating announcement bar that cycles through all four new-client offers. Use the copy below for each rotation.</li>
+          <li>Link each offer message to the relevant service page so visitors can act immediately.</li>
+          <li>Set bar color to DogiZone brand colors. Keep text short enough to read in under 3 seconds on mobile.</li>
+          <li>Alternatively, if you prefer not to use a plugin, paste the pure HTML/CSS bar below before the opening <code>&lt;header&gt;</code> tag in your theme using WPCode.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Announcement Bar Copy (4 rotating messages)</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Rotation 1: 🐾 New clients: 50% off your first boarding stay — Book now →
+Rotation 2: 🐕 First daycare day is on us — Claim your free day →
+Rotation 3: 🎓 Free training evaluation (a $79.95 value) — Schedule yours →
+Rotation 4: ✂️ New clients save 10% on first grooming — Book a session →</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Pure HTML Announcement Bar (no plugin option)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div id="dz-offer-bar" style="background:#5b3fd4;color:#fff;text-align:center;
+     padding:10px 16px;font-size:14px;font-weight:600;position:relative;"&gt;
+  &lt;span id="dz-offer-text"&gt;&lt;/span&gt;
+  &lt;button onclick="document.getElementById('dz-offer-bar').style.display='none'"
+     style="position:absolute;right:14px;top:50%;transform:translateY(-50%);
+     background:none;border:none;color:rgba(255,255,255,0.7);font-size:18px;
+     cursor:pointer;line-height:1;"&gt;&amp;times;&lt;/button&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  var offers = [
+    '🐾 New clients: 50% off your first boarding stay — &lt;a href="/dog-boarding/" style="color:#fde68a;text-decoration:underline;"&gt;Book now →&lt;/a&gt;',
+    '🐕 First daycare day is on us — &lt;a href="/dog-daycare/" style="color:#fde68a;text-decoration:underline;"&gt;Claim your free day →&lt;/a&gt;',
+    '🎓 Free training evaluation (a $79.95 value) — &lt;a href="/dog-training/" style="color:#fde68a;text-decoration:underline;"&gt;Schedule yours →&lt;/a&gt;',
+    '✂️ New clients save 10% on first grooming — &lt;a href="/dog-grooming/" style="color:#fde68a;text-decoration:underline;"&gt;Book a session →&lt;/a&gt;'
+  ];
+  var i = 0;
+  document.getElementById('dz-offer-text').innerHTML = offers[i];
+  setInterval(function() {
+    i = (i + 1) % offers.length;
+    document.getElementById('dz-offer-text').innerHTML = offers[i];
+  }, 4000);
+&lt;/script&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-05 -->
+  <div class="item-card" id="c05">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-05</span>
+        <div class="item-card-title">Add Activity Package Pricing Inside the Reservation Form</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open your reservation form in <strong>Gravity Forms → Form Editor</strong>.</li>
+          <li>Find the activity package selection field (5-Star, 4-Star, 3-Star, Puppy, TLC). Edit each choice label to include the price inline — see the deliverable below for updated label copy.</li>
+          <li>Below the package field, add a <strong>HTML field</strong> in Gravity Forms and paste in the package comparison table. This gives visitors side-by-side clarity before they choose.</li>
+          <li>Also add pricing to the boarding service pages above the form CTA so visitors know rates before they even click "Book Online."</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Updated Form Field Labels (edit in Gravity Forms choices)</div>
+        <div class="note"><span class="note-icon">💡</span>Fill in the actual prices for each package below. The format "Package Name — $XX/night" is all that's needed in the choice label itself.</div>
+        <table class="data-table">
+          <thead><tr><th>Package</th><th>Current Label</th><th>Updated Label (fill in price)</th></tr></thead>
+          <tbody>
+            <tr><td>5-Star</td><td><span class="badge-before">5-Star</span></td><td><span class="badge-after">5-Star — $[PRICE]/night</span></td></tr>
+            <tr><td>4-Star</td><td><span class="badge-before">4-Star</span></td><td><span class="badge-after">4-Star — $[PRICE]/night</span></td></tr>
+            <tr><td>3-Star</td><td><span class="badge-before">3-Star</span></td><td><span class="badge-after">3-Star — $[PRICE]/night</span></td></tr>
+            <tr><td>Puppy</td><td><span class="badge-before">Puppy</span></td><td><span class="badge-after">Puppy — $[PRICE]/night</span></td></tr>
+            <tr><td>TLC</td><td><span class="badge-before">TLC</span></td><td><span class="badge-after">TLC — $[PRICE]/night</span></td></tr>
+          </tbody>
+        </table>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Package Explainer HTML (add as Gravity Forms HTML field below package selector)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:8px;
+     padding:16px 20px;margin:8px 0 16px;font-size:13px;color:#374151;"&gt;
+  &lt;div style="font-weight:700;color:#1a1a2e;margin-bottom:10px;font-size:14px;"&gt;
+    What's included in each package?
+  &lt;/div&gt;
+  &lt;table style="width:100%;border-collapse:collapse;font-size:13px;"&gt;
+    &lt;thead&gt;
+      &lt;tr style="background:#f1f3f8;"&gt;
+        &lt;th style="padding:8px 10px;text-align:left;border-bottom:2px solid #e2e8f0;
+             font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;"&gt;Package&lt;/th&gt;
+        &lt;th style="padding:8px 10px;text-align:left;border-bottom:2px solid #e2e8f0;
+             font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;"&gt;Includes&lt;/th&gt;
+        &lt;th style="padding:8px 10px;text-align:left;border-bottom:2px solid #e2e8f0;
+             font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;"&gt;Price/Night&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;&lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;5-Star&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;Private suite, multiple daily activities, webcam access&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;font-weight:700;"&gt;$[PRICE]&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;4-Star&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;Private suite, daily activities&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;font-weight:700;"&gt;$[PRICE]&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;3-Star&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;Standard suite, outdoor time&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;font-weight:700;"&gt;$[PRICE]&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;Puppy&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;"&gt;Puppy-specific care, extra check-ins&lt;/td&gt;
+          &lt;td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;font-weight:700;"&gt;$[PRICE]&lt;/td&gt;&lt;/tr&gt;
+      &lt;tr&gt;&lt;td style="padding:8px 10px;"&gt;TLC&lt;/td&gt;
+          &lt;td style="padding:8px 10px;"&gt;Senior or special-needs dogs, extra attention&lt;/td&gt;
+          &lt;td style="padding:8px 10px;font-weight:700;"&gt;$[PRICE]&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-06 -->
+  <div class="item-card" id="c06">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-06</span>
+        <div class="item-card-title">Fix Booking Page Mobile Performance (45 → 75+ target)</div>
+      </div>
+      <span class="effort-tag et-high">High Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Install <strong>WP Rocket</strong> (paid, recommended) or <strong>LiteSpeed Cache</strong> (free if on LiteSpeed server). Enable page caching, browser caching, and GZIP compression.</li>
+          <li>In WP Rocket or your caching plugin, enable <strong>lazy loading</strong> for all images and enable <strong>minification</strong> for CSS and JS files.</li>
+          <li>Run the site through <strong>TinyPNG.com</strong> or install <strong>Imagify</strong> / <strong>ShortPixel</strong> WordPress plugin to compress all existing images. Target: under 200KB per image.</li>
+          <li>In your caching plugin, use the <strong>Defer JS</strong> option to delay non-critical scripts from loading on the booking page.</li>
+          <li>Go to your hosting control panel — if on shared hosting, consider upgrading to a VPS or managed WordPress host (WP Engine, Kinsta, or Flywheel). Current server response time is 1,007ms; target is under 200ms.</li>
+          <li>After each change, re-run <strong>PageSpeed Insights</strong> on the booking page URL to confirm the mobile score is improving. Target: 75+.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Performance Fix Checklist</div>
+        <table class="data-table">
+          <thead><tr><th>Fix</th><th>Tool / Where</th><th>Current</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>Page caching</td><td>WP Rocket or LiteSpeed Cache</td><td>Not enabled</td><td>Enabled</td></tr>
+            <tr><td>Image compression</td><td>ShortPixel, Imagify, or TinyPNG</td><td>Unoptimized</td><td>&lt;200KB/image</td></tr>
+            <tr><td>Lazy load images</td><td>Caching plugin setting</td><td>Off</td><td>On</td></tr>
+            <tr><td>Minify CSS + JS</td><td>Caching plugin setting</td><td>Off</td><td>On</td></tr>
+            <tr><td>Defer non-critical JS</td><td>Caching plugin setting</td><td>Off</td><td>On</td></tr>
+            <tr><td>Server response time</td><td>Hosting upgrade if needed</td><td>1,007ms</td><td>&lt;200ms</td></tr>
+            <tr><td>Mobile LCP (booking page)</td><td>PageSpeed Insights</td><td>5.0s</td><td>&lt;2.5s</td></tr>
+            <tr><td>Mobile PageSpeed score</td><td>PageSpeed Insights</td><td>45/100</td><td>75+</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:12px;"><span class="note-icon">⚠️</span>Test the reservation form thoroughly after enabling JS minification and deferral — Gravity Forms scripts can conflict with aggressive JS optimization. Whitelist Gravity Forms scripts in your caching plugin's exclusion list if the form breaks.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HIGH ==================== -->
+  <div class="phase-label">High Priority</div>
+
+  <!-- H-01 -->
+  <div class="item-card" id="h01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-01</span>
+        <div class="item-card-title">Rewrite Homepage Hero Headline</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open the homepage in Beaver Builder and locate the hero section headline.</li>
+          <li>Replace the current headline with one of the options below. Option A (credential-led) is the recommended starting point.</li>
+          <li>Update the hero subheadline to lead with a specific differentiator rather than a generic welcome message.</li>
+          <li>After publishing, run Option A for 2–3 weeks before testing Option B — don't run both simultaneously without an A/B testing tool.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Headline Options</div>
+        <table class="data-table">
+          <thead><tr><th></th><th>Headline</th><th>Subheadline</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge-before">Current</span></td>
+              <td>Welcome to Rockville's award-winning spot for happy, healthy dogs!</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td><span class="test-variant tv-a">Option A</span></td>
+              <td><strong>Rockville's Only Inc. 5000 Dog Care Facility</strong></td>
+              <td>30,000 dogs trained. 1,461 five-star reviews. Boarding, daycare, training, and grooming — all under one roof.</td>
+            </tr>
+            <tr>
+              <td><span class="test-variant tv-b">Option B</span></td>
+              <td><strong>Your Dog Deserves More Than a Kennel</strong></td>
+              <td>Individual attention, climate-controlled comfort, and a team that treats your dog like family. Serving Rockville since [YEAR].</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:12px;"><span class="note-icon">💡</span>Option A is credential-led and directly counters competitors who lead with emotion. Option B is emotion-led and may outperform for first-time visitors who are already trust-aware. Start with A — test B after you have a baseline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-02 -->
+  <div class="item-card" id="h02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-02</span>
+        <div class="item-card-title">Add Awards Row to All Service and Booking Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>In Beaver Builder, build the awards badge row below as a <strong>saved row</strong> (Global Row) so it can be added to any page with one click.</li>
+          <li>Add the saved row to: Dog Boarding, Dog Training, Dog Grooming, Dog Daycare, and the Reservations/Booking page.</li>
+          <li>Place the awards row above the fold on service pages — ideally just below the hero or page headline, not buried at the bottom.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Awards Badge Row HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+     align-items:center;padding:20px 0;border-top:1px solid #e2e8f0;
+     border-bottom:1px solid #e2e8f0;margin:24px 0;"&gt;
+
+  &lt;div style="display:flex;align-items:center;gap:8px;background:#f8f9fb;
+       border:1px solid #e2e8f0;border-radius:8px;padding:10px 16px;"&gt;
+    &lt;span style="font-size:20px;"&gt;🏆&lt;/span&gt;
+    &lt;div&gt;
+      &lt;div style="font-size:11px;font-weight:700;color:#6b7280;
+           text-transform:uppercase;letter-spacing:0.06em;"&gt;Inc. 5000&lt;/div&gt;
+      &lt;div style="font-size:12px;font-weight:600;color:#1a1a2e;"&gt;America's Fastest-Growing Companies&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="display:flex;align-items:center;gap:8px;background:#f8f9fb;
+       border:1px solid #e2e8f0;border-radius:8px;padding:10px 16px;"&gt;
+    &lt;span style="font-size:20px;"&gt;⭐&lt;/span&gt;
+    &lt;div&gt;
+      &lt;div style="font-size:11px;font-weight:700;color:#6b7280;
+           text-transform:uppercase;letter-spacing:0.06em;"&gt;Best of Bethesda 2026&lt;/div&gt;
+      &lt;div style="font-size:12px;font-weight:600;color:#1a1a2e;"&gt;Voted #1 Dog Care&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="display:flex;align-items:center;gap:8px;background:#f8f9fb;
+       border:1px solid #e2e8f0;border-radius:8px;padding:10px 16px;"&gt;
+    &lt;span style="font-size:20px;"&gt;👨‍👩‍👧&lt;/span&gt;
+    &lt;div&gt;
+      &lt;div style="font-size:11px;font-weight:700;color:#6b7280;
+           text-transform:uppercase;letter-spacing:0.06em;"&gt;Best for Families&lt;/div&gt;
+      &lt;div style="font-size:12px;font-weight:600;color:#1a1a2e;"&gt;Rockville's Family Favorite&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="display:flex;align-items:center;gap:8px;background:#f8f9fb;
+       border:1px solid #e2e8f0;border-radius:8px;padding:10px 16px;"&gt;
+    &lt;span style="color:#f59e0b;font-size:16px;"&gt;★★★★★&lt;/span&gt;
+    &lt;div&gt;
+      &lt;div style="font-size:12px;font-weight:700;color:#1a1a2e;"&gt;[STAR_RATING] · 1,461 Reviews&lt;/div&gt;
+      &lt;div style="font-size:11px;color:#6b7280;"&gt;Google Reviews&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-03 -->
+  <div class="item-card" id="h03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-03</span>
+        <div class="item-card-title">Surface "30,000 Dogs Trained" Stat Sitewide</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Build the stats bar below as a <strong>Global Row</strong> in Beaver Builder — same approach as the awards row in H-02.</li>
+          <li>Add it to the homepage (below the hero), and on the Dog Boarding and Dog Daycare pages — pages where visitors are making a trust-sensitive decision and currently have no exposure to this stat.</li>
+          <li>Update the numbers periodically as they grow.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Stats Bar HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:linear-gradient(135deg,#3a2a8a 0%,#5b3fd4 100%);
+     border-radius:12px;padding:32px 24px;margin:32px 0;
+     display:flex;flex-wrap:wrap;justify-content:space-around;gap:24px;
+     text-align:center;"&gt;
+
+  &lt;div&gt;
+    &lt;div style="font-size:36px;font-weight:800;color:#fff;"&gt;30,000+&lt;/div&gt;
+    &lt;div style="font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px;"&gt;Dogs trained&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="border-left:1px solid rgba(255,255,255,0.2);padding-left:24px;"&gt;
+    &lt;div style="font-size:36px;font-weight:800;color:#fff;"&gt;1,461&lt;/div&gt;
+    &lt;div style="font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px;"&gt;Five-star reviews&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="border-left:1px solid rgba(255,255,255,0.2);padding-left:24px;"&gt;
+    &lt;div style="font-size:36px;font-weight:800;color:#fff;"&gt;Inc. 5000&lt;/div&gt;
+    &lt;div style="font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px;"&gt;Recognized nationally&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="border-left:1px solid rgba(255,255,255,0.2);padding-left:24px;"&gt;
+    &lt;div style="font-size:36px;font-weight:800;color:#fff;"&gt;[STAR_RATING]★&lt;/div&gt;
+    &lt;div style="font-size:14px;color:rgba(255,255,255,0.75);margin-top:4px;"&gt;Google rating&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-04 -->
+  <div class="item-card" id="h04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-04</span>
+        <div class="item-card-title">Elevate "Book Online" CTA Across the Site</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Audit every page that currently leads with a phone number as the primary CTA. Update the hierarchy: "Book Online" button first, phone number as secondary.</li>
+          <li>In Beaver Builder, find every call-to-action button and update the copy. Use one of the options below — "Book Online" is fine, but "Check Availability" and "Reserve Your Spot" test well for date-sensitive bookings.</li>
+          <li>Ensure the primary CTA button is visually dominant: full-color background (brand purple or brand color), not an outline or ghost button.</li>
+          <li>On mobile, the "Book Online" button should be sticky or pinned near the bottom of service pages so it's always accessible without scrolling.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — CTA Copy Options (A/B test in order)</div>
+        <table class="data-table">
+          <thead><tr><th>Variant</th><th>Button Copy</th><th>Context</th></tr></thead>
+          <tbody>
+            <tr><td><span class="test-variant tv-a">Start Here</span></td><td>Book Online →</td><td>Safe default for all service pages</td></tr>
+            <tr><td><span class="test-variant tv-b">Test Next</span></td><td>Check Availability →</td><td>Works well for boarding — suggests limited spots</td></tr>
+            <tr><td><span class="test-variant tv-b">Test After</span></td><td>Reserve Your Spot →</td><td>Adds urgency, pairs well with seasonal messaging</td></tr>
+          </tbody>
+        </table>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Sticky Mobile CTA Bar HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div id="dz-sticky-cta" style="display:none;position:fixed;bottom:0;left:0;right:0;
+     background:#fff;border-top:1px solid #e2e8f0;padding:12px 20px;
+     z-index:9999;box-shadow:0 -4px 20px rgba(0,0,0,0.08);
+     justify-content:space-between;align-items:center;"&gt;
+  &lt;div&gt;
+    &lt;div style="font-size:13px;font-weight:700;color:#1a1a2e;"&gt;Ready to book?&lt;/div&gt;
+    &lt;div style="font-size:12px;color:#6b7280;"&gt;Spots fill fast — especially weekends&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;a href="/reservations/"
+     style="background:#5b3fd4;color:#fff;font-size:14px;font-weight:700;
+     padding:10px 22px;border-radius:7px;text-decoration:none;white-space:nowrap;"&gt;
+    Book Online →
+  &lt;/a&gt;
+&lt;/div&gt;
+&lt;script&gt;
+  // Show sticky CTA on mobile after scrolling 400px
+  if (window.innerWidth &lt; 768) {
+    window.addEventListener('scroll', function() {
+      var bar = document.getElementById('dz-sticky-cta');
+      if (window.scrollY &gt; 400) {
+        bar.style.display = 'flex';
+      } else {
+        bar.style.display = 'none';
+      }
+    });
+  }
+&lt;/script&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-05 -->
+  <div class="item-card" id="h05">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-05</span>
+        <div class="item-card-title">Add New Client Offers Section to Homepage</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open the homepage in Beaver Builder and add a new row above the fold — ideally just below the hero section, before any other content.</li>
+          <li>Label the section "New Client Offers" with a clear heading.</li>
+          <li>Paste in the four-card offer block below. Each card links to its respective service page.</li>
+          <li>This section should be visible without scrolling on desktop. On mobile, the cards can stack vertically.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — New Client Offers Section HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="padding:32px 0;"&gt;
+  &lt;div style="text-align:center;margin-bottom:24px;"&gt;
+    &lt;div style="font-size:12px;font-weight:700;text-transform:uppercase;
+         letter-spacing:0.1em;color:#5b3fd4;margin-bottom:8px;"&gt;
+      Welcome to DogiZone
+    &lt;/div&gt;
+    &lt;div style="font-size:24px;font-weight:800;color:#1a1a2e;"&gt;
+      Special Offers for New Clients
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+       gap:16px;"&gt;
+
+    &lt;a href="/dog-boarding/" style="text-decoration:none;display:block;
+       background:#fff;border:2px solid #e2e8f0;border-radius:12px;
+       padding:20px;transition:border-color 0.2s;"
+       onmouseover="this.style.borderColor='#5b3fd4'"
+       onmouseout="this.style.borderColor='#e2e8f0'"&gt;
+      &lt;div style="font-size:28px;margin-bottom:12px;"&gt;🛏️&lt;/div&gt;
+      &lt;div style="font-size:22px;font-weight:800;color:#5b3fd4;margin-bottom:4px;"&gt;50% Off&lt;/div&gt;
+      &lt;div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;"&gt;First Boarding Stay&lt;/div&gt;
+      &lt;div style="font-size:13px;color:#6b7280;"&gt;Climate-controlled suites with individual attention.&lt;/div&gt;
+      &lt;div style="margin-top:12px;font-size:13px;font-weight:600;color:#5b3fd4;"&gt;Book now →&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a href="/dog-daycare/" style="text-decoration:none;display:block;
+       background:#fff;border:2px solid #e2e8f0;border-radius:12px;
+       padding:20px;transition:border-color 0.2s;"
+       onmouseover="this.style.borderColor='#5b3fd4'"
+       onmouseout="this.style.borderColor='#e2e8f0'"&gt;
+      &lt;div style="font-size:28px;margin-bottom:12px;"&gt;🐕&lt;/div&gt;
+      &lt;div style="font-size:22px;font-weight:800;color:#5b3fd4;margin-bottom:4px;"&gt;Free Day&lt;/div&gt;
+      &lt;div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;"&gt;First Daycare Visit&lt;/div&gt;
+      &lt;div style="font-size:13px;color:#6b7280;"&gt;As low as $25/day after your free first visit.&lt;/div&gt;
+      &lt;div style="margin-top:12px;font-size:13px;font-weight:600;color:#5b3fd4;"&gt;Claim your day →&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a href="/dog-training/" style="text-decoration:none;display:block;
+       background:#fff;border:2px solid #e2e8f0;border-radius:12px;
+       padding:20px;transition:border-color 0.2s;"
+       onmouseover="this.style.borderColor='#5b3fd4'"
+       onmouseout="this.style.borderColor='#e2e8f0'"&gt;
+      &lt;div style="font-size:28px;margin-bottom:12px;"&gt;🎓&lt;/div&gt;
+      &lt;div style="font-size:22px;font-weight:800;color:#5b3fd4;margin-bottom:4px;"&gt;Free Eval&lt;/div&gt;
+      &lt;div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;"&gt;Training Evaluation&lt;/div&gt;
+      &lt;div style="font-size:13px;color:#6b7280;"&gt;A $79.95 value. 30,000 dogs trained by our team.&lt;/div&gt;
+      &lt;div style="margin-top:12px;font-size:13px;font-weight:600;color:#5b3fd4;"&gt;Schedule yours →&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a href="/dog-grooming/" style="text-decoration:none;display:block;
+       background:#fff;border:2px solid #e2e8f0;border-radius:12px;
+       padding:20px;transition:border-color 0.2s;"
+       onmouseover="this.style.borderColor='#5b3fd4'"
+       onmouseout="this.style.borderColor='#e2e8f0'"&gt;
+      &lt;div style="font-size:28px;margin-bottom:12px;"&gt;✂️&lt;/div&gt;
+      &lt;div style="font-size:22px;font-weight:800;color:#5b3fd4;margin-bottom:4px;"&gt;10% Off&lt;/div&gt;
+      &lt;div style="font-size:14px;font-weight:700;color:#1a1a2e;margin-bottom:6px;"&gt;First Grooming Session&lt;/div&gt;
+      &lt;div style="font-size:13px;color:#6b7280;"&gt;Professional grooming for all breeds and sizes.&lt;/div&gt;
+      &lt;div style="margin-top:12px;font-size:13px;font-weight:600;color:#5b3fd4;"&gt;Book a session →&lt;/div&gt;
+    &lt;/a&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-06 -->
+  <div class="item-card" id="h06">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-06</span>
+        <div class="item-card-title">Consolidate Training Submenu from 8 to 4 Items</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>WordPress → Appearance → Menus</strong> and open the main navigation menu.</li>
+          <li>Under the Training parent item, reduce the submenu to the 4 items below. Group remaining offerings under a single "All Training Programs" link rather than listing each individually.</li>
+          <li>Save and verify the menu renders correctly on both desktop and mobile.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Revised Training Submenu Structure</div>
+        <table class="data-table">
+          <thead><tr><th>Keep</th><th>Label</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge-after">✓ Keep</span></td><td>Private Training</td><td>Highest intent — keep prominent</td></tr>
+            <tr><td><span class="badge-after">✓ Keep</span></td><td>Group Classes</td><td>Second most popular entry point</td></tr>
+            <tr><td><span class="badge-after">✓ Keep</span></td><td>Board &amp; Train</td><td>High-value offering — keep visible</td></tr>
+            <tr><td><span class="badge-after">✓ Keep</span></td><td>All Training Programs →</td><td>Catch-all link to main training page — captures the rest</td></tr>
+            <tr><td><span class="badge-before">Remove from nav</span></td><td>Remaining 4+ items</td><td>Move to the main Training page body — not the nav</td></tr>
+          </tbody>
+        </table>
+        <div class="note" style="margin-top:12px;"><span class="note-icon">💡</span>Decision paralysis is real at 8 menu items. A visitor who can't decide quickly will often just leave. Four clear options with a catch-all is enough to get them into the right page — let the page do the rest of the selling.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MEDIUM ==================== -->
+  <div class="phase-label">Medium Priority</div>
+
+  <!-- M-01 -->
+  <div class="item-card" id="m01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-01</span>
+        <div class="item-card-title">Add "What to Have Ready" Pre-Booking Checklist</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>In Beaver Builder, open the Reservations/Booking page and add a new row <strong>above</strong> the form — before the visitor starts filling anything out.</li>
+          <li>Paste the checklist block below. This reframes the vaccination requirement as helpful preparation rather than a last-minute surprise mid-form.</li>
+          <li>This block also sets expectations for the whole booking process, reducing drop-off from "I didn't know I needed that."</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Pre-Booking Checklist HTML (place above the form)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;
+     padding:20px 24px;margin-bottom:28px;"&gt;
+  &lt;div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"&gt;
+    &lt;span style="font-size:20px;"&gt;📋&lt;/span&gt;
+    &lt;div style="font-size:15px;font-weight:700;color:#15803d;"&gt;
+      Before you book — have these ready
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+       gap:10px;"&gt;
+    &lt;div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#374151;"&gt;
+      &lt;span style="color:#16a34a;font-weight:700;flex-shrink:0;"&gt;✓&lt;/span&gt;
+      &lt;span&gt;Vaccination records (Rabies, Bordetella, DHPP) — you'll upload or email these after booking&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#374151;"&gt;
+      &lt;span style="color:#16a34a;font-weight:700;flex-shrink:0;"&gt;✓&lt;/span&gt;
+      &lt;span&gt;Your dog's name, breed, age, and weight&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#374151;"&gt;
+      &lt;span style="color:#16a34a;font-weight:700;flex-shrink:0;"&gt;✓&lt;/span&gt;
+      &lt;span&gt;Drop-off and pick-up dates and times&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#374151;"&gt;
+      &lt;span style="color:#16a34a;font-weight:700;flex-shrink:0;"&gt;✓&lt;/span&gt;
+      &lt;span&gt;Emergency contact name and phone number&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:#374151;"&gt;
+      &lt;span style="color:#16a34a;font-weight:700;flex-shrink:0;"&gt;✓&lt;/span&gt;
+      &lt;span&gt;Any medications, allergies, or special needs&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div style="margin-top:14px;font-size:13px;color:#16a34a;font-weight:600;"&gt;
+    Takes about 3 minutes to complete. We'll confirm your reservation by phone within 24 hours.
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-02 -->
+  <div class="item-card" id="m02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-02</span>
+        <div class="item-card-title">Add "What Happens Next" Confirmation Page</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>In Gravity Forms, go to <strong>Form Settings → Confirmations</strong> and change the confirmation type from a simple text message to a <strong>Redirect</strong> to a dedicated thank-you page.</li>
+          <li>Create a new WordPress page titled "Booking Received" (keep it out of the nav). Build the page content using the copy below in Beaver Builder.</li>
+          <li>Set the Gravity Forms confirmation redirect URL to this new page.</li>
+          <li>This page eliminates the "what do I do now?" confusion that causes anxiety and no-shows after form submission.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Confirmation Page Copy</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Headline: You're Almost Set — Here's What Happens Next
+
+Subhead: We received your reservation request. Here's the process from here.
+
+Step 1 — We'll call you within 24 hours
+Our team will confirm availability for your requested dates and walk you through any questions. If you have an urgent need, call us directly at [PHONE].
+
+Step 2 — Send your vaccination records
+Email your dog's current vaccination records (Rabies, Bordetella, DHPP) to [EMAIL]. First-time clients must submit records before drop-off. If your vet can send them directly, that works too.
+
+Step 3 — You're confirmed
+Once we've spoken and records are received, your reservation is locked in. You'll get a confirmation summary for your records.
+
+---
+
+Questions? Call us at [PHONE] or email [EMAIL].
+
+We can't wait to meet [your dog's name]!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-03 -->
+  <div class="item-card" id="m03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-03</span>
+        <div class="item-card-title">Set Up Abandoned Form Recovery Email</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Install the <strong>Gravity Forms Partial Entries add-on</strong> (requires Gravity Forms Elite license or available as a standalone add-on). This captures form data as visitors type, even if they don't submit.</li>
+          <li>In Gravity Forms, go to <strong>Form Settings → Partial Entries</strong> and enable it for the reservation form. Set the capture trigger to after the email field is completed.</li>
+          <li>Set up an automated email to fire 1 hour after a partial entry is recorded with no completion. Use the recovery email copy below.</li>
+          <li>Send a second follow-up at 24 hours if still no completion. Use the 24-hour copy below.</li>
+          <li>Note: This requires an email delivery tool connected to Gravity Forms — WP Mail SMTP + a transactional email service (Postmark, SendGrid, or Mailgun) is recommended for reliable delivery.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — 1-Hour Recovery Email</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Subject: Did something come up? Your DogiZone reservation isn't finished yet.
+
+Hi [First Name],
+
+It looks like you started a reservation request for [Dog Name] but didn't quite finish — no worries, it happens!
+
+Your spot isn't reserved until we receive your completed request. If you ran into any questions or hiccups along the way, we're happy to help.
+
+Finish your reservation here: [RESERVATION_LINK]
+
+Or give us a call at [PHONE] — we can take your information over the phone in just a few minutes.
+
+Talk soon,
+The DogiZone Team</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — 24-Hour Follow-Up Email</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Subject: Still thinking it over? Here's what you should know.
+
+Hi [First Name],
+
+We noticed you were looking into boarding for [Dog Name] — we'd love to have them.
+
+A few things worth knowing before you decide:
+
+✓ New clients get 50% off their first boarding stay
+✓ We have 1,461 Google reviews and are Rockville's only Inc. 5000 dog care facility
+✓ Peak weekends fill up 3–4 weeks in advance — dates are going fast
+
+Finish your reservation: [RESERVATION_LINK]
+
+Questions? Call us at [PHONE]. We're here to help.
+
+The DogiZone Team</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-04 -->
+  <div class="item-card" id="m04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-04</span>
+        <div class="item-card-title">Add Seasonal Availability Urgency Badge to Boarding Page</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Open the Dog Boarding page in Beaver Builder and add an HTML module near the top — just below the headline or pricing section.</li>
+          <li>Paste in the urgency badge below. Update the seasonal language depending on time of year (summer, holiday season, spring break).</li>
+          <li>This gives visitors a real reason to book now rather than "think about it" — and it's truthful: boarding facilities do fill up weeks in advance during peak periods.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Urgency Badge HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;
+     padding:12px 18px;margin:16px 0;display:flex;gap:10px;align-items:center;
+     font-size:14px;"&gt;
+  &lt;span style="font-size:20px;flex-shrink:0;"&gt;⏰&lt;/span&gt;
+  &lt;div&gt;
+    &lt;strong style="color:#92400e;"&gt;Summer dates are filling fast.&lt;/strong&gt;
+    &lt;span style="color:#78350f;"&gt;
+      Peak boarding weekends typically fill 3–4 weeks in advance.
+      &lt;a href="/reservations/" style="color:#5b3fd4;font-weight:600;text-decoration:none;"&gt;
+        Reserve your dates now →
+      &lt;/a&gt;
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Seasonal Copy Swaps</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Summer (June–Aug):    "Summer dates are filling fast. Peak boarding weekends fill 3–4 weeks in advance."
+Holiday (Nov–Jan):    "Holiday boarding spots go quickly. Reserve Thanksgiving and Christmas dates now."
+Spring Break (Mar–Apr): "Spring break is one of our busiest weeks. Don't wait — spots are limited."
+General (off-peak):   "Weekend boarding spots fill quickly. Reserve your dates to guarantee availability."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== LOW ==================== -->
+  <div class="phase-label">Low Priority</div>
+
+  <!-- L-01 -->
+  <div class="item-card" id="l01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-low">L-01</span>
+        <div class="item-card-title">Install Online Availability Calendar</div>
+      </div>
+      <span class="effort-tag et-high">High Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Evaluate booking calendar plugins compatible with WordPress + Gravity Forms. Recommended options: <strong>Amelia</strong>, <strong>Simply Schedule Appointments</strong>, or <strong>Bookly</strong>. All have free tiers to test.</li>
+          <li>The goal is to let visitors check date availability without having to call. This removes one of the top reasons visitors abandon the booking flow ("I don't know if my dates are open").</li>
+          <li>If a full calendar plugin is too heavy for now, a lightweight interim solution is to add a simple note on the boarding page: "Call us at [PHONE] to check availability for your dates — we can usually confirm in under 2 minutes." This acknowledges the gap without requiring a dev sprint.</li>
+          <li>Full calendar integration should be scoped as a separate project — requires connecting to whatever internal system DogiZone uses to manage boarding capacity.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Interim Deliverable — "Check Availability" Callout (until a calendar is live)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:8px;
+     padding:14px 18px;margin:16px 0;display:flex;gap:12px;
+     align-items:center;font-size:14px;"&gt;
+  &lt;span style="font-size:20px;flex-shrink:0;"&gt;📅&lt;/span&gt;
+  &lt;div&gt;
+    &lt;strong style="color:#1a1a2e;"&gt;Want to check if your dates are available?&lt;/strong&gt;
+    &lt;span style="color:#374151;"&gt;
+      Give us a call at
+      &lt;a href="tel:[PHONE]" style="color:#5b3fd4;font-weight:600;text-decoration:none;"&gt;[PHONE]&lt;/a&gt;
+      — we can confirm availability in under 2 minutes.
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  <div class="container">
+    <p><strong>DogiZone</strong> — Implementation Workbook prepared by EmberTribe &middot; May 2026</p>
+    <p style="margin-top:6px;">Questions? Reach out to your EmberTribe account manager.</p>
+  </div>
+</div>
+
+<script>
+  function copyCode(btn) {
+    var block = btn.nextElementSibling;
+    var text = block.innerText;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+  function copyLightCode(btn) {
+    var block = btn.nextElementSibling;
+    var text = block.innerText;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>
