@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LendForAll Canada — EmberTribe SEO Growth Proposal</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary-dark: #1a1a2e;
+            --primary-mid: #16213e;
+            --primary-light: #0f3460;
+            --accent: #e94560;
+            --ember-red: #ff333d;
+            --ember-dark: #e0202a;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #e9ecef;
+            --green: #27AE60;
+            --yellow: #F39C12;
+            --red: #E74C3C;
+            --orange: #E67E22;
+            --teal: #00B4D8;
+            --blue: #3498DB;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-dark);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .deck { width: 100vw; height: 100vh; position: relative; }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 48px 64px;
+            overflow-y: auto;
+            background: var(--card-bg);
+        }
+
+        .slide.active { display: flex; }
+
+        .slide.dark {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+            color: #ffffff;
+        }
+
+        .slide.dark .text-light,
+        .slide.dark .stat-label,
+        .slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+        .slide.dark .stat-card {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .slide.dark table th {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.7);
+        }
+
+        .slide.dark table td { border-color: rgba(255,255,255,0.08); }
+        .slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+        h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+        h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+        h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+        .subtitle {
+            font-size: 20px; font-weight: 400;
+            color: var(--text-light);
+            max-width: 860px;
+            margin-bottom: 24px;
+        }
+
+        .slide-label {
+            font-size: 12px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px;
+            color: var(--ember-red); margin-bottom: 8px;
+        }
+
+        .slide.dark .slide-label { color: var(--accent); }
+
+        .stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+        .stat-card {
+            flex: 1; min-width: 140px;
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+
+        .stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+        .stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+        .annotation {
+            background: #FFF8E1;
+            border-left: 3px solid var(--ember-red);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 16px;
+            font-size: 14px;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .annotation strong { color: var(--primary-dark); }
+        .annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+        .annotation.info strong { color: var(--teal); }
+        .annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+        .annotation.danger strong { color: var(--red); }
+        .annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+        .annotation.success strong { color: var(--green); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+        th {
+            background: var(--light-bg); font-weight: 600;
+            text-transform: uppercase; font-size: 11px;
+            letter-spacing: 0.5px; color: var(--text-light);
+            text-align: left; padding: 10px 12px;
+            border-bottom: 2px solid var(--border);
+        }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:hover td { background: rgba(0,0,0,0.02); }
+        .right { text-align: right; }
+        .bold { font-weight: 700; }
+
+        .bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+        .bar-row { display: flex; align-items: center; gap: 12px; }
+        .bar-label { width: 130px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+        .bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+        .bar-fill {
+            height: 100%; border-radius: 6px;
+            display: flex; align-items: center;
+            justify-content: flex-end; padding-right: 10px;
+            font-size: 12px; font-weight: 700; color: white;
+            transition: width 0.8s ease;
+        }
+        .bar-fill.teal { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+        .bar-fill.ember { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+        .bar-fill.green { background: linear-gradient(90deg, #1e8449, var(--green)); }
+        .bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+        .bar-fill.red { background: linear-gradient(90deg, #c0392b, var(--red)); }
+        .bar-fill.blue { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+        .bar-fill.accent { background: linear-gradient(90deg, var(--accent), var(--primary-light)); }
+        .bar-fill.grey { background: linear-gradient(90deg, #95a5a6, #bdc3c7); }
+
+        .pill {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 11px;
+            font-weight: 600; text-transform: uppercase;
+        }
+        .pill.seo { background: #E8F5E9; color: #1B5E20; }
+        .pill.tech { background: #FFF3E0; color: #E65100; }
+        .pill.local { background: #E3F2FD; color: #0D47A1; }
+        .pill.content { background: #F3E5F5; color: #6A1B9A; }
+        .pill.green { background: #E8F5E9; color: var(--green); }
+        .pill.red { background: #FFEBEE; color: var(--red); }
+        .pill.yellow { background: #FFF8E1; color: #F57F17; }
+
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+        .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+        .two-col-wide { display: grid; grid-template-columns: 3fr 2fr; gap: 32px; }
+
+        .channel-card {
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+        .channel-card h3 { margin-bottom: 12px; }
+        .channel-card ul { list-style: none; padding: 0; }
+        .channel-card ul li {
+            position: relative; padding-left: 16px;
+            margin-bottom: 6px; font-size: 14px; line-height: 1.5;
+        }
+        .channel-card ul li::before {
+            content: ''; position: absolute; left: 0; top: 8px;
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .timeline { display: flex; gap: 0; margin: 16px 0; }
+        .timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+        .timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+        .timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+        .phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+        .timeline-phase h4 { margin-bottom: 10px; }
+        .timeline-phase ul { list-style: none; padding: 0; }
+        .timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 13px; }
+        .timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+        .phase-cost { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+        .mt-8 { margin-top: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .mt-24 { margin-top: 24px; }
+        .mb-8 { margin-bottom: 8px; }
+        .mb-16 { margin-bottom: 16px; }
+        .flex-grow { flex: 1; }
+        .text-center { text-align: center; }
+
+        .red { color: var(--red); }
+        .green { color: var(--green); }
+        .orange { color: var(--orange); }
+        .teal { color: var(--teal); }
+        .blue { color: var(--blue); }
+        .ember { color: var(--ember-red); }
+
+        .logo-row {
+            margin-top: auto; padding-top: 16px;
+            border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+        .logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+        .logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+        .slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--ember-red), var(--accent));
+            z-index: 100; transition: width 0.3s ease;
+        }
+
+        .nav {
+            position: fixed; bottom: 24px; right: 32px;
+            display: flex; align-items: center; gap: 12px; z-index: 100;
+        }
+
+        .nav button {
+            width: 40px; height: 40px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.4); color: white;
+            font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+        .counter {
+            font-size: 13px; font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            background: rgba(0,0,0,0.3);
+            padding: 6px 14px; border-radius: 6px;
+        }
+
+        @media (max-width: 1024px) {
+            .slide { padding: 32px 40px; }
+            h1 { font-size: 36px; }
+            h2 { font-size: 28px; }
+            .two-col, .two-col-wide, .three-col { grid-template-columns: 1fr; }
+            .timeline { flex-direction: column; }
+            .timeline-phase { border-radius: 0; }
+            .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+            .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+            .bar-label { width: 90px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="progress" class="progress-bar"></div>
+
+    <div class="deck">
+
+        <!-- SLIDE 1: Title -->
+        <div class="slide dark active" data-slide="1">
+            <div>
+                <div class="slide-label">SEO Growth Proposal</div>
+                <h1>LendForAll Canada</h1>
+                <p class="subtitle">You're showing up in 752,000 searches per month — but capturing only 1.72% of them. Your city pages alone have 57,000 monthly impressions stuck on page 4–7.</p>
+
+                <div class="stats-row mt-24">
+                    <div class="stat-card">
+                        <div class="stat-value teal">752K</div>
+                        <div class="stat-label">Monthly Impressions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--accent);">2,051</div>
+                        <div class="stat-label">Monthly Clicks (avg)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--red);">1.72%</div>
+                        <div class="stat-label">Overall CTR</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" style="color: var(--yellow);">pos. 54</div>
+                        <div class="stat-label">Toronto Payday Loans Rank</div>
+                    </div>
+                </div>
+
+                <div class="annotation info mt-24" style="background: rgba(255,255,255,0.06); border-left-color: var(--teal); color: rgba(255,255,255,0.8);">
+                    <strong style="color: var(--teal);">Live GSC data:</strong> Oct 1, 2025 – Apr 13, 2026 via Google Search Console API
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">Prepared for LendForAll Canada — April 2026</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 2: GSC Snapshot -->
+        <div class="slide" data-slide="2">
+            <div class="slide-label">GSC Snapshot — Oct 2025 to Apr 2026</div>
+            <h2>What 6 Months of Data Actually Shows</h2>
+            <p class="subtitle">Massive search visibility, very low click capture. The gap between impressions and clicks is the opportunity.</p>
+
+            <div class="stats-row mt-16">
+                <div class="stat-card">
+                    <div class="stat-value teal">116K</div>
+                    <div class="stat-label">Avg. Monthly Impressions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value ember">2,051</div>
+                    <div class="stat-label">Avg. Monthly Clicks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--red);">1.72%</div>
+                    <div class="stat-label">Avg. CTR</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--text-light);">12,978</div>
+                    <div class="stat-label">Total Clicks (6 months)</div>
+                </div>
+            </div>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>Monthly Clicks — Oct 2025 to Mar 2026</h3>
+                    <div class="bar-chart mt-8">
+                        <div class="bar-row">
+                            <div class="bar-label">Oct 2025</div>
+                            <div class="bar-track"><div class="bar-fill teal" style="width: 100%;">2,208</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Nov 2025</div>
+                            <div class="bar-track"><div class="bar-fill teal" style="width: 89%;">1,961</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Dec 2025</div>
+                            <div class="bar-track"><div class="bar-fill teal" style="width: 89%;">1,977</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Jan 2026</div>
+                            <div class="bar-track"><div class="bar-fill teal" style="width: 90%;">1,991</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Feb 2026</div>
+                            <div class="bar-track"><div class="bar-fill ember" style="width: 100%;">2,214</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Mar 2026</div>
+                            <div class="bar-track"><div class="bar-fill teal" style="width: 88%;">1,953</div></div>
+                        </div>
+                    </div>
+                    <div class="annotation mt-8">
+                        <strong>Traffic is flat.</strong> Six months of near-identical monthly clicks (1,953–2,214) with no meaningful growth. The site is plateaued — publishing without a strategy isn't moving the needle.
+                    </div>
+                </div>
+                <div>
+                    <h3>Where Clicks Are Coming From</h3>
+                    <div class="bar-chart mt-8">
+                        <div class="bar-row">
+                            <div class="bar-label">Bad credit</div>
+                            <div class="bar-track"><div class="bar-fill ember" style="width: 100%;">2,001 clicks</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Branded</div>
+                            <div class="bar-track"><div class="bar-fill grey" style="width: 44%;">886 clicks</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Personal loans</div>
+                            <div class="bar-track"><div class="bar-fill blue" style="width: 21%;">411 clicks</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">City + loan</div>
+                            <div class="bar-track"><div class="bar-fill green" style="width: 13%;">256 clicks</div></div>
+                        </div>
+                        <div class="bar-row">
+                            <div class="bar-label">Same-day</div>
+                            <div class="bar-track"><div class="bar-fill yellow" style="width: 2%;">33</div></div>
+                        </div>
+                    </div>
+                    <div class="annotation danger mt-8">
+                        <strong>City pages only drive 256 clicks/month</strong> — despite 57,000+ monthly impressions across all local pages. They're showing up but ranking too low to get clicks.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Top Pages -->
+        <div class="slide" data-slide="3">
+            <div class="slide-label">Traffic Concentration</div>
+            <h2>One Page Drives 60% of All Traffic</h2>
+            <p class="subtitle">The homepage captures 7,719 of 12,978 total clicks — mostly branded. Remove branded search and your non-branded organic footprint is very thin.</p>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>Top Pages by Clicks (6 months)</h3>
+                    <table class="mt-8">
+                        <thead>
+                            <tr>
+                                <th>Page</th>
+                                <th>Clicks</th>
+                                <th>Imps</th>
+                                <th>Pos.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>/ <span style="font-size: 11px; color: var(--text-light);">(homepage)</span></td>
+                                <td class="bold" style="color: var(--ember-red);">7,719</td>
+                                <td>344,640</td>
+                                <td>20.2</td>
+                            </tr>
+                            <tr>
+                                <td>/child-tax-loans/</td>
+                                <td class="bold" style="color: var(--orange);">1,856</td>
+                                <td>44,783</td>
+                                <td>15.2</td>
+                            </tr>
+                            <tr>
+                                <td>/loans-without-employment-verification/</td>
+                                <td>412</td>
+                                <td>16,114</td>
+                                <td>32.6</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-toronto/ <span class="pill local" style="font-size:10px;">City</span></td>
+                                <td>361</td>
+                                <td>16,973</td>
+                                <td style="color: var(--red);">54.0</td>
+                            </tr>
+                            <tr>
+                                <td>/installment-loans/</td>
+                                <td>280</td>
+                                <td>9,585</td>
+                                <td style="color: var(--red);">47.1</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-alberta/</td>
+                                <td>193</td>
+                                <td>7,863</td>
+                                <td style="color: var(--red);">47.1</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-edmonton/ <span class="pill local" style="font-size:10px;">City</span></td>
+                                <td>143</td>
+                                <td>12,069</td>
+                                <td style="color: var(--red);">38.5</td>
+                            </tr>
+                            <tr>
+                                <td>/personal-loans/</td>
+                                <td>137</td>
+                                <td>12,134</td>
+                                <td style="color: var(--red);">42.9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>The Two Standout Observations</h3>
+
+                    <div class="channel-card mt-8" style="margin-bottom: 16px;">
+                        <h4 style="color: var(--green);">What's Actually Working</h4>
+                        <ul>
+                            <li><strong>/child-tax-loans/</strong> — 1,856 clicks at position 15.2. This is your best non-branded page by a wide margin. It's a niche, high-intent query and you own it. This is exactly the model to replicate.</li>
+                            <li><strong>Bad credit queries</strong> — 2,001 clicks total. Strong demand signal for bad credit + local combinations.</li>
+                        </ul>
+                    </div>
+
+                    <div class="channel-card" style="border-color: #FFCDD2;">
+                        <h4 style="color: var(--red);">What Needs Work</h4>
+                        <ul>
+                            <li><strong>/personal-loans-toronto/</strong> — 3,806 impressions but only 5 clicks. Position 73.5. Page 7 of Google.</li>
+                            <li><strong>/payday-loans-toronto/</strong> — 16,973 impressions, position 54. Enormous demand, no click capture.</li>
+                            <li><strong>City pages avg. position: 45–70.</strong> They exist — Google knows them — they just don't rank high enough to get clicked.</li>
+                        </ul>
+                    </div>
+
+                    <div class="annotation success mt-16">
+                        <strong>The leverage:</strong> Demand is already there. Search volume is proven. The fix is ranking higher — not finding new keywords.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: City Page Deep Dive -->
+        <div class="slide" data-slide="4">
+            <div class="slide-label">Local Page Opportunity</div>
+            <h2>57,000 Monthly Impressions. 706 Clicks. That's the Gap.</h2>
+            <p class="subtitle">Your city pages are averaging 1.2% CTR because they rank on page 4–7. Move them to page 1 and you 5–10x the clicks from demand that already exists.</p>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>City Page Performance — Live GSC Data</h3>
+                    <table class="mt-8" style="font-size: 13px;">
+                        <thead>
+                            <tr>
+                                <th>Page</th>
+                                <th>Clicks</th>
+                                <th>Imps</th>
+                                <th>Pos.</th>
+                                <th>CTR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>/payday-loans-toronto/</td>
+                                <td class="bold">361</td>
+                                <td>16,973</td>
+                                <td style="color: var(--red);">54.0</td>
+                                <td>2.1%</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-edmonton/</td>
+                                <td class="bold">143</td>
+                                <td>12,069</td>
+                                <td style="color: var(--red);">38.5</td>
+                                <td>1.2%</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-calgary/</td>
+                                <td class="bold">71</td>
+                                <td>6,517</td>
+                                <td style="color: var(--red);">50.3</td>
+                                <td>1.1%</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-montreal/</td>
+                                <td class="bold">46</td>
+                                <td>4,531</td>
+                                <td style="color: var(--orange);">31.3</td>
+                                <td>1.0%</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-winnipeg/</td>
+                                <td>13</td>
+                                <td>2,719</td>
+                                <td style="color: var(--red);">60.8</td>
+                                <td>0.5%</td>
+                            </tr>
+                            <tr>
+                                <td>/payday-loans-ottawa/</td>
+                                <td>12</td>
+                                <td>2,636</td>
+                                <td style="color: var(--red);">57.6</td>
+                                <td>0.5%</td>
+                            </tr>
+                            <tr>
+                                <td>/personal-loans-toronto/</td>
+                                <td style="color: var(--red);">5</td>
+                                <td>3,806</td>
+                                <td style="color: var(--red);">73.5</td>
+                                <td>0.1%</td>
+                            </tr>
+                            <tr>
+                                <td>/personal-loans-ottawa/</td>
+                                <td style="color: var(--red);">4</td>
+                                <td>2,511</td>
+                                <td style="color: var(--red);">57.8</td>
+                                <td>0.2%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 12px; color: var(--text-light); margin-top: 8px; font-style: italic;">All data: Oct 2025–Apr 2026 via Google Search Console</p>
+                </div>
+                <div>
+                    <h3>What Moving Rankings Actually Means</h3>
+
+                    <div style="background: var(--light-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                        <h4 style="margin-bottom: 12px;">Toronto Payday Loans — Position 54 Today</h4>
+                        <div class="bar-chart" style="margin: 0;">
+                            <div class="bar-row">
+                                <div class="bar-label" style="width: 80px; font-size: 12px;">Today (pos 54)</div>
+                                <div class="bar-track"><div class="bar-fill red" style="width: 5%;">361</div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label" style="width: 80px; font-size: 12px;">Pos. 10–20</div>
+                                <div class="bar-track"><div class="bar-fill yellow" style="width: 30%;">~1,700</div></div>
+                            </div>
+                            <div class="bar-row">
+                                <div class="bar-label" style="width: 80px; font-size: 12px;">Pos. 3–5</div>
+                                <div class="bar-track"><div class="bar-fill green" style="width: 80%;">~4,500</div></div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-light); margin-top: 8px;">Est. annual clicks from this single page at position 3–5</p>
+                    </div>
+
+                    <div class="annotation danger">
+                        <strong>Coverage gap:</strong> You have city pages for payday loans in 21 cities. For personal loans: only Toronto and Ottawa. For installment loans: only Toronto and Ottawa. For bad credit loans: 9 cities. These pages simply don't exist yet for most cities — and competitors are filling that space.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Strategy -->
+        <div class="slide" data-slide="5">
+            <div class="slide-label">Content Strategy</div>
+            <h2>The Pillar-Cluster Architecture</h2>
+            <p class="subtitle">National pillar pages build authority. City service area pages capture local intent. Local blog posts drive traffic to both — and send ranking signals through internal links.</p>
+
+            <div class="two-col-wide mt-16">
+                <div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0;">
+                        <div style="background: linear-gradient(135deg, var(--primary-dark), var(--primary-light)); color: white; border-radius: 12px; padding: 14px 24px; font-weight: 700; font-size: 15px; width: 100%; text-align: center; margin-bottom: 0;">
+                            Pillar: /personal-loans/
+                            <div style="font-size: 12px; font-weight: 400; opacity: 0.7; margin-top: 4px;">National hub — targets "personal loans Canada" (4,290 monthly imps in GSC)</div>
+                        </div>
+                        <div style="width: 2px; height: 20px; background: var(--border); margin-left: 50%;"></div>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <div style="flex: 1; background: #E3F2FD; border: 1px solid #90CAF9; border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 600; color: #0D47A1; text-align: center;">
+                                /personal-loans-vancouver/
+                            </div>
+                            <div style="flex: 1; background: #E3F2FD; border: 1px solid #90CAF9; border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 600; color: #0D47A1; text-align: center;">
+                                /personal-loans-calgary/
+                            </div>
+                            <div style="flex: 1; background: #E3F2FD; border: 1px solid #90CAF9; border-radius: 10px; padding: 10px; font-size: 12px; font-weight: 600; color: #0D47A1; text-align: center;">
+                                /personal-loans-winnipeg/
+                            </div>
+                        </div>
+                        <div style="width: 2px; height: 20px; background: var(--border); margin-left: 50%;"></div>
+                        <div style="display: flex; gap: 8px; width: 100%;">
+                            <div style="flex: 1; background: #F3E5F5; border: 1px solid #CE93D8; border-radius: 10px; padding: 10px; font-size: 11px; font-weight: 500; color: #6A1B9A; text-align: center;">
+                                "Personal Loans in Vancouver: Options for All Credit Scores"
+                            </div>
+                            <div style="flex: 1; background: #F3E5F5; border: 1px solid #CE93D8; border-radius: 10px; padding: 10px; font-size: 11px; font-weight: 500; color: #6A1B9A; text-align: center;">
+                                "How to Get a Personal Loan in Calgary With Bad Credit"
+                            </div>
+                            <div style="flex: 1; background: #F3E5F5; border: 1px solid #CE93D8; border-radius: 10px; padding: 10px; font-size: 11px; font-weight: 500; color: #6A1B9A; text-align: center;">
+                                "Same-Day Personal Loans in Winnipeg"
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="annotation info mt-16">
+                        <strong>How it works:</strong> Blog posts rank for longer-tail local queries and link into the city service area page. The city page links up to the national pillar. Google sees a coherent topic cluster and rewards the whole group — this is why /child-tax-loans/ performs well, it's your only truly built-out cluster.
+                    </div>
+                </div>
+                <div>
+                    <h3>Priority Loan Types to Localize</h3>
+                    <table class="mt-8">
+                        <thead>
+                            <tr>
+                                <th>Loan Type</th>
+                                <th>Priority</th>
+                                <th>New City Pages</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Personal Loans</strong></td>
+                                <td><span class="pill red">High</span></td>
+                                <td>+18 cities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bad Credit Loans</strong></td>
+                                <td><span class="pill red">High</span></td>
+                                <td>+12 cities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Installment Loans</strong></td>
+                                <td><span class="pill red">High</span></td>
+                                <td>+15 cities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Debt Consolidation</strong></td>
+                                <td><span class="pill yellow">Medium</span></td>
+                                <td>+10 cities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Car Loans</strong></td>
+                                <td><span class="pill yellow">Medium</span></td>
+                                <td>+10 cities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Same-Day Loans</strong></td>
+                                <td><span class="pill yellow">Medium</span></td>
+                                <td>+8 cities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="annotation mt-8">
+                        <strong>Month 1 cities:</strong> Vancouver, Calgary, Edmonton, Winnipeg, Montreal, Hamilton, Mississauga — highest impression volume in GSC first.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Local Blog Content -->
+        <div class="slide" data-slide="6">
+            <div class="slide-label">Content Plan</div>
+            <h2>Local Blog Posts That Feed City Rankings</h2>
+            <p class="subtitle">Each city gets a supporting blog post targeting a longer-tail local query — these rank faster, drive qualified traffic, and internally link to the service area page.</p>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>Sample Article Map — Month 1</h3>
+                    <table class="mt-8">
+                        <thead>
+                            <tr>
+                                <th>Article Title</th>
+                                <th>Links To</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>"Personal Loans in Vancouver: Options for All Credit Scores"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/personal-loans-vancouver/</td>
+                            </tr>
+                            <tr>
+                                <td>"Bad Credit Loans in Montreal: How to Get Approved"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/bad-credit-loans-montreal/</td>
+                            </tr>
+                            <tr>
+                                <td>"Installment Loans in Calgary: Compare Rates &amp; Lenders"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/installment-loans-calgary/</td>
+                            </tr>
+                            <tr>
+                                <td>"Same-Day Loans in Edmonton: Get Funds Within Hours"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/same-day-loans-edmonton/</td>
+                            </tr>
+                            <tr>
+                                <td>"Debt Consolidation Loans in Winnipeg: A Step-by-Step Guide"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/debt-consolidation-winnipeg/</td>
+                            </tr>
+                            <tr>
+                                <td>"No Credit Check Loans in Hamilton: What Are Your Options?"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/payday-loans-hamilton/</td>
+                            </tr>
+                            <tr>
+                                <td>"How to Get a Car Loan in Mississauga With Bad Credit"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/car-loans-mississauga/</td>
+                            </tr>
+                            <tr>
+                                <td>"Personal Loans for Bad Credit in Saskatoon"</td>
+                                <td style="color: var(--blue); font-size: 12px;">/personal-loans-saskatoon/</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Why This Works for LendForAll</h3>
+                    <div class="channel-card">
+                        <ul>
+                            <li><strong>GSC confirms city demand:</strong> Toronto payday loans = 16,973 impressions. Edmonton = 12,069. Calgary = 6,517. The search volume is real and proven.</li>
+                            <li><strong>Bad credit is your strongest signal:</strong> 2,001 clicks already from bad credit queries. City + bad credit combinations are the highest-intent, lowest-competition opportunity in your GSC data.</li>
+                            <li><strong>Fast-ranking long-tails:</strong> "Installment loans Calgary lenders" ranks in 30–60 days vs 6+ months for national terms.</li>
+                            <li><strong>Scales the model:</strong> Your /child-tax-loans/ page proves a focused, well-built single page can dominate. Apply that to 60+ local combinations.</li>
+                            <li><strong>Internal links fix existing rankings:</strong> Blog posts linking to /payday-loans-toronto/ help push it from pos 54 toward page 1 — no new pages required.</li>
+                        </ul>
+                    </div>
+                    <div class="annotation success mt-16">
+                        <strong>Volume plan:</strong> Start at 25 articles/month targeting city + loan type combinations validated in GSC. Scale to 40–50/month at 90-day review.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: Technical SEO -->
+        <div class="slide" data-slide="7">
+            <div class="slide-label">Technical SEO</div>
+            <h2>Technical Fixes That Unlock Existing Rankings</h2>
+            <p class="subtitle">Your city pages already have Google's attention — 57K impressions says so. Technical improvements directly lift click-through from search results without waiting for new content to index.</p>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>Priority Fixes</h3>
+                    <table class="mt-8">
+                        <thead>
+                            <tr>
+                                <th>Issue</th>
+                                <th>Impact</th>
+                                <th>Effort</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Schema markup missing on city pages</strong><br><span style="font-size: 12px; color: var(--text-light);">No FinancialProduct, FAQPage, or BreadcrumbList schema</span></td>
+                                <td><span class="pill red">High</span></td>
+                                <td><span class="pill green">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Near-duplicate content across 21 payday city pages</strong><br><span style="font-size: 12px; color: var(--text-light);">~85% identical body text — Google suppresses lower-authority pages</span></td>
+                                <td><span class="pill red">High</span></td>
+                                <td><span class="pill yellow">Med</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Internal linking gaps</strong><br><span style="font-size: 12px; color: var(--text-light);">City pages not linking up to national pillars or across to sibling cities</span></td>
+                                <td><span class="pill red">High</span></td>
+                                <td><span class="pill green">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Title / H1 missing geo-modifiers</strong><br><span style="font-size: 12px; color: var(--text-light);">Several city pages use generic titles without city name prominent</span></td>
+                                <td><span class="pill yellow">Med</span></td>
+                                <td><span class="pill green">Low</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>No breadcrumb navigation</strong><br><span style="font-size: 12px; color: var(--text-light);">Hurts crawl hierarchy for local pages under national loan type categories</span></td>
+                                <td><span class="pill yellow">Med</span></td>
+                                <td><span class="pill green">Low</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>The Duplicate Content Problem — Right Now</h3>
+                    <div class="annotation danger mt-8">
+                        <strong>GSC evidence:</strong> /payday-loans-toronto/ gets 361 clicks from 16,973 impressions (2.1% CTR at position 54). Meanwhile /payday-loans-vancouver/ gets 0 clicks from 76 impressions — Google barely surfaces it. Near-duplicate pages compete with each other and the weaker ones get suppressed.
+                    </div>
+
+                    <div class="channel-card mt-16">
+                        <h4>Schema Priority Per City Page</h4>
+                        <ul>
+                            <li><strong>FinancialProduct</strong> — signals loan type, rate range, and lender to Google</li>
+                            <li><strong>FAQPage</strong> — wins featured snippets for "can I get [loan] in [city] with bad credit" queries</li>
+                            <li><strong>BreadcrumbList</strong> — helps Google understand Canada &rarr; Province &rarr; City &rarr; Loan Type hierarchy</li>
+                        </ul>
+                    </div>
+
+                    <div class="stats-row mt-16">
+                        <div class="stat-card" style="padding: 14px 20px;">
+                            <div class="stat-value" style="font-size: 24px; color: var(--ember-red);">One-Time</div>
+                            <div class="stat-label">Technical audit + implementation: $500–$1,500 flat fee</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Pricing -->
+        <div class="slide" data-slide="8">
+            <div class="slide-label">Investment</div>
+            <h2>Pricing &amp; Deliverables</h2>
+            <p class="subtitle">Flexible monthly article volume with a 3-month commitment option for maximum savings. Technical fixes are a one-time fee.</p>
+
+            <div class="two-col mt-16">
+                <div>
+                    <h3>Content: Local Blog + Service Area Pages</h3>
+                    <p style="font-size: 13px; color: var(--text-light); margin-bottom: 12px;">10 slots available for April start.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th># of Articles/mo</th>
+                                <th>One-Time / Monthly</th>
+                                <th>3-Month Commitment <span style="font-style: italic; text-transform: none;">(quarterly total)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="bold">25</td>
+                                <td>$700</td>
+                                <td><strong>$1,750</strong> <span style="color: var(--green); font-size: 12px; font-style: italic;">-$350 savings</span></td>
+                            </tr>
+                            <tr>
+                                <td class="bold">40</td>
+                                <td>$1,100</td>
+                                <td><strong>$2,700</strong> <span style="color: var(--green); font-size: 12px; font-style: italic;">-$600 savings</span></td>
+                            </tr>
+                            <tr>
+                                <td class="bold">50</td>
+                                <td>$1,350</td>
+                                <td><strong>$3,400</strong> <span style="color: var(--green); font-size: 12px; font-style: italic;">-$650 savings</span></td>
+                            </tr>
+                            <tr>
+                                <td class="bold">100</td>
+                                <td>$2,700</td>
+                                <td><strong>$7,000</strong> <span style="color: var(--green); font-size: 12px; font-style: italic;">-$1,100 savings</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="annotation info mt-16">
+                        <strong>Our recommendation for LendForAll:</strong> Start at <strong>25 articles/month</strong> targeting city + loan type combos with the highest GSC impression volume. Review at 90 days — when ranking data shows which clusters are moving, scale to 40–50/month.
+                    </div>
+                </div>
+                <div>
+                    <h3>Technical SEO — One-Time Fee</h3>
+                    <table class="mt-8">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Full Technical Audit</strong><br><span style="font-size: 12px; color: var(--text-light);">Crawl analysis, schema gap report, internal linking map, duplicate content flagging</span></td>
+                                <td class="bold">$500</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Schema Implementation</strong><br><span style="font-size: 12px; color: var(--text-light);">FinancialProduct + FAQPage + BreadcrumbList across all existing city pages</span></td>
+                                <td class="bold">$500</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Internal Linking Pass</strong><br><span style="font-size: 12px; color: var(--text-light);">City pages to pillars, blog posts to city pages, cross-city links</span></td>
+                                <td class="bold">$300</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Title / H1 Optimization</strong><br><span style="font-size: 12px; color: var(--text-light);">All existing city pages updated with geo-modified titles + meta descriptions</span></td>
+                                <td class="bold">$200</td>
+                            </tr>
+                            <tr style="background: var(--light-bg);">
+                                <td class="bold">Full Technical Bundle</td>
+                                <td class="bold" style="color: var(--green);">$1,200 <span style="font-size: 12px; font-weight: 400; color: var(--text-light);">(save $300 vs. a la carte)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="annotation success mt-16">
+                        <strong>All-in to start:</strong> $1,200 technical bundle + $700/mo content (25 articles) = <strong>$1,900 in Month 1</strong>, then $700/mo ongoing — or $1,750/quarter on the 3-month commitment.
+                    </div>
+                    <div class="annotation info mt-8" style="font-size: 13px;">
+                        <strong>Note:</strong> New location page build-out is a separate add-on — see next slide.
+                    </div>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Location Page Add-On -->
+        <div class="slide" data-slide="9">
+            <div class="slide-label">Add-On Scope</div>
+            <h2>Location Page Build-Out</h2>
+            <p class="subtitle">Priced as a separate add-on — deployed in parallel with the content + technical scope. Each page is a 1,500–2,500 word city+loan-type service area page, schema-equipped, internally linked to its national pillar.</p>
+
+            <div class="timeline mt-24">
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 1</div>
+                    <h4>8 New Pages</h4>
+                    <ul>
+                        <li>Personal Loans — Vancouver, Calgary, Edmonton, Montreal</li>
+                        <li>Bad Credit Loans — Winnipeg, Hamilton, Mississauga, Saskatoon</li>
+                    </ul>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">Highest-impression cities in GSC, strongest demand signal.</div>
+                    <div class="phase-cost">$600</div>
+                </div>
+
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 2</div>
+                    <h4>10 New Pages</h4>
+                    <ul>
+                        <li>Installment Loans — Toronto, Vancouver, Calgary, Edmonton, Ottawa</li>
+                        <li>Debt Consolidation — Toronto, Vancouver, Calgary, Montreal, Winnipeg</li>
+                    </ul>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">Fills the widest coverage gap: only Toronto + Ottawa currently exist.</div>
+                    <div class="phase-cost">$750</div>
+                </div>
+
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 3</div>
+                    <h4>10 New Pages</h4>
+                    <ul>
+                        <li>Car Loans — Toronto, Vancouver, Calgary, Edmonton, Mississauga</li>
+                        <li>Same-Day Loans — Toronto, Vancouver, Calgary, Edmonton, Hamilton</li>
+                    </ul>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 8px;">Expands into Medium-priority loan types once high-priority clusters are seeded.</div>
+                    <div class="phase-cost">$750</div>
+                </div>
+            </div>
+
+            <div class="annotation success mt-16">
+                <strong>90-day total add-on:</strong> 28 new location pages — <strong>$2,100</strong>. Fully additive to the content + technical retainer. Volume and city mix adjustable monthly based on GSC ranking data.
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Roadmap -->
+        <div class="slide" data-slide="10">
+            <div class="slide-label">Roadmap</div>
+            <h2>First 90 Days</h2>
+            <p class="subtitle">Technical fixes and the first city clusters launch in parallel in Month 1. Rankings begin appearing by Month 2 — we use GSC to steer Month 3+.</p>
+
+            <div class="timeline mt-24">
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 1 — Foundation</div>
+                    <h4>Fix &amp; Build</h4>
+                    <ul>
+                        <li>Technical audit complete</li>
+                        <li>Schema deployed across all city pages</li>
+                        <li>Internal linking pass on 145 existing pages</li>
+                        <li>Title / H1 geo-optimization across city pages</li>
+                        <li>25 new local blog posts live (city + loan combos)</li>
+                    </ul>
+                    <div class="phase-cost">$1,900</div>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">$1,200 tech + $700 content</div>
+                </div>
+
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 2 — Scale</div>
+                    <h4>Expand Coverage</h4>
+                    <ul>
+                        <li>25 more local blog posts live</li>
+                        <li>Duplicate content differentiation across payday loan city pages</li>
+                        <li>First GSC ranking movement report — double down on performing clusters</li>
+                        <li>Internal links from Month 1 blog posts pushing city page rankings</li>
+                    </ul>
+                    <div class="phase-cost">$700/mo</div>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">$1,750/quarter on 3-mo commitment</div>
+                </div>
+
+                <div class="timeline-phase">
+                    <div class="phase-label">Month 3 — Compound</div>
+                    <h4>First Rankings Visible</h4>
+                    <ul>
+                        <li>25 more articles (75 city-loan combos total)</li>
+                        <li>Month 1 blog posts begin ranking for long-tail city queries</li>
+                        <li>Existing city service area pages moving up from page 4–7 toward page 1–2</li>
+                        <li>90-day GSC review: decide on scale-up to 40–50 articles/mo</li>
+                    </ul>
+                    <div class="phase-cost">$700/mo</div>
+                    <div style="font-size: 12px; color: var(--text-light); margin-top: 4px;">$1,750/quarter on 3-mo commitment</div>
+                </div>
+            </div>
+
+            <div class="annotation success mt-16">
+                <strong>By end of Month 3:</strong> 75+ new blog posts, full schema and internal linking — and 3 months of GSC ranking data to guide scaling decisions with precision. Location page add-on (28 pages) runs in parallel if approved.
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">LendForAll Canada — EmberTribe Proposal</div>
+            </div>
+        </div>
+
+        <!-- SLIDE 11: Next Steps -->
+        <div class="slide dark" data-slide="11">
+            <div>
+                <div class="slide-label">Next Steps</div>
+                <h1>116,000 Monthly Impressions. Let's Start Converting Them.</h1>
+                <p class="subtitle mt-16">The search demand is already there and proven. The work is ranking higher and building out what's missing.</p>
+
+                <div class="three-col mt-24">
+                    <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px;">
+                        <div style="font-size: 28px; margin-bottom: 12px;">1</div>
+                        <h4>Choose Your Package</h4>
+                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 8px;">Start with 25 articles/month + the technical bundle ($1,900 Month 1). Upgrade at 90 days using real GSC ranking data.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px;">
+                        <div style="font-size: 28px; margin-bottom: 12px;">2</div>
+                        <h4>Kick-Off Call</h4>
+                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 8px;">30 minutes to align on city priority order, loan type sequence, and brand voice. We start writing in the same week.</p>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px;">
+                        <div style="font-size: 28px; margin-bottom: 12px;">3</div>
+                        <h4>Go Live by Week 2</h4>
+                        <p style="font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 8px;">Technical audit Days 1–3. First city article briefs Day 5. First batch of articles and new city pages live by end of Week 2.</p>
+                    </div>
+                </div>
+
+                <div class="mt-24" style="padding: 28px 32px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <p style="font-size: 18px; margin-bottom: 8px;">Book a 30-minute strategy call to finalize scope and city prioritization.</p>
+                    <p style="font-size: 15px; color: rgba(255,255,255,0.55);">hello@embertribe.com &nbsp;&middot;&nbsp; embertribe.com</p>
+                </div>
+            </div>
+
+            <div class="logo-row">
+                <div class="logo-ember">EMBERTRIBE</div>
+                <div class="logo-date">Confidential — April 2026</div>
+            </div>
+        </div>
+
+    </div><!-- /deck -->
+
+    <div class="nav">
+        <button onclick="go(-1)">&#8592;</button>
+        <span class="counter" id="counter">1 / 10</span>
+        <button onclick="go(1)">&#8594;</button>
+    </div>
+
+    <script>
+        let current = 1;
+        const total = document.querySelectorAll('.slide').length;
+
+        function go(dir) {
+            const next = current + dir;
+            if (next < 1 || next > total) return;
+
+            const curr = document.querySelector('.slide[data-slide="' + current + '"]');
+            curr.classList.remove('active');
+            curr.scrollTop = 0;
+
+            current = next;
+
+            const nxt = document.querySelector('.slide[data-slide="' + current + '"]');
+            nxt.classList.add('active');
+            nxt.scrollTop = 0;
+
+            document.getElementById('counter').textContent = current + ' / ' + total;
+            document.getElementById('progress').style.width = ((current / total) * 100) + '%';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+        });
+
+        document.getElementById('progress').style.width = ((1 / total) * 100) + '%';
+    </script>
+</body>
+</html>

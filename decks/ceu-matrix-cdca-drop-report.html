@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEU Matrix — Ohio CDCA Position Drop Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --ceu-navy:  #0B2545;
+    --ceu-dark:  #091B36;
+    --ceu-blue:  #13315C;
+    --ceu-mid:   #134074;
+    --ceu-teal:  #00B4D8;
+    --ceu-sky:   #48CAE4;
+    --ember-red: #ff333d;
+    --green:     #27AE60;
+    --yellow:    #F39C12;
+    --red:       #E74C3C;
+    --light-bg:  #f8f9fa;
+    --text:      #2c3e50;
+    --text-light:#7f8c8d;
+    --border:    #e9ecef;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--ceu-dark); color:var(--text); }
+  .report { width:100%; }
+
+  .section { width:100%; display:flex; flex-direction:column; padding:64px 96px; background:#fff; }
+  .section.dark { background:linear-gradient(135deg,var(--ceu-dark) 0%,var(--ceu-navy) 50%,var(--ceu-blue) 100%); color:#fff; }
+  .section.light-bg { background:var(--light-bg); }
+  .section + .section { border-top:1px solid var(--border); }
+  .section.dark + .section { border-top:none; }
+
+  .section-label { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ember-red); margin-bottom:8px; }
+  .section.dark .section-label { color:var(--ceu-teal); }
+
+  h1 { font-size:44px; font-weight:900; line-height:1.1; letter-spacing:-1px; margin-bottom:12px; }
+  h2 { font-size:30px; font-weight:800; line-height:1.2; letter-spacing:-0.5px; margin-bottom:10px; }
+  h3 { font-size:17px; font-weight:700; margin-bottom:8px; }
+
+  .subtitle { font-size:17px; color:var(--text-light); font-weight:400; line-height:1.6; max-width:780px; }
+  .section.dark .subtitle { color:rgba(255,255,255,0.65); }
+
+  p { font-size:14px; line-height:1.7; color:var(--text); }
+  .section.dark p { color:rgba(255,255,255,0.8); }
+
+  .annotation { background:#FFF8E1; border-left:3px solid var(--ember-red); padding:12px 16px; border-radius:0 8px 8px 0; font-size:14px; line-height:1.6; margin:12px 0; }
+  .annotation strong { color:var(--ceu-navy); }
+  .annotation.info    { background:#E3F2FD; border-color:var(--ceu-teal); }
+  .annotation.info strong { color:var(--ceu-blue); }
+  .annotation.danger  { background:#FFEBEE; border-color:var(--red); }
+  .annotation.danger strong { color:var(--red); }
+  .annotation.success { background:#E8F5E9; border-color:var(--green); }
+  .annotation.success strong { color:var(--green); }
+  .annotation.warning { background:#FFF3E0; border-color:var(--yellow); }
+  .annotation.warning strong { color:#E65100; }
+  .section.dark .annotation { background:rgba(255,255,255,0.07); border-color:rgba(255,255,255,0.2); color:rgba(255,255,255,0.85); }
+  .section.dark .annotation strong { color:var(--ceu-teal); }
+
+  .two-col   { display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; }
+  .col { display:flex; flex-direction:column; gap:12px; }
+
+  .card { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .section.dark .card { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); }
+
+  .priority-card { border-radius:12px; padding:20px 24px; border:1px solid var(--border); background:#fff; position:relative; }
+  .priority-card .badge { position:absolute; top:20px; right:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; padding:3px 10px; border-radius:20px; }
+
+  /* ── Tables ── */
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:8px 0; }
+  th { text-align:left; padding:8px 12px; font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; color:rgba(255,255,255,0.7); border-bottom:2px solid rgba(255,255,255,0.15); }
+  td { padding:9px 12px; border-bottom:1px solid var(--border); vertical-align:middle; line-height:1.4; }
+  tr:last-child td { border-bottom:none; }
+
+  .data-table thead tr { background:var(--ceu-navy); }
+  .data-table tbody tr:hover td { background:rgba(0,0,0,0.02); }
+  .data-table td.mono { font-family:'SF Mono','Fira Code',monospace; font-size:11px; color:var(--ceu-navy); }
+  .data-table td.r { text-align:right; font-weight:600; }
+  .data-table td.pos-drop { text-align:right; font-weight:700; color:var(--red); }
+  .data-table td.pos-ok   { text-align:right; font-weight:700; color:var(--green); }
+  .data-table td.pos-warn { text-align:right; font-weight:700; color:var(--yellow); }
+  .data-table td.zero     { text-align:right; font-weight:800; color:var(--red); font-size:14px; }
+
+  /* ── Stats ── */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .stat-card { background:var(--light-bg); border-radius:12px; padding:18px 20px; border:1px solid var(--border); min-width:0; }
+  .section.dark .stat-card { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); }
+  .stat-value { font-size:26px; font-weight:800; line-height:1.2; color:var(--text); word-break:break-word; }
+  .stat-label { font-size:11px; font-weight:500; color:var(--text-light); margin-top:4px; line-height:1.4; }
+  .stat-value.red   { color:var(--red); }
+  .stat-value.teal  { color:var(--ceu-teal); }
+  .stat-value.green { color:var(--green); }
+  .section.dark .stat-label { color:rgba(255,255,255,0.5); }
+  .section.dark .stat-value { color:#fff; }
+
+  /* ── Pills ── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .pill.high      { background:#FFEBEE; color:#C62828; }
+  .pill.medium    { background:#FFF3E0; color:#E65100; }
+  .pill.low       { background:#E8F5E9; color:#2E7D32; }
+  .pill.confirmed { background:#FFEBEE; color:#B71C1C; }
+  .pill.stable    { background:#E8F5E9; color:#2E7D32; }
+  .pill.dropped   { background:#FFEBEE; color:#B71C1C; }
+  .pill.info      { background:#E3F2FD; color:#1565C0; }
+
+  /* ── Split bar ── */
+  .split-bar { display:flex; height:30px; border-radius:6px; overflow:hidden; gap:2px; margin:10px 0 4px; }
+  .split-bar .seg { display:flex; align-items:center; padding:0 10px; font-size:11px; font-weight:700; color:#fff; white-space:nowrap; }
+
+  /* ── Steps ── */
+  .step-list { list-style:none; padding:0; counter-reset:steps; }
+  .step-list li { counter-increment:steps; font-size:14px; padding:12px 0 12px 44px; border-bottom:1px solid var(--border); position:relative; line-height:1.7; }
+  .step-list li:last-child { border-bottom:none; }
+  .step-list li::before { content:counter(steps); position:absolute; left:0; top:12px; width:26px; height:26px; background:var(--ceu-navy); color:#fff; border-radius:50%; font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .step-list li.urgent::before { background:var(--red); }
+  .step-tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:2px 8px; border-radius:20px; margin-left:8px; vertical-align:middle; }
+  .step-tag.doing-now { background:#FFEBEE; color:#C62828; }
+  .step-tag.this-week { background:#FFF3E0; color:#E65100; }
+  .step-tag.next-week { background:#E3F2FD; color:#1565C0; }
+
+  /* ── Callout ── */
+  .callout-banner { background:linear-gradient(135deg,#0B2545 0%,#134074 100%); border-radius:12px; padding:20px 24px; display:flex; align-items:flex-start; gap:16px; margin:16px 0; }
+  .callout-banner .icon { font-size:24px; flex-shrink:0; margin-top:2px; }
+  .callout-banner h4 { font-size:14px; font-weight:700; color:#fff; margin-bottom:4px; }
+  .callout-banner p { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.6; margin:0; }
+  .callout-banner p strong { color:var(--ceu-teal); }
+
+  /* ── Email ── */
+  .email-block { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:28px 32px; font-size:14px; line-height:1.8; max-width:720px; }
+  .email-block .meta { font-size:12px; color:var(--text-light); border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px; }
+  .email-block .meta strong { color:var(--text); }
+
+  code { font-family:'SF Mono','Fira Code',monospace; font-size:12px; background:#f0f4f8; padding:2px 6px; border-radius:4px; color:var(--ceu-navy); }
+
+  .mt-sm { margin-top:16px; }
+  .mt-md { margin-top:24px; }
+  .mt-lg { margin-top:36px; }
+  .divider { height:4px; background:linear-gradient(90deg,var(--ceu-teal),var(--ceu-mid)); width:100%; }
+
+  @media(max-width:1024px) {
+    .section { padding:40px 40px; }
+    h1 { font-size:32px; }
+    h2 { font-size:24px; }
+    .two-col,.three-col { grid-template-columns:1fr; }
+    .stats-row { flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+<div class="report">
+
+<!-- ════════ HEADER ════════════════════════════════════════════════════════ -->
+<div class="section dark">
+  <div class="section-label">CEU Matrix &mdash; Search Performance Report &mdash; May 2026</div>
+  <h1 style="font-size:48px; margin-bottom:16px;">Ohio CDCA<br>Position Drop Report</h1>
+  <p class="subtitle">Prepared by EmberTribe &mdash; covering April 22&ndash;30, 2026. Data pulled directly from Google Search Console and Google Analytics 4.</p>
+
+  <div class="stats-row" style="margin-top:36px;">
+    <div class="stat-card">
+      <div class="stat-value red">2.6 &rarr; 6.9</div>
+      <div class="stat-label">Position — "cdca certification ohio" — March baseline vs. April 22&ndash;30</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">&minus;57%</div>
+      <div class="stat-label">Daily CDCA clicks — March baseline (9.9/day) vs. April 22&ndash;30 (4.2/day)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value red">pos 10.0</div>
+      <div class="stat-label">"cdca" broad query — now past page 1. Was position 3.5 in March, 8.6 two weeks ago</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value teal">&minus;2%</div>
+      <div class="stat-label">Sitewide organic — 193.9/day (Apr 22&ndash;30) vs. 197.7/day (March). Site is healthy. Drop is CDCA-only.</div>
+    </div>
+  </div>
+  <p style="margin-top:40px; font-size:13px; opacity:0.4;">Data sources: Google Search Console (ceumatrix.com) &mdash; Google Analytics 4 (Property 276964576) &mdash; April 22&ndash;30, 2026</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ════════ EXECUTIVE SUMMARY ════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Executive Summary</div>
+  <h2>What Happened, Why, and What We're Doing About It</h2>
+  <p class="subtitle" style="margin-bottom:36px;">Three things are true at the same time about your Ohio CDCA search performance. Understanding all three is important before looking at the data.</p>
+
+  <div class="three-col" style="margin-bottom:32px;">
+    <div class="card" style="border-top:3px solid var(--green);">
+      <div style="font-size:22px; margin-bottom:10px;">✅</div>
+      <h3 style="color:var(--ceu-navy); margin-bottom:8px;">Your site is healthy</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.7;">Sitewide organic traffic is within 2% of your March baseline (193.9 sessions/day vs. 197.7/day). This is not a Google penalty. Your other credentials, state pages, and course listings are performing normally.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div style="font-size:22px; margin-bottom:10px;">⚠️</div>
+      <h3 style="color:var(--ceu-navy); margin-bottom:8px;">The CDCA drop is real and continuing</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.7;">CDCA-specific clicks are down 57% from March (9.9/day &rarr; 4.2/day). Your top purchase-intent queries — "cdca certification ohio," "cdca certification," and "cdca" — have all lost significant position, with "cdca" now off page 1 entirely.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--ceu-teal);">
+      <div style="font-size:22px; margin-bottom:10px;">🔧</div>
+      <h3 style="color:var(--ceu-navy); margin-bottom:8px;">The cause is known and fixable</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.7;">Your site has two live URLs for each CDCA credential — one under <code>/course/</code> and one under <code>/product/</code>. Without a canonical tag, Google can't determine which is the definitive page. It oscillates between them, splitting authority and dragging both down. A single technical fix resolves this.</p>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#0B2545,#134074); border-radius:12px; padding:28px 32px;">
+    <div style="font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--ceu-teal); margin-bottom:12px;">Bottom Line</div>
+    <p style="font-size:17px; font-weight:600; color:#fff; line-height:1.6; margin-bottom:12px;">This is a structural issue with a one-time technical fix — not an ongoing content or algorithm problem. Once canonical tags are implemented, Google will consolidate the split ranking authority into your <code style="color:var(--ceu-teal); background:rgba(255,255,255,0.08);">/product/</code> pages, and positions will recover. The Month 2 Ohio hub build will then push CDCA performance above its March baseline, not just back to it.</p>
+    <p style="font-size:13px; color:rgba(255,255,255,0.55);">EmberTribe identified this issue in the Month 1 audit. The drop is occurring because the canonical tags haven't been implemented yet. That is the immediate priority.</p>
+  </div>
+</div>
+
+<!-- ════════ FLAG ══════════════════════════════════════════════════════════ -->
+<div class="section light-bg">
+  <div class="section-label">The Original Flag</div>
+  <h2>What You Reported &mdash; April 22, 2026</h2>
+  <p class="subtitle" style="margin-bottom:24px;">EmberTribe pulled live data from Google Search Console and GA4 the same day. This report covers all 9 days of post-flag data through April 30.</p>
+  <div class="email-block">
+    <div class="meta">
+      <strong>From:</strong> Everett Wolf &nbsp;&middot;&nbsp;
+      <strong>To:</strong> Melissa Cedeno, EmberTribe &nbsp;&middot;&nbsp;
+      <strong>Re:</strong> Ohio CDCA position drop
+    </div>
+    I want to bring the Ohio CDCA to EmberTribe's attention. We've seen a pretty serious drop over the last 7 days in our average position across queries for this product. Hoping EmberTribe can analyze this and pinpoint the reason.
+  </div>
+</div>
+
+<!-- ════════ GSC QUERY DATA ════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Search Rankings &mdash; April 22&ndash;30, 2026</div>
+  <h2>Where Your CDCA Pages Are Ranking Now</h2>
+  <p class="subtitle" style="margin-bottom:24px;">The drop has continued since April 22. Every major CDCA query lost additional position over the past 9 days. "cdca" broad is now off page 1. Only two queries are holding steady.</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Query</th>
+        <th style="text-align:right;">Mar Position</th>
+        <th style="text-align:right;">Apr 22&ndash;30 Position</th>
+        <th style="text-align:right;">Mar Clicks (31d)</th>
+        <th style="text-align:right;">Apr 22&ndash;30 Clicks</th>
+        <th>Move vs. March</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>cdca certification ohio</strong></td>
+        <td class="r">2.6</td>
+        <td class="pos-drop">6.9</td>
+        <td class="r">31</td>
+        <td class="r">2</td>
+        <td><span class="pill high">&minus;4.3 pos</span></td>
+      </tr>
+      <tr>
+        <td><strong>cdca certification</strong></td>
+        <td class="r">2.8</td>
+        <td class="pos-drop">5.5</td>
+        <td class="r">31</td>
+        <td class="r">3</td>
+        <td><span class="pill high">&minus;2.7 pos</span></td>
+      </tr>
+      <tr>
+        <td><strong>cdca</strong> (broad)</td>
+        <td class="r">3.5</td>
+        <td class="pos-drop">10.0</td>
+        <td class="r">18</td>
+        <td class="r">1</td>
+        <td><span class="pill high">&minus;6.5 pos</span></td>
+      </tr>
+      <tr>
+        <td><strong>cdca license</strong></td>
+        <td class="r">4.9</td>
+        <td class="pos-drop">9.9</td>
+        <td class="r">4</td>
+        <td class="r">1</td>
+        <td><span class="pill high">&minus;5.0 pos</span></td>
+      </tr>
+      <tr>
+        <td><strong>cdca classes</strong></td>
+        <td class="r">6.1</td>
+        <td class="pos-drop">12.9</td>
+        <td class="r">4</td>
+        <td class="r">1</td>
+        <td><span class="pill high">&minus;6.8 pos</span></td>
+      </tr>
+      <tr>
+        <td>cdca certification online ohio</td>
+        <td class="r">1.1</td>
+        <td class="pos-drop">4.6</td>
+        <td class="r">13</td>
+        <td class="r">0</td>
+        <td><span class="pill high">&minus;3.5 pos</span></td>
+      </tr>
+      <tr>
+        <td>cdca online courses ohio</td>
+        <td class="r">1.0</td>
+        <td class="pos-warn">2.9</td>
+        <td class="r">19</td>
+        <td class="r">1</td>
+        <td><span class="pill medium">&minus;1.9 pos</span></td>
+      </tr>
+      <tr>
+        <td>cdca certification online</td>
+        <td class="r">1.5</td>
+        <td class="pos-ok">1.2</td>
+        <td class="r">4</td>
+        <td class="r">4</td>
+        <td><span class="pill stable">Holding</span></td>
+      </tr>
+      <tr>
+        <td>cdca classes near me</td>
+        <td class="r">1.8</td>
+        <td class="pos-ok">1.8</td>
+        <td class="r">3</td>
+        <td class="r">3</td>
+        <td><span class="pill stable">Stable</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation danger mt-md">
+    <strong>"cdca" dropped from position 3.5 (March) to 10.0 (April 22&ndash;30).</strong> That is off page 1 on the highest-volume CDCA search term. Position 10 means appearing at the very bottom of page 1 — or on page 2 depending on the device. A move like this on a broad head term eliminates virtually all expected clicks. Only "cdca certification online" and "cdca classes near me" are holding.
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:12px;">CDCA Click Volume &mdash; Daily Average</h3>
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-light); margin-bottom:10px;">March 2026 (31 days)</div>
+      <div style="font-size:38px; font-weight:800; color:var(--green);">~9.9</div>
+      <div style="font-size:13px; color:var(--text-light); margin-top:4px;">CDCA query clicks per day</div>
+      <div style="font-size:12px; color:var(--text-light); margin-top:8px;">Top queries: "cdca certification" (31), "cdca certification ohio" (31), "cdca" (18)</div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-light); margin-bottom:10px;">April 22&ndash;30 (9 days)</div>
+      <div style="font-size:38px; font-weight:800; color:var(--red);">~4.2</div>
+      <div style="font-size:13px; color:var(--text-light); margin-top:4px;">CDCA query clicks per day</div>
+      <div style="font-size:12px; color:var(--text-light); margin-top:8px;">Top queries: "ceu matrix cdca" (11), "cdca certification online" (4), "cdca certification" (3)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PAGE-LEVEL DATA ═══════════════════════════════════════════════ -->
+<div class="section light-bg">
+  <div class="section-label">Page-Level Analysis &mdash; April 22&ndash;30</div>
+  <h2>How Google Is Treating Your Duplicate Pages</h2>
+  <p class="subtitle" style="margin-bottom:24px;">All four core CDCA pages lost position. A new development emerged: Google flipped its preference for the Phase II credential — it is now ranking the /course/ version above the /product/ version for the first time.</p>
+
+  <h3 style="margin-bottom:12px;">Page Positions &mdash; March Baseline vs. April 22&ndash;30</h3>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>URL</th>
+        <th style="text-align:right;">Mar Avg Pos</th>
+        <th style="text-align:right;">Apr 22&ndash;30 Pos</th>
+        <th style="text-align:right;">Mar Clicks</th>
+        <th style="text-align:right;">Apr 22&ndash;30 Clicks</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="mono">/product/ohio-cdca-preliminary-phase-i</td>
+        <td class="r">3.3</td>
+        <td class="pos-drop">4.7</td>
+        <td class="r">344</td>
+        <td class="r">61</td>
+        <td><span class="pill high">Dropping</span></td>
+      </tr>
+      <tr style="background:#FFF5F5;">
+        <td class="mono" style="color:var(--red);">/course/ohio-cdca-preliminary-phase-i</td>
+        <td class="r">3.0</td>
+        <td class="pos-drop">5.5</td>
+        <td class="r">81</td>
+        <td class="r">24</td>
+        <td><span class="pill high">Dropping</span></td>
+      </tr>
+      <tr style="background:#FFF5F5;">
+        <td class="mono" style="color:var(--red); font-weight:700;">/course/ohio-cdca-phase-ii</td>
+        <td class="r">4.6</td>
+        <td class="pos-warn">3.4</td>
+        <td class="r">19</td>
+        <td class="r">4</td>
+        <td><span class="pill medium">Google switched &#8593;</span></td>
+      </tr>
+      <tr>
+        <td class="mono">/product/ohio-cdca-phase-ii</td>
+        <td class="r">2.9</td>
+        <td class="pos-drop">3.8</td>
+        <td class="r">56</td>
+        <td class="r">7</td>
+        <td><span class="pill high">Dropping</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation danger mt-md">
+    <strong>A notable shift on Phase II:</strong> In March, Google was ranking your /product/ page for Ohio CDCA Phase II at position 2.9 with 56 monthly clicks. As of April 22&ndash;30, Google has switched — it now favors the /course/ version at position 3.4, while /product/ has slipped to 3.8. Neither page is benefiting, because the ranking authority that should belong to one definitive URL is permanently divided until canonical tags are in place.
+  </div>
+
+  <h3 style="margin-top:32px; margin-bottom:12px;">Session Split — Preliminary Phase I — April 22&ndash;30</h3>
+  <p style="font-size:13px; color:var(--text-light); margin-bottom:14px;">Google is still sending the majority of organic sessions to your /product/ page for Phase I — but the /course/ version continues drawing traffic and splitting the ranking signal.</p>
+
+  <div class="split-bar">
+    <div class="seg" style="flex:82; background:var(--ceu-navy);">/product/ — 108 GA4 organic sessions · 61 GSC clicks (82%)</div>
+    <div class="seg" style="flex:18; background:var(--ceu-teal);">/course/ — 24 sessions · 24 clicks (18%)</div>
+  </div>
+  <p style="font-size:12px; color:var(--text-light); margin-top:6px;">Without canonical tags, this split will continue destabilizing. Phase II has now fully switched — /course/ is leading — but with far less traffic than /product/ had in March.</p>
+
+  <div class="callout-banner mt-md">
+    <div class="icon">📋</div>
+    <div>
+      <h4>Already scoped in your Month 1 SEO audit</h4>
+      <p>This fix was identified and documented before the drop was flagged: <strong>"Canonical tags: /course/ vs. /product/ credential pairs (4 pairs) — consolidates duplicate ranking signal into one URL per credential."</strong> The drop is occurring because the implementation hasn't gone live yet. This is the immediate next step.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ GA4 SITE-WIDE CONTEXT ════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Overall Site Health &mdash; April 22&ndash;30</div>
+  <h2>The Rest of Your Site Is Performing Well</h2>
+  <p class="subtitle" style="margin-bottom:24px;">Sitewide organic sessions are within 2% of your March baseline. This confirms the drop is not caused by a Google penalty, a sitewide algorithm impact, or any other broad issue — it is isolated to the CDCA pages affected by the duplicate URL conflict.</p>
+
+  <div class="two-col">
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-light); margin-bottom:12px;">April 22&ndash;30 &mdash; 9 Days</div>
+      <div style="font-size:42px; font-weight:800; color:var(--ceu-navy);">1,745</div>
+      <div style="font-size:13px; color:var(--text-light);">organic sessions &mdash; 193.9/day avg</div>
+      <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:12px; font-size:13px;">
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Organic Search</span><strong>1,745</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Direct</span><strong>912</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Referral</span><strong>210</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-light); margin-bottom:12px;">March 2026 Baseline &mdash; 31 Days</div>
+      <div style="font-size:42px; font-weight:800; color:var(--ceu-navy);">6,128</div>
+      <div style="font-size:13px; color:var(--text-light);">organic sessions &mdash; 197.7/day avg</div>
+      <div style="margin-top:16px; border-top:1px solid var(--border); padding-top:12px; font-size:13px;">
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Organic Search</span><strong>6,128</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Direct</span><strong>3,666</strong></div>
+        <div style="display:flex; justify-content:space-between; padding:3px 0;"><span style="color:var(--text-light);">Referral</span><strong>741</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation success mt-md">
+    <strong>Daily organic: 197.7 (March) &rarr; 193.9 (April 22&ndash;30) = &minus;2%.</strong> Sitewide organic has stabilized and improved from the earlier 187.4/day reading (April 15&ndash;21). The CDCA position drop is not a sitewide penalty, algorithm impact, or broad technical failure. It is a structural URL conflict that is correctable with canonical tags.
+  </div>
+</div>
+
+<!-- ════════ ROOT CAUSE ═══════════════════════════════════════════════════ -->
+<div class="section light-bg">
+  <div class="section-label">Root Cause Analysis</div>
+  <h2>What&rsquo;s Driving the Drop</h2>
+  <p class="subtitle" style="margin-bottom:28px;">One primary cause confirmed by both Google Search Console and Google Analytics. Two contributing factors that context the timing.</p>
+
+  <div class="col" style="gap:16px;">
+
+    <div class="priority-card" style="border:2px solid #FFCDD2;">
+      <span class="badge pill confirmed">Primary Cause &mdash; Data Confirmed</span>
+      <div style="font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--red); margin-bottom:6px;">Root Cause</div>
+      <h3 style="font-size:17px;">Duplicate Pages Without a Canonical Tag — Google Cycling Between Them</h3>
+      <p style="font-size:14px; line-height:1.7; margin-bottom:14px;">Your site currently has two live URLs for each CDCA credential — one under <code>/course/</code> and one under <code>/product/</code> — with identical content and no signal telling Google which is the authoritative version. Google is forced to choose, and that choice has proven unstable. The data shows this happening simultaneously across both credential pages:</p>
+
+      <table class="data-table" style="margin-bottom:16px;">
+        <thead>
+          <tr>
+            <th>Credential</th>
+            <th>Google&rsquo;s Current Pick (Apr 22&ndash;30)</th>
+            <th>Losing URL</th>
+            <th>Stage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Phase I — Preliminary</strong></td>
+            <td class="mono" style="color:var(--yellow);">/product/ — pos 4.7, 61 clicks</td>
+            <td class="mono" style="color:var(--red);">/course/ — pos 5.5, 24 clicks</td>
+            <td><span class="pill high">Both declining</span></td>
+          </tr>
+          <tr>
+            <td><strong>Phase II</strong></td>
+            <td class="mono" style="color:var(--red);">/course/ — pos 3.4, 4 clicks &#8593; switched</td>
+            <td class="mono" style="color:var(--yellow);">/product/ — pos 3.8, 7 clicks</td>
+            <td><span class="pill dropped">Preference flipped</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:14px; line-height:1.7; margin-bottom:14px;">The Phase II situation has reversed since the original flag. In March, Google preferred your <code>/product/</code> page (position 2.9, 56 clicks) over <code>/course/</code> (position 4.6). As of April 22&ndash;30, Google switched — <code>/course/</code> is now ranking at position 3.4 and <code>/product/</code> has fallen to 3.8. This cycling is the canonical conflict in action. Neither page wins because the ranking authority that should belong to one URL is permanently divided between two.</p>
+
+      <p style="font-size:14px; line-height:1.7;">The overall position decline Everett flagged in Google Search Console is a direct result of this: both versions are losing ground simultaneously because neither one is accumulating the authority it would hold as the sole canonical page.</p>
+    </div>
+
+    <div class="priority-card">
+      <span class="badge pill medium">Contributing</span>
+      <div style="font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--yellow); margin-bottom:6px;">Contributing Factor</div>
+      <h3>Post-Migration Re-evaluation</h3>
+      <p style="font-size:14px; line-height:1.7; margin-bottom:10px;">Your site relaunched in late February 2026. Two months after a site migration, Google systematically re-evaluates URL structure and architecture. Duplicate URL issues that may have been passively tolerated on the old site are now being actively resolved — which is what's producing the cycling behavior visible in the position data.</p>
+    </div>
+
+    <div class="priority-card">
+      <span class="badge pill low">Monitor</span>
+      <div style="font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:var(--green); margin-bottom:6px;">Contributing Factor</div>
+      <h3>Google Algorithm Update Window</h3>
+      <p style="font-size:14px; line-height:1.7;">A confirmed Google algorithm update ran during the same period. These updates typically force Google to act on ambiguous signals it had previously tolerated — including split ranking authority across duplicate URLs. The update likely accelerated the timeline of what was already happening, rather than introducing a new, independent problem. The fix is the same either way.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ ACTION PLAN ══════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-label">Action Plan</div>
+  <h2>What EmberTribe Is Doing &mdash; and When</h2>
+  <p class="subtitle" style="margin-bottom:28px;">Sequenced by priority. Steps 1 and 2 are the critical path. Every day without canonical tags in place allows the drop to continue.</p>
+
+  <ol class="step-list">
+    <li class="urgent">
+      <strong>Implement canonical tags on the duplicate CDCA pages</strong>
+      <span class="step-tag next-week">Month 2 &mdash; May</span><br>
+      A canonical tag is a single line of code added to the duplicate <code>/course/</code> pages, telling Google which URL is the definitive version to rank. This stops the cycling and begins consolidating all ranking authority into your <code>/product/</code> pages.
+      <div style="background:#f0f4f8; border-radius:6px; padding:10px 14px; margin-top:10px; font-family:'SF Mono','Fira Code',monospace; font-size:11px; line-height:2;">
+        /course/ohio-cdca-preliminary-phase-i/ &rarr; canonical: /product/ohio-cdca-preliminary-phase-i/<br>
+        /course/ohio-cdca-phase-ii/ &rarr; canonical: /product/ohio-cdca-phase-ii/
+      </div>
+    </li>
+    <li class="urgent">
+      <strong>Request re-indexing on all /product/ CDCA pages in Google Search Console</strong>
+      <span class="step-tag next-week">Month 2 &mdash; May</span><br>
+      Once canonical tags are live, EmberTribe will request re-crawling of your <code>/product/</code> CDCA pages via Google Search Console. This accelerates authority consolidation rather than waiting weeks for Google's natural crawl cycle.
+    </li>
+    <li>
+      <strong>Fix the broken link in the Ohio CDCA blog post</strong>
+      <span class="step-tag next-week">Month 2 &mdash; May</span><br>
+      Your top-of-funnel blog post (<code>/cdca-certification-in-ohio-requirements-phase-1-training-and-your-next-steps/</code>) contains a broken internal link to <code>/courses-by-state/ohio/</code> — a page that returned a 404 after the site migration. Visitors reading this post hit a dead end where a navigation link should be. EmberTribe will update the link to point to the correct Ohio CDCA product page, or to the new Ohio hub once it goes live in Month 2.
+    </li>
+    <li>
+      <strong>Build the Ohio CDCA credential hub — Month 2</strong>
+      <span class="step-tag next-week">Month 2 &mdash; May</span><br>
+      Once canonical tags stabilize positions, the Month 2 content build adds the informational depth these pages need to rank for broader intent queries. Search terms like "cdca requirements ohio" (currently position 8.5, zero clicks) require a dedicated hub page to capture. This is what takes performance from recovery back to March baseline and beyond.
+    </li>
+  </ol>
+
+  <div class="annotation warning mt-md">
+    <strong>One important note for your development team:</strong> Once canonical tags are in place, no new content should be added to the <code>/course/</code> versions of your CDCA pages. Google will treat them as duplicates going forward, and any content placed there will not be indexed. All content investment should go on the <code>/product/</code> pages and the new Ohio hub.
+  </div>
+</div>
+
+<!-- ════════ RECOVERY TIMELINE ════════════════════════════════════════════ -->
+<div class="section light-bg">
+  <div class="section-label">What to Expect</div>
+  <h2>Recovery Timeline</h2>
+  <p class="subtitle" style="margin-bottom:28px;">Realistic milestones from canonical implementation through full recovery and growth. These are based on typical Google re-indexing cycles and the current gap between your actual and potential positions.</p>
+
+  <div class="three-col">
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px;">Week 1 &mdash; May 2026</div>
+      <h3 style="font-size:15px; color:var(--ceu-navy);">Fix Goes Live</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.6; margin-top:6px;">Canonical tags implemented and your <code>/product/</code> CDCA pages submitted for re-indexing. Rankings won't change immediately — Google needs time to re-crawl. The Phase II oscillation should stabilize as Google receives a clear signal about which URL to rank.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px;">Weeks 2&ndash;4 &mdash; May 2026</div>
+      <h3 style="font-size:15px; color:var(--ceu-navy);">Rankings Recover</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.6; margin-top:6px;">Google consolidates split authority into your canonical <code>/product/</code> pages. Target: "cdca certification ohio" recovers from position 6.9 back toward 2.6 (March baseline). "cdca" broad returns from position 10.0 toward 3&ndash;4. Daily CDCA clicks recover from 4.2/day toward 9.9/day.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-light); margin-bottom:8px;">Month 2 &mdash; June 2026</div>
+      <h3 style="font-size:15px; color:var(--ceu-navy);">Exceed Baseline</h3>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.6; margin-top:6px;">Ohio CDCA hub page live with in-depth content, FAQ schema, and internal links to your canonical product pages. Broader queries like "cdca requirements ohio" (currently position 8.5, zero clicks) enter the top 3. CDCA daily clicks exceed the 9.9/day March baseline.</p>
+    </div>
+  </div>
+
+  <div class="annotation success mt-md">
+    <strong>This is a recovery with upside, not damage control.</strong> Your overall organic traffic is healthy (&minus;2% from March). The CDCA position drop is a specific structural issue with a clear, scoped fix. Once resolved, the Ohio hub build in Month 2 positions these pages to perform above their March baseline — not just return to it.
+  </div>
+</div>
+
+<!-- ════════ FOOTER ════════════════════════════════════════════════════════ -->
+<div class="section dark">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;">
+    <div>
+      <div class="section-label">EmberTribe &mdash; CEU Matrix</div>
+      <p style="font-size:20px; font-weight:700; color:#fff; margin-bottom:4px;">Ohio CDCA Position Drop Report</p>
+      <p style="font-size:13px; opacity:0.5;">Data updated April 22&ndash;30, 2026 &mdash; GSC (https://ceumatrix.com/) + GA4 276964576</p>
+    </div>
+    <div style="text-align:right;">
+      <p style="font-size:13px; color:rgba(255,255,255,0.5);">Melissa Cedeno</p>
+      <p style="font-size:13px; color:rgba(255,255,255,0.5);">Director of Accounts, EmberTribe</p>
+      <p style="font-size:13px; color:var(--ceu-teal);">melissa@embertribe.com</p>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

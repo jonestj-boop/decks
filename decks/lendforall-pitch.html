@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lend For All — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Lend For All brand */
+  --primary-dark: #1e4d1c;
+  --primary-mid: #2a6828;
+  --primary-light: #357a32;
+  --accent: #8cc53f;
+
+  /* EmberTribe constants */
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 120px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.brand  { background: linear-gradient(90deg, var(--primary-dark), var(--accent)); }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary-light);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.brand { color: var(--primary-light); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit</p>
+      <h1>Lend For All</h1>
+      <p class="subtitle">Google is showing your site 98,000 times a month — but only 1.34% of those searchers click. Here's what's holding you back, and how we fix it.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">98K</div>
+          <div class="stat-label">Monthly Google Impressions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">1.34%</div>
+          <div class="stat-label">Avg. Click-Through Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">~1,300</div>
+          <div class="stat-label">Clicks/Month from Organic Search</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">4,400+</div>
+          <div class="stat-label">Potential Clicks/Month Within Reach</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Lend For All &mdash; April 2026 &mdash; Source: Google Search Console</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: GSC OVERVIEW -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Google Search Console — Oct 2025 to Apr 2026</p>
+    <h2>You're Visible. But Not Getting Clicked.</h2>
+    <p class="subtitle">589,975 impressions over 6 months — yet only 7,885 clicks. The site is showing up in Google, but low positions and thin pages are costing you the conversion.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value brand">589K</div>
+        <div class="stat-label">Total Impressions (6 mo)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value blue">7,885</div>
+        <div class="stat-label">Total Clicks (6 mo)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">1.34%</div>
+        <div class="stat-label">Avg. CTR (industry avg ~3%)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">160</div>
+        <div class="stat-label">Pages Indexed</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="mb-8" style="font-size:16px;">Top Pages by Clicks</h3>
+        <table style="font-size:13px;">
+          <thead><tr><th>Page</th><th class="right">Clicks</th><th class="right">Avg Pos</th><th class="right">CTR</th></tr></thead>
+          <tbody>
+            <tr><td>/ (homepage)</td><td class="right bold">5,411</td><td class="right orange">20.4</td><td class="right">1.9%</td></tr>
+            <tr><td>/child-tax-loans</td><td class="right">784</td><td class="right orange">16.7</td><td class="right">3.1%</td></tr>
+            <tr><td>/payday-loans-toronto</td><td class="right">218</td><td class="right red">53.0</td><td class="right">1.6%</td></tr>
+            <tr><td>/installment-loans</td><td class="right">172</td><td class="right red">58.3</td><td class="right">2.4%</td></tr>
+            <tr><td>/loans-without-employment</td><td class="right">125</td><td class="right red">32.6</td><td class="right">1.1%</td></tr>
+            <tr><td>/bad-credit-loans</td><td class="right">86</td><td class="right red">46.0</td><td class="right">0.8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="mb-8" style="font-size:16px;">Top Queries by Clicks</h3>
+        <table style="font-size:13px;">
+          <thead><tr><th>Query</th><th class="right">Clicks</th><th class="right">Pos</th></tr></thead>
+          <tbody>
+            <tr><td>guaranteed approval loans poor credit ca</td><td class="right">308</td><td class="right red">30.0</td></tr>
+            <tr><td>loans for bad credit canada</td><td class="right">231</td><td class="right orange">12.0</td></tr>
+            <tr><td>loans for bad credit</td><td class="right">172</td><td class="right orange">17.3</td></tr>
+            <tr><td>bad credit loans canada</td><td class="right">162</td><td class="right orange">14.3</td></tr>
+            <tr><td>personal loans canada</td><td class="right">106</td><td class="right orange">25.8</td></tr>
+            <tr><td>child tax loans</td><td class="right">54</td><td class="right orange">13.5</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation danger" style="margin-top:12px;">
+          <strong>Homepage dependency:</strong> 68% of all clicks go to the homepage — product pages are barely pulling their weight.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console — lendforall.ca</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: STRIKING DISTANCE -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Striking Distance — Source: Google Search Console</p>
+    <h2>4,400 Clicks/Month Within Reach</h2>
+    <p class="subtitle">These are keywords where lendforall.ca is already showing up on page 1–2 of Google (positions 5–20) with high impression volume. A ranking push here delivers fast, compounding results.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th class="right">Current Pos</th>
+          <th class="right">Impressions/mo</th>
+          <th class="right">Current Clicks</th>
+          <th class="right">Potential Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">loans for bad credit</td>
+          <td class="right orange">17.1</td>
+          <td class="right">5,286</td>
+          <td class="right">172</td>
+          <td class="right green bold">581</td>
+        </tr>
+        <tr>
+          <td class="bold">bad credit loans canada</td>
+          <td class="right orange">11.0</td>
+          <td class="right">4,613</td>
+          <td class="right">162</td>
+          <td class="right green bold">507</td>
+        </tr>
+        <tr>
+          <td class="bold">loans for bad credit canada</td>
+          <td class="right orange">9.8</td>
+          <td class="right">4,170</td>
+          <td class="right">231</td>
+          <td class="right green bold">458</td>
+        </tr>
+        <tr>
+          <td class="bold">guaranteed approval loans poor credit ca</td>
+          <td class="right orange">17.9</td>
+          <td class="right">3,833</td>
+          <td class="right">308</td>
+          <td class="right green bold">421</td>
+        </tr>
+        <tr>
+          <td class="bold">bad credit loans</td>
+          <td class="right orange">18.6</td>
+          <td class="right">3,694</td>
+          <td class="right">96</td>
+          <td class="right green bold">406</td>
+        </tr>
+        <tr>
+          <td class="bold">personal loans canada</td>
+          <td class="right" style="color:var(--primary-light);">6.2</td>
+          <td class="right">3,051</td>
+          <td class="right">106</td>
+          <td class="right green bold">335</td>
+        </tr>
+        <tr>
+          <td class="bold">child tax loans</td>
+          <td class="right orange">13.5</td>
+          <td class="right">2,457</td>
+          <td class="right">54</td>
+          <td class="right green bold">270</td>
+        </tr>
+        <tr>
+          <td class="bold">bad credit personal loans canada</td>
+          <td class="right orange">16.0</td>
+          <td class="right">2,117</td>
+          <td class="right">53</td>
+          <td class="right green bold">232</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Total opportunity (top 8 terms)</td>
+          <td></td>
+          <td class="right">29,221</td>
+          <td class="right">1,182</td>
+          <td class="right green">3,210+</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>How potential clicks are calculated:</strong> Conservative 11% CTR at top-5 position on existing impression volume — based on industry benchmarks. Current clicks already included.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console — lendforall.ca — Oct 2025 to Apr 2026</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMPETITOR LANDSCAPE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up</h2>
+    <p class="subtitle">Direct competitors in the Canadian bad-credit lending space are significantly outranking on organic search, content volume, and domain authority.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Lend For All</th>
+          <th>Loans Canada</th>
+          <th>Magical Credit</th>
+          <th>Spring Financial</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Est. Monthly Organic Traffic</td>
+          <td class="bold red">~1,300</td>
+          <td class="green">~85K</td>
+          <td class="green">~32K</td>
+          <td class="green">~58K</td>
+        </tr>
+        <tr>
+          <td>Ranking Keywords (est.)</td>
+          <td class="bold red">~160 pages</td>
+          <td>~12,000</td>
+          <td>~4,200</td>
+          <td>~7,800</td>
+        </tr>
+        <tr>
+          <td>Blog / Content Volume</td>
+          <td class="bold red">Minimal</td>
+          <td class="green">200+ articles</td>
+          <td class="orange">50+ articles</td>
+          <td class="green">100+ articles</td>
+        </tr>
+        <tr>
+          <td>Domain Authority (est.)</td>
+          <td class="bold red">~35</td>
+          <td class="green">~62</td>
+          <td class="orange">~48</td>
+          <td class="green">~55</td>
+        </tr>
+        <tr>
+          <td>Canadian Backlinks (.ca domains)</td>
+          <td class="bold red">~6 of 60</td>
+          <td class="green">Strong CA profile</td>
+          <td class="orange">Moderate CA profile</td>
+          <td class="green">Strong CA profile</td>
+        </tr>
+        <tr>
+          <td>Finance-Relevant Backlinks</td>
+          <td class="bold red">~8 of 60</td>
+          <td class="green">High topical relevance</td>
+          <td class="orange">Moderate relevance</td>
+          <td class="green">High topical relevance</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>Gap alert:</strong> Lend For All's organic traffic is 65x lower than Loans Canada. The backlink gap is a core driver — competitors have deep Canadian finance link profiles while lendforall.ca's acquired links are mostly non-Canadian, non-finance sources.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Lend For All &mdash; Growth Audit &mdash; Traffic source: GSC; Backlinks: EmberTribe analysis</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: BACKLINK GAP -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Backlink Gap Analysis — 60 Acquired Links Audited</p>
+    <h2>The Links Aren't Working Hard Enough</h2>
+    <p class="subtitle">Of 60 backlinks acquired over 8 months, only 10% are Canadian and 13% are finance-relevant. For a Canadian lending brand, Google weighs topical and geographic relevance heavily.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="mb-8" style="font-size:16px;">Current Link Profile Breakdown</h3>
+        <div class="bar-chart" style="margin-top:16px;">
+          <div class="bar-row">
+            <span class="bar-label">Canadian (.ca)</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:10%;">6</div></div>
+            <span class="bar-value red">10%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Finance/Biz</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:13%;">8</div></div>
+            <span class="bar-value orange">13%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Generic Blogs</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:77%;">46</div></div>
+            <span class="bar-value red">77%</span>
+          </div>
+        </div>
+        <div class="annotation danger" style="margin-top:16px;">
+          <strong>The problem:</strong> 77% of links come from generic US/international blogs with no topical connection to Canadian lending. Google's relevance signals treat these as weak authority for finance queries.
+        </div>
+        <h3 class="mb-8 mt-16" style="font-size:16px;">Current Canadian Links</h3>
+        <table style="font-size:13px;">
+          <thead><tr><th>Domain</th><th>Relevance</th></tr></thead>
+          <tbody>
+            <tr><td>londonincmagazine.ca</td><td><span class="pill seo">Business</span></td></tr>
+            <tr><td>ceo.ca (×2)</td><td><span class="pill seo">Business</span></td></tr>
+            <tr><td>theseeker.ca</td><td><span class="pill content">General</span></td></tr>
+            <tr><td>save.ca</td><td><span class="pill seo">Finance-adj.</span></td></tr>
+            <tr><td>everydaytourist.ca</td><td><span class="pill" style="background:#FFEBEE;color:var(--red);">Off-topic</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="mb-8" style="font-size:16px;">What Competitors Have That You Don't</h3>
+        <div class="channel-card" style="margin-bottom:16px;">
+          <h4 style="color:var(--primary-light);">Canadian Finance Publications</h4>
+          <p style="font-size:13px;color:var(--text-light);margin-top:4px;">Links from MoneySense, Financial Post, Canadian Living, Ratehub, and similar .ca finance properties — the exact topical signals Google needs to rank Canadian lending pages.</p>
+        </div>
+        <div class="channel-card" style="margin-bottom:16px;">
+          <h4 style="color:var(--primary-light);">Credit Comparison Sites</h4>
+          <p style="font-size:13px;color:var(--text-light);margin-top:4px;">Loans Canada, Magical Credit, and Spring Financial all receive links from ratehub.ca, loans.ca, creditcardgenius.ca — high-DR Canadian comparison sites that pass strong topical authority.</p>
+        </div>
+        <div class="channel-card">
+          <h4 style="color:var(--primary-light);">Provincial News &amp; Business Press</h4>
+          <p style="font-size:13px;color:var(--text-light);margin-top:4px;">Toronto Star, CBC, Globe and Mail, and regional outlets citing lenders as trusted sources. These links dramatically lift domain authority and brand trust signals.</p>
+        </div>
+        <div class="annotation success" style="margin-top:16px;">
+          <strong>Our plan:</strong> Shift link acquisition to 80%+ Canadian, finance-relevant sources. Target 10 high-DR .ca domains per month through editorial outreach and PR.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: EmberTribe backlink audit — 60 links acquired over 8 months</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: STRATEGY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Grow Lend For All</h2>
+    <p class="subtitle">A three-channel approach built around the high-intent, underserved search demand in Canadian lending.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📝</div>
+        <h3>SEO Content</h3>
+        <ul>
+          <li>8 high-intent articles per month targeting bad credit, debt consolidation, and emergency loan queries</li>
+          <li>Expand all product pages with depth, FAQs, and comparison content</li>
+          <li>Province-specific landing pages (Ontario, BC, Alberta)</li>
+          <li>Featured snippet capture for "how to" and "best loans" queries</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Paid Search</h3>
+        <ul>
+          <li>Google Ads targeting high-intent loan queries with strong CTAs</li>
+          <li>Competitor conquest campaigns (Loans Canada, Magical Credit)</li>
+          <li>Retargeting for applicants who didn't complete the form</li>
+          <li>Performance Max campaigns for broad awareness in CA</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Authority Building</h3>
+        <ul>
+          <li>10+ high-DR Canadian finance backlinks per month</li>
+          <li>Schema markup on all product and FAQ pages</li>
+          <li>PR placements in personal finance publications</li>
+          <li>Technical audit: crawl, speed, and indexation fixes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Lend For All &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ROADMAP -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Technical foundation in Month 1, full content and backlink engine running by Month 3.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Full technical SEO audit</li>
+          <li>Schema markup deployed sitewide</li>
+          <li>Core Web Vitals + crawl fixes</li>
+          <li>Internal linking architecture</li>
+          <li>First 40 articles briefed &amp; writing begins</li>
+        </ul>
+        <div class="phase-cost">$2,100/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Publish</h4>
+        <ul>
+          <li>40 articles live targeting striking-distance keywords</li>
+          <li>Product page rewrites complete</li>
+          <li>Province landing pages (ON, BC, AB)</li>
+          <li>First backlinks placed — Canadian finance sources</li>
+          <li>Indexation + technical fixes verified</li>
+        </ul>
+        <div class="phase-cost">$2,350+/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Rank &amp; Scale</h4>
+        <ul>
+          <li>First ranking lifts visible in GSC</li>
+          <li>Next 40 articles published</li>
+          <li>Backlink campaign scaled — .ca finance targets</li>
+          <li>CTR improvements from title/meta optimization</li>
+          <li>Monthly GSC reporting vs. baseline</li>
+        </ul>
+        <div class="phase-cost">$2,350+/mo</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Lend For All &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: INVESTMENT -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Three focused services targeting the gaps identified in this audit — technical, content, and authority.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Rate</th>
+          <th>Monthly Est.</th>
+          <th>Includes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill content">Tech</span> &nbsp;Technical SEO Fixes</td>
+          <td class="bold">$1,000/mo</td>
+          <td class="bold">$1,000</td>
+          <td>Schema, Core Web Vitals, crawl cleanup, internal linking, indexation fixes</td>
+        </tr>
+        <tr>
+          <td><span class="pill seo">SEO</span> &nbsp;Article Writing</td>
+          <td class="bold">$1,100/mo</td>
+          <td class="bold">$1,100</td>
+          <td>40 Canadian finance articles/mo targeting striking-distance keywords &amp; product pages</td>
+        </tr>
+        <tr>
+          <td><span class="pill" style="background:#E3F2FD;color:#0D47A1;">Links</span> &nbsp;Backlink Acquisition</td>
+          <td class="bold">$250/link</td>
+          <td class="bold">Flexible</td>
+          <td>Canadian .ca finance &amp; business publications — editorial placements, DR 40+ targets</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Retainer Total</td>
+          <td></td>
+          <td>$2,100/mo</td>
+          <td style="color:var(--text-light); font-weight:400;">+ backlinks at $250/link as needed</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="two-col mt-16">
+      <div class="annotation info">
+        <strong>Example Month:</strong> $2,100 retainer + 10 backlinks = <strong>$4,600 total</strong>. Scale links up or down based on budget and ranking velocity.
+      </div>
+      <div class="annotation success">
+        <strong>What you get:</strong> A Canadian finance writer, SEO strategist, and technical specialist — plus monthly GSC reporting and a direct Slack channel.
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Lend For All &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: NEXT STEPS -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Grow?</h1>
+      <p class="subtitle" style="text-align:center;">We can have technical fixes underway and articles in production within two weeks of kickoff.</p>
+      <div class="stats-row" style="justify-content:center; margin: 32px 0;">
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:24px; color:var(--accent);">$2,100</div>
+          <div class="stat-label">Monthly retainer to start</div>
+        </div>
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:24px; color:var(--accent);">40</div>
+          <div class="stat-label">Articles published in Month 2</div>
+        </div>
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:24px; color:var(--accent);">$250</div>
+          <div class="stat-label">Per Canadian backlink, on demand</div>
+        </div>
+      </div>
+      <p style="font-size:18px; font-weight:600;">Book a 30-minute call to confirm scope and get started.</p>
+      <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">hello@embertribe.com &mdash; or reply directly to this deck link</p>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

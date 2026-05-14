@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Implementation Workbook — Party Kids America</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #5b3fd4;
+      --accent-dim: rgba(91,63,212,0.07);
+      --red: #dc2626; --red-dim: #fef2f2; --red-mid: rgba(220,38,38,0.15);
+      --orange: #ea580c; --orange-dim: #fff7ed;
+      --yellow: #d97706; --yellow-dim: #fffbeb;
+      --green: #16a34a; --green-dim: #f0fdf4;
+      --text: #1a1a2e;
+      --text-muted: #374151;
+      --text-dim: #6b7280;
+      --code-bg: #1e1e2e;
+      --code-text: #cdd6f4;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mono: 'JetBrains Mono','Fira Code','Courier New',monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    /* HEADER */
+    .report-header { background: linear-gradient(135deg,#3a2a8a 0%,#5b3fd4 100%); padding: 56px 0 48px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+    .header-tag { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:20px; }
+    .header-title { font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px; }
+    .header-sub { font-size:16px;color:rgba(255,255,255,0.75);max-width:560px; }
+    .header-meta { display:flex;gap:24px;margin-top:28px;flex-wrap:wrap; }
+    .header-meta-item { font-size:13px;color:rgba(255,255,255,0.6); }
+    .header-meta-item strong { color:rgba(255,255,255,0.95); }
+
+    /* PLACEHOLDER ALERT */
+    .placeholder-alert { background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px 24px;margin:32px 0; }
+    .placeholder-alert h3 { font-size:14px;font-weight:700;color:#15803d;margin-bottom:12px;display:flex;align-items:center;gap:8px; }
+    .placeholder-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px; }
+    .placeholder-item { display:flex;gap:8px;align-items:flex-start;font-size:13px; }
+    .placeholder-tag { background:#fef3c7;color:#92400e;border-radius:4px;padding:2px 7px;font-family:var(--mono);font-size:11px;font-weight:700;flex-shrink:0;white-space:nowrap; }
+    .placeholder-desc { color:#78350f; }
+
+    /* TOC */
+    .toc-wrap { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px 28px;margin-bottom:40px; }
+    .toc-title { font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-dim);margin-bottom:16px; }
+    .toc-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px; }
+    .toc-item { display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;text-decoration:none;font-size:13px;color:var(--text-muted); transition:background 0.15s; }
+    .toc-item:hover { background:var(--accent-dim);color:var(--accent); }
+    .toc-badge { font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;flex-shrink:0; }
+    .tc { color:#fff; }
+    .tb-critical { background:var(--red); }
+    .tb-high { background:var(--orange); }
+    .tb-medium { background:var(--yellow); }
+    .tb-low { background:#6b7280; }
+
+    /* SECTION LABEL */
+    .phase-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin:40px 0 16px; }
+
+    /* ITEM CARD */
+    .item-card { background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px; }
+    .item-card-header { display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid var(--border); }
+    .item-card-left { display:flex;align-items:center;gap:12px;flex:1;min-width:0; }
+    .item-num { font-size:12px;font-weight:800;border-radius:6px;padding:4px 9px;flex-shrink:0;color:#fff; }
+    .in-critical { background:var(--red); }
+    .in-high { background:var(--orange); }
+    .in-medium { background:var(--yellow); }
+    .in-low { background:#6b7280; }
+    .item-card-title { font-size:15px;font-weight:700;color:var(--text); }
+    .effort-tag { font-size:11px;font-weight:600;border-radius:5px;padding:3px 9px;white-space:nowrap;flex-shrink:0; }
+    .et-low { background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0; }
+    .et-med { background:#fff7ed;color:var(--orange);border:1px solid #fed7aa; }
+    .et-high { background:#fef2f2;color:var(--red);border:1px solid #fecaca; }
+    .item-card-body { padding:24px; }
+
+    /* DIRECTIONS */
+    .directions-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:10px; }
+    .directions ol { padding-left:20px;color:var(--text-muted);font-size:14px; }
+    .directions ol li { padding:3px 0; }
+    .directions ol li + li { margin-top:4px; }
+
+    /* DELIVERABLE */
+    .deliverable { margin-top:20px;border-top:1px solid var(--border);padding-top:20px; }
+    .deliverable-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:12px; }
+
+    /* CODE BLOCK */
+    .code-wrap { position:relative;border-radius:8px;overflow:hidden;margin:12px 0; }
+    .code-block { background:var(--code-bg);color:var(--code-text);font-family:var(--mono);font-size:12.5px;line-height:1.7;padding:20px 20px 20px;overflow-x:auto;white-space:pre; }
+    .copy-btn { position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;padding:5px 11px;border-radius:5px;cursor:pointer;font-family:var(--sans);transition:all 0.15s; }
+    .copy-btn:hover { background:rgba(255,255,255,0.2);color:#fff; }
+    .copy-btn.copied { background:rgba(22,163,74,0.3);border-color:rgba(22,163,74,0.5);color:#6ee7b7; }
+
+    /* COPY BLOCK (plain text / prose) */
+    .copy-block { background:#f8f9fb;border:1px solid var(--border);border-radius:8px;padding:18px 20px;font-size:14px;color:var(--text-muted);line-height:1.7;position:relative; }
+    .copy-block-inner { white-space:pre-wrap; }
+    .copy-block .copy-btn-light { position:absolute;top:10px;right:10px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);font-size:11px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;font-family:var(--sans);transition:all 0.15s; }
+    .copy-block .copy-btn-light:hover { border-color:var(--accent);color:var(--accent); }
+    .copy-block .copy-btn-light.copied { border-color:var(--green);color:var(--green); }
+
+    /* TABLE */
+    .data-table { width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0; }
+    .data-table th { background:#f1f3f8;color:var(--text-dim);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border); }
+    .data-table td { padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top; }
+    .data-table tr:last-child td { border-bottom:none; }
+    .data-table .strike { text-decoration:line-through;color:var(--text-dim); }
+    .data-table .arrow { color:var(--accent);font-weight:700; }
+
+    /* TEST CARD */
+    .test-card { border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:10px 0; }
+    .test-card-header { background:#f8f9fb;padding:12px 16px;font-size:13px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border); }
+    .test-card-body { padding:14px 16px;font-size:13.5px;color:var(--text-muted); }
+    .test-row { display:flex;gap:12px;align-items:flex-start;padding:6px 0; }
+    .test-row + .test-row { border-top:1px solid var(--border); }
+    .test-variant { font-size:11px;font-weight:700;border-radius:4px;padding:2px 8px;flex-shrink:0;margin-top:2px; }
+    .tv-a { background:#dbeafe;color:#1e40af; }
+    .tv-b { background:#d1fae5;color:#065f46; }
+    .test-meta { font-size:12px;color:var(--text-dim);margin-top:6px; }
+
+    /* PLACEHOLDER INLINE */
+    .ph { background:#fef3c7;color:#92400e;border-radius:3px;padding:1px 5px;font-family:var(--mono);font-size:11px;font-weight:700; }
+
+    /* CATEGORY COPY CARDS */
+    .cat-copy-card { border:1px solid var(--border);border-radius:8px;margin:10px 0;overflow:hidden; }
+    .cat-copy-header { background:#f8f9fb;padding:10px 16px;font-size:13px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center; }
+    .cat-copy-body { padding:14px 16px;font-size:14px;color:var(--text-muted);line-height:1.7; }
+    .cat-h1 { font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px; }
+
+    /* CTA TABLE */
+    .badge-before { background:#fef2f2;color:var(--red);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+    .badge-after { background:#f0fdf4;color:var(--green);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+
+    /* NOTE */
+    .note { background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:12px 16px;font-size:13px;color:#5b21b6;margin:12px 0;display:flex;gap:8px;align-items:flex-start; }
+    .note-icon { flex-shrink:0;font-size:15px; }
+
+    /* FOOTER */
+    .report-footer { background:var(--surface);border-top:1px solid var(--border);padding:32px 0;margin-top:64px;text-align:center; }
+    .report-footer p { font-size:13px;color:var(--text-dim); }
+
+    /* CHECKBOX TOC */
+    .toc-item-wrap { display:flex;align-items:center;gap:6px; }
+    .toc-check { appearance:none;-webkit-appearance:none;width:15px;height:15px;min-width:15px;border:1.5px solid #d1d5db;border-radius:3px;cursor:pointer;flex-shrink:0;position:relative;background:#fff;transition:all 0.15s; }
+    .toc-check:checked { background:var(--green);border-color:var(--green); }
+    .toc-check:checked::after { content:'✓';position:absolute;top:-2px;left:2px;font-size:10px;color:#fff;font-weight:800;line-height:1; }
+    .toc-item-wrap .toc-item { flex:1; }
+    .toc-item.toc-done { text-decoration:line-through;color:var(--text-dim);opacity:0.65; }
+
+    /* DONE BADGE */
+    .done-badge { display:inline-flex;align-items:center;gap:5px;background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0;border-radius:6px;padding:4px 10px;font-size:12px;font-weight:700;flex-shrink:0; }
+
+    @media (max-width:640px) {
+      .item-card-header { flex-direction:column; }
+      .toc-grid { grid-template-columns:1fr 1fr; }
+      .placeholder-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="container">
+    <div class="header-tag">⚒ Implementation Workbook</div>
+    <div class="header-title">Party Kids America</div>
+    <div class="header-sub">19 ready-to-use deliverables from the CRO audit — copy, paste, and implement in ERS and GHL.</div>
+    <div class="header-meta">
+      <div class="header-meta-item"><strong>19</strong> actionable items</div>
+      <div class="header-meta-item"><strong>Platform:</strong> ERS (ourers.com) + GHL</div>
+      <div class="header-meta-item"><strong>Prepared:</strong> April 2025</div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px;">
+
+  <!-- PLACEHOLDER ALERT -->
+  <div class="placeholder-alert">
+    <h3>✓ All client info is filled in — only third-party account IDs remain</h3>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;margin-bottom:8px;">Pre-filled from client ✓</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">NO OWNER NAME</span><span class="placeholder-desc" style="color:#374151;">Brand-first approach — company name only</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">FOUNDED</span><span class="placeholder-desc" style="color:#374151;">June 2016 — approaching 10 years</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">EVENTS SERVED</span><span class="placeholder-desc" style="color:#374151;">2,636 events to date</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">ORIGIN STORY</span><span class="placeholder-desc" style="color:#374151;">Pre-filled — see M-11 copy below</span></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #bbf7d0;padding-top:14px;margin-bottom:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;margin-bottom:8px;">Pre-filled from site ✓</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">PHONE</span><span class="placeholder-desc" style="color:#374151;">(832) 338-5611</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">EMAIL</span><span class="placeholder-desc" style="color:#374151;">info@partykidsamerica.com</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">DEPOSIT</span><span class="placeholder-desc" style="color:#374151;">$50 non-refundable (orders over $300)</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">WEATHER POLICY</span><span class="placeholder-desc" style="color:#374151;">Free reschedule; 24hr notice for severe weather</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">PAYMENT</span><span class="placeholder-desc" style="color:#374151;">Cash or PayPal on delivery</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">RENTAL PERIOD</span><span class="placeholder-desc" style="color:#374151;">6 hours standard</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">ADDRESS</span><span class="placeholder-desc" style="color:#374151;">11601 Shadow Creek Pkwy, Pearland TX 77584</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag" style="background:#d1fae5;color:#065f46;">CANCEL POLICY</span><span class="placeholder-desc" style="color:#374151;">$50 deposit non-refundable (weather = full refund)</span></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #bbf7d0;padding-top:14px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#374151;margin-bottom:8px;">Still needs setup — third-party accounts</div>
+      <div class="placeholder-grid">
+        <div class="placeholder-item"><span class="placeholder-tag">[GOOGLE_REVIEW_URL]</span><span class="placeholder-desc">Your Google Business Profile direct review link</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[ELFSIGHT_WIDGET_ID]</span><span class="placeholder-desc">From elfsight.com after creating your widget</span></div>
+        <div class="placeholder-item"><span class="placeholder-tag">[GHL_WIDGET_ID]</span><span class="placeholder-desc">From GHL Settings → Chat Widget</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-wrap">
+    <div class="toc-title">Contents — 20 Items</div>
+    <div class="toc-grid">
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-c01" onchange="saveCheck(this)"><a href="#c01" class="toc-item"><span class="toc-badge tb-critical tc">C-01</span>FAQ payment methods copy</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-c02" checked onchange="saveCheck(this)"><a href="#c02" class="toc-item toc-done"><span class="toc-badge tb-critical tc">C-02</span>Google Reviews widget</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-c03" checked onchange="saveCheck(this)"><a href="#c03" class="toc-item toc-done"><span class="toc-badge tb-critical tc">C-03</span>Static hero block</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-c04" onchange="saveCheck(this)"><a href="#c04" class="toc-item"><span class="toc-badge tb-critical tc">C-04</span>Delivery fee display</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h01" onchange="saveCheck(this)"><a href="#h01" class="toc-item"><span class="toc-badge tb-high tc">H-01</span>Rental terms callout</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h02" onchange="saveCheck(this)"><a href="#h02" class="toc-item"><span class="toc-badge tb-high tc">H-02</span>Category page copy</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h04" onchange="saveCheck(this)"><a href="#h04" class="toc-item"><span class="toc-badge tb-high tc">H-04</span>A/B test plan</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h05" onchange="saveCheck(this)"><a href="#h05" class="toc-item"><span class="toc-badge tb-high tc">H-05</span>Trust bar</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h06" onchange="saveCheck(this)"><a href="#h06" class="toc-item"><span class="toc-badge tb-high tc">H-06</span>CTA rewrites</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h08" onchange="saveCheck(this)"><a href="#h08" class="toc-item"><span class="toc-badge tb-high tc">H-08</span>Homepage hero copy</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-h09" onchange="saveCheck(this)"><a href="#h09" class="toc-item"><span class="toc-badge tb-high tc">H-09</span>Urgency badge</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m01" onchange="saveCheck(this)"><a href="#m01" class="toc-item"><span class="toc-badge tb-medium tc">M-01</span>"Complete Your Party" upsell section</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m02" onchange="saveCheck(this)"><a href="#m02" class="toc-item"><span class="toc-badge tb-medium tc">M-02</span>$25-off email capture popup + nurture</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m04" onchange="saveCheck(this)"><a href="#m04" class="toc-item"><span class="toc-badge tb-medium tc">M-04</span>Breadcrumbs on product pages</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m03" onchange="saveCheck(this)"><a href="#m03" class="toc-item"><span class="toc-badge tb-medium tc">M-03</span>Product spec block</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m05" onchange="saveCheck(this)"><a href="#m05" class="toc-item"><span class="toc-badge tb-medium tc">M-05</span>Weather policy badge</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m06" onchange="saveCheck(this)"><a href="#m06" class="toc-item"><span class="toc-badge tb-medium tc">M-06</span>"What Happens Next" page</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m10" onchange="saveCheck(this)"><a href="#m10" class="toc-item"><span class="toc-badge tb-medium tc">M-10</span>Chat widget + FAQ workflow</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m11" onchange="saveCheck(this)"><a href="#m11" class="toc-item"><span class="toc-badge tb-medium tc">M-11</span>About Us copy</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-m13" onchange="saveCheck(this)"><a href="#m13" class="toc-item"><span class="toc-badge tb-medium tc">M-13</span>Address autocomplete</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-l01" onchange="saveCheck(this)"><a href="#l01" class="toc-item"><span class="toc-badge tb-low tc">L-01</span>Instagram feed section</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-l03" onchange="saveCheck(this)"><a href="#l03" class="toc-item"><span class="toc-badge tb-low tc">L-03</span>Footer contact block</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-l04" onchange="saveCheck(this)"><a href="#l04" class="toc-item"><span class="toc-badge tb-low tc">L-04</span>Mega menu CSS/JS</a></label>
+      <label class="toc-item-wrap"><input type="checkbox" class="toc-check" id="check-l05" onchange="saveCheck(this)"><a href="#l05" class="toc-item"><span class="toc-badge tb-low tc">L-05</span>Nav hover CSS</a></label>
+    </div>
+  </div>
+
+  <!-- ==================== CRITICAL ==================== -->
+  <div class="phase-label">Critical Priority</div>
+
+  <!-- C-01 -->
+  <div class="item-card" id="c01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-01</span>
+        <div class="item-card-title">Update FAQ — Communicate All Accepted Payment Methods</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> in ERS and open the FAQ page in the Responsive Editor.</li>
+          <li>Find the question "What form of payment do you accept?" and replace the answer with the updated copy below.</li>
+          <li>Search the rest of the site for any other mentions of "Cash or PayPal" — product pages, order confirmation emails (<strong>/cp/email_templates_for_orders/</strong>), and automatic messages — and update those too.</li>
+          <li>Optionally, add the payment icons snippet to product pages near the booking button so customers see accepted methods without needing to visit the FAQ.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Updated FAQ Answer (replace current text)</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Q: What form of payment do you accept?
+
+A: We accept all major credit cards, debit cards, Apple Pay, and Google Pay at checkout — no cash required to book. A $50 deposit is collected securely online at the time of booking. Your remaining balance is due on delivery day, where we also accept cash or PayPal if you prefer.</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Payment Methods Callout (add to product pages near booking button)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+     font-size:13px;color:#6b7280;margin:10px 0;"&gt;
+  &lt;span style="font-weight:600;color:#374151;"&gt;We accept:&lt;/span&gt;
+  &lt;span style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:5px;
+        padding:3px 10px;font-size:12px;font-weight:600;color:#374151;"&gt;
+    Visa
+  &lt;/span&gt;
+  &lt;span style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:5px;
+        padding:3px 10px;font-size:12px;font-weight:600;color:#374151;"&gt;
+    Mastercard
+  &lt;/span&gt;
+  &lt;span style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:5px;
+        padding:3px 10px;font-size:12px;font-weight:600;color:#374151;"&gt;
+    Amex
+  &lt;/span&gt;
+  &lt;span style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:5px;
+        padding:3px 10px;font-size:12px;font-weight:600;color:#374151;"&gt;
+    Apple Pay
+  &lt;/span&gt;
+  &lt;span style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:5px;
+        padding:3px 10px;font-size:12px;font-weight:600;color:#374151;"&gt;
+    Google Pay
+  &lt;/span&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-02 -->
+  <div class="item-card" id="c02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-02</span>
+        <div class="item-card-title">Add Google Reviews Widget Sitewide</div>
+      </div>
+      <span class="done-badge">✓ Done</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>elfsight.com</strong>, create a free account, and add a new <strong>Google Reviews</strong> widget.</li>
+          <li>Search for "Party Kids America" or paste your Google Business Profile URL. Configure: 5-star filter on, carousel layout, show reviewer name + photo.</li>
+          <li>Copy your <strong>Elfsight App ID</strong> from the dashboard (looks like <code>elfsight-app-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code>).</li>
+          <li>In ERS, go to <strong>/cp/source_code/</strong> and paste the sitewide script just before <code>&lt;/body&gt;</code>.</li>
+          <li>To show reviews on a specific page (e.g. homepage), go to <strong>/cp/website_pages/</strong> → open the page → add a Custom Code block → paste the widget div tag.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Embed Code</div>
+        <div class="note"><span class="note-icon">💡</span>Paste the script tag in /cp/source_code/ (sitewide), and place the div tag wherever you want reviews to appear on a page.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;!-- STEP 1: Paste in ERS /cp/source_code/ before &lt;/body&gt; --&gt;
+&lt;script src="https://static.elfsight.com/platform/platform.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- STEP 2: Paste this where you want the reviews widget to appear --&gt;
+&lt;div class="elfsight-app-[ELFSIGHT_WIDGET_ID]" data-elfsight-app-lazy&gt;&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Inline Star Rating Badge (for product pages)</div>
+        <div class="note"><span class="note-icon">💡</span>Add this just below the product title or price to show social proof without a full widget.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#374151;margin:8px 0;"&gt;
+  &lt;span style="color:#f59e0b;font-size:17px;letter-spacing:-1px;"&gt;★★★★★&lt;/span&gt;
+  &lt;span&gt;&lt;strong&gt;5.0&lt;/strong&gt; · Google Reviews&lt;/span&gt;
+  &lt;a href="[GOOGLE_REVIEW_URL]" target="_blank"
+     style="color:#5b3fd4;font-size:13px;text-decoration:none;"&gt;
+    See all reviews →
+  &lt;/a&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-03 -->
+  <div class="item-card" id="c03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-03</span>
+        <div class="item-card-title">Replace Hero Carousel with Static Headline</div>
+      </div>
+      <span class="done-badge">✓ Done</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open homepage in Responsive Editor.</li>
+          <li>Delete the current carousel/slider element from the hero section.</li>
+          <li>Add a Custom Code block in its place and paste the HTML below, OR use this copy as a guide to fill in ERS's native text/image blocks.</li>
+          <li>Set the hero background to a real action photo: crew setting up a unit, or kids mid-jump at a party. A photo with energy converts better than a product-only shot.</li>
+          <li>After publishing, set this as Test A in Conversion Booster (H-04) to measure lift vs. the carousel.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Static Hero HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="position:relative;text-align:center;padding:80px 24px;
+     background:linear-gradient(135deg,#3a1a8a 0%,#5b3fd4 60%,#7c4de8 100%);
+     color:#fff;border-radius:12px;"&gt;
+
+  &lt;!-- Location tag --&gt;
+  &lt;div style="display:inline-block;background:rgba(255,255,255,0.15);
+       border:1px solid rgba(255,255,255,0.3);border-radius:20px;
+       padding:4px 16px;font-size:13px;font-weight:600;
+       letter-spacing:0.05em;margin-bottom:22px;"&gt;
+    Serving Pearland &amp;amp; Greater SE Houston
+  &lt;/div&gt;
+
+  &lt;!-- Headline --&gt;
+  &lt;h1 style="font-size:clamp(36px,5vw,62px);font-weight:800;
+       line-height:1.1;margin-bottom:16px;letter-spacing:-0.02em;"&gt;
+    Make Their Birthday&lt;br&gt;Unforgettable
+  &lt;/h1&gt;
+
+  &lt;!-- Subhead --&gt;
+  &lt;p style="font-size:clamp(16px,2vw,20px);opacity:0.88;
+      max-width:560px;margin:0 auto 36px;line-height:1.6;"&gt;
+    Bounce houses, water slides &amp;amp; party rentals — delivered,
+    set up, and picked up by our local crew.
+  &lt;/p&gt;
+
+  &lt;!-- CTA Button --&gt;
+  &lt;a href="/order-by-date/"
+     style="display:inline-block;background:#fff;color:#5b3fd4;
+     font-size:18px;font-weight:700;padding:16px 44px;border-radius:8px;
+     text-decoration:none;box-shadow:0 4px 24px rgba(0,0,0,0.2);"&gt;
+    Book Your Date →
+  &lt;/a&gt;
+
+  &lt;!-- Trust line --&gt;
+  &lt;div style="display:flex;justify-content:center;gap:20px;
+       margin-top:28px;flex-wrap:wrap;font-size:14px;opacity:0.82;"&gt;
+    &lt;span&gt;✓ Free setup &amp;amp; breakdown&lt;/span&gt;
+    &lt;span&gt;✓ 100+ cities served&lt;/span&gt;
+    &lt;span&gt;✓ Same-week availability&lt;/span&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Alt Headlines to A/B Test</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Option A: "Make Their Birthday Unforgettable"
+Option B: "The Bounce House Rental They'll Talk About All Year"
+Option C: "SE Houston's Go-To Party Rental Crew"
+Option D: "Party Rentals That Show Up On Time and Set Up Fast"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C-04 -->
+  <div class="item-card" id="c04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-critical">C-04</span>
+        <div class="item-card-title">Surface Delivery Fee on Product Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/items/</strong> → open each product → scroll to the description field.</li>
+          <li>Add the plain-text callout below to the bottom of every product description.</li>
+          <li>Optionally, paste the HTML callout block into a Custom Code block in the Responsive Editor on product page templates — this shows it more visually near the price.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Plain Text (add to product description in ERS)</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">📦 Delivery fee calculated at checkout based on your address. We serve 100+ cities across Greater SE Houston — enter your zip at booking to see your exact delivery fee before you confirm. No surprises.</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — HTML Callout Block</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;
+     padding:14px 18px;margin:16px 0;display:flex;gap:12px;
+     align-items:flex-start;font-size:14px;"&gt;
+  &lt;span style="font-size:20px;flex-shrink:0;"&gt;🚚&lt;/span&gt;
+  &lt;div&gt;
+    &lt;strong style="color:#15803d;display:block;margin-bottom:4px;"&gt;
+      Delivery included — fee calculated at checkout
+    &lt;/strong&gt;
+    &lt;span style="color:#374151;"&gt;
+      We serve 100+ cities across Greater SE Houston.
+      Your exact delivery fee appears before you book — no surprises.
+    &lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HIGH ==================== -->
+  <div class="phase-label">High Priority</div>
+
+  <!-- H-01 -->
+  <div class="item-card" id="h01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-01</span>
+        <div class="item-card-title">Add Rental Terms Callout to Product Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li><strong>Product pages — Rental Terms Callout:</strong> Go to <strong>/cp/website_pages/</strong> → open a product page in the Responsive Editor. Add a Custom Code block below the price and booking button. Paste Deliverable 1 below — all real policy data is pre-filled, no changes needed. Repeat for each product page, or add once to a template if ERS supports it.</li>
+          <li><strong>Product pages — Pre-Checkout Pricing Notice:</strong> In the same Custom Code block (or a second block below Deliverable 1), paste Deliverable 2. This surfaces the 5-hour window and pricing tiers while customers are still browsing — before they even add to cart.</li>
+          <li><strong>Checkout page — Banner injection:</strong> Go to <strong>/cp/source_code/</strong> and paste Deliverable 3. This script auto-detects when a customer lands on the cart or checkout URL and inserts the pricing notice at the top of the order form — no manual checkout page editing needed.</li>
+          <li>After publishing, do a full run-through on desktop and mobile: browse a product page (confirm Deliverables 1 and 2 appear), then proceed to checkout (confirm Deliverable 3 banner appears above the form).</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Rental Terms Callout HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#fafaf9;border:1px solid #e5e7eb;border-radius:10px;
+     padding:20px 24px;margin:24px 0;font-size:14px;"&gt;
+  &lt;div style="font-weight:700;color:#1a1a2e;margin-bottom:14px;font-size:15px;"&gt;
+    📋 Rental Terms
+  &lt;/div&gt;
+  &lt;div style="display:grid;gap:12px;"&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#dbeafe;color:#1d4ed8;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;DEPOSIT&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        $50 secures your date — balance due on delivery
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#d1fae5;color:#065f46;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;WEATHER&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        Rain? Free reschedule — no questions asked.
+        Give us 24 hours notice and we'll find you a new date.
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#fef3c7;color:#92400e;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;CANCEL&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        $50 deposit is non-refundable — weather cancellations refunded in full
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#e0f2fe;color:#0369a1;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;RENTAL TIME&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        5-hour rental window — add hours at &lt;strong&gt;$25/hr&lt;/strong&gt;,
+        or book all-night for &lt;strong&gt;50% more&lt;/strong&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#f3e8ff;color:#6b21a8;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;SETUP&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        Flat surface required · Gate clearance min. 36" ·
+        Power outlet within 50ft
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+
+        <div class="deliverable" style="margin-top:20px;border-top:1px solid var(--border);padding-top:20px;">
+          <div class="deliverable-label">Deliverable — Pre-Checkout Pricing Notice</div>
+          <div class="note"><span class="note-icon">💡</span>Place this in the ERS cart or checkout page via <strong>/cp/website_pages/</strong> or inject sitewide via <strong>/cp/source_code/</strong> so every customer sees rental time and pricing options before they complete their order.</div>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <div class="code-block">&lt;div style="background:#fffbeb;border:2px solid #f59e0b;border-radius:10px;
+     padding:20px 24px;margin:20px 0;font-size:14px;"&gt;
+
+  &lt;div style="font-weight:700;color:#1a1a2e;font-size:15px;margin-bottom:14px;"&gt;
+    ⏱ Rental Time &amp;amp; Pricing
+  &lt;/div&gt;
+
+  &lt;div style="display:grid;gap:12px;"&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#d1fae5;color:#065f46;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;STANDARD&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        &lt;strong&gt;5-hour rentals&lt;/strong&gt; — regular price
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#dbeafe;color:#1d4ed8;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;EXTRA HOURS&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        Only &lt;strong&gt;$25 more per hour!&lt;/strong&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;div style="display:flex;gap:10px;align-items:flex-start;"&gt;
+      &lt;span style="background:#f3e8ff;color:#6b21a8;border-radius:4px;
+            padding:2px 8px;font-size:11px;font-weight:700;
+            flex-shrink:0;margin-top:2px;"&gt;ALL NIGHT&lt;/span&gt;
+      &lt;span style="color:#374151;"&gt;
+        Party all night long for only &lt;strong&gt;50% more!&lt;/strong&gt;
+      &lt;/span&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+  &lt;div style="margin-top:14px;padding-top:12px;border-top:1px solid #fde68a;
+       font-size:13px;color:#6b7280;"&gt;
+    Please note: Holiday and Graduation event pricing will differ.
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+          </div>
+        </div>
+
+        <div class="deliverable" style="margin-top:20px;border-top:1px solid var(--border);padding-top:20px;">
+          <div class="deliverable-label">Deliverable — Checkout Page Banner (Sitewide JS Injection)</div>
+          <div class="note"><span class="note-icon">💡</span>Paste this into <strong>/cp/source_code/</strong>. It detects when a customer is on the cart or checkout page and automatically inserts the pricing notice at the top of the order form — no manual page editing needed.</div>
+          <div class="code-wrap">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <div class="code-block">&lt;script&gt;
+(function() {
+  <span class="cm">// Only run on cart / checkout pages</span>
+  var path = window.location.pathname.toLowerCase();
+  if (!path.includes('/checkout') &amp;&amp; !path.includes('/cart') &amp;&amp; !path.includes('/order')) return;
+
+  var notice = document.createElement('div');
+  notice.innerHTML = `
+    &lt;div style="background:#fffbeb;border:2px solid #f59e0b;border-radius:10px;
+         padding:18px 22px;margin:0 0 24px;font-size:14px;font-family:inherit;"&gt;
+
+      &lt;div style="font-weight:700;color:#1a1a2e;font-size:15px;margin-bottom:12px;"&gt;
+        ⏱ Rental Time &amp; Pricing
+      &lt;/div&gt;
+
+      &lt;div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;"&gt;
+
+        &lt;div style="display:flex;gap:8px;align-items:center;"&gt;
+          &lt;span style="background:#d1fae5;color:#065f46;border-radius:4px;
+                padding:2px 8px;font-size:11px;font-weight:700;white-space:nowrap;"&gt;STANDARD&lt;/span&gt;
+          &lt;span style="color:#374151;"&gt;5-hour rental — regular price&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div style="display:flex;gap:8px;align-items:center;"&gt;
+          &lt;span style="background:#dbeafe;color:#1d4ed8;border-radius:4px;
+                padding:2px 8px;font-size:11px;font-weight:700;white-space:nowrap;"&gt;EXTRA HOURS&lt;/span&gt;
+          &lt;span style="color:#374151;"&gt;Only &lt;strong&gt;$25/hr more&lt;/strong&gt;&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div style="display:flex;gap:8px;align-items:center;"&gt;
+          &lt;span style="background:#f3e8ff;color:#6b21a8;border-radius:4px;
+                padding:2px 8px;font-size:11px;font-weight:700;white-space:nowrap;"&gt;ALL NIGHT&lt;/span&gt;
+          &lt;span style="color:#374151;"&gt;Party all night for &lt;strong&gt;50% more&lt;/strong&gt;&lt;/span&gt;
+        &lt;/div&gt;
+
+      &lt;/div&gt;
+
+      &lt;div style="font-size:12px;color:#6b7280;"&gt;
+        Please note: Holiday and Graduation event pricing will differ.
+      &lt;/div&gt;
+
+    &lt;/div&gt;
+  `;
+
+  <span class="cm">// Insert before the first form or main content block on the page</span>
+  var target = document.querySelector('form') || document.querySelector('main') || document.body;
+  target.insertBefore(notice.firstElementChild, target.firstChild);
+})();
+&lt;/script&gt;</div>
+          </div>
+          <div class="note" style="margin-top:12px;"><span class="note-icon">⚠️</span>After pasting, complete a test checkout on desktop and mobile to confirm the banner appears and doesn't overlap any form fields. If the path check doesn't match ERS's checkout URL, update <code>'/checkout'</code>, <code>'/cart'</code>, or <code>'/order'</code> to match the actual URL path on your site.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- H-02 -->
+  <div class="item-card" id="h02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-02</span>
+        <div class="item-card-title">Category Sub-Page Copy (5 pages)</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open each category page in the Responsive Editor.</li>
+          <li>Replace the existing headline and intro copy with the text below for each category.</li>
+          <li>Replace <span class="ph">[CITY]</span> with your primary city target for that page (Pearland for local SEO, or the city you most want to rank for per category).</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Copy for Each Category Page</div>
+
+        <div class="cat-copy-card">
+          <div class="cat-copy-header">Bounce Houses <button class="copy-btn-light" onclick="copyParent(this)" style="position:static;font-size:11px;padding:3px 8px;">Copy</button></div>
+          <div class="cat-copy-body">
+            <div class="cat-h1">H1: Bounce House Rentals in [CITY]</div>
+            The classic party centerpiece — and Party Kids America's most-booked category. From compact residential-friendly units to massive combo bounce houses with slides and obstacles, we have the right size for your yard and your guest list.<br><br>
+            All bounce houses include free delivery, professional setup, and pickup. Most setups take under 30 minutes. Browse below, pick your date, and we'll handle the rest.
+          </div>
+        </div>
+
+        <div class="cat-copy-card">
+          <div class="cat-copy-header">Water Slides <button class="copy-btn-light" onclick="copyParent(this)" style="position:static;font-size:11px;padding:3px 8px;">Copy</button></div>
+          <div class="cat-copy-body">
+            <div class="cat-h1">H1: Water Slide Rentals in [CITY]</div>
+            The minute they see it pull up in the driveway, the party starts. Party Kids America carries a full range of inflatable water slides — from backyard-friendly dual lanes to towering wet rides for older kids and teens.<br><br>
+            Perfect for summer birthday parties, end-of-school celebrations, and neighborhood block parties. Free delivery, setup, and breakdown included with every rental.
+          </div>
+        </div>
+
+        <div class="cat-copy-card">
+          <div class="cat-copy-header">Party Equipment <button class="copy-btn-light" onclick="copyParent(this)" style="position:static;font-size:11px;padding:3px 8px;">Copy</button></div>
+          <div class="cat-copy-body">
+            <div class="cat-h1">H1: Party Equipment Rentals in [CITY]</div>
+            Tables, chairs, tents, and concessions — everything you need so you can focus on the party, not the logistics. We deliver, set up, and pick up when you're done.<br><br>
+            Mix and match with any of our bounce houses or water slides for a complete party package. One delivery, one crew, one less thing to worry about.
+          </div>
+        </div>
+
+        <div class="cat-copy-card">
+          <div class="cat-copy-header">Interactives <button class="copy-btn-light" onclick="copyParent(this)" style="position:static;font-size:11px;padding:3px 8px;">Copy</button></div>
+          <div class="cat-copy-body">
+            <div class="cat-h1">H1: Interactive Game Rentals in [CITY]</div>
+            Go beyond the bounce house with carnival games, obstacle courses, and interactive units that keep kids — and adults — entertained for hours.<br><br>
+            Great for school field days, church carnivals, corporate family events, and birthday parties where you want a little extra wow-factor. Browse our full interactive lineup below.
+          </div>
+        </div>
+
+        <div class="cat-copy-card">
+          <div class="cat-copy-header">Entertainment <button class="copy-btn-light" onclick="copyParent(this)" style="position:static;font-size:11px;padding:3px 8px;">Copy</button></div>
+          <div class="cat-copy-body">
+            <div class="cat-h1">H1: Party Entertainment Rentals in [CITY]</div>
+            Photo booths, snow cone machines, popcorn makers, and more — Party Kids America has the extras that turn a birthday party into a full event.<br><br>
+            Bundle any entertainment add-on with your main rental and save on delivery. One truck, everything you need, zero hassle.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- H-04 -->
+  <div class="item-card" id="h04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-04</span>
+        <div class="item-card-title">A/B Test Plan for ERS Conversion Booster</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/conversion_booster/</strong> in ERS — this is already active on your account.</li>
+          <li>Create a new split test for each experiment below. Run them sequentially, not simultaneously.</li>
+          <li>Let each test run a minimum of 2 weeks or 200 unique visitors before declaring a winner.</li>
+          <li>Start with Test 1 (highest impact, fewest variables).</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — 3 Tests to Run</div>
+
+        <div class="test-card">
+          <div class="test-card-header">Test 1 — Homepage Hero CTA Button Text <span style="font-size:11px;font-weight:400;color:#6b7280;">(Start here)</span></div>
+          <div class="test-card-body">
+            <div class="test-row">
+              <span class="test-variant tv-a">A</span>
+              <div><strong>Control:</strong> "Book Now" — current or default button text</div>
+            </div>
+            <div class="test-row">
+              <span class="test-variant tv-b">B</span>
+              <div><strong>Test:</strong> "Check Availability" — intent-matching language for visitors who aren't sure yet</div>
+            </div>
+            <div class="test-meta">Goal: Clicks to /order-by-date/ · Run: 2 weeks min.</div>
+          </div>
+        </div>
+
+        <div class="test-card">
+          <div class="test-card-header">Test 2 — Product Page Primary Button</div>
+          <div class="test-card-body">
+            <div class="test-row">
+              <span class="test-variant tv-a">A</span>
+              <div><strong>Control:</strong> "Add to Cart" — functional but transactional</div>
+            </div>
+            <div class="test-row">
+              <span class="test-variant tv-b">B</span>
+              <div><strong>Test:</strong> "Reserve This" — softer commitment, better fit for rentals vs. purchases</div>
+            </div>
+            <div class="test-meta">Goal: Cart additions · Page: your highest-traffic bounce house · Run: 2 weeks min.</div>
+          </div>
+        </div>
+
+        <div class="test-card">
+          <div class="test-card-header">Test 3 — Hero Layout (after C-03 is live)</div>
+          <div class="test-card-body">
+            <div class="test-row">
+              <span class="test-variant tv-a">A</span>
+              <div><strong>Control:</strong> Current rotating carousel hero</div>
+            </div>
+            <div class="test-row">
+              <span class="test-variant tv-b">B</span>
+              <div><strong>Test:</strong> New static headline hero (C-03 deliverable above)</div>
+            </div>
+            <div class="test-meta">Goal: Time on page + scroll depth + add-to-cart rate · Run: 3 weeks min.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- H-05 -->
+  <div class="item-card" id="h05">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-05</span>
+        <div class="item-card-title">Add Trust Bar to Product Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open a product page in the Responsive Editor.</li>
+          <li>Add a Custom Code block directly below the main product image (above the price/CTA area).</li>
+          <li>Paste the HTML below. No placeholders — it's ready to use as-is.</li>
+          <li>Repeat for all product pages, or once if ERS lets you edit a shared product page template.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Trust Bar HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:flex;border:1px solid #e5e7eb;border-radius:10px;
+     overflow:hidden;margin:16px 0;background:#fff;"&gt;
+
+  &lt;div style="flex:1;padding:14px 12px;text-align:center;
+       border-right:1px solid #e5e7eb;"&gt;
+    &lt;div style="font-size:22px;margin-bottom:4px;"&gt;🚚&lt;/div&gt;
+    &lt;div style="font-size:12px;font-weight:700;color:#1a1a2e;
+         margin-bottom:2px;"&gt;Free Delivery&lt;/div&gt;
+    &lt;div style="font-size:11px;color:#6b7280;"&gt;Setup &amp;amp; breakdown included&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="flex:1;padding:14px 12px;text-align:center;
+       border-right:1px solid #e5e7eb;"&gt;
+    &lt;div style="font-size:22px;margin-bottom:4px;"&gt;📍&lt;/div&gt;
+    &lt;div style="font-size:12px;font-weight:700;color:#1a1a2e;
+         margin-bottom:2px;"&gt;100+ Cities&lt;/div&gt;
+    &lt;div style="font-size:11px;color:#6b7280;"&gt;Greater SE Houston&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="flex:1;padding:14px 12px;text-align:center;
+       border-right:1px solid #e5e7eb;"&gt;
+    &lt;div style="font-size:22px;margin-bottom:4px;"&gt;👨&amp;zwj;👩&amp;zwj;👧&lt;/div&gt;
+    &lt;div style="font-size:12px;font-weight:700;color:#1a1a2e;
+         margin-bottom:2px;"&gt;Family Owned&lt;/div&gt;
+    &lt;div style="font-size:11px;color:#6b7280;"&gt;Local Pearland crew&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div style="flex:1;padding:14px 12px;text-align:center;"&gt;
+    &lt;div style="font-size:22px;margin-bottom:4px;"&gt;🌧️&lt;/div&gt;
+    &lt;div style="font-size:12px;font-weight:700;color:#1a1a2e;
+         margin-bottom:2px;"&gt;Rain Guarantee&lt;/div&gt;
+    &lt;div style="font-size:11px;color:#6b7280;"&gt;Free reschedule policy&lt;/div&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-06 -->
+  <div class="item-card" id="h06">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-06</span>
+        <div class="item-card-title">Standardize All CTAs to "Book Now" Family</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to each page type in <strong>/cp/website_pages/</strong> and update the button text per the table below using the Responsive Editor.</li>
+          <li>For system-generated buttons (cart, checkout), check <strong>/cp/misc_order_settings/</strong> or the ERS checkout settings for label overrides.</li>
+          <li>Button colors: primary action buttons should be your purple (#5b3fd4) or your brand's primary CTA color — make sure no important button is gray or white by default.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Button Rewrite Table</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Location</th><th>Current (change this)</th><th>New Text</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Homepage hero</td><td><span class="badge-before">Shop Now / View Rentals</span></td><td><span class="badge-after">Book Your Date</span></td></tr>
+            <tr><td>Homepage nav CTA</td><td><span class="badge-before">Get Started / Book</span></td><td><span class="badge-after">Book Now</span></td></tr>
+            <tr><td>Product page primary</td><td><span class="badge-before">Add to Cart</span></td><td><span class="badge-after">Book This</span></td></tr>
+            <tr><td>Category page cards</td><td><span class="badge-before">View / See More</span></td><td><span class="badge-after">See Details</span></td></tr>
+            <tr><td>Cart page proceed</td><td><span class="badge-before">Continue / Next</span></td><td><span class="badge-after">Complete Booking</span></td></tr>
+            <tr><td>Date availability page</td><td><span class="badge-before">Search / Check</span></td><td><span class="badge-after">Find My Date</span></td></tr>
+            <tr><td>Confirmation page</td><td><span class="badge-before">View Order / Done</span></td><td><span class="badge-after">See What's Next</span></td></tr>
+            <tr><td>Homepage secondary CTA</td><td><span class="badge-before">Learn More / Browse</span></td><td><span class="badge-after">Browse Rentals</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-08 -->
+  <div class="item-card" id="h08">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-08</span>
+        <div class="item-card-title">Homepage Hero Copy — Full Set</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Use this in conjunction with C-03 (static hero HTML above) — this is the copy that fills it.</li>
+          <li>Or use it independently: go to <strong>/cp/website_pages/</strong> → homepage → Responsive Editor → update the headline and subhead text blocks.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Full Hero Copy Set</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">HEADLINE (primary):
+Make Their Birthday Unforgettable
+
+SUBHEAD:
+Bounce houses, water slides & party rentals — delivered, set up, and picked up by our local crew. Serving Pearland & Greater SE Houston.
+
+PRIMARY CTA BUTTON:
+Book Your Date
+
+TRUST LINE (below button):
+✓ Free setup & breakdown  ·  ✓ 100+ cities served  ·  ✓ Same-week availability
+
+LOCATION TAG (above headline):
+Serving Pearland & Greater SE Houston</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- H-09 -->
+  <div class="item-card" id="h09">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-high">H-09</span>
+        <div class="item-card-title">Urgency / Availability Badge</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open a product page in the Responsive Editor.</li>
+          <li>Add a Custom Code block directly above or below the booking button.</li>
+          <li>Paste the HTML below. The pulsing dot adds visual urgency without feeling spammy.</li>
+          <li>Optionally, update the badge text seasonally: "Summer weekends filling fast" in June/July, "Holiday parties booking now" in November.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Urgency Badge HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+@keyframes pkam-pulse {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.35; }
+}
+&lt;/style&gt;
+
+&lt;div style="display:inline-flex;align-items:center;gap:8px;
+     background:#fef2f2;border:1px solid #fecaca;border-radius:6px;
+     padding:9px 14px;font-size:13px;color:#991b1b;
+     font-weight:600;margin:12px 0;"&gt;
+  &lt;span style="width:8px;height:8px;border-radius:50%;background:#dc2626;
+        flex-shrink:0;animation:pkam-pulse 1.5s ease infinite;"&gt;&lt;/span&gt;
+  High demand — weekends filling fast.
+  &lt;a href="/order-by-date/"
+     style="color:#7f1d1d;text-decoration:underline;margin-left:2px;"&gt;
+    Check your date →
+  &lt;/a&gt;
+&lt;/div&gt;</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:16px;">Seasonal Variations (swap the badge text)</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">April–May:   "Spring parties booking fast — check your weekend"
+June–Aug:    "Summer weekends filling up — lock in your date"
+Sept–Oct:    "Fall season is busy — book early"
+Nov–Dec:     "Holiday party slots going fast"
+Year-round:  "High demand — weekends filling fast. Check your date →"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MEDIUM ==================== -->
+  <div class="phase-label">Medium Priority</div>
+
+  <!-- M-01 -->
+  <div class="item-card" id="m01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-01</span>
+        <div class="item-card-title">"Complete Your Party" Upsell Section on Product Pages</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/addons/</strong> in ERS and set up the smart pairings from the table below — this is the platform-level configuration that controls which items are suggested together.</li>
+          <li>For a visual "Complete Your Party" section on the product page itself, go to <strong>/cp/items/</strong>, open each primary item, and paste the HTML below into the item description. Update the 3 companion product links to match real item URLs.</li>
+          <li>Start with your highest-traffic items: water slides, bounce house combos, and the mechanical bull.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Smart Pairing Logic (configure in /cp/addons/)</div>
+        <table class="data-table">
+          <thead><tr><th>Primary Item</th><th>Suggested Add-ons</th></tr></thead>
+          <tbody>
+            <tr><td>Any Bounce House</td><td>Snow Cone Machine · Popcorn Machine · Tables &amp; Chairs · Balloon Garland</td></tr>
+            <tr><td>Any Water Slide</td><td>Snow Cone Machine · Cotton Candy Machine · Outdoor Light Stand</td></tr>
+            <tr><td>Bounce House Combos</td><td>Face Painting · Balloon Artists · Concession Machine</td></tr>
+            <tr><td>Mechanical Bull</td><td>Trackless Train · Dunk Tank · Giant Jenga</td></tr>
+            <tr><td>Trackless Train</td><td>Balloon Artists · Face Painting · Popcorn Machine</td></tr>
+            <tr><td>Tables &amp; Chairs</td><td>10x10 Canopy Tent · Outdoor Light Stand · Generator Rental</td></tr>
+          </tbody>
+        </table>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — "Complete Your Party" HTML Section (paste in item description)</div>
+        <div class="note"><span class="note-icon">💡</span>Update the 3 href links and item names to match your actual companion products. Use this template on each primary rental page.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="border-top:2px solid #e2e8f0;margin-top:24px;padding-top:20px;"&gt;
+  &lt;div style="font-weight:700;color:#1a1a2e;font-size:15px;margin-bottom:16px;"&gt;
+    Complete Your Party
+  &lt;/div&gt;
+  &lt;div style="display:flex;gap:12px;flex-wrap:wrap;"&gt;
+
+    &lt;a href="/items/[ITEM-1-URL-SLUG]/"
+       style="flex:1;min-width:140px;border:1px solid #e2e8f0;border-radius:8px;
+       padding:14px;text-decoration:none;color:inherit;text-align:center;"&gt;
+      &lt;div style="font-size:22px;margin-bottom:6px;"&gt;🍦&lt;/div&gt;
+      &lt;div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;"&gt;
+        Snow Cone Machine
+      &lt;/div&gt;
+      &lt;div style="font-size:12px;color:#6b7280;"&gt;from $105&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a href="/items/[ITEM-2-URL-SLUG]/"
+       style="flex:1;min-width:140px;border:1px solid #e2e8f0;border-radius:8px;
+       padding:14px;text-decoration:none;color:inherit;text-align:center;"&gt;
+      &lt;div style="font-size:22px;margin-bottom:6px;"&gt;🍿&lt;/div&gt;
+      &lt;div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;"&gt;
+        Popcorn Machine
+      &lt;/div&gt;
+      &lt;div style="font-size:12px;color:#6b7280;"&gt;from $105&lt;/div&gt;
+    &lt;/a&gt;
+
+    &lt;a href="/items/[ITEM-3-URL-SLUG]/"
+       style="flex:1;min-width:140px;border:1px solid #e2e8f0;border-radius:8px;
+       padding:14px;text-decoration:none;color:inherit;text-align:center;"&gt;
+      &lt;div style="font-size:22px;margin-bottom:6px;"&gt;🎈&lt;/div&gt;
+      &lt;div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;"&gt;
+        Balloon Garland
+      &lt;/div&gt;
+      &lt;div style="font-size:12px;color:#6b7280;"&gt;from $350&lt;/div&gt;
+    &lt;/a&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-02 -->
+  <div class="item-card" id="m02">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-02</span>
+        <div class="item-card-title">Move $25-Off Email Capture to High-Traffic Pages + 3-Email Nurture Sequence</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/source_code/</strong> in ERS and paste the popup HTML/JS below just before <code>&lt;/body&gt;</code> — this adds a slide-in on the homepage after 30 seconds.</li>
+          <li>For the sticky bar on category pages, paste the sticky bar HTML into the same source_code block — it shows on all pages and can be conditionally hidden on checkout via CSS if needed.</li>
+          <li>Connect form submissions to ERS's built-in email marketing (<strong>/cp/mailchimp_settings/</strong>) or route to GHL via highlevel_connect for the nurture sequence.</li>
+          <li>Build the 3-email nurture sequence using the copy below in ERSMail, Mailchimp, or GHL Automation.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Slide-In Popup HTML/JS (paste in /cp/source_code/)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+#pkam-popup {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 320px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  padding: 28px 24px;
+  z-index: 9999;
+  font-family: system-ui, sans-serif;
+  animation: pkam-slide-in 0.3s ease;
+}
+@keyframes pkam-slide-in {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+#pkam-popup-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #9ca3af;
+  line-height: 1;
+}
+&lt;/style&gt;
+
+&lt;div id="pkam-popup"&gt;
+  &lt;button id="pkam-popup-close" onclick="document.getElementById('pkam-popup').style.display='none'"&gt;
+    &amp;times;
+  &lt;/button&gt;
+  &lt;div style="font-size:22px;margin-bottom:8px;"&gt;🎉&lt;/div&gt;
+  &lt;div style="font-weight:800;font-size:17px;color:#1a1a2e;margin-bottom:6px;"&gt;
+    Get $25 Off Your First Rental
+  &lt;/div&gt;
+  &lt;div style="font-size:13px;color:#6b7280;margin-bottom:16px;"&gt;
+    Join our list and we'll send your discount code instantly.
+  &lt;/div&gt;
+  &lt;!-- Replace this form action with your actual ERS or Mailchimp form URL --&gt;
+  &lt;form action="[YOUR_FORM_ACTION_URL]" method="POST"&gt;
+    &lt;input type="text" name="name" placeholder="Your first name"
+      style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;
+      font-size:14px;margin-bottom:8px;box-sizing:border-box;" required&gt;
+    &lt;input type="email" name="email" placeholder="Your email address"
+      style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;
+      font-size:14px;margin-bottom:12px;box-sizing:border-box;" required&gt;
+    &lt;button type="submit"
+      style="width:100%;background:#5b3fd4;color:#fff;font-weight:700;font-size:15px;
+      padding:12px;border:none;border-radius:8px;cursor:pointer;"&gt;
+      Claim My $25 Off
+    &lt;/button&gt;
+  &lt;/form&gt;
+  &lt;div style="font-size:11px;color:#9ca3af;text-align:center;margin-top:10px;"&gt;
+    No spam. Unsubscribe anytime.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+(function() {
+  // Show popup after 30 seconds, only once per session
+  if (!sessionStorage.getItem('pkam_popup_shown')) {
+    setTimeout(function() {
+      var popup = document.getElementById('pkam-popup');
+      if (popup) {
+        popup.style.display = 'block';
+        sessionStorage.setItem('pkam_popup_shown', '1');
+      }
+    }, 30000);
+  }
+})();
+&lt;/script&gt;</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Sticky Bottom Bar (paste in /cp/source_code/ alongside popup)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+#pkam-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #5b3fd4;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 9998;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+#pkam-sticky-bar a {
+  background: #fff;
+  color: #5b3fd4;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  white-space: nowrap;
+}
+#pkam-sticky-close {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+&lt;/style&gt;
+
+&lt;div id="pkam-sticky-bar"&gt;
+  &lt;span&gt;🎉 &lt;strong&gt;$25 off your first rental&lt;/strong&gt; — limited time offer&lt;/span&gt;
+  &lt;a href="/frequently-asked-questions/#discount"&gt;Claim My Discount&lt;/a&gt;
+  &lt;button id="pkam-sticky-close"
+    onclick="document.getElementById('pkam-sticky-bar').style.display='none'"&gt;
+    &amp;times;
+  &lt;/button&gt;
+&lt;/div&gt;</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — 3-Email Nurture Sequence Copy</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">EMAIL 1 — Send immediately on signup
+Subject: Here's your $25 off, [First Name]
+--
+Hi [First Name],
+
+Your $25 discount is ready — use code [CODE] at checkout on your next rental.
+
+Here are our most-booked rentals right now:
+- Water Slides (from $350) → [link]
+- Bounce House Combos (from $275) → [link]
+- Snow Cone + Popcorn Machines (from $105) → [link]
+
+All rentals include free delivery, setup, and breakdown. Most of SE Houston is covered.
+
+Book your date: partykidsamerica.com/order-by-date/
+
+The Party Kids America Team
+(832) 338-5611
+
+
+EMAIL 2 — Send on Day 3
+Subject: Planning a summer party, [First Name]?
+--
+Hi [First Name],
+
+Summer weekends fill up fast — especially for water slides and large inflatables.
+
+If you're planning a birthday party, block party, or school event, now is a good time to lock in your date. Your $25 discount code [CODE] is still waiting.
+
+Our most popular summer rentals:
+- 24FT Tropical Thunder Dual Lane Water Slide ($699) → [link]
+- Bounce House Combos with slides (from $275) → [link]
+- Mechanical Bull — always a crowd favorite ($500) → [link]
+
+Check availability: partykidsamerica.com/order-by-date/
+
+The Party Kids America Team
+
+
+EMAIL 3 — Send on Day 7
+Subject: Your discount expires soon, [First Name]
+--
+Hi [First Name],
+
+Just a heads up — your $25 off code [CODE] expires in 48 hours.
+
+If you've been thinking about a rental for an upcoming party or event, this is a good time to check your date. We serve Pearland, Manvel, Sugar Land, Friendswood, and 100+ cities across SE Houston.
+
+Browse everything: partykidsamerica.com
+
+Questions? Text us at (832) 338-5611 — we reply fast.
+
+The Party Kids America Team</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-04 -->
+  <div class="item-card" id="m04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-04</span>
+        <div class="item-card-title">Add Breadcrumbs and "See More" Links to Product Pages</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/items/</strong> in ERS and open each product. Paste the breadcrumb HTML at the very top of the item description field — it renders above the description on the product page.</li>
+          <li>Paste the "See More" link HTML at the very bottom of the item description. Update the category name and URL for each item.</li>
+          <li>For a sitewide automatic version, paste the source_code snippet into <strong>/cp/source_code/</strong> — this dynamically reads the page URL and injects breadcrumbs without editing each item individually.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Breadcrumb HTML (paste at top of each item description)</div>
+        <div class="note"><span class="note-icon">💡</span>Update the category name and URL for each item. The item name at the end can just say the product name or be left as a non-linked span.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;p style="font-size:12px;color:#9ca3af;margin-bottom:16px;"&gt;
+  &lt;a href="/" style="color:#9ca3af;text-decoration:none;"&gt;Home&lt;/a&gt;
+  &lt;span style="margin:0 6px;"&gt;/&lt;/span&gt;
+  &lt;a href="/category/[CATEGORY-SLUG]/"
+     style="color:#9ca3af;text-decoration:none;"&gt;[Category Name]&lt;/a&gt;
+  &lt;span style="margin:0 6px;"&gt;/&lt;/span&gt;
+  &lt;span style="color:#374151;"&gt;[Item Name]&lt;/span&gt;
+&lt;/p&gt;</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Category Slugs Reference</div>
+        <table class="data-table">
+          <thead><tr><th>Category</th><th>URL Slug</th></tr></thead>
+          <tbody>
+            <tr><td>Water Slides</td><td><code>/category/water-slides/</code></td></tr>
+            <tr><td>Bounce Houses</td><td><code>/category/bounce-houses/</code></td></tr>
+            <tr><td>Bounce House With Slides</td><td><code>/category/bounce-house-with-slides/</code></td></tr>
+            <tr><td>Party Equipment</td><td><code>/category/party-equipment/</code></td></tr>
+            <tr><td>Interactives</td><td><code>/category/interactives/</code></td></tr>
+            <tr><td>Concessions</td><td><code>/category/concessions/</code></td></tr>
+            <tr><td>Entertainment</td><td><code>/category/entertainment/</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — "See More" Link (paste at bottom of each item description)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="margin-top:24px;padding-top:16px;border-top:1px solid #e2e8f0;"&gt;
+  &lt;a href="/category/[CATEGORY-SLUG]/"
+     style="color:#5b3fd4;font-size:14px;font-weight:600;text-decoration:none;"&gt;
+    &amp;larr; See all [Category Name]
+  &lt;/a&gt;
+&lt;/div&gt;</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Sitewide Automatic Breadcrumb (paste in /cp/source_code/)</div>
+        <div class="note"><span class="note-icon">💡</span>This reads the URL path automatically and injects breadcrumbs on every item page — no per-item editing needed. Inspect the live output and adjust the CSS selectors if ERS's item page structure differs.</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+.pkam-breadcrumb {
+  font-size: 12px;
+  color: #9ca3af;
+  padding: 8px 0 16px;
+}
+.pkam-breadcrumb a {
+  color: #9ca3af;
+  text-decoration: none;
+}
+.pkam-breadcrumb a:hover { color: #5b3fd4; }
+.pkam-breadcrumb span { margin: 0 6px; }
+&lt;/style&gt;
+
+&lt;script&gt;
+(function() {
+  var path = window.location.pathname;
+  // Only run on item pages
+  if (!path.includes('/items/')) return;
+
+  var parts = path.replace(/^\/|\/$/g, '').split('/');
+  // parts[0] = 'items', parts[1] = item-slug
+  var slug = parts[1] || '';
+  var label = slug.replace(/-/g, ' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
+
+  var bc = document.createElement('p');
+  bc.className = 'pkam-breadcrumb';
+  bc.innerHTML =
+    '&lt;a href="/"&gt;Home&lt;/a&gt;' +
+    '&lt;span&gt;/&lt;/span&gt;' +
+    '&lt;a href="/all-products/"&gt;All Rentals&lt;/a&gt;' +
+    '&lt;span&gt;/&lt;/span&gt;' +
+    '&lt;span style="color:#374151;"&gt;' + label + '&lt;/span&gt;';
+
+  // Insert before the first h1 or main content area on the item page
+  var target = document.querySelector('h1') || document.querySelector('.basic-item-page');
+  if (target) target.parentNode.insertBefore(bc, target);
+})();
+&lt;/script&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-03 -->
+  <div class="item-card" id="m03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-03</span>
+        <div class="item-card-title">Product Spec Block Template</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/items/</strong> → open each product → scroll to the description field.</li>
+          <li>Copy the plain-text spec block below and fill in the dimensions for each product. Add this to every item description.</li>
+          <li>For a richer visual version, go to <strong>/cp/website_pages/</strong> → product page → Responsive Editor → add a Custom Code block below the description and paste the HTML version.</li>
+          <li>Get dimensions from your equipment manuals, or measure at next delivery setup.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Plain Text (paste in ERS item description)</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">📐 Specifications
+Setup Footprint: [LENGTH]ft L × [WIDTH]ft W
+Height: [HEIGHT]ft
+Recommended Ages: [AGE_RANGE]
+Max Capacity: [CAPACITY] at a time
+Power Required: Standard 110V outlet within 50ft
+Surface: Grass or concrete (stakes or sandbags provided)
+
+Tip: Measure your space before booking. Length includes the blower unit at the back.</div>
+        </div>
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — HTML Spec Table (visual version)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="background:#f8f9fb;border:1px solid #e2e8f0;border-radius:10px;
+     padding:20px 24px;margin:24px 0;"&gt;
+  &lt;div style="font-weight:700;color:#1a1a2e;font-size:15px;margin-bottom:16px;"&gt;
+    📐 Specifications
+  &lt;/div&gt;
+  &lt;table style="width:100%;border-collapse:collapse;font-size:14px;"&gt;
+    &lt;tr style="border-bottom:1px solid #e2e8f0;"&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;width:45%;"&gt;Setup Footprint&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;
+        [LENGTH]ft L × [WIDTH]ft W
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style="border-bottom:1px solid #e2e8f0;"&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;"&gt;Height&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;[HEIGHT]ft&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style="border-bottom:1px solid #e2e8f0;"&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;"&gt;Recommended Ages&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;[AGE_RANGE]&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style="border-bottom:1px solid #e2e8f0;"&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;"&gt;Max Capacity&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;[CAPACITY] at a time&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr style="border-bottom:1px solid #e2e8f0;"&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;"&gt;Power Required&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;
+        Standard 110V outlet within 50ft
+      &lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style="padding:9px 0;color:#6b7280;"&gt;Surface&lt;/td&gt;
+      &lt;td style="padding:9px 0;color:#1a1a2e;font-weight:600;"&gt;
+        Grass or concrete (stakes or sandbags provided)
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;div style="margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0;
+       font-size:13px;color:#6b7280;"&gt;
+    Tip: Measure your setup area before booking —
+    length includes the blower unit at the back of the inflatable.
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-05 -->
+  <div class="item-card" id="m05">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-05</span>
+        <div class="item-card-title">Weather Policy Badge Near Price</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open a product page in the Responsive Editor.</li>
+          <li>Add a Custom Code block directly below the price (above or below the booking button).</li>
+          <li>Paste the HTML below. It's ready to use — no placeholders.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Weather Policy Badge HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="display:inline-flex;align-items:center;gap:8px;
+     background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;
+     padding:9px 14px;font-size:13px;color:#15803d;margin:12px 0;"&gt;
+  &lt;span style="font-size:17px;"&gt;🌧️&lt;/span&gt;
+  &lt;span&gt;
+    &lt;strong&gt;Rain? We reschedule free.&lt;/strong&gt;
+    No fees, no questions — just pick a new date.
+  &lt;/span&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-06 -->
+  <div class="item-card" id="m06">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-06</span>
+        <div class="item-card-title">"What Happens Next" Post-Booking Page</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → create a new page titled "What Happens Next" (or "Your Booking is Confirmed"). Set the URL to <code>/whats-next/</code>.</li>
+          <li>Add a Custom Code block on the page and paste the HTML below.</li>
+          <li>Fill in <span class="ph">(832) 338-5611</span> and <span class="ph">cash or PayPal (checks accepted from churches, corporations, and schools)</span> before publishing.</li>
+          <li>In ERS, go to your order confirmation email template (<strong>/cp/email_templates_for_orders/</strong>) and add a button linking to this page: "See What Happens Next →"</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Full "What Happens Next" Page HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="max-width:660px;margin:0 auto;padding:40px 20px;
+     font-family:system-ui,sans-serif;"&gt;
+
+  &lt;!-- Header --&gt;
+  &lt;div style="text-align:center;margin-bottom:40px;"&gt;
+    &lt;div style="width:64px;height:64px;background:#d1fae5;border-radius:50%;
+         display:flex;align-items:center;justify-content:center;
+         font-size:30px;margin:0 auto 16px;"&gt;✅&lt;/div&gt;
+    &lt;h1 style="font-size:28px;font-weight:800;color:#1a1a2e;margin-bottom:8px;"&gt;
+      You're Booked!
+    &lt;/h1&gt;
+    &lt;p style="color:#6b7280;font-size:16px;"&gt;
+      Here's exactly what to expect before your event day.
+    &lt;/p&gt;
+  &lt;/div&gt;
+
+  &lt;!-- Steps --&gt;
+  &lt;div style="display:grid;gap:16px;"&gt;
+
+    &lt;div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+         padding:24px;display:flex;gap:18px;align-items:flex-start;"&gt;
+      &lt;div style="width:40px;height:40px;background:#5b3fd4;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#fff;font-weight:800;font-size:18px;flex-shrink:0;"&gt;1&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div style="font-weight:700;color:#1a1a2e;font-size:16px;margin-bottom:6px;"&gt;
+          Booking Confirmed
+        &lt;/div&gt;
+        &lt;div style="color:#374151;font-size:14px;line-height:1.65;"&gt;
+          You'll receive a confirmation email with your date, items booked,
+          and deposit receipt. If you don't see it within 5 minutes,
+          check your spam folder.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+         padding:24px;display:flex;gap:18px;align-items:flex-start;"&gt;
+      &lt;div style="width:40px;height:40px;background:#5b3fd4;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#fff;font-weight:800;font-size:18px;flex-shrink:0;"&gt;2&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div style="font-weight:700;color:#1a1a2e;font-size:16px;margin-bottom:6px;"&gt;
+          We Confirm Your Setup Details
+        &lt;/div&gt;
+        &lt;div style="color:#374151;font-size:14px;line-height:1.65;"&gt;
+          Within 24–48 hours, our team will reach out to confirm your delivery
+          window, setup location, and any questions. You can also text us
+          anytime at &lt;a href="tel:(832) 338-5611" style="color:#5b3fd4;"&gt;(832) 338-5611&lt;/a&gt;.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+         padding:24px;display:flex;gap:18px;align-items:flex-start;"&gt;
+      &lt;div style="width:40px;height:40px;background:#5b3fd4;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#fff;font-weight:800;font-size:18px;flex-shrink:0;"&gt;3&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div style="font-weight:700;color:#1a1a2e;font-size:16px;margin-bottom:6px;"&gt;
+          Delivery &amp;amp; Setup Day
+        &lt;/div&gt;
+        &lt;div style="color:#374151;font-size:14px;line-height:1.65;"&gt;
+          Our crew arrives during your confirmed window and handles everything.
+          Setup takes 20–30 minutes. We'll walk you through safe operation
+          before we head out — you're all set to party.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+         padding:24px;display:flex;gap:18px;align-items:flex-start;"&gt;
+      &lt;div style="width:40px;height:40px;background:#5b3fd4;border-radius:50%;
+           display:flex;align-items:center;justify-content:center;
+           color:#fff;font-weight:800;font-size:18px;flex-shrink:0;"&gt;4&lt;/div&gt;
+      &lt;div&gt;
+        &lt;div style="font-weight:700;color:#1a1a2e;font-size:16px;margin-bottom:6px;"&gt;
+          Balance Due on Delivery
+        &lt;/div&gt;
+        &lt;div style="color:#374151;font-size:14px;line-height:1.65;"&gt;
+          Your remaining balance is due when we arrive.
+          We accept cash or PayPal (checks accepted from churches, corporations, and schools). After your event, we return to break
+          everything down and load up — you don't lift a thing.
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+
+  &lt;!-- Footer CTA --&gt;
+  &lt;div style="text-align:center;margin-top:36px;padding:24px;
+       background:#f8f9fb;border-radius:12px;"&gt;
+    &lt;div style="font-weight:700;color:#1a1a2e;margin-bottom:8px;"&gt;
+      Have questions before your event?
+    &lt;/div&gt;
+    &lt;a href="sms:(832) 338-5611"
+       style="display:inline-block;background:#5b3fd4;color:#fff;
+       font-weight:700;padding:13px 28px;border-radius:8px;
+       text-decoration:none;font-size:15px;"&gt;
+      Text Us at (832) 338-5611
+    &lt;/a&gt;
+  &lt;/div&gt;
+
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-10 -->
+  <div class="item-card" id="m10">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-10</span>
+        <div class="item-card-title">Live Chat — GHL Widget Embed + FAQ Workflow</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>In GHL, go to <strong>Settings → Chat Widget</strong>. Enable the widget, set color to your purple (#5b3fd4), and set the greeting message (see copy below).</li>
+          <li>Copy the script tag GHL gives you from the Chat Widget settings page.</li>
+          <li>In ERS, go to <strong>/cp/source_code/</strong> and paste the script just before <code>&lt;/body&gt;</code> — this embeds the widget on every page of your site.</li>
+          <li>In GHL, go to <strong>Automation → Workflows</strong> and build the FAQ bot using the keyword triggers and responses below.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — GHL Chat Widget Embed (paste in ERS /cp/source_code/)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;!-- GHL Chat Widget — paste in ERS /cp/source_code/ before &lt;/body&gt; --&gt;
+&lt;!-- Get your actual script from GHL → Settings → Chat Widget --&gt;
+&lt;script src="https://widgets.leadconnectorhq.com/loader.js"
+  data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+  data-widget-id="[GHL_WIDGET_ID]"&gt;
+&lt;/script&gt;</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — Chat Widget Greeting Copy</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">Greeting message (GHL Chat Widget → Greeting):
+"Have questions about a rental? We're here to help — ask away or text us at (832) 338-5611."
+
+After-hours auto-reply:
+"We're offline right now but reply within 2 hours during business hours. Or text us directly at (832) 338-5611 — we check texts all day."</div>
+        </div>
+
+        <div class="deliverable-label" style="margin-top:20px;">Deliverable — GHL FAQ Workflow Triggers</div>
+        <div class="note"><span class="note-icon">💡</span>In GHL Automation → Workflows, create one workflow per keyword group. Trigger: "Chat message contains keyword." Action: Send reply message.</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Keyword(s)</th><th>Auto-Reply Message</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>delivery, deliver, my area, zip</code></td>
+              <td>We serve 100+ cities across Greater SE Houston! Enter your zip at checkout to see your exact delivery fee and confirm we cover your area.</td>
+            </tr>
+            <tr>
+              <td><code>deposit, down payment, hold</code></td>
+              <td>We require a $50 deposit to secure your date — the balance is due on delivery day. No surprise fees!</td>
+            </tr>
+            <tr>
+              <td><code>cancel, refund</code></td>
+              <td>Our $50 deposit is non-refundable, but weather cancellations are always refunded in full. Need to cancel or reschedule? Text us at (832) 338-5611.</td>
+            </tr>
+            <tr>
+              <td><code>rain, weather, storm</code></td>
+              <td>Rain? No problem — we reschedule for free. Just give us 24 hours notice and we'll find you a new date.</td>
+            </tr>
+            <tr>
+              <td><code>available, availability, open, booked</code></td>
+              <td>Check real-time availability and book your date at partykidsamerica.com/order-by-date/ — takes about 3 minutes!</td>
+            </tr>
+            <tr>
+              <td><code>price, cost, how much, pricing</code></td>
+              <td>Prices vary by item — browse everything at partykidsamerica.com. All prices include delivery, setup, and breakdown. No hidden fees.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-11 -->
+  <div class="item-card" id="m11">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-11</span>
+        <div class="item-card-title">About Us Page — Full Copy Rewrite</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/website_pages/</strong> → open About Us in Responsive Editor.</li>
+          <li>Replace existing text blocks with the copy below. Fill in all <span class="ph">[PLACEHOLDERS]</span> before publishing.</li>
+          <li>Add a real photo: owner(s) at a delivery, the crew setting up, or a family event shot. Place it next to or above the story text.</li>
+          <li>In <strong>/cp/navigation_editor/</strong>, confirm About Us is a direct top-level nav link — not buried in a dropdown or footer only.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — About Us Copy</div>
+        <div class="copy-block">
+          <button class="copy-btn-light" onclick="copyLightCode(this)">Copy</button>
+          <div class="copy-block-inner">PAGE HEADLINE:
+We're the Team Behind the Fun
+
+SUBHEADLINE:
+Party Kids America was built to raise the standard in the event rental industry — clean equipment, reliable service, and a booking process that's actually simple.
+
+BODY:
+Founded in June 2016, Party Kids America has spent nearly a decade earning the trust of families across Greater SE Houston. In that time, we've completed over 2,600 events — from backyard birthday parties to school carnivals, church festivals, and neighborhood block parties.
+
+Our focus has always been the same: deliver clean, safe, high-quality equipment on time, every time. We're not just providing rentals — we're giving you the confidence that your event will run smoothly from start to finish. That consistency is what keeps families coming back and referring their friends.
+
+We're based in Pearland and proudly serve Manvel, Sugar Land, Friendswood, Alvin, and 100+ cities across SE Houston.
+
+STATS ROW (3–4 numbers across the page):
+Nearly 10 Years in Business  ·  2,636+ Events Served  ·  100+ Cities Covered  ·  5-Star Rated on Google
+
+CLOSING LINE:
+We show up so your event is unforgettable. That's the whole job.
+
+CTA BUTTON:
+Browse Our Rentals  →  /  (link to homepage or /categories/)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M-13 -->
+  <div class="item-card" id="m13">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-medium">M-13</span>
+        <div class="item-card-title">Address Autocomplete — Google Places Checkout Integration</div>
+      </div>
+      <span class="effort-tag et-med">Med Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li><strong>Check for iframe first:</strong> Go to your checkout page, right-click the delivery address input field, and choose "Inspect." Look at the surrounding HTML — if the input is inside an <code>&lt;iframe&gt;</code> tag, stop here and contact ERS support to ask about native autocomplete options. If the input is in the main page DOM, continue.</li>
+          <li>Note the exact <code>id</code> or <code>name</code> attribute on the address input field (e.g. <code>id="delivery_address"</code> or <code>name="address1"</code>). Update the selector in the script below before pasting.</li>
+          <li>Get a Google Maps API key: visit <strong>console.cloud.google.com</strong>, create a project, enable the <strong>Places API</strong>, and generate a key. Under "API restrictions," limit the key to Places API only. Under "Website restrictions," add your domain.</li>
+          <li>Go to <strong>/cp/source_code/</strong> in ERS. Paste the full script below into the custom code area. Replace <code>YOUR_API_KEY</code> with your actual key and update the selector if needed.</li>
+          <li>Go through checkout on desktop and mobile: type a partial address and confirm the dropdown appears. Select a suggestion and confirm city, state, and zip populate correctly.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Google Places Autocomplete Script</div>
+        <div class="copy-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <pre><code><span class="cm">/* ── Google Places Autocomplete ──────────────────────────
+   Paste into ERS /cp/source_code/
+   Replace YOUR_API_KEY and update the selector (#delivery_address)
+   to match the actual address field id on your checkout page.
+────────────────────────────────────────────────────────── */</span>
+
+<span class="kw">&lt;script&gt;</span>
+<span class="fn">function</span> <span class="fn">initAddressAutocomplete</span>() {
+  <span class="cm">// Update this selector to match your checkout address field</span>
+  <span class="kw">const</span> input = document.<span class="fn">getElementById</span>(<span class="str">'delivery_address'</span>);
+  <span class="kw">if</span> (!input) <span class="kw">return</span>; <span class="cm">// Field not found — check selector</span>
+
+  <span class="kw">const</span> options = {
+    types: [<span class="str">'address'</span>],
+    componentRestrictions: { country: <span class="str">'us'</span> }
+  };
+
+  <span class="kw">const</span> autocomplete = <span class="kw">new</span> google.maps.places.<span class="fn">Autocomplete</span>(input, options);
+
+  autocomplete.<span class="fn">addListener</span>(<span class="str">'place_changed'</span>, <span class="fn">function</span>() {
+    <span class="kw">const</span> place = autocomplete.<span class="fn">getPlace</span>();
+    <span class="kw">if</span> (!place.address_components) <span class="kw">return</span>;
+
+    <span class="cm">// Auto-fill city, state, zip if those fields exist</span>
+    place.address_components.<span class="fn">forEach</span>(<span class="fn">function</span>(component) {
+      <span class="kw">const</span> type = component.types[<span class="num">0</span>];
+      <span class="kw">if</span> (type === <span class="str">'locality'</span>) {
+        <span class="kw">const</span> cityField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_city'</span>);
+        <span class="kw">if</span> (cityField) cityField.value = component.long_name;
+      }
+      <span class="kw">if</span> (type === <span class="str">'administrative_area_level_1'</span>) {
+        <span class="kw">const</span> stateField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_state'</span>);
+        <span class="kw">if</span> (stateField) stateField.value = component.short_name;
+      }
+      <span class="kw">if</span> (type === <span class="str">'postal_code'</span>) {
+        <span class="kw">const</span> zipField = document.<span class="fn">getElementById</span>(<span class="str">'delivery_zip'</span>);
+        <span class="kw">if</span> (zipField) zipField.value = component.long_name;
+      }
+    });
+  });
+}
+<span class="kw">&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- Load Google Places API — replace YOUR_API_KEY --&gt;</span>
+<span class="kw">&lt;script</span> src=<span class="str">"https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;libraries=places&amp;callback=initAddressAutocomplete"</span> async defer<span class="kw">&gt;&lt;/script&gt;</span></code></pre>
+        </div>
+      </div>
+      <div class="deliverable" style="margin-top:16px;">
+        <div class="deliverable-label">Field Selector Reference — Common ERS Patterns</div>
+        <div class="copy-block" style="padding:0;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.04);">
+                <th style="text-align:left;padding:10px 14px;color:var(--text-dim);font-weight:600;border-bottom:1px solid var(--border);">Field</th>
+                <th style="text-align:left;padding:10px 14px;color:var(--text-dim);font-weight:600;border-bottom:1px solid var(--border);">Likely ERS selector (verify by inspecting)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">Street address</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_address"</code> or <code style="color:var(--accent);font-size:12px;">name="address1"</code></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">City</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_city"</code> or <code style="color:var(--accent);font-size:12px;">name="city"</code></td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:9px 14px;color:var(--text-muted);">State</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_state"</code> or <code style="color:var(--accent);font-size:12px;">name="state"</code></td>
+              </tr>
+              <tr>
+                <td style="padding:9px 14px;color:var(--text-muted);">Zip code</td>
+                <td style="padding:9px 14px;"><code style="color:var(--accent);font-size:12px;">id="delivery_zip"</code> or <code style="color:var(--accent);font-size:12px;">name="zip"</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:10px;">Update all four selectors in the script to match what you find in the inspector. If ERS uses a single combined address field (no separate city/state/zip), remove the forEach block and just leave the Autocomplete initialization.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== LOW ==================== -->
+  <div class="phase-label">Low Priority</div>
+
+  <!-- L-01 -->
+  <div class="item-card" id="l01">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-low">L-01</span>
+        <div class="item-card-title">Instagram Feed Section — Homepage</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>elfsight.com</strong> (free tier available) → create an Instagram Feed widget → connect @partykidsamerica. Configure: 6 photos, 3-column grid, no follow button overlay.</li>
+          <li>Copy your widget ID from the Elfsight dashboard.</li>
+          <li>Go to <strong>/cp/website_pages/</strong> → homepage → Responsive Editor → add a new section above the footer.</li>
+          <li>Add a Custom Code block in that section and paste the full HTML below.</li>
+          <li>Replace <span class="ph">[ELFSIGHT_WIDGET_ID]</span> with your actual widget ID.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Instagram Feed Section HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;section style="padding:60px 20px;text-align:center;background:#fff;"&gt;
+
+  &lt;h2 style="font-size:24px;font-weight:800;color:#1a1a2e;margin-bottom:8px;"&gt;
+    See Our Setups in Action
+  &lt;/h2&gt;
+  &lt;p style="color:#6b7280;font-size:15px;margin-bottom:32px;"&gt;
+    Follow us on Instagram —
+    &lt;a href="https://instagram.com/partykidsamerica" target="_blank"
+       style="color:#5b3fd4;text-decoration:none;font-weight:600;"&gt;
+      @partykidsamerica
+    &lt;/a&gt;
+  &lt;/p&gt;
+
+  &lt;!-- Elfsight Instagram Feed --&gt;
+  &lt;script src="https://static.elfsight.com/platform/platform.js" defer&gt;&lt;/script&gt;
+  &lt;div class="elfsight-app-[ELFSIGHT_WIDGET_ID]" data-elfsight-app-lazy&gt;&lt;/div&gt;
+
+&lt;/section&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L-03 -->
+  <div class="item-card" id="l03">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-low">L-03</span>
+        <div class="item-card-title">Footer Contact Block</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Go to <strong>/cp/responsive_editor/</strong> → open the footer section of your template.</li>
+          <li>Add a new text/column block or Custom Code block in the footer.</li>
+          <li>Paste the HTML below. Fill in <span class="ph">(832) 338-5611</span> and <span class="ph">info@partykidsamerica.com</span>.</li>
+          <li>ERS footer changes in the Responsive Editor apply sitewide. Verify on homepage, a product page, and About Us after saving.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Footer Contact Block HTML</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;div style="font-size:14px;color:#d1d5db;line-height:2.1;"&gt;
+  &lt;div style="font-weight:700;color:#fff;font-size:15px;margin-bottom:10px;"&gt;
+    Party Kids America
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;a href="tel:(832) 338-5611"
+       style="color:#e5e7eb;text-decoration:none;font-size:16px;font-weight:600;"&gt;
+      (832) 338-5611
+    &lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div&gt;
+    &lt;a href="mailto:info@partykidsamerica.com"
+       style="color:#d1d5db;text-decoration:none;"&gt;info@partykidsamerica.com&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div style="margin-top:10px;color:#9ca3af;font-size:13px;line-height:1.7;"&gt;
+    Serving Pearland, Manvel,&lt;br&gt;
+    Sugar Land &amp;amp; Greater SE Houston
+  &lt;/div&gt;
+&lt;/div&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L-04 -->
+  <div class="item-card" id="l04">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-low">L-04</span>
+        <div class="item-card-title">Mega Menu CSS / JS Foundation</div>
+      </div>
+      <span class="effort-tag et-high">High Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li><strong>Defer until M-12 standard dropdowns are live and working.</strong></li>
+          <li>Once M-12 is done, go to <strong>/cp/source_code/</strong> in ERS and paste the CSS below.</li>
+          <li>Use browser DevTools (right-click → Inspect) on your nav to find the exact class names ERS uses for nav items and dropdowns — update the CSS selectors below to match.</li>
+          <li>Wire up the mega panel HTML for each category — this is a developer task; the CSS and structure below are the foundation.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Mega Menu CSS Foundation (paste in /cp/source_code/)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+/* Mega menu foundation — activate after M-12 dropdowns are live */
+/* Update .pkam-mega-nav and .pkam-mega-panel class names to match
+   whatever ERS outputs in your nav DOM */
+
+.pkam-mega-nav {
+  position: relative;
+}
+
+.pkam-mega-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 680px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+  padding: 28px;
+  z-index: 9999;
+  grid-template-columns: 160px 1fr 180px;
+  gap: 24px;
+}
+
+.pkam-mega-nav:hover .pkam-mega-panel {
+  display: grid;
+  animation: pkam-mega-in 0.15s ease;
+}
+
+@keyframes pkam-mega-in {
+  from { opacity:0; transform:translateX(-50%) translateY(-6px); }
+  to   { opacity:1; transform:translateX(-50%) translateY(0); }
+}
+
+/* Category image column */
+.pkam-mega-img {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+}
+
+/* Middle links column */
+.pkam-mega-links a {
+  display: block;
+  padding: 8px 0;
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+  border-bottom: 1px solid #f3f4f6;
+  transition: color 0.1s;
+}
+.pkam-mega-links a:hover { color: #5b3fd4; }
+
+/* Right promo column */
+.pkam-mega-promo {
+  background: #f5f3ff;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 13px;
+}
+.pkam-mega-promo strong {
+  color: #5b3fd4;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* Mobile: hide mega menu entirely */
+@media (max-width: 768px) {
+  .pkam-mega-panel { display: none !important; }
+}
+&lt;/style&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- L-05 -->
+  <div class="item-card" id="l05">
+    <div class="item-card-header">
+      <div class="item-card-left">
+        <span class="item-num in-low">L-05</span>
+        <div class="item-card-title">Nav Hover CSS — Switch Click to Hover</div>
+      </div>
+      <span class="effort-tag et-low">Low Effort</span>
+    </div>
+    <div class="item-card-body">
+      <div class="directions">
+        <div class="directions-label">What to do</div>
+        <ol>
+          <li>Address as part of the M-12 implementation — don't do this standalone.</li>
+          <li>Once M-12 dropdowns are live, go to <strong>/cp/source_code/</strong> in ERS.</li>
+          <li>Paste the CSS below. If it doesn't work, use browser DevTools to inspect the nav and find the exact class names ERS uses for dropdown containers — update the selectors accordingly.</li>
+        </ol>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-label">Deliverable — Hover Trigger CSS (paste in /cp/source_code/)</div>
+        <div class="code-wrap">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <div class="code-block">&lt;style&gt;
+/* Switch nav dropdowns: click → hover (desktop only) */
+/* If selectors below don't match, inspect your nav in DevTools
+   and update class names to match what ERS outputs */
+
+@media (min-width: 769px) {
+
+  .nav-item:hover &gt; .nav-dropdown,
+  .nav-item:hover &gt; .dropdown-menu,
+  .menu-item:hover &gt; .sub-menu,
+  .nav-link:hover + .dropdown {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: all !important;
+  }
+
+  /* 100ms delay prevents accidental trigger on fast mouse moves */
+  .nav-dropdown,
+  .dropdown-menu,
+  .sub-menu {
+    transition: opacity 0.15s ease;
+    transition-delay: 0.1s;
+  }
+
+}
+&lt;/style&gt;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="report-footer">
+  <div class="container">
+    <p>Party Kids America · Implementation Workbook · Prepared by EmberTribe · April 2025</p>
+  </div>
+</div>
+
+<script>
+function copyCode(btn) {
+  const block = btn.nextElementSibling;
+  const text = block.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyLightCode(btn) {
+  // Find the copy-block-inner sibling
+  const inner = btn.parentElement.querySelector('.copy-block-inner');
+  const text = inner ? inner.textContent : btn.parentElement.textContent;
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function copyParent(btn) {
+  const body = btn.closest('.cat-copy-card').querySelector('.cat-copy-body');
+  navigator.clipboard.writeText(body.innerText.trim()).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+  });
+}
+
+// CHECKBOX PERSISTENCE
+function saveCheck(el) {
+  const state = JSON.parse(localStorage.getItem('pka-checks') || '{}');
+  state[el.id] = el.checked;
+  localStorage.setItem('pka-checks', JSON.stringify(state));
+  syncTocDone(el);
+}
+function syncTocDone(el) {
+  const wrap = el.closest('.toc-item-wrap');
+  if (!wrap) return;
+  const link = wrap.querySelector('.toc-item');
+  if (link) link.classList.toggle('toc-done', el.checked);
+}
+function loadChecks() {
+  const state = JSON.parse(localStorage.getItem('pka-checks') || '{}');
+  document.querySelectorAll('.toc-check').forEach(function(el) {
+    if (state[el.id] !== undefined) el.checked = state[el.id];
+    syncTocDone(el);
+  });
+}
+document.addEventListener('DOMContentLoaded', loadChecks);
+</script>
+
+</body>
+</html>

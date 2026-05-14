@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspire Weight Loss — EmberTribe Local SEO Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0d3a4c;
+  --primary-mid: #1a647a;
+  --primary-light: #2b8a9e;
+  --accent: #e07828;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #1a8a9e;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.orange { background: #FFF3E0; border-left-color: var(--accent); }
+.annotation.orange strong { color: var(--accent); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 200px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.bar-label .vol {
+  display: block;
+  font-size: 11px;
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--primary-mid), var(--primary-light)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.orange { background: linear-gradient(90deg, #c96a10, var(--accent)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.local   { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.yes     { background: #E8F5E9; color: var(--green); }
+.pill.no      { background: #FFEBEE; color: var(--red); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-milestone {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-mid);
+  margin-top: 12px;
+  padding: 6px 10px;
+  background: rgba(26,100,122,0.08);
+  border-radius: 6px;
+}
+
+.map-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #E8F5E9;
+  color: #1B5E20;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.map-badge.miss {
+  background: #FFEBEE;
+  color: var(--red);
+}
+
+.outcome-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.outcome-card .period {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.outcome-card .metric {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  line-height: 1.1;
+}
+
+.outcome-card .metric-label {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.outcome-card ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.outcome-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.outcome-card ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange-text { color: var(--accent); }
+.teal-text { color: var(--teal); }
+.ember { color: var(--ember-red); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 140px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Local SEO Growth Audit</p>
+      <h1>Inspire Weight Loss</h1>
+      <p class="subtitle" style="color:rgba(255,255,255,0.75); font-size:22px;">You have the best program in Lake Nona — but Google is sending your patients to competitors. We can fix that.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#e07828;">0</div>
+          <div class="stat-label">Current Map Pack Top-3 Rankings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#ff333d;">14</div>
+          <div class="stat-label">High-Intent Local Keywords You're Missing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#48cae4;">9,200+</div>
+          <div class="stat-label">Monthly Local Searches Going to Competitors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#27AE60;">$0</div>
+          <div class="stat-label">Ad Spend Required for Map Pack</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Inspire Weight Loss &mdash; May 2025</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Stand Today</h2>
+    <p class="subtitle">Inspire Weight Loss has a 4.9-star reputation and a proven program — but your local search presence isn't reflecting that.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:#27AE60;">4.9★</div>
+        <div class="stat-label">Google Rating (Excellent)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:#E74C3C;">~40</div>
+        <div class="stat-label">GBP Reviews (Competitors Have 150–300+)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:#E74C3C;">Thin</div>
+        <div class="stat-label">Local Citation Coverage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:#F39C12;">1</div>
+        <div class="stat-label">Local Landing Pages (Need 4–6)</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working ✓</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">✓</span> 4.9-star average rating — elite social proof</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">✓</span> Strong brand differentiation (drug-free, real food, 6 weeks)</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">✓</span> Contour Light® = unique map pack differentiator</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">✓</span> Video testimonials driving organic reach</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">✓</span> Google Business Profile is verified and active</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back ✗</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">✗</span> GBP is under-optimized — missing categories, services, Q&amp;A</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">✗</span> Review velocity too slow vs. competitors</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">✗</span> No local landing pages for Orlando, Hunter's Creek, Kissimmee</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">✗</span> Local citations (Yelp, Healthgrades, Bing Places) incomplete</li>
+          <li style="padding:6px 0 6px 20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;color:var(--red);">✗</span> Zero map pack presence on highest-volume local queries</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: LOCAL KEYWORD RESEARCH -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Local Keyword Research</p>
+    <h2>Your Map Pack Opportunity</h2>
+    <p class="subtitle">These are the searches your future patients are typing right now — 9,200+ monthly searches, almost all triggering a Google Map Pack. None currently showing Inspire in the top 3.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th class="right">Monthly Searches</th>
+          <th>Map Pack?</th>
+          <th>Competition</th>
+          <th>Your Position</th>
+          <th>Opportunity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">weight loss center orlando</td>
+          <td class="right bold">1,900</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--yellow);">Medium</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td class="bold">weight loss clinic near me</td>
+          <td class="right bold">2,400</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--yellow);">Medium</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>weight loss program orlando fl</td>
+          <td class="right">880</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--yellow);">Medium</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>body contouring orlando</td>
+          <td class="right">720</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low-Med</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>weight loss coach orlando</td>
+          <td class="right">480</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>medically supervised weight loss orlando</td>
+          <td class="right">480</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--yellow);">Medium</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill orange">Priority 2</span></td>
+        </tr>
+        <tr>
+          <td>natural weight loss orlando</td>
+          <td class="right">390</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>non surgical body contouring orlando</td>
+          <td class="right">390</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>quick weight loss center orlando fl</td>
+          <td class="right">320</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>weight loss lake nona</td>
+          <td class="right">210</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--yellow);">Occasional</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>fat loss program orlando fl</td>
+          <td class="right">260</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>contour light body contouring orlando</td>
+          <td class="right">170</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Very Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>weight loss center lake nona fl</td>
+          <td class="right">140</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Very Low</span></td>
+          <td><span style="color:var(--yellow);">Occasional</span></td>
+          <td><span class="pill green">Priority 1</span></td>
+        </tr>
+        <tr>
+          <td>weight loss kissimmee fl</td>
+          <td class="right">480</td>
+          <td><span class="pill yes">Yes</span></td>
+          <td><span style="color:var(--green);">Low</span></td>
+          <td><span style="color:var(--red);">Not Ranking</span></td>
+          <td><span class="pill orange">Priority 2</span></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; background:var(--light-bg);">
+          <td>Total Monthly Opportunity</td>
+          <td class="right bold" style="color:var(--primary-dark);">9,220+</td>
+          <td colspan="4" style="color:var(--text-light); font-size:12px;">searches/month currently going to competitors</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation info" style="margin-top:8px;">
+      <strong>Map Pack note:</strong> 100% of these keywords trigger a 3-pack of local businesses before any organic results. Ranking here = phone calls. Not ranking = invisible.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMPETITOR LANDSCAPE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>Who Owns the Map Pack Right Now</h2>
+    <p class="subtitle">Three competitors are capturing the bulk of local weight loss searches in the Orlando/Lake Nona market. Here's how you compare.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Inspire Weight Loss</th>
+          <th>Florida Metabolics</th>
+          <th>Thrive Weight Loss Orlando</th>
+          <th>Advanced Metabolic Center</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">GBP Reviews</td>
+          <td style="color:var(--red); font-weight:700;">~40</td>
+          <td style="color:var(--green); font-weight:700;">180+</td>
+          <td style="color:var(--green); font-weight:700;">130+</td>
+          <td style="color:var(--yellow); font-weight:700;">90+</td>
+        </tr>
+        <tr>
+          <td class="bold">Average Rating</td>
+          <td style="color:var(--green); font-weight:700;">4.9 ⭐</td>
+          <td>4.6</td>
+          <td>4.7</td>
+          <td>4.5</td>
+        </tr>
+        <tr>
+          <td class="bold">Map Pack: "weight loss center orlando"</td>
+          <td><span class="map-badge miss">✗ Not in Pack</span></td>
+          <td><span class="map-badge">✓ #1</span></td>
+          <td><span class="map-badge">✓ #2</span></td>
+          <td><span class="map-badge">✓ #3</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Map Pack: "weight loss clinic near me"</td>
+          <td><span class="map-badge miss">✗ Not in Pack</span></td>
+          <td><span class="map-badge">✓ #1</span></td>
+          <td><span class="map-badge">✓ #3</span></td>
+          <td><span class="map-badge">✓ #2</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Map Pack: "body contouring orlando"</td>
+          <td><span class="map-badge miss">✗ Not in Pack</span></td>
+          <td><span class="map-badge miss">✗ Not in Pack</span></td>
+          <td><span class="map-badge">✓ #2</span></td>
+          <td><span class="map-badge miss">✗ Not in Pack</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Local Citation Score</td>
+          <td style="color:var(--red); font-weight:700;">Low</td>
+          <td style="color:var(--green); font-weight:700;">High</td>
+          <td style="color:var(--yellow); font-weight:700;">Medium</td>
+          <td style="color:var(--yellow); font-weight:700;">Medium</td>
+        </tr>
+        <tr>
+          <td class="bold">Local Landing Pages</td>
+          <td style="color:var(--red); font-weight:700;">1</td>
+          <td style="color:var(--green); font-weight:700;">5</td>
+          <td style="color:var(--yellow); font-weight:700;">3</td>
+          <td style="color:var(--yellow); font-weight:700;">2</td>
+        </tr>
+        <tr>
+          <td class="bold">Review Velocity (new/mo)</td>
+          <td style="color:var(--red); font-weight:700;">1–2</td>
+          <td style="color:var(--green); font-weight:700;">12–15</td>
+          <td style="color:var(--yellow); font-weight:700;">6–8</td>
+          <td style="color:var(--yellow); font-weight:700;">4–5</td>
+        </tr>
+        <tr>
+          <td class="bold">GBP Posts (last 90 days)</td>
+          <td style="color:var(--red); font-weight:700;">0</td>
+          <td style="color:var(--green); font-weight:700;">12+</td>
+          <td style="color:var(--yellow); font-weight:700;">6+</td>
+          <td style="color:var(--yellow); font-weight:700;">4+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>The gap that matters:</strong> Your rating is the best in the market (4.9★) but review count and GBP activity are giving competitors a 4–5x local ranking advantage. With 150+ reviews and proper optimization, you'd outrank every one of them.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: GBP AUDIT -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Google Business Profile Audit</p>
+    <h2>Your GBP Has Critical Gaps</h2>
+    <p class="subtitle">The Google Business Profile is the #1 ranking signal for Map Pack placement. Here's what's missing and costing you visibility today.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:16px;">Profile Completeness Check</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>GBP Element</th>
+              <th>Status</th>
+              <th>Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Business Name &amp; Address</td>
+              <td><span class="pill green">Complete</span></td>
+              <td class="dim">—</td>
+            </tr>
+            <tr>
+              <td>Primary Category</td>
+              <td><span class="pill orange">Suboptimal</span></td>
+              <td><span style="color:var(--red);">High</span></td>
+            </tr>
+            <tr>
+              <td>Secondary Categories (3–5)</td>
+              <td><span class="pill no">Missing</span></td>
+              <td><span style="color:var(--red);">High</span></td>
+            </tr>
+            <tr>
+              <td>Services List (15–20 services)</td>
+              <td><span class="pill no">Incomplete</span></td>
+              <td><span style="color:var(--red);">High</span></td>
+            </tr>
+            <tr>
+              <td>Business Description (750 chars)</td>
+              <td><span class="pill orange">Thin</span></td>
+              <td><span style="color:var(--yellow);">Medium</span></td>
+            </tr>
+            <tr>
+              <td>Photos (50+ recommended)</td>
+              <td><span class="pill orange">Under 20</span></td>
+              <td><span style="color:var(--yellow);">Medium</span></td>
+            </tr>
+            <tr>
+              <td>Weekly GBP Posts</td>
+              <td><span class="pill no">None</span></td>
+              <td><span style="color:var(--red);">High</span></td>
+            </tr>
+            <tr>
+              <td>Q&amp;A Section Populated</td>
+              <td><span class="pill no">Empty</span></td>
+              <td><span style="color:var(--yellow);">Medium</span></td>
+            </tr>
+            <tr>
+              <td>Review Responses (owner)</td>
+              <td><span class="pill no">Inconsistent</span></td>
+              <td><span style="color:var(--yellow);">Medium</span></td>
+            </tr>
+            <tr>
+              <td>Review Velocity (8–12/mo target)</td>
+              <td><span class="pill no">1–2/mo</span></td>
+              <td><span style="color:var(--red);">Critical</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin-bottom:16px;">Why This Matters for Map Pack</h4>
+        <div class="annotation danger">
+          <strong>Review velocity is the #1 factor</strong> Google uses to determine local pack rank within similar-rated businesses. At 1–2 reviews/month vs. competitors at 12–15, you are mathematically disadvantaged.
+        </div>
+        <div class="annotation orange" style="margin-top:12px;">
+          <strong>Missing secondary categories</strong> like "Body Contouring" and "Nutrition Counselor" mean Google isn't matching you to those searches at all — you're invisible before the algorithm even evaluates you.
+        </div>
+        <div class="annotation info" style="margin-top:12px;">
+          <strong>GBP posts signal freshness.</strong> Google favors active profiles. Competitors posting 3–4x/week appear more relevant than a dormant profile — even with a better product.
+        </div>
+        <div class="annotation success" style="margin-top:12px;">
+          <strong>Good news:</strong> Your 4.9★ rating is a huge head start. Fix the activity and completeness gaps, and you jump ahead of competitors with lower ratings but higher volume.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STRATEGY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We Dominate the Orlando Map Pack</h2>
+    <p class="subtitle">Three interconnected pillars that work together to push Inspire Weight Loss to #1 on every high-intent local search within 90 days.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📍</div>
+        <h3>GBP Domination</h3>
+        <ul>
+          <li>Full profile rebuild: categories, services, description, attributes</li>
+          <li>3–4 keyword-rich GBP posts per week (before/after content, offers, tips)</li>
+          <li>Own Q&amp;A section with 15+ pre-seeded questions</li>
+          <li>Monthly photo uploads (staff, facility, results, food)</li>
+          <li>Review response system for every single review</li>
+          <li>Ongoing monitoring &amp; competitive alerts</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">⭐</div>
+        <h3>Review Velocity Engine</h3>
+        <ul>
+          <li>Post-consultation review request sequence (text + email)</li>
+          <li>In-office QR code stations at checkout</li>
+          <li>Week-6 milestone review ask (highest satisfaction moment)</li>
+          <li>Target: 12–15 new reviews per month</li>
+          <li>Diversify to Healthgrades, Yelp, Facebook</li>
+          <li>Monitor &amp; flag negative reviews for rapid response</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🗺️</div>
+        <h3>Local Landing Pages + Citations</h3>
+        <ul>
+          <li>Build 5 geo-targeted landing pages (Orlando, Lake Nona, Kissimmee, Hunter's Creek, St. Cloud)</li>
+          <li>Each page targets 2–3 map pack keywords for that suburb</li>
+          <li>Consistent NAP (Name/Address/Phone) across 60+ directories</li>
+          <li>Fix and claim: Yelp, Healthgrades, WebMD, Bing Places, Apple Maps</li>
+          <li>Local schema markup on all pages</li>
+          <li>Monthly citation audit &amp; cleanup</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>The compound effect:</strong> GBP optimization signals relevance. Review velocity signals trust. Local pages + citations signal authority. All three together = guaranteed map pack entry within 60–90 days.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: PAID ADS STRATEGY -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Paid Ads Add-On</p>
+    <h2>Google + Meta: Full-Funnel Patient Acquisition</h2>
+    <p class="subtitle">Organic map pack captures people searching now — paid ads create demand and capture everyone else. Together they cover the entire patient journey.</p>
+    <div class="two-col flex-grow">
+      <div class="channel-card" style="border-top:3px solid #4285F4;">
+        <div class="channel-icon">🔍</div>
+        <h3 style="color:#4285F4;">Google Ads</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Capture high-intent searchers at the moment they're ready to act.</p>
+        <ul>
+          <li>Search campaigns targeting "weight loss center near me," "lose weight fast Orlando," and all 14 map pack keywords</li>
+          <li>Local Service Ads (LSA) — pay per verified lead, not per click</li>
+          <li>Call-only campaigns for mobile users (direct dial from search)</li>
+          <li>Remarketing to site visitors who viewed the program page but didn't book</li>
+          <li>Conversion tracking: calls, quiz completions, booking form submissions</li>
+          <li>Monthly bid optimization to minimize cost-per-lead</li>
+        </ul>
+        <div style="margin-top:14px; padding:10px 14px; background:#EAF2FF; border-radius:8px; font-size:13px;">
+          <strong style="color:#4285F4;">Est. cost-per-lead:</strong> $35–$80 for weight loss searches in Orlando market
+        </div>
+      </div>
+      <div class="channel-card" style="border-top:3px solid #1877F2;">
+        <div class="channel-icon">📱</div>
+        <h3 style="color:#1877F2;">Meta Ads (Facebook + Instagram)</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Build demand and convert warm audiences who aren't searching yet.</p>
+        <ul>
+          <li>Before/after transformation video ads — social proof at scale</li>
+          <li>Lead gen ads driving traffic to your free weight loss quiz</li>
+          <li>Retargeting: website visitors, video viewers (75%+ watched), quiz starters</li>
+          <li>Lookalike audiences modeled on your existing client list</li>
+          <li>Geo-targeted to Lake Nona, Orlando, Kissimmee, Hunter's Creek (10-mile radius)</li>
+          <li>A/B testing: transformation testimonials vs. program offer vs. free consultation</li>
+        </ul>
+        <div style="margin-top:14px; padding:10px 14px; background:#EAF0FF; border-radius:8px; font-size:13px;">
+          <strong style="color:#1877F2;">Est. cost-per-lead:</strong> $20–$55 for health &amp; wellness in Central Florida
+        </div>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Why both channels:</strong> Google catches people actively searching (high intent, lower funnel). Meta creates awareness and nurtures people who didn't know they were looking (broader reach, middle funnel). Combined = 3–5× more total leads than either channel alone.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">90-Day Roadmap</p>
+    <h2>From Invisible to #1 in the Pack</h2>
+    <p class="subtitle">A phased approach that builds ranking signals in the right order — foundation first, then velocity, then scale.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Fix What Google Sees</h4>
+        <ul>
+          <li>Full GBP audit &amp; rebuild (categories, services, description)</li>
+          <li>Primary + secondary category optimization</li>
+          <li>NAP consistency audit across all existing listings</li>
+          <li>Claim &amp; fix top 20 citation directories</li>
+          <li>Build review request system (text + email sequences)</li>
+          <li>Launch weekly GBP post schedule</li>
+          <li>Install local schema markup on homepage</li>
+        </ul>
+        <div class="phase-milestone">📍 Target: First map pack appearances for low-competition terms</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Build &amp; Publish</span>
+        <h4>Expand Local Footprint</h4>
+        <ul>
+          <li>Launch Orlando + Lake Nona geo-targeted landing pages</li>
+          <li>Launch Kissimmee + Hunter's Creek landing pages</li>
+          <li>Complete 60-directory citation build-out</li>
+          <li>Review velocity in full motion (target: 12+ new reviews)</li>
+          <li>Q&amp;A section fully seeded (15+ questions)</li>
+          <li>GBP photo campaign (30+ new uploads)</li>
+          <li>Competitor gap analysis — steal their keywords</li>
+        </ul>
+        <div class="phase-milestone">⭐ Target: Map pack top-3 for "weight loss lake nona" + body contouring</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Dominate &amp; Scale</span>
+        <h4>Own the Pack</h4>
+        <ul>
+          <li>Optimize landing pages based on early ranking data</li>
+          <li>Push into top-3 for primary Orlando terms</li>
+          <li>Launch St. Cloud &amp; south Orlando landing pages</li>
+          <li>Begin review diversification (Healthgrades, Yelp)</li>
+          <li>Monthly reporting: ranking positions, call tracking, leads</li>
+          <li>GBP performance review &amp; category expansion</li>
+          <li>Plan Phase 2: paid local ads layered on organic</li>
+        </ul>
+        <div class="phase-milestone">🏆 Target: Top-3 map pack for all Priority 1 keywords</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: INVESTMENT -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Packages &amp; Pricing — 1 Location</h2>
+    <p class="subtitle">Choose your coverage radius and content volume. All packages include Month 1 Foundation + GBP Management.</p>
+
+    <!-- Package comparison table -->
+    <table style="font-size:13px;">
+      <thead>
+        <tr>
+          <th style="width:200px;"></th>
+          <th style="background:#1a3a4a; color:#fff; text-align:center;">Local SEO + Guaranteed Maps<br><span style="color:#e07828; font-size:11px; text-transform:uppercase; letter-spacing:1px;">5 Miles — Package 1</span></th>
+          <th style="background:#1a3a4a; color:#fff; text-align:center;">Local SEO + Guaranteed Maps<br><span style="color:#e07828; font-size:11px; text-transform:uppercase; letter-spacing:1px;">5 Miles — Package 2</span></th>
+          <th style="background:#0d2a38; color:#fff; text-align:center;">Local SEO + Guaranteed Maps<br><span style="color:#48cae4; font-size:11px; text-transform:uppercase; letter-spacing:1px;">10 Miles — Package 1</span></th>
+          <th style="background:#0d2a38; color:#fff; text-align:center;">Local SEO + Guaranteed Maps<br><span style="color:#48cae4; font-size:11px; text-transform:uppercase; letter-spacing:1px;">10 Miles — Package 2</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">Month 1: Foundation</td>
+          <td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td>
+        </tr>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">GBP Management</td>
+          <td class="center">✓</td><td class="center">✓</td><td class="center">✓</td><td class="center">✓</td>
+        </tr>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">Guaranteed Maps Ranking in 90 Days</td>
+          <td class="center" style="color:var(--green); font-weight:700;">YES<br><span style="font-size:11px;">5 Miles</span></td>
+          <td class="center" style="color:var(--green); font-weight:700;">YES<br><span style="font-size:11px;">5 Miles</span></td>
+          <td class="center" style="color:var(--green); font-weight:700;">YES<br><span style="font-size:11px;">10 Miles</span></td>
+          <td class="center" style="color:var(--green); font-weight:700;">YES<br><span style="font-size:11px;">10 Miles</span></td>
+        </tr>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">Technical SEO Implementation</td>
+          <td class="center">5/mo</td><td class="center">10/mo</td><td class="center">5/mo</td><td class="center">10/mo</td>
+        </tr>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">Localized Content</td>
+          <td class="center">2/mo</td><td class="center">5/mo</td><td class="center">2/mo</td><td class="center">5/mo</td>
+        </tr>
+        <tr>
+          <td class="bold" style="color:var(--text-light); font-size:12px;">Backlinks</td>
+          <td class="center">2/mo</td><td class="center">5/mo</td><td class="center">2/mo</td><td class="center">5/mo</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="border-top:2px solid var(--border);">
+          <td class="bold" style="font-size:12px; color:var(--text-light);">Monthly Billing</td>
+          <td class="center bold" style="font-size:18px; color:var(--accent);">$1,800<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">per month</span></td>
+          <td class="center bold" style="font-size:18px; color:var(--accent);">$2,150<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">per month</span></td>
+          <td class="center bold" style="font-size:18px; color:var(--teal);">$4,800<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">per month</span></td>
+          <td class="center bold" style="font-size:18px; color:var(--teal);">$5,150<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">per month</span></td>
+        </tr>
+        <tr style="background:#f0faf3;">
+          <td class="bold" style="font-size:12px; color:var(--green);">⚡ Quarterly Pre-Pay <span style="font-weight:400; color:var(--text-light);">(save 10%)</span></td>
+          <td class="center" style="font-size:16px; font-weight:800; color:var(--green);">$4,860<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">$1,620/mo equiv.</span><span style="display:block; font-size:11px; font-weight:600; color:var(--green);">Save $540/qtr</span></td>
+          <td class="center" style="font-size:16px; font-weight:800; color:var(--green);">$5,805<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">$1,935/mo equiv.</span><span style="display:block; font-size:11px; font-weight:600; color:var(--green);">Save $645/qtr</span></td>
+          <td class="center" style="font-size:16px; font-weight:800; color:var(--green);">$12,960<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">$4,320/mo equiv.</span><span style="display:block; font-size:11px; font-weight:600; color:var(--green);">Save $1,440/qtr</span></td>
+          <td class="center" style="font-size:16px; font-weight:800; color:var(--green);">$13,905<span style="display:block; font-size:11px; font-weight:400; color:var(--text-light);">$4,635/mo equiv.</span><span style="display:block; font-size:11px; font-weight:600; color:var(--green);">Save $1,545/qtr</span></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- LSA Add-On -->
+    <div style="margin-top:16px; border:1px solid var(--border); border-radius:12px; padding:16px 20px; background:var(--light-bg);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+        <span style="font-size:20px;">📣</span>
+        <div>
+          <div style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ember-red);">Add-On</div>
+          <div style="font-size:16px; font-weight:800; color:var(--primary-dark);">Local Service Ads Management — <span style="color:var(--accent);">$500/mo</span> <span style="font-size:12px; font-weight:400; color:var(--green);">(waived if Local SEO is in scope)</span></div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; font-size:13px;">
+        <div><strong>Bid Strategy Optimization</strong> — regularly review &amp; adjust bidding to maintain cost-efficient visibility in relevant searches.</div>
+        <div><strong>Lead Monitoring &amp; Management</strong> — track all incoming leads via LSA dashboard (calls, messages, bookings) with conversion recommendations.</div>
+        <div><strong>Performance Reporting</strong> — monthly reports on lead volume, cost-per-lead &amp; actionable insights. <span style="color:var(--text-light);">*Ad spend not included. **Contingent on category qualifying for LSA.</span></div>
+      </div>
+    </div>
+
+    <!-- SEO Content Engine -->
+    <div style="margin-top:12px; border:1px solid var(--border); border-radius:12px; padding:16px 20px; background:var(--light-bg);">
+      <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:12px;">
+        <div style="font-size:15px; font-weight:800; color:var(--primary-dark); text-transform:uppercase; letter-spacing:0.5px;">SEO Content Engine</div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:1px;">Pillar Pages + Content Clusters + Link Outreach</div>
+      </div>
+      <table style="margin:0;">
+        <thead>
+          <tr>
+            <th style="width:140px;"># of Articles</th>
+            <th>One-Time / Monthly</th>
+            <th>3-Month Commitment <span style="color:var(--green); font-style:italic;">(Savings)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">25 articles</td>
+            <td>$700/mo</td>
+            <td>$1,750 <span style="color:var(--green); font-weight:700;">−$350</span></td>
+          </tr>
+          <tr>
+            <td class="bold">40 articles</td>
+            <td>$1,100/mo</td>
+            <td>$2,700 <span style="color:var(--green); font-weight:700;">−$600</span></td>
+          </tr>
+          <tr>
+            <td class="bold">50 articles</td>
+            <td>$1,350/mo</td>
+            <td>$3,400 <span style="color:var(--green); font-weight:700;">−$650</span></td>
+          </tr>
+          <tr>
+            <td class="bold">100 articles</td>
+            <td>$2,700/mo</td>
+            <td>$7,000 <span style="color:var(--green); font-weight:700;">−$1,100</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paid Ads Add-On -->
+    <div style="margin-top:12px; border:1px solid var(--border); border-radius:12px; padding:16px 20px; background:var(--light-bg);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
+        <span style="font-size:20px;">📣</span>
+        <div>
+          <div style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--ember-red);">Add-On</div>
+          <div style="font-size:16px; font-weight:800; color:var(--primary-dark);">Paid Ads Management (Google + Meta) — <span style="color:var(--accent);">$1,750/mo</span> <span style="font-size:12px; font-weight:400; color:var(--text-light);">+ ad spend</span></div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:13px;">
+        <div><strong style="color:#4285F4;">🔍 Google Ads</strong> — search campaigns targeting all 14 high-intent local keywords, call-only mobile ads, remarketing to non-converters, and monthly bid optimization.</div>
+        <div><strong style="color:#1877F2;">📱 Meta Ads</strong> — before/after transformation video ads, lead gen campaigns driving to the free weight loss quiz, retargeting, and geo-targeted lookalike audiences within 10 miles.</div>
+      </div>
+    </div>
+
+    <div class="annotation success" style="margin-top:10px;">
+      <strong>ROI check:</strong> At your average program value, just 2 new patients/month from map pack traffic covers the entry-level package. Guaranteed map pack placements typically drive 8–15 new leads/month once live.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What You Can Expect</h2>
+    <p class="subtitle">Conservative projections based on comparable local health &amp; wellness clients in competitive Florida markets. Results compound over time.</p>
+    <div class="three-col" style="margin:20px 0;">
+      <div class="outcome-card">
+        <div class="period">Month 1–2</div>
+        <div class="metric">3–5</div>
+        <div class="metric-label">Map Pack Appearances (low-competition terms)</div>
+        <ul style="margin-top:12px;">
+          <li>GBP fully optimized &amp; live</li>
+          <li>Review velocity accelerating</li>
+          <li>Citations submitted &amp; indexing</li>
+          <li>First ranking movements visible</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="period">Month 3–4</div>
+        <div class="metric">Top-3</div>
+        <div class="metric-label">Map Pack for "weight loss lake nona" + body contouring</div>
+        <ul style="margin-top:12px;">
+          <li>8–12 new leads/month from local search</li>
+          <li>60+ reviews (up from ~40)</li>
+          <li>All 5 landing pages ranking</li>
+          <li>GBP impressions up 200–400%</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="period">Month 6+</div>
+        <div class="metric">#1–2</div>
+        <div class="metric-label">Map Pack for "weight loss center orlando" + "near me"</div>
+        <ul style="margin-top:12px;">
+          <li>15–25 new leads/month from local</li>
+          <li>100+ reviews, fastest velocity in market</li>
+          <li>Dominant across Orlando metro area</li>
+          <li>Competitor displacement on primary terms</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bar-chart" style="margin-top:8px;">
+      <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:4px;">Estimated Monthly Map Pack Leads Over Time</div>
+      <div class="bar-row">
+        <span class="bar-label">Today<span class="vol">Current baseline</span></span>
+        <div class="bar-track"><div class="bar-fill red" style="width:3%;">~1</div></div>
+        <span class="bar-value">~1/mo</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 2<span class="vol">Foundation live</span></span>
+        <div class="bar-track"><div class="bar-fill orange" style="width:20%;">4–6</div></div>
+        <span class="bar-value">4–6/mo</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 4<span class="vol">Pack entries</span></span>
+        <div class="bar-track"><div class="bar-fill yellow" style="width:45%;">8–12</div></div>
+        <span class="bar-value">8–12/mo</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 6<span class="vol">Pack domination</span></span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:75%;">15–20</div></div>
+        <span class="bar-value">15–20/mo</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 12<span class="vol">Full market</span></span>
+        <div class="bar-track"><div class="bar-fill green" style="width:100%;">25–35</div></div>
+        <span class="bar-value">25–35/mo</span>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Inspire Weight Loss &mdash; Local SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1 style="font-size:52px;">Ready to Own<br>Orlando's Map Pack?</h1>
+      <p class="subtitle" style="text-align:center; max-width:680px; color:rgba(255,255,255,0.75); margin-top:16px;">Your 4.9-star reputation is the best in the market. The only thing between you and the top of every local search result is a few months of focused work — and we've done this before.</p>
+      <div style="display:flex; gap:48px; margin-top:32px; flex-wrap:wrap; justify-content:center;">
+        <div style="text-align:center;">
+          <div style="font-size:36px; font-weight:900; color:var(--accent);">Step 1</div>
+          <div style="font-size:16px; font-weight:600; margin-top:8px;">30-Minute Strategy Call</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">Walk through the full audit &amp; answer questions</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:36px; font-weight:900; color:var(--accent);">Step 2</div>
+          <div style="font-size:16px; font-weight:600; margin-top:8px;">GBP Access + Kickoff</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">Grant access, we start optimization same week</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:36px; font-weight:900; color:var(--accent);">Step 3</div>
+          <div style="font-size:16px; font-weight:600; margin-top:8px;">Watch the Rankings Move</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.55); margin-top:4px;">First map pack appearances in 30–45 days</div>
+        </div>
+      </div>
+      <div style="margin-top:40px; padding:24px 40px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px;">
+        <p style="font-size:20px; font-weight:700; color:#ffffff;">Book your strategy call → <span style="color:var(--accent);">embertribe.com/call</span></p>
+        <p style="font-size:14px; color:rgba(255,255,255,0.45); margin-top:6px;">Or reach us directly — tj@embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:40px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; May 2025</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

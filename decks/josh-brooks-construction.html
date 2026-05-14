@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Josh Brooks Construction — EmberTribe Growth Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0D1F2D;
+  --primary-mid: #1A3348;
+  --primary-light: #1F4060;
+  --accent: #E07B20;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 18px; font-weight: 400; color: var(--text-light); max-width: 860px; margin-bottom: 20px; }
+
+.slide-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1; min-width: 140px;
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px;
+}
+
+.stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 12px 16px;
+  font-size: 14px; margin: 12px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.orange { background: #FFF3E0; border-left-color: var(--accent); }
+.annotation.orange strong { color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.5px; color: var(--text-light);
+  text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.center { text-align: center; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 150px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px; font-size: 12px; font-weight: 700; color: white;
+  transition: width 0.8s ease;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, #0097B2, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #B05F10, var(--accent)); }
+.bar-fill.navy   { background: linear-gradient(90deg, var(--primary-dark), var(--primary-mid)); }
+.bar-value { width: 60px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.ai      { background: #EDE7F6; color: #4527A0; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.maps    { background: #E3F2FD; color: #0D47A1; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 22px;
+}
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; font-size: 18px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 16px; margin-bottom: 6px;
+  font-size: 13px; line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 12px 0; flex: 1; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; display: block;
+}
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 13px; }
+.timeline-phase ul li::before {
+  content: ''; position: absolute; left: 0; top: 7px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+}
+.phase-cost { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+.pricing-card {
+  border: 2px solid var(--border); border-radius: 16px; padding: 28px;
+  display: flex; flex-direction: column;
+}
+.pricing-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 4px 24px rgba(224,123,32,0.15);
+}
+.pricing-badge {
+  background: var(--accent); color: white;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; padding: 4px 12px; border-radius: 20px;
+  display: inline-block; margin-bottom: 12px; align-self: flex-start;
+}
+.pricing-name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.pricing-tagline { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+.pricing-price { font-size: 38px; font-weight: 900; color: var(--primary-dark); line-height: 1; }
+.pricing-price span { font-size: 16px; font-weight: 500; color: var(--text-light); }
+.pricing-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.pricing-item { font-size: 13px; padding: 4px 0; padding-left: 18px; position: relative; }
+.pricing-item::before {
+  content: '✓'; position: absolute; left: 0; font-weight: 700; color: var(--green);
+}
+.pricing-item.muted { color: var(--text-light); }
+.pricing-item.muted::before { content: '—'; color: var(--text-light); }
+
+.stat-highlight {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-mid));
+  border-radius: 12px; padding: 20px 24px; color: white; text-align: center;
+}
+.stat-highlight .stat-value { color: var(--accent); }
+.stat-highlight .stat-label { color: rgba(255,255,255,0.65); }
+
+.query-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0;
+}
+.query-card {
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px; font-size: 13px; line-height: 1.4;
+  color: var(--text);
+}
+.query-card .q-icon { font-size: 16px; margin-bottom: 4px; }
+
+.subreddit-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+.sub-card {
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px;
+}
+.sub-name { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+.sub-desc { font-size: 12px; color: var(--text-light); line-height: 1.4; }
+
+.ai-stat-row {
+  display: flex; gap: 12px; margin: 12px 0;
+}
+.ai-stat-box {
+  flex: 1; text-align: center; background: var(--light-bg);
+  border: 1px solid var(--border); border-radius: 12px; padding: 18px 12px;
+}
+.ai-stat-box .big { font-size: 32px; font-weight: 900; color: var(--primary-dark); }
+.ai-stat-box .lbl { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+.logo-row {
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100; transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed; bottom: 24px; right: 32px;
+  display: flex; align-items: center; gap: 12px; z-index: 100;
+}
+.nav button {
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);
+  color: white; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.accent-color { color: var(--accent); }
+.white { color: white; }
+.dim { opacity: 0.55; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col, .three-col, .query-grid, .subreddit-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 90px; }
+  .ai-stat-row { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Local Dominance Strategy</p>
+      <h1>Josh Brooks Construction</h1>
+      <p class="subtitle" style="color:rgba(255,255,255,0.7); max-width:780px;">
+        You're gaining traffic — but nearly invisible where today's buyers find contractors: the Google Map Pack and AI chatbots like ChatGPT and Claude. Here's how we fix both.
+      </p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">14</div>
+          <div class="stat-label">AI Visibility Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">5</div>
+          <div class="stat-label">AI Mentions (Total)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">+48%</div>
+          <div class="stat-label">Organic Traffic Growth</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0</div>
+          <div class="stat-label">ChatGPT / AI Overview Presence</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Josh Brooks Construction &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Stand Today</h2>
+    <p class="subtitle">Traffic is growing but visibility is fragmented — third-party platforms are driving your AI mentions, not your own brand.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-dark);">17</div>
+        <div class="stat-label">Domain Authority Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">184</div>
+        <div class="stat-label">Monthly Organic Visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">86</div>
+        <div class="stat-label">Ranking Keywords (&#8209;10%)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal);">27.6K</div>
+        <div class="stat-label">Backlinks / 1.1K Domains</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">&#10003;</span> Organic traffic growing +48% — strong momentum signal</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">&#10003;</span> 27.6K backlinks from 1.1K domains — solid link base</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--green);">&#10003;</span> Present on Houzz, Yelp, Localo — directory foundation started</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">&#10003;</span> Veteran-owned differentiator — strong community angle</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">&#10007;</span> Zero presence in ChatGPT and Google AI Overviews</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">&#10007;</span> AI citations come from 3rd parties (Houzz, Yelp) — not your site</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--red);">&#10007;</span> No guaranteed Map Pack ranking — missing high-intent clicks</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px;"><span style="position:absolute;left:0;color:var(--red);">&#10007;</span> Keyword breadth declining (&#8209;10%) — losing topical coverage</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: LOCAL KEYWORD RESEARCH -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Keyword Research</p>
+    <h2>High-Impact Local Keywords to Target</h2>
+    <p class="subtitle">10 priority terms across your core services — ranked by opportunity. Competitors are already owning these; you're absent on most.</p>
+    <table style="font-size:13px;">
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th class="center">Mo. Volume</th>
+          <th class="center">Difficulty</th>
+          <th class="center">Josh's Rank</th>
+          <th>Top Competitor Ranking</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>general contractor longmont co</strong></td>
+          <td class="center">110</td>
+          <td class="center"><span class="pill green">22 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>K&amp;D Development, D&amp;G Home Pro</td>
+        </tr>
+        <tr>
+          <td><strong>roofing contractor longmont co</strong></td>
+          <td class="center">170</td>
+          <td class="center"><span class="pill orange">31 Med</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>HWG Colorado, Quality Renovations</td>
+        </tr>
+        <tr>
+          <td><strong>kitchen remodel longmont co</strong></td>
+          <td class="center">90</td>
+          <td class="center"><span class="pill green">18 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>Koeppen Construction, HWG Colorado</td>
+        </tr>
+        <tr>
+          <td><strong>basement finishing longmont co</strong></td>
+          <td class="center">70</td>
+          <td class="center"><span class="pill green">14 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>Koeppen Construction, JRocco Colorado</td>
+        </tr>
+        <tr>
+          <td><strong>hail damage roof repair longmont</strong></td>
+          <td class="center">140</td>
+          <td class="center"><span class="pill orange">35 Med</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>HWG Colorado, Quality Renovations</td>
+        </tr>
+        <tr>
+          <td><strong>bathroom remodel longmont co</strong></td>
+          <td class="center">80</td>
+          <td class="center"><span class="pill green">16 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>HWG Colorado, Koeppen Construction</td>
+        </tr>
+        <tr>
+          <td><strong>James Hardie siding contractor longmont</strong></td>
+          <td class="center">50</td>
+          <td class="center"><span class="pill green">10 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>HWG Colorado (only ranked result)</td>
+        </tr>
+        <tr>
+          <td><strong>deck builder longmont co</strong></td>
+          <td class="center">60</td>
+          <td class="center"><span class="pill green">15 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>D&amp;G Home Pro, JRocco Colorado</td>
+        </tr>
+        <tr>
+          <td><strong>home addition contractor boulder county</strong></td>
+          <td class="center">50</td>
+          <td class="center"><span class="pill green">20 Easy</span></td>
+          <td class="center"><span style="color:var(--red); font-weight:700;">Not ranking</span></td>
+          <td>Koeppen Construction, K&amp;D Development</td>
+        </tr>
+        <tr>
+          <td><strong>veteran contractor longmont co</strong></td>
+          <td class="center">40</td>
+          <td class="center"><span class="pill green">8 Easy</span></td>
+          <td class="center"><span style="color:var(--orange); font-weight:700;">Pg 2–3</span></td>
+          <td style="color:var(--green); font-weight:600;">No direct competitor — wide open</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display:flex; gap:12px; margin-top:10px; flex-wrap:wrap;">
+      <div class="annotation danger" style="flex:1; margin:0;">
+        <strong>The gap:</strong> Competitors like Koeppen Construction, HWG Colorado, and K&amp;D Development have dedicated service-area landing pages for every keyword above. Josh Brooks has none — meaning these searches convert directly to competitor calls.
+      </div>
+      <div class="annotation success" style="flex:1; margin:0;">
+        <strong>The opportunity:</strong> 7 of 10 keywords are rated Easy difficulty (KD &lt;25). With localized landing pages + schema + GBP signals, ranking on Page 1 within 60–90 days is realistic on most of these terms.
+      </div>
+    </div>
+    <p style="font-size:11px; color:var(--text-light); margin-top:8px;">* Volume = estimated monthly local searches. Difficulty = KD score (0–100). Rankings based on manual SERP checks + SEMrush estimates. Seasonal variance applies to roofing/hail keywords.</p>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: WHY AI SEARCH MATTERS -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">The New Search Reality</p>
+    <h2>Buyers Now Ask AI Before They Click Google</h2>
+    <p class="subtitle">AI chatbots have replaced the "search + scroll + click" behavior for service recommendations. If you're not in the answers, you're not in the running.</p>
+    <div class="ai-stat-row">
+      <div class="ai-stat-box">
+        <div class="big" style="color:var(--ember-red);">21%</div>
+        <div class="lbl">of Google AI Overviews<br>cite Reddit content</div>
+      </div>
+      <div class="ai-stat-box">
+        <div class="big" style="color:var(--accent);">46.7%</div>
+        <div class="lbl">of Perplexity answers<br>pull from Reddit</div>
+      </div>
+      <div class="ai-stat-box">
+        <div class="big" style="color:var(--green);">+87%</div>
+        <div class="lbl">growth in ChatGPT<br>Reddit citations</div>
+      </div>
+      <div class="ai-stat-box">
+        <div class="big" style="color:var(--blue);">$130M</div>
+        <div class="lbl">Google + OpenAI pay Reddit<br>annually for AI training data</div>
+      </div>
+    </div>
+    <div class="annotation orange mt-16">
+      <strong>Why Reddit is the cheat code:</strong> Google pays $60M/yr and OpenAI pays $70M/yr for Reddit's content to train their AI systems. Consistent, positive brand mentions in Reddit = your brand gets recommended by ChatGPT, Claude, Gemini, and Perplexity when someone asks who to hire.
+    </div>
+    <div class="annotation info">
+      <strong>Your current AI status:</strong> AI Visibility Score of 14 with only 5 total mentions — zero owned-channel citations. Houzz and Yelp are speaking for you. We need YOUR brand to own those answers.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: TWO-TRACK STRATEGY -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">The Strategy</p>
+    <h2>Two Tracks. Complete Local Dominance.</h2>
+    <p class="subtitle">Map Pack captures buyers with local intent right now. AI citations capture buyers in the discovery and research phase. You need both to be uncatchable.</p>
+    <div class="two-col flex-grow mt-16">
+      <div style="border:2px solid var(--teal); border-radius:16px; padding:28px;">
+        <div style="font-size:32px; margin-bottom:12px;">&#x1F4CD;</div>
+        <h3 style="color:var(--primary-dark);">Track 1: Map Pack Domination</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Guaranteed Top 3 ranking in the Google Maps local pack within 90 days. Captures buyers who are ready to call right now.</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--teal);">&#10003;</span> Google Business Profile optimization + management</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--teal);">&#10003;</span> Local Business Schema + Google Map embed</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--teal);">&#10003;</span> Citation building + directory submissions</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--teal);">&#10003;</span> Weekly GBP posts + new photo/video uploads</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--teal);">&#10003;</span> Rank tracking across 10–20 target keywords</li>
+        </ul>
+        <div style="margin-top:16px; background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; color:var(--primary-dark);">
+          Guarantee: Top 3 Maps Ranking in 90 days*
+        </div>
+      </div>
+      <div style="border:2px solid var(--accent); border-radius:16px; padding:28px;">
+        <div style="font-size:32px; margin-bottom:12px;">&#x1F916;</div>
+        <h3 style="color:var(--primary-dark);">Track 2: AI Citation Building</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:16px;">Strategic Reddit placements and AEO content that trains AI engines to recommend Josh Brooks Construction when anyone asks who to hire in Longmont/Boulder County.</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--accent);">&#10003;</span> Reddit thread seeding in high-AI-indexed subreddits</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--accent);">&#10003;</span> Brand mention placement in existing high-traffic threads</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--accent);">&#10003;</span> AEO-optimized articles that feed AI answer engines</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;color:var(--accent);">&#10003;</span> Entity-rich content for ChatGPT, Claude, Perplexity</li>
+          <li style="padding:5px 0 5px 18px; position:relative; font-size:13px;"><span style="position:absolute;left:0;color:var(--accent);">&#10003;</span> High-DA editorial backlinks for trust signals</li>
+        </ul>
+        <div style="margin-top:16px; background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px; font-weight:600; color:var(--primary-dark);">
+          Goal: Recommended by AI when asked for contractors in your market
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: REDDIT TARGETS -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">AI Citation Targeting</p>
+    <h2>The Queries We'll Make You the Answer To</h2>
+    <p class="subtitle">These are the prompts real buyers type into ChatGPT, Google AI Mode, and Perplexity. We place Josh Brooks Construction as the top community recommendation for each.</p>
+    <div class="query-grid">
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best general contractor in Longmont, CO for home renovations?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best kitchen remodeling contractor near Boulder County?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best basement finishing company in Longmont, CO?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best roofing contractor in Northern Colorado for hail damage?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best contractor for storm damage restoration in Colorado?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best deck builder in Longmont, CO for custom Trex or wood decks?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best James Hardie siding installer in Longmont?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best home addition and ADU contractor in Northern Colorado?"</div>
+      <div class="query-card"><div class="q-icon">&#x1F50D;</div>"Best general contractor in Boulder County with veteran discounts?"</div>
+    </div>
+    <div class="subreddit-grid mt-12">
+      <div class="sub-card"><div class="sub-name">r/HomeImprovement</div><div class="sub-desc">Largest DIY &amp; contractor-seeking community — daily roofing, remodel, addition questions</div></div>
+      <div class="sub-card"><div class="sub-name">r/Longmont + r/boulder</div><div class="sub-desc">Local homeowners asking for trusted trades and contractor recommendations</div></div>
+      <div class="sub-card"><div class="sub-name">r/Colorado + r/Denver</div><div class="sub-desc">Statewide audience — hail damage and storm restoration spike after storms</div></div>
+      <div class="sub-card"><div class="sub-name">r/Roofing + r/kitchenremodel</div><div class="sub-desc">High-intent homeowners comparing contractors, pricing, and materials</div></div>
+      <div class="sub-card"><div class="sub-name">r/FortCollins + r/Loveland</div><div class="sub-desc">Active Northern Colorado communities with regular contractor referral requests</div></div>
+      <div class="sub-card"><div class="sub-name">r/Veterans + r/RealEstate</div><div class="sub-desc">Military community + buyers/investors seeking pre-sale remodels and additions</div></div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ROADMAP -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 6 Months to Local + AI Dominance</h2>
+    <p class="subtitle">Both tracks run in parallel. Map Pack results come in 90 days. AI citation authority compounds through months 3–6.</p>
+    <div class="timeline flex-grow mt-12">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>GBP creation/optimization</li>
+          <li>Full technical SEO audit</li>
+          <li>Sitemap, robots.txt, Local Schema</li>
+          <li>Google Map embed</li>
+          <li>Citation + directory submissions</li>
+          <li>Keyword research &amp; site mapping</li>
+          <li>Reddit landscape mapping</li>
+          <li>Initial AI visibility benchmark</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:var(--light-bg);">
+        <span class="phase-label">Month 2</span>
+        <h4>Launch</h4>
+        <ul>
+          <li>GBP management goes live</li>
+          <li>First Reddit thread seeds planted</li>
+          <li>AEO content articles published</li>
+          <li>Brand mentions in existing threads</li>
+          <li>Technical SEO changes deployed</li>
+          <li>Localized content pages live</li>
+          <li>First backlink placements</li>
+          <li>Rank tracking report</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Map Pack Win</h4>
+        <ul>
+          <li><strong>Guaranteed Maps Top 3 ranking</strong></li>
+          <li>Measurable AI visibility lift</li>
+          <li>Expanded Reddit placements</li>
+          <li>Service area + blog pages live</li>
+          <li>Authority backlink cadence ongoing</li>
+          <li>AI engine benchmark report</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:var(--light-bg);">
+        <span class="phase-label">Months 4–6</span>
+        <h4>Compounding Authority</h4>
+        <ul>
+          <li>AI recommendations measurable</li>
+          <li>Competitive displacement in Maps</li>
+          <li>Content topical authority expanding</li>
+          <li>Reddit consensus building</li>
+          <li>DA backlinks strengthening trust</li>
+          <li>Full AI category ownership</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: DELIVERABLES -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">What's Included</p>
+    <h2>Full Deliverables by Track</h2>
+    <p class="subtitle">Both tracks run simultaneously. Every deliverable feeds both your Map Pack ranking and your AI citation profile.</p>
+    <div class="two-col flex-grow mt-12">
+      <div>
+        <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="color:var(--teal);">&#x1F4CD;</span> Local SEO + Map Pack</h3>
+        <table>
+          <thead><tr><th>Deliverable</th><th class="right">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>GBP optimization + management</td><td class="right">Ongoing</td></tr>
+            <tr><td>New GBP posts + photo/video uploads</td><td class="right">Weekly</td></tr>
+            <tr><td>Technical SEO implementations</td><td class="right">5–10/mo</td></tr>
+            <tr><td>Localized content (service/area pages)</td><td class="right">2–5/mo</td></tr>
+            <tr><td>DR 30+ backlinks</td><td class="right">2–5/mo</td></tr>
+            <tr><td>Citation + directory management</td><td class="right">Ongoing</td></tr>
+            <tr><td>Keyword rank tracking (10–20 keywords)</td><td class="right">Weekly</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-12">
+          <strong>Guarantee:</strong> Top 3 Maps Pack ranking within 90 days on select plans.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px; display:flex; align-items:center; gap:8px;"><span style="color:var(--accent);">&#x1F916;</span> Reddit + AI Visibility</h3>
+        <table>
+          <thead><tr><th>Deliverable</th><th class="right">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>AEO placements (Reddit brand mentions)</td><td class="right">5–12/mo</td></tr>
+            <tr><td>AEO-optimized articles</td><td class="right">10–40/mo</td></tr>
+            <tr><td>New Reddit thread seeds</td><td class="right">Ongoing</td></tr>
+            <tr><td>Comment strategy in existing threads</td><td class="right">Ongoing</td></tr>
+            <tr><td>Subreddit landscape monitoring</td><td class="right">Weekly</td></tr>
+            <tr><td>DA 40–50+ editorial backlinks</td><td class="right">0–2/mo</td></tr>
+            <tr><td>AI visibility benchmark reports</td><td class="right">Monthly</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation orange mt-12">
+          <strong>Target AI engines:</strong> ChatGPT, Claude, Google AI Overviews, Perplexity, Copilot, Gemini
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Combined Packages — Map Pack + AI Visibility</h2>
+    <p class="subtitle">Choose the coverage radius and AI intensity that fits your growth goals. All plans include both tracks running in parallel from day one.</p>
+    <div class="three-col flex-grow mt-12">
+
+      <div class="pricing-card">
+        <div class="pricing-name">Starter Bundle</div>
+        <div class="pricing-tagline">5-Mile Map Pack + AI Visibility Starter</div>
+        <div class="pricing-price">$3,550<span>/mo</span></div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--teal); margin-bottom:8px;">&#x1F4CD; Local SEO + Maps 5mi — $1,800</div>
+        <div class="pricing-item">GBP optimization + management</div>
+        <div class="pricing-item">Month 1 technical foundation</div>
+        <div class="pricing-item">2 localized content pieces/mo</div>
+        <div class="pricing-item">2 DR30+ backlinks/mo</div>
+        <div class="pricing-item">Guaranteed Top 3 Maps — 5mi radius</div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">&#x1F916; AI Visibility Starter — $1,750</div>
+        <div class="pricing-item">5 AEO Reddit placements/mo</div>
+        <div class="pricing-item">10 AEO-optimized articles/mo</div>
+        <div class="pricing-item muted">No DA40+ backlinks</div>
+        <div class="pricing-item">Monthly AI visibility report</div>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-name">Growth Bundle</div>
+        <div class="pricing-tagline">5-Mile Map Pack + AI Growth Engine</div>
+        <div class="pricing-price">$5,600<span>/mo</span></div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--teal); margin-bottom:8px;">&#x1F4CD; Local SEO + Maps 5mi — $2,150</div>
+        <div class="pricing-item">GBP optimization + management</div>
+        <div class="pricing-item">Month 1 technical foundation</div>
+        <div class="pricing-item">5 localized content pieces/mo</div>
+        <div class="pricing-item">5 DR30+ backlinks/mo</div>
+        <div class="pricing-item">Guaranteed Top 3 Maps — 5mi radius</div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">&#x1F916; AI Growth Engine — $3,450</div>
+        <div class="pricing-item">8 AEO Reddit placements/mo</div>
+        <div class="pricing-item">25 AEO-optimized articles/mo</div>
+        <div class="pricing-item">2 DA40+ editorial backlinks/mo</div>
+        <div class="pricing-item">Monthly AI visibility report</div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="pricing-name">Authority Bundle</div>
+        <div class="pricing-tagline">10-Mile Map Pack + AI Authority Accelerator</div>
+        <div class="pricing-price">$10,400<span>/mo</span></div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--teal); margin-bottom:8px;">&#x1F4CD; Local SEO + Maps 10mi — $5,150</div>
+        <div class="pricing-item">GBP optimization + management</div>
+        <div class="pricing-item">Month 1 technical foundation</div>
+        <div class="pricing-item">5 localized content pieces/mo</div>
+        <div class="pricing-item">5 DR30+ backlinks/mo</div>
+        <div class="pricing-item">Guaranteed Top 3 Maps — 10mi radius</div>
+        <hr class="pricing-divider">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">&#x1F916; AI Authority Accelerator — $5,250</div>
+        <div class="pricing-item">12 AEO Reddit placements/mo</div>
+        <div class="pricing-item">40 AEO-optimized articles/mo</div>
+        <div class="pricing-item">2 DA50+ editorial backlinks/mo</div>
+        <div class="pricing-item">Monthly AI visibility report</div>
+      </div>
+
+    </div>
+    <p style="font-size:12px; color:var(--text-light); margin-top:10px;">*Guaranteed Maps ranking available on all plans shown. Guarantee applies to 10–20 keywords within stated radius.</p>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Success Looks Like</h2>
+    <p class="subtitle">Based on current momentum (+48% traffic growth) and benchmark results from comparable contractor campaigns in competitive local markets.</p>
+    <div class="two-col flex-grow mt-12">
+      <div>
+        <h3 style="margin-bottom:16px;">Map Pack Milestones</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Month 1</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:15%;">Setup</div></div>
+            <span class="bar-value dim">Foundation</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 2</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:40%;">Rising</div></div>
+            <span class="bar-value">Top 10</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 3</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:70%;">&#x1F4CD; Guaranteed</div></div>
+            <span class="bar-value green bold">Top 3</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 6</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:100%;">Dominant</div></div>
+            <span class="bar-value green bold">#1 Area</span>
+          </div>
+        </div>
+        <div class="annotation success mt-12">
+          <strong>Map Pack impact:</strong> Top 3 Map Pack listings capture 44% of local search clicks for high-intent queries like "contractor near me."
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:16px;">AI Visibility Milestones</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Today</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:7%;">14</div></div>
+            <span class="bar-value">Score: 14</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 2</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:28%;">35</div></div>
+            <span class="bar-value">Score: 35</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 3</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:50%;">55</div></div>
+            <span class="bar-value">Score: 55</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Month 6</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:80%;">80+</div></div>
+            <span class="bar-value green bold">Score: 80+</span>
+          </div>
+        </div>
+        <div class="annotation orange mt-12">
+          <strong>AI citation goal:</strong> When someone in Longmont asks ChatGPT or Claude "who's the best contractor near me?" — Josh Brooks Construction is the first name recommended.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Josh Brooks Construction &mdash; Local Dominance Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: NEXT STEPS -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1 style="font-size:52px;">Own Your Market.<br>Online and in AI.</h1>
+      <p class="subtitle" style="text-align:center; color:rgba(255,255,255,0.7); max-width:640px; margin-top:16px;">
+        The window to build AI citation authority before your competitors do is open right now. Every month they appear in those answers and you don't is market share walking out the door.
+      </p>
+      <div class="stats-row mt-24" style="justify-content:center; max-width:700px;">
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent);">Step 1</div>
+          <div class="stat-label">Choose your bundle (Starter / Growth / Authority)</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--teal);">Step 2</div>
+          <div class="stat-label">Sign + complete the onboarding questionnaire</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--green);">Step 3</div>
+          <div class="stat-label">Month 1 foundation kicks off within 48 hours</div>
+        </div>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:40px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

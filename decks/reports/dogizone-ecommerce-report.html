@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecommerce Audit — DogiZone</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fb;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --accent: #5b3fd4;
+      --accent-dim: rgba(91,63,212,0.07);
+      --red: #dc2626; --red-dim: #fef2f2;
+      --orange: #ea580c; --orange-dim: #fff7ed;
+      --yellow: #d97706; --yellow-dim: #fffbeb;
+      --green: #16a34a; --green-dim: #f0fdf4;
+      --text: #1a1a2e;
+      --text-muted: #374151;
+      --text-dim: #6b7280;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mono: 'JetBrains Mono','Fira Code','Courier New',monospace;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+    .report-header { background: linear-gradient(135deg,#3a2a8a 0%,#5b3fd4 100%); padding: 56px 0 48px; }
+    .container { max-width: 980px; margin: 0 auto; padding: 0 28px; }
+    .header-tag { display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:20px; }
+    .header-title { font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px; }
+    .header-sub { font-size:16px;color:rgba(255,255,255,0.75);max-width:600px; }
+    .header-meta { display:flex;gap:24px;margin-top:28px;flex-wrap:wrap; }
+    .header-meta-item { font-size:13px;color:rgba(255,255,255,0.6); }
+    .header-meta-item strong { color:rgba(255,255,255,0.95); }
+
+    .section { margin-bottom:40px; }
+    .section-label { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin:40px 0 16px; }
+
+    .card { background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px; }
+    .card-header { display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px; }
+    .card-title { font-size:15px;font-weight:700;color:var(--text); }
+
+    .pill { font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;flex-shrink:0; }
+    .pill-red { background:var(--red-dim);color:var(--red);border:1px solid #fecaca; }
+    .pill-orange { background:var(--orange-dim);color:var(--orange);border:1px solid #fed7aa; }
+    .pill-yellow { background:var(--yellow-dim);color:var(--yellow);border:1px solid #fde68a; }
+    .pill-green { background:var(--green-dim);color:var(--green);border:1px solid #bbf7d0; }
+
+    .two-col { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
+    .three-col { display:grid;grid-template-columns:repeat(3,1fr);gap:16px; }
+
+    .compare-block { background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px; }
+    .compare-header { display:grid;grid-template-columns:1fr 1fr 1fr;background:#f1f3f8;border-bottom:2px solid var(--border); }
+    .compare-header div { padding:12px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-dim); }
+    .compare-row { display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--border); }
+    .compare-row:last-child { border-bottom:none; }
+    .compare-row > div { padding:11px 16px;font-size:13.5px;color:var(--text-muted);vertical-align:top; }
+    .compare-row > div:first-child { font-weight:600;color:var(--text); }
+    .etail-col { background:rgba(220,38,38,0.03); }
+    .shopify-col { background:rgba(22,163,74,0.03); }
+    .x { color:var(--red);font-weight:700; }
+    .chk { color:var(--green);font-weight:700; }
+
+    .stat-row { display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px; }
+    .stat-box { background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px; }
+    .stat-val { font-size:26px;font-weight:800;color:var(--text);margin-bottom:2px; }
+    .stat-val.red { color:var(--red); }
+    .stat-val.green { color:var(--green); }
+    .stat-val.orange { color:var(--orange); }
+    .stat-lbl { font-size:12px;color:var(--text-dim);line-height:1.4; }
+
+    .note { background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:12px 16px;font-size:13px;color:#5b21b6;margin:12px 0;display:flex;gap:8px;align-items:flex-start; }
+    .note-icon { flex-shrink:0;font-size:15px; }
+    .note-green { background:var(--green-dim);border-color:#bbf7d0;color:#15803d; }
+    .note-red { background:var(--red-dim);border-color:#fecaca;color:#991b1b; }
+    .note-yellow { background:var(--yellow-dim);border-color:#fde68a;color:#92400e; }
+
+    .data-table { width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0; }
+    .data-table th { background:#f1f3f8;color:var(--text-dim);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border); }
+    .data-table td { padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top; }
+    .data-table tr:last-child td { border-bottom:none; }
+    .badge-bad { background:var(--red-dim);color:var(--red);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+    .badge-good { background:var(--green-dim);color:var(--green);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+    .badge-warn { background:var(--yellow-dim);color:var(--yellow);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600; }
+
+    .phase-block { border-left:3px solid var(--accent);padding:16px 20px;background:var(--surface);border-radius:0 10px 10px 0;margin-bottom:12px; }
+    .phase-block.green { border-left-color:var(--green); }
+    .phase-block.orange { border-left-color:var(--orange); }
+    .phase-num { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-dim);margin-bottom:4px; }
+    .phase-title { font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px; }
+    .phase-body { font-size:13px;color:var(--text-muted);line-height:1.6; }
+
+    .report-footer { background:var(--surface);border-top:1px solid var(--border);padding:32px 0;margin-top:64px;text-align:center; }
+    .report-footer p { font-size:13px;color:var(--text-dim); }
+
+    @media (max-width:680px) {
+      .two-col, .three-col { grid-template-columns:1fr; }
+      .compare-header, .compare-row { grid-template-columns:1fr; }
+      .compare-header div:not(:first-child), .compare-row > div:not(:first-child) { border-top:1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="container">
+    <div class="header-tag">🛒 Ecommerce Audit</div>
+    <div class="header-title">DogiZone — Ecommerce Strategy</div>
+    <div class="header-sub">An assessment of the current eTailPet store, its platform limitations, and the case for migrating to Shopify with a full SEO and CRO gap analysis.</div>
+    <div class="header-meta">
+      <div class="header-meta-item"><strong>Current store:</strong> dogizone.etailpet.com</div>
+      <div class="header-meta-item"><strong>Recommended platform:</strong> Shopify</div>
+      <div class="header-meta-item"><strong>Prepared:</strong> May 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px;">
+
+  <!-- THE CORE PROBLEM -->
+  <div class="section-label">The Core Problem</div>
+
+  <div class="note note-red">
+    <span class="note-icon">⚠️</span>
+    <div><strong>The ecommerce store is invisible to Google.</strong> dogizone.etailpet.com is a subdomain of etailpet.com — not dogizone.com. Every product page, every category, every piece of content on that store builds authority for eTailPet's domain, not DogiZone's. DogiZone gets none of the SEO benefit from its own online store.</div>
+  </div>
+
+  <div class="stat-row" style="margin-top:16px;">
+    <div class="stat-box">
+      <div class="stat-val red">0</div>
+      <div class="stat-lbl">SEO authority passed to dogizone.com from the current store</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val red">etailpet.com</div>
+      <div class="stat-lbl">Domain that benefits from DogiZone's product content and links</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val orange">Subdomain</div>
+      <div class="stat-lbl">Treated by Google as a separate site — not part of dogizone.com</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val green">Shopify</div>
+      <div class="stat-lbl">Recommended platform — can run at dogizone.com/shop/ on the same domain</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:8px;">
+    <div class="card-title" style="margin-bottom:10px;">Why the subdomain problem matters beyond SEO</div>
+    <p style="font-size:14px;color:var(--text-muted);line-height:1.7;">When a customer searches "dog food Rockville MD" or "bully sticks near me" and clicks a result that lands on dogizone.etailpet.com, they're on a URL that reads as a third-party platform — not DogiZone's own brand. For first-time visitors, it erodes trust. For repeat visitors, it creates a disjointed experience switching between dogizone.com for services and a different-looking subdomain for products. And from a paid media standpoint, running ads to a subdomain outside your main domain makes attribution, retargeting, and conversion tracking significantly more complex.</p>
+  </div>
+
+  <!-- PLATFORM COMPARISON -->
+  <div class="section-label">Platform Comparison — eTailPet vs. Shopify</div>
+
+  <div class="compare-block">
+    <div class="compare-header">
+      <div>Feature</div>
+      <div>eTailPet (current)</div>
+      <div>Shopify (recommended)</div>
+    </div>
+
+    <div class="compare-row">
+      <div>Domain / URL structure</div>
+      <div class="etail-col"><span class="x">✗</span> Subdomain of etailpet.com — no authority for dogizone.com</div>
+      <div class="shopify-col"><span class="chk">✓</span> Runs at dogizone.com/shop/ — all authority stays on your domain</div>
+    </div>
+    <div class="compare-row">
+      <div>SEO control</div>
+      <div class="etail-col"><span class="x">✗</span> Limited — platform controls URL structure, meta templates, and schema</div>
+      <div class="shopify-col"><span class="chk">✓</span> Full control over URLs, meta titles, descriptions, schema, and canonical tags</div>
+    </div>
+    <div class="compare-row">
+      <div>Collection / category page SEO</div>
+      <div class="etail-col"><span class="x">✗</span> Category pages use query parameter URLs (/products/list/?categories=0003000D) — not indexable or rankable by Google</div>
+      <div class="shopify-col"><span class="chk">✓</span> Clean collection URLs (/shop/collections/dog-food/) — keyword-optimized and fully indexable</div>
+    </div>
+    <div class="compare-row">
+      <div>Google indexing</div>
+      <div class="etail-col"><span class="x">✗</span> Product pages index under eTailPet's domain — DogiZone gets no ranking credit</div>
+      <div class="shopify-col"><span class="chk">✓</span> All pages indexed under dogizone.com — every product page builds your domain</div>
+    </div>
+    <div class="compare-row">
+      <div>Customer reviews</div>
+      <div class="etail-col"><span class="x">✗</span> No visible product review system on current store</div>
+      <div class="shopify-col"><span class="chk">✓</span> Native reviews + apps like Judge.me or Okendo — generates review schema for rich snippets</div>
+    </div>
+    <div class="compare-row">
+      <div>Abandoned cart recovery</div>
+      <div class="etail-col"><span class="x">✗</span> No abandoned cart emails or SMS — confirmed not enabled</div>
+      <div class="shopify-col"><span class="chk">✓</span> Built-in abandoned checkout emails + SMS via Klaviyo or native flows</div>
+    </div>
+    <div class="compare-row">
+      <div>Email capture / list building</div>
+      <div class="etail-col"><span class="x">✗</span> No newsletter signup or email capture visible on current store</div>
+      <div class="shopify-col"><span class="chk">✓</span> Klaviyo, Mailchimp, or native email with popup and footer capture</div>
+    </div>
+    <div class="compare-row">
+      <div>Loyalty / repeat purchase</div>
+      <div class="etail-col"><span class="x">✗</span> No loyalty program visible</div>
+      <div class="shopify-col"><span class="chk">✓</span> Smile.io, LoyaltyLion, or native Shopify — points, rewards, referrals</div>
+    </div>
+    <div class="compare-row">
+      <div>Local pickup / delivery UX</div>
+      <div class="etail-col"><span class="badge-warn">Limited</span> Location selector present but not prominently merchandised</div>
+      <div class="shopify-col"><span class="chk">✓</span> Local pickup native in checkout, store availability widgets on product pages</div>
+    </div>
+    <div class="compare-row">
+      <div>Brand consistency</div>
+      <div class="etail-col"><span class="x">✗</span> eTailPet platform UI — visually disconnected from dogizone.com</div>
+      <div class="shopify-col"><span class="chk">✓</span> Fully custom theme — identical brand experience to main site</div>
+    </div>
+    <div class="compare-row">
+      <div>Analytics / attribution</div>
+      <div class="etail-col"><span class="x">✗</span> Separate domain makes cross-site GA4 tracking complex and unreliable</div>
+      <div class="shopify-col"><span class="chk">✓</span> Runs under dogizone.com — same GA4 property, clean unified attribution</div>
+    </div>
+    <div class="compare-row">
+      <div>Paid media retargeting</div>
+      <div class="etail-col"><span class="x">✗</span> Subdomain makes pixel audience segmentation and retargeting unreliable</div>
+      <div class="shopify-col"><span class="chk">✓</span> Meta Pixel and Google Tag fire under one domain — clean retargeting audiences</div>
+    </div>
+    <div class="compare-row">
+      <div>App ecosystem</div>
+      <div class="etail-col"><span class="x">✗</span> Closed platform — limited to eTailPet's built-in features</div>
+      <div class="shopify-col"><span class="chk">✓</span> 8,000+ apps — subscriptions, upsells, bundles, reviews, loyalty, local delivery</div>
+    </div>
+    <div class="compare-row">
+      <div>Franchise scalability</div>
+      <div class="etail-col"><span class="x">✗</span> Multi-location on a third-party subdomain creates compounding brand fragmentation</div>
+      <div class="shopify-col"><span class="chk">✓</span> Multi-location inventory and pickup native — scales cleanly under dogizone.com</div>
+    </div>
+  </div>
+
+  <!-- SEO GAPS -->
+  <div class="section-label">SEO Gaps — Current Store</div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Category and collection pages can't rank</div>
+          <span class="pill pill-red">Critical</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:8px;">Individual product URLs are clean and descriptive — <code style="font-family:var(--mono);font-size:12px;background:#f1f3f8;padding:1px 5px;border-radius:3px;">/products/dogizone-slip-dog-lead-orange-2/</code> is fine. The problem is every category and brand collection page uses query parameter URLs: <code style="font-family:var(--mono);font-size:12px;background:#f1f3f8;padding:1px 5px;border-radius:3px;">/products/list/?categories=0003000D</code> for Dog Food, <code style="font-family:var(--mono);font-size:12px;background:#f1f3f8;padding:1px 5px;border-radius:3px;">/products/list/?brand=1550</code> for brand pages.</p>
+        <p style="font-size:13.5px;color:var(--text-muted);">Google treats query parameter URLs as low-priority, often skips them in crawls, and they carry no keyword signal. A "Dog Food Rockville MD" collection page can't exist in this URL structure. On Shopify: <code style="font-family:var(--mono);font-size:12px;background:#f1f3f8;padding:1px 5px;border-radius:3px;">/shop/collections/dog-food-rockville/</code> — indexable, keyword-rich, rankable.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">No product schema / rich snippets</div>
+          <span class="pill pill-red">Critical</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);">The current store has no Product schema markup. Shopify generates this automatically and supports review stars, price, and availability in Google search results — significantly improving CTR from product searches.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Zero local product search visibility</div>
+          <span class="pill pill-red">Critical</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);">Searches like "open farm dog food rockville md," "freeze dried dog food near me," and "bully sticks rockville" all have commercial intent and local competition DogiZone could win — but the current subdomain makes it impossible for dogizone.com to rank for any of them.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">No "why we carry this" editorial layer</div>
+          <span class="pill pill-yellow">Medium</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);">Product pages have solid manufacturer content — full ingredient lists, nutritional specs, and brand marketing copy. What's missing is DogiZone's own voice: why they chose to carry this brand, how staff recommends using it, which dogs it's best for. That editorial layer differentiates a specialty pet store from Chewy and builds SEO content that manufacturer descriptions don't cover.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">No blog or buying guide content</div>
+          <span class="pill pill-orange">High</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);">A Shopify store on dogizone.com could host buying guides that rank organically and drive product discovery: "best freeze-dried dog food for senior dogs," "bully stick vs. rawhide — what's safer." These are high-intent, low-competition searches that feed directly into product purchases.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Google Shopping listings drive to eTailPet, not DogiZone</div>
+          <span class="pill pill-orange">High</span>
+        </div>
+        <p style="font-size:13.5px;color:var(--text-muted);">Google Merchant Center is connected and DogiZone's products do appear in Google Shopping — but every listing links to dogizone.etailpet.com. Customers clicking a Shopping result land on eTailPet's subdomain, not dogizone.com. On Shopify, Shopping listings link directly to dogizone.com product pages, keeping customers on your brand and contributing to your domain's authority and conversion tracking.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRO GAPS -->
+  <div class="section-label">CRO Gaps — Current Store</div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Gap</th>
+        <th>Current State</th>
+        <th>Impact</th>
+        <th>Shopify Fix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>No product reviews</strong></td>
+        <td>Static product pages, no ratings visible</td>
+        <td><span class="badge-bad">High</span></td>
+        <td>Judge.me or Okendo — automated review requests post-purchase</td>
+      </tr>
+      <tr>
+        <td><strong>No abandoned cart recovery</strong></td>
+        <td>Cart abandonment results in lost revenue with no automated follow-up — confirmed not active</td>
+        <td><span class="badge-bad">High</span></td>
+        <td>Built-in abandoned checkout emails + Klaviyo SMS flows</td>
+      </tr>
+      <tr>
+        <td><strong>No email capture</strong></td>
+        <td>No newsletter signup, no popup, no list building</td>
+        <td><span class="badge-bad">High</span></td>
+        <td>Klaviyo popup + footer signup — 10–15% capture rate with offer</td>
+      </tr>
+      <tr>
+        <td><strong>No upsell / cross-sell</strong></td>
+        <td>Customers buy one item with no recommendations</td>
+        <td><span class="badge-bad">High</span></td>
+        <td>ReConvert or native Shopify — "frequently bought together" and post-purchase upsells</td>
+      </tr>
+      <tr>
+        <td><strong>No subscription / auto-ship</strong></td>
+        <td>Repeat purchases require customers to remember to return</td>
+        <td><span class="badge-bad">High</span></td>
+        <td>Recharge or Skio — subscribe &amp; save on food and treats (highest LTV customers)</td>
+      </tr>
+      <tr>
+        <td><strong>No loyalty program</strong></td>
+        <td>No points, rewards, or referral incentives</td>
+        <td><span class="badge-warn">Medium</span></td>
+        <td>Smile.io — points for purchases, referrals, and in-store visits</td>
+      </tr>
+      <tr>
+        <td><strong>No dynamic low-stock alerts</strong></td>
+        <td>Product pages show inventory quantity (e.g., "In Stock (Quantity 17)") but there are no threshold-based urgency triggers — no "Only 3 left!" warning when stock runs low</td>
+        <td><span class="badge-warn">Medium</span></td>
+        <td>Shopify inventory threshold alerts — automatically surface "Low Stock" messaging when quantity drops below a set level</td>
+      </tr>
+      <tr>
+        <td><strong>No express checkout options</strong></td>
+        <td>Guest checkout is available but requires manual entry of email and phone — no Shop Pay, Apple Pay, or Google Pay</td>
+        <td><span class="badge-warn">Medium</span></td>
+        <td>Shopify surfaces Shop Pay, Apple Pay, and Google Pay — one-tap checkout for returning buyers and mobile users</td>
+      </tr>
+      <tr>
+        <td><strong>No in-store pickup promotion</strong></td>
+        <td>Local pickup is available but not merchandised</td>
+        <td><span class="badge-warn">Medium</span></td>
+        <td>Store pickup prominently surfaced on product pages and cart — drives foot traffic</td>
+      </tr>
+      <tr>
+        <td><strong>No social proof on homepage</strong></td>
+        <td>No testimonials, no "bestsellers," no trust signals</td>
+        <td><span class="badge-warn">Medium</span></td>
+        <td>Curated bestseller section + Google review widget from main site</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- LOCAL + FRANCHISE OPPORTUNITY -->
+  <div class="section-label">Local Delivery + Franchise Opportunity</div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Local delivery as a competitive differentiator</div>
+        <span class="pill pill-green">Opportunity</span>
+      </div>
+      <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:10px;">DogiZone already offers local delivery from the Rockville store. On Shopify, this becomes a full-featured, marketable offering with dedicated landing pages, local SEO content, and a checkout experience that clearly presents pickup vs. delivery options.</p>
+      <p style="font-size:13.5px;color:var(--text-muted);">Content to build on dogizone.com/shop/: "same-day dog food delivery Rockville MD," "local pet supply delivery Bethesda" — these are low-competition searches with immediate commercial intent that Chewy and Amazon can't win locally.</p>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Franchise scalability on Shopify</div>
+        <span class="pill pill-green">Opportunity</span>
+      </div>
+      <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:10px;">As DogiZone opens franchise locations, each location needs its own inventory, pickup option, and local delivery radius. Shopify's multi-location inventory management handles this natively — each franchise location can have its own stock levels, pickup availability, and local delivery zone within a single Shopify store.</p>
+      <p style="font-size:13.5px;color:var(--text-muted);">On eTailPet, adding franchise locations to the existing subdomain creates brand fragmentation. On Shopify under dogizone.com, every location is part of the same brand, same domain, same authority.</p>
+    </div>
+  </div>
+
+  <!-- MIGRATION ROADMAP -->
+  <div class="section-label">Migration Roadmap</div>
+
+  <div class="phase-block">
+    <div class="phase-num">Phase 1 — Discovery & Setup</div>
+    <div class="phase-title">Export products, set up Shopify, configure domain</div>
+    <div class="phase-body">Export full product catalog from eTailPet. Set up Shopify store at dogizone.com/shop/ (subdirectory, not subdomain — critical for SEO). Select and configure a theme that matches the main dogizone.com brand. Migrate products with proper category structure, descriptions, and images. Set up GA4 integration under the existing DogiZone property so attribution is unified from day one.</div>
+  </div>
+  <div class="phase-block orange">
+    <div class="phase-num">Phase 2 — SEO Build</div>
+    <div class="phase-title">Keyword-optimize URLs, write product descriptions, add schema</div>
+    <div class="phase-body">Rename all product and collection URLs to keyword-rich slugs. Write or expand product descriptions — minimum 150 words per product, include brand name + use case + local angle where relevant. Enable Shopify's native Product and BreadcrumbList schema. Connect Google Merchant Center for Shopping listings. Submit sitemap to GSC. Build 5–10 buying guide blog posts targeting high-intent product searches.</div>
+  </div>
+  <div class="phase-block green">
+    <div class="phase-num">Phase 3 — CRO Layer</div>
+    <div class="phase-title">Install email capture, reviews, abandoned cart, loyalty</div>
+    <div class="phase-body">Install Klaviyo for email + SMS. Set up welcome flow with first-order discount. Configure abandoned cart sequence (1hr email + 24hr SMS). Install Judge.me for product reviews — send post-purchase review requests to existing customer list. Set up Smile.io loyalty program with points for purchases and in-store visits. Add "frequently bought together" recommendations. Launch local pickup and local delivery prominently in checkout and on product pages.</div>
+  </div>
+  <div class="phase-block" style="border-left-color:var(--yellow);">
+    <div class="phase-num">Phase 4 — Franchise Prep</div>
+    <div class="phase-title">Multi-location inventory, location-specific content, subscription</div>
+    <div class="phase-body">Configure Shopify multi-location inventory for each franchise location as they come online. Build location-specific landing pages under dogizone.com/shop/[location]/ for local delivery SEO. Evaluate and launch a subscribe-and-save option for recurring purchases (food, treats) — highest LTV segment. Connect online and in-store loyalty so points earn across both channels.</div>
+  </div>
+
+  <!-- REDIRECT NOTE -->
+  <div class="note note-yellow" style="margin-top:24px;">
+    <span class="note-icon">💡</span>
+    <div><strong>On migration:</strong> When the eTailPet store is retired, set up 301 redirects from all etailpet.com product URLs to the corresponding Shopify pages. This passes any existing link equity and prevents broken links from existing marketing materials. Notify all email lists and social channels of the new store URL at launch.</div>
+  </div>
+
+  <div class="note note-green" style="margin-top:8px;">
+    <span class="note-icon">✓</span>
+    <div><strong>The bottom line:</strong> The current setup means your ecommerce store is working for eTailPet, not for DogiZone. Every sale you make online, every product page Google indexes, every customer who finds you through a product search — that's building equity on someone else's domain. Moving to Shopify under dogizone.com puts that equity where it belongs, ties your online store to your brand, and sets the foundation for selling products across every franchise location from a single platform.</div>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  <div class="container">
+    <p><strong>DogiZone</strong> — Ecommerce Audit prepared by EmberTribe &middot; May 2026</p>
+    <p style="margin-top:6px;">Questions? Reach out to your EmberTribe account manager.</p>
+  </div>
+</div>
+
+</body>
+</html>

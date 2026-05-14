@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monkeeroos — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0B3A4A;
+  --primary-mid: #1A5F7A;
+  --primary-light: #2A8599;
+  --accent: #FF6B47;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #1A8FAA;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 160px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--primary-dark), var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--accent), #FF9A7A); }
+.bar-fill.coral  { background: linear-gradient(90deg, #C0392B, var(--accent)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.teal    { background: #E0F4F7; color: var(--primary-mid); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.four-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card.highlight {
+  background: linear-gradient(135deg, #E0F4F7, #F0FAF5);
+  border-color: var(--teal);
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.pricing-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  background: var(--light-bg);
+  position: relative;
+}
+
+.pricing-card.recommended {
+  border-color: var(--teal);
+  background: linear-gradient(160deg, #E0F4F7 0%, #F0FAF5 100%);
+  box-shadow: 0 4px 24px rgba(26,95,122,0.12);
+}
+
+.recommended-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--teal);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pricing-articles {
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.pricing-articles span {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.pricing-monthly {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 12px 0 4px;
+}
+
+.pricing-monthly .price {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.pricing-commit {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.pricing-commit .price {
+  font-weight: 700;
+  color: var(--primary-mid);
+}
+
+.pricing-savings {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  background: #E8F5E9;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.coral { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .four-col { grid-template-columns: 1fr 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">SEO + Go-To-Market Audit</p>
+      <h1>Monkeeroos</h1>
+      <p class="subtitle" style="color:rgba(255,255,255,0.75); font-size:22px;">The bamboo pajama market is worth millions in organic traffic — and the top spots are still up for grabs.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color: var(--accent);">120K+</div>
+          <div class="stat-label">Monthly searches: bamboo kids pajamas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color: #FF6B6B;">5–6</div>
+          <div class="stat-label">Funded competitors outranking you</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color: var(--accent);">&lt;1%</div>
+          <div class="stat-label">Estimated organic share of voice</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color: #6FCFA0;">Lifetime</div>
+          <div class="stat-label">Warranty — a moat no one is writing about</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Monkeeroos — April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE OPPORTUNITY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Market Opportunity</p>
+    <h2>The Bamboo Sleepwear Category Is Exploding</h2>
+    <p class="subtitle">Parents are searching — but most of that traffic is going to competitors with a content engine. Monkeeroos has the product. It needs the visibility.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="mb-16">High-Value Keyword Demand</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">bamboo baby pajamas</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:90%;">~40,500/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">bamboo toddler pajamas</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:70%;">~22,000/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">family matching pajamas</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:65%;">~18,000/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">bamboo kids sleepwear</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:45%;">~12,000/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">soft baby rompers</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:38%;">~9,500/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">bamboo kids pajamas</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:32%;">~8,000/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">organic toddler sleepwear</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:24%;">~6,000/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">matching family pjs</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:20%;">~5,000/mo</div></div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--text-light); margin-top:8px;">Sources: Semrush / Google Keyword Planner estimates</p>
+      </div>
+      <div>
+        <h3 class="mb-16">Why Monkeeroos Wins Here</h3>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="annotation success">
+            <strong>Lifetime warranty</strong> — nearly no competitor offers this. A high-intent search term ("best bamboo pajamas with warranty") that could own page 1.
+          </div>
+          <div class="annotation success">
+            <strong>Family matching sets</strong> — high emotional purchase, seasonal spike volume, and deeply shareable on social.
+          </div>
+          <div class="annotation success">
+            <strong>Licensed collabs (Def Leppard, Duke)</strong> — creates unique long-tail brand searches with zero competition.
+          </div>
+          <div class="annotation success">
+            <strong>Mom-to-mom brand story</strong> — founder narrative drives trust signals Google rewards (E-E-A-T).
+          </div>
+          <div class="annotation info">
+            <strong>Gap:</strong> All of this is invisible to search engines right now. No keyword-optimized content, no topic clusters, no category guides.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SEO SNAPSHOT -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">SEO Snapshot</p>
+    <h2>Where Monkeeroos Stands Today</h2>
+    <p class="subtitle">A well-loved brand with a near-zero content footprint. The SEO foundation is essentially unbuilt — which means upside is wide open.</p>
+    <div class="stats-row mb-16">
+      <div class="stat-card">
+        <div class="stat-value red">~3K</div>
+        <div class="stat-label">Est. monthly organic visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">&lt;300</div>
+        <div class="stat-label">Estimated ranking keywords</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">Product-only</div>
+        <div class="stat-label">Content strategy (no blog, no guides)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">5,000+</div>
+        <div class="stat-label">Five-star customer reviews (social proof)</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>
+        <h3 class="green mb-8">What's Working</h3>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:6px;">
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Strong brand loyalty and repeat purchase signals</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Product pages exist with clean URLs</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Free shipping + lifetime warranty (powerful conversion signals)</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Licensed collabs driving brand name searches</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Family-matching SKUs = differentiated inventory vs. solo-child brands</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">✅</span> Social responsibility story (Bundle of Joy) for PR + link building</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red mb-8">What's Holding Growth Back</h3>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:6px;">
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> No editorial content — no blog, no buying guides, no category articles</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> Product pages not optimized for non-branded searches</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> No internal linking structure to pass authority</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> Competitor brands have 50–200× more indexed content</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> No backlink acquisition strategy — low domain authority</li>
+          <li style="padding-left:20px; position:relative; font-size:14px;"><span style="position:absolute;left:0;">❌</span> Lifetime warranty and founder story buried — not search-visible</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMPETITOR LANDSCAPE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up Against the Field</h2>
+    <p class="subtitle">Every major competitor in this space is running a content engine. Monkeeroos' product quality is on par — but search visibility is 50–150× lower.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Est. Organic Traffic/Mo</th>
+          <th>Ranking Keywords</th>
+          <th>Content Strategy</th>
+          <th>Family Matching</th>
+          <th>Differentiator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background: #FFF8F8;">
+          <td class="bold">Monkeeroos</td>
+          <td class="bold red">~3,000</td>
+          <td class="red">&lt;300</td>
+          <td><span class="pill red">None</span></td>
+          <td><span class="pill green">Yes</span></td>
+          <td style="font-size:13px;">Lifetime warranty, licensed collabs, founder story</td>
+        </tr>
+        <tr>
+          <td class="bold">Little Sleepies</td>
+          <td class="bold green">~450,000</td>
+          <td class="green">12,000+</td>
+          <td><span class="pill seo">Blog + Guides</span></td>
+          <td><span class="pill green">Yes</span></td>
+          <td style="font-size:13px;">Lunaluxe® fabric branding, massive content library</td>
+        </tr>
+        <tr>
+          <td class="bold">Kyte Baby</td>
+          <td class="bold green">~180,000</td>
+          <td class="green">6,500+</td>
+          <td><span class="pill seo">Blog + Guides</span></td>
+          <td><span class="pill orange">Limited</span></td>
+          <td style="font-size:13px;">OEKO-TEX certified, VC-backed, strong PR</td>
+        </tr>
+        <tr>
+          <td class="bold">Caden Lane</td>
+          <td class="bold orange">~95,000</td>
+          <td class="orange">4,200+</td>
+          <td><span class="pill content">Gift Guides</span></td>
+          <td><span class="pill green">Yes</span></td>
+          <td style="font-size:13px;">Personalization focus, holiday-heavy SEO</td>
+        </tr>
+        <tr>
+          <td class="bold">Free Birdees</td>
+          <td class="bold orange">~55,000</td>
+          <td class="orange">2,800+</td>
+          <td><span class="pill content">Parenting Blog</span></td>
+          <td><span class="pill green">Yes</span></td>
+          <td style="font-size:13px;">Matching + toddler focus, strong Pinterest presence</td>
+        </tr>
+        <tr>
+          <td class="bold">Poppy Kids Co</td>
+          <td class="bold orange">~28,000</td>
+          <td class="orange">1,400+</td>
+          <td><span class="pill content">Minimal</span></td>
+          <td><span class="pill orange">Limited</span></td>
+          <td style="font-size:13px;">Premium positioning, influencer-led growth</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>Bottom line:</strong> Little Sleepies has a 150× organic traffic advantage. But they built that through content — not a better product. Monkeeroos can close this gap faster than it took them to open it, because the keyword landscape is still maturing.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: KEYWORD OPPORTUNITIES -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Keyword Strategy</p>
+    <h2>The Content Gaps Worth Owning</h2>
+    <p class="subtitle">These are high-value topics competitors rank for that Monkeeroos has zero presence on — and several where the product story is uniquely strong.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 class="mb-8">Quick-Win Keywords <span class="pill teal">Low Competition</span></h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Keyword</th>
+              <th>Est. Volume</th>
+              <th>Monkeeroos Fit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>bamboo pajamas with lifetime warranty</td><td>~500/mo</td><td class="green bold">Perfect</td></tr>
+            <tr><td>family matching bamboo pajamas</td><td>~3,200/mo</td><td class="green bold">Perfect</td></tr>
+            <tr><td>bamboo rompers for babies</td><td>~4,400/mo</td><td class="green bold">Perfect</td></tr>
+            <tr><td>best bamboo pajamas for toddlers</td><td>~2,900/mo</td><td class="green bold">Perfect</td></tr>
+            <tr><td>soft sleepwear for sensitive skin kids</td><td>~1,800/mo</td><td class="green bold">Perfect</td></tr>
+            <tr><td>mom-founded kids clothing brands</td><td>~900/mo</td><td class="orange bold">Strong</td></tr>
+            <tr><td>organic toddler pajamas newborn to 16</td><td>~700/mo</td><td class="green bold">Perfect</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 class="mb-8">Content Cluster Opportunities <span class="pill content">Topic Authority</span></h4>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">🎯 Bamboo Fabric Hub</div>
+            <div style="font-size:12px; color:var(--text-light);">Why bamboo? How it's made? Safe for babies? Temperature regulation? — 15–20 articles, pillar + supporting posts.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">👨‍👩‍👧 Family Matching Guides</div>
+            <div style="font-size:12px; color:var(--text-light);">Best matching family pajamas by season, occasion, holiday, and age range. High-intent buying content.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">😴 Baby Sleep + Sleepwear</div>
+            <div style="font-size:12px; color:var(--text-light);">Safe sleep guides, what to dress baby in, temperature charts — drives top-of-funnel parenting traffic.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">🎁 Gift Guide SEO</div>
+            <div style="font-size:12px; color:var(--text-light);">Best baby shower gifts, best kids pajamas by age, holiday gift guides — seasonal traffic with direct purchase intent.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: GTM STRATEGY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Go-To-Market Strategy</p>
+    <h2>Three Channels. One Compounding System.</h2>
+    <p class="subtitle">Build organic visibility that compounds, activate high-intent paid at the bottom of the funnel, and convert casual browsers into repeat buyers.</p>
+    <div class="three-col flex-grow mt-8">
+      <div class="channel-card highlight">
+        <div class="channel-icon">✍️</div>
+        <h3>SEO Content Engine</h3>
+        <p style="font-size:12px; font-weight:600; color:var(--teal); margin-bottom:10px;">ClusterMagic — Topic Authority at Scale</p>
+        <ul>
+          <li>Bamboo fabric + parenting topic clusters</li>
+          <li>Family matching buying guides (seasonal spikes)</li>
+          <li>Founder story + brand narrative pages</li>
+          <li>Product page optimization for category terms</li>
+          <li>Gift guide content for Q4 + Mother's Day</li>
+          <li>Internal linking structure to lift all pages</li>
+        </ul>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light);">Primary driver of long-term organic growth</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🛒</div>
+        <h3>Paid Search + Shopping</h3>
+        <p style="font-size:12px; font-weight:600; color:var(--orange); margin-bottom:10px;">Capture High-Intent Buyers Now</p>
+        <ul>
+          <li>Google Shopping campaigns for top SKUs</li>
+          <li>Performance Max for holiday seasons</li>
+          <li>Branded + competitor keyword bidding</li>
+          <li>Dynamic remarketing to site visitors</li>
+          <li>Meta carousel ads for family matching sets</li>
+          <li>Seasonal budget scaling (Q4, holidays)</li>
+        </ul>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light);">Revenue bridge while organic traffic builds</div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📧</div>
+        <h3>Retention + Lifecycle</h3>
+        <p style="font-size:12px; font-weight:600; color:var(--green); margin-bottom:10px;">Maximize LTV from Every Customer</p>
+        <ul>
+          <li>Welcome flow highlighting lifetime warranty</li>
+          <li>Size-based repurchase sequences (as kids grow)</li>
+          <li>Seasonal matching set reminders</li>
+          <li>Post-purchase UGC + review request flow</li>
+          <li>Referral program: mom-to-mom is the brand voice</li>
+          <li>Bundle of Joy CSR story for brand loyalty</li>
+        </ul>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light);">Turns one-time buyers into brand advocates</div>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Why this works together:</strong> SEO content drives free top-of-funnel traffic → Paid captures in-market buyers who didn't find you organically → Retention compounds AOV and LTV. Each channel feeds the next.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ROADMAP -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days: Build the Foundation</h2>
+    <p class="subtitle">Months 1–3 are about planting the seeds that compound. Content published in month 1 will still be generating traffic in year 3.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Research &amp; First Cluster</h4>
+        <ul>
+          <li>Full keyword + competitor audit</li>
+          <li>Content strategy &amp; topic cluster map</li>
+          <li>On-page optimization of top product pages</li>
+          <li>Launch Bamboo Fabric Hub (25 articles)</li>
+          <li>Google Search Console setup + baseline</li>
+          <li>Google Shopping campaigns live</li>
+          <li>Welcome email flow activated</li>
+        </ul>
+        <div class="phase-cost teal">25 articles/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Build</span>
+        <h4>Scale Content + Activate Paid</h4>
+        <ul>
+          <li>Family Matching + Gift Guide clusters</li>
+          <li>Baby Sleep &amp; Sleepwear hub launch</li>
+          <li>Internal linking audit + structure</li>
+          <li>PMax campaigns for seasonal SKUs</li>
+          <li>Meta remarketing to site visitors</li>
+          <li>Post-purchase UGC + review flows</li>
+          <li>Repurchase email sequences live</li>
+        </ul>
+        <div class="phase-cost teal">40 articles/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Optimize</span>
+        <h4>Double Down on Winners</h4>
+        <ul>
+          <li>Update + expand top-performing pages</li>
+          <li>Launch referral / mom-to-mom program</li>
+          <li>PR + link outreach (Bundle of Joy story)</li>
+          <li>Scale paid to top ROAS campaigns</li>
+          <li>Q4 holiday content published early</li>
+          <li>Affiliate program setup for parenting blogs</li>
+          <li>Monthly reporting + strategy review</li>
+        </ul>
+        <div class="phase-cost teal">50 articles/mo</div>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Expected by end of month 3:</strong> 100+ indexed content pages, first organic keyword rankings in top 20, Google Shopping ROAS established, email flows generating passive revenue.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: REDDIT + AI MENTIONS -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Reddit + AI Mentions Strategy</p>
+    <h2>Get Recommended by AI — Before Competitors Do</h2>
+    <p class="subtitle">ChatGPT, Perplexity, and Google AI Overviews pull heavily from Reddit. When parents ask AI "what are the best bamboo pajamas?" — Reddit threads are what get cited. Monkeeroos should be in those threads.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="mb-16">How It Works</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:6px;">🤖 Why Reddit Powers AI Answers</div>
+            <div style="font-size:13px; color:var(--text-light); line-height:1.6;">AI models are trained on and actively scrape Reddit for "real person" recommendations. A mention in r/beyondthebump carries more weight in an AI response than a brand website.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:6px;">🎯 Target Subreddits</div>
+            <div style="font-size:13px; color:var(--text-light); line-height:1.6;">
+              <span class="pill teal" style="margin:2px;">r/beyondthebump</span>
+              <span class="pill teal" style="margin:2px;">r/BabyBumps</span>
+              <span class="pill teal" style="margin:2px;">r/Parenting</span>
+              <span class="pill teal" style="margin:2px;">r/Mommit</span>
+              <span class="pill teal" style="margin:2px;">r/daddit</span>
+              <span class="pill teal" style="margin:2px;">r/NewParents</span>
+              <span class="pill teal" style="margin:2px;">r/BabyGear</span>
+              <span class="pill teal" style="margin:2px;">r/Frugal</span>
+            </div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:6px;">💬 What We Create</div>
+            <div style="font-size:13px; color:var(--text-light); line-height:1.6;">Authentic, helpful threads and comment replies that organically reference Monkeeroos — product comparisons, "what worked for us," gift recommendations, and sleep advice that happens to link to relevant content.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:6px;">📊 Monitoring + Reporting</div>
+            <div style="font-size:13px; color:var(--text-light); line-height:1.6;">Track brand mentions across Reddit, monitor competitor threads, and flag opportunities to insert Monkeeroos into active conversations before they get indexed by AI.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 class="mb-16">AI Query Targets</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Query Type</th>
+              <th>Example Prompt</th>
+              <th>Goal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="pill content">Discovery</span></td><td style="font-size:12px;">"best bamboo pajamas for babies Reddit"</td><td class="green bold" style="font-size:12px;">Surface in top 3</td></tr>
+            <tr><td><span class="pill seo">Comparison</span></td><td style="font-size:12px;">"Monkeeroos vs Little Sleepies"</td><td class="green bold" style="font-size:12px;">Own the narrative</td></tr>
+            <tr><td><span class="pill paid">Gift Intent</span></td><td style="font-size:12px;">"best baby shower gift bamboo pajamas"</td><td class="green bold" style="font-size:12px;">Get recommended</td></tr>
+            <tr><td><span class="pill content">Problem</span></td><td style="font-size:12px;">"soft pajamas for baby sensitive skin"</td><td class="green bold" style="font-size:12px;">Be the solution</td></tr>
+            <tr><td><span class="pill seo">Warranty</span></td><td style="font-size:12px;">"kids pajamas with lifetime warranty"</td><td class="green bold" style="font-size:12px;">Zero competition</td></tr>
+            <tr><td><span class="pill paid">Family</span></td><td style="font-size:12px;">"matching family bamboo pajamas brand"</td><td class="green bold" style="font-size:12px;">Top of mind</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-16">
+          <strong>The compounding effect:</strong> Reddit threads indexed today become AI training data tomorrow. A thread created in month 1 can power AI recommendations for 2–3 years with zero additional work.
+        </div>
+        <div class="annotation success mt-8">
+          <strong>Monkeeroos advantage:</strong> The lifetime warranty + mom-founded story is exactly the kind of authentic differentiator Reddit (and by extension AI) rewards. No competitor owns this space in those communities yet.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: PAID ADS STRATEGY -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Paid Ads Strategy</p>
+    <h2>Google + Meta: Capture Buyers Now</h2>
+    <p class="subtitle">While organic content compounds, paid ads put Monkeeroos in front of high-intent buyers immediately. Management: <strong>$1,750/mo</strong> covering both platforms.</p>
+    <div class="two-col" style="flex:1; gap:28px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="font-size:22px;">🔍</span>
+          <h3 style="margin:0;">Google Ads</h3>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Shopping Campaigns <span class="pill seo" style="margin-left:6px;">Highest Intent</span></div>
+            <div style="font-size:13px; color:var(--text-light);">Product listing ads for "bamboo baby pajamas," "bamboo toddler sleepwear," family matching sets. Captures buyers already in purchase mode.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Performance Max</div>
+            <div style="font-size:13px; color:var(--text-light);">Automated cross-channel campaigns (Search, Display, YouTube, Gmail). Especially powerful for Q4 holiday and seasonal pushes.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Branded + Competitor Search</div>
+            <div style="font-size:13px; color:var(--text-light);">Protect branded terms. Bid on "Little Sleepies alternative," "Kyte Baby vs" searches to intercept comparison shoppers.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Dynamic Remarketing</div>
+            <div style="font-size:13px; color:var(--text-light);">Re-engage site visitors with the exact products they viewed. Strong ROAS, especially for cart abandoners.</div>
+          </div>
+        </div>
+        <div style="margin-top:14px; background:var(--light-bg); border-radius:10px; padding:12px 16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Expected Google ROAS</div>
+          <div style="font-size:24px; font-weight:800; color:var(--green);">3–5×</div>
+          <div style="font-size:12px; color:var(--text-light);">Shopping campaigns at steady state (months 2–3+)</div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <span style="font-size:22px;">📱</span>
+          <h3 style="margin:0;">Meta Ads (Facebook + Instagram)</h3>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Family Matching Carousels <span class="pill content" style="margin-left:6px;">Top Creative</span></div>
+            <div style="font-size:13px; color:var(--text-light);">Instagram + Facebook carousels featuring family matching sets. High emotional resonance, strong share rate. Perfect for Reels placement.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">UGC-Style Testimonials</div>
+            <div style="font-size:13px; color:var(--text-light);">Amplify existing 5-star reviews as ad creative. Mom-to-mom voice outperforms polished brand ads in this category.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Lookalike Audiences</div>
+            <div style="font-size:13px; color:var(--text-light);">Build lookalikes from purchaser list and email subscribers. Parents of young children (0–8) with purchase intent signals.</div>
+          </div>
+          <div class="channel-card" style="padding:14px 18px;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Seasonal Campaign Bursts</div>
+            <div style="font-size:13px; color:var(--text-light);">Dedicated budget spikes for Q4 holidays, Mother's Day, baby shower season, and back-to-school. 2–3× standard spend during peak windows.</div>
+          </div>
+        </div>
+        <div style="margin-top:14px; background:var(--light-bg); border-radius:10px; padding:12px 16px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Expected Meta ROAS</div>
+          <div style="font-size:24px; font-weight:800; color:var(--green);">2–3×</div>
+          <div style="font-size:12px; color:var(--text-light);">Prospecting 1.5–2×, retargeting 4–6×</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: CLUSTERMAGIC PRICING -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Content Pricing — ClusterMagic</p>
+    <h2>Choose Your Growth Velocity</h2>
+    <p class="subtitle">More articles = faster indexation, broader keyword coverage, and faster ranking compounding. April has 10 slots available.</p>
+    <div style="background: linear-gradient(135deg, #E0F4F7, #F0FAF5); border: 1px solid var(--teal); border-radius: 14px; padding: 16px 24px; margin-bottom: 20px; display:flex; align-items:center; justify-content:space-between;">
+      <div>
+        <div style="font-size:13px; font-weight:700; color:var(--primary-dark);">April — 10 Slots Available</div>
+        <div style="font-size:12px; color:var(--text-light); margin-top:2px;">3-month commitment clients get first priority on scheduling</div>
+      </div>
+      <div style="font-size:12px; font-weight:600; color:var(--teal);">ClusterMagic Articles</div>
+    </div>
+    <div class="four-col flex-grow">
+      <div class="pricing-card">
+        <div class="pricing-articles">25 <span>articles/mo</span></div>
+        <div class="pricing-monthly">One-time/Monthly<br><span class="price">$700</span></div>
+        <div style="border-top: 1px solid var(--border); margin: 12px 0;"></div>
+        <div class="pricing-commit">3-Month Commitment<br><span class="price">$1,750</span> <span style="font-size:12px; color:var(--text-light);">/mo avg</span></div>
+        <div class="pricing-savings">Save $350</div>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light); line-height:1.5;">Good for testing the channel. Covers 1 topic cluster per month.</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-articles">40 <span>articles/mo</span></div>
+        <div class="pricing-monthly">One-time/Monthly<br><span class="price">$1,100</span></div>
+        <div style="border-top: 1px solid var(--border); margin: 12px 0;"></div>
+        <div class="pricing-commit">3-Month Commitment<br><span class="price">$2,700</span> <span style="font-size:12px; color:var(--text-light);">/mo avg</span></div>
+        <div class="pricing-savings">Save $600</div>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light); line-height:1.5;">Solid velocity. Covers 2 clusters/month with room to refresh older pages.</div>
+      </div>
+      <div class="pricing-card recommended">
+        <div class="recommended-badge">Recommended for Monkeeroos</div>
+        <div class="pricing-articles">50 <span>articles/mo</span></div>
+        <div class="pricing-monthly">One-time/Monthly<br><span class="price">$1,350</span></div>
+        <div style="border-top: 1px solid rgba(26,95,122,0.2); margin: 12px 0;"></div>
+        <div class="pricing-commit">3-Month Commitment<br><span class="price">$3,400</span> <span style="font-size:12px; color:var(--text-light);">/mo avg</span></div>
+        <div class="pricing-savings">Save $650</div>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light); line-height:1.5;">Optimal for catching up to competitors. Enough volume to see ranking momentum in 60–90 days.</div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-articles">100 <span>articles/mo</span></div>
+        <div class="pricing-monthly">One-time/Monthly<br><span class="price">$2,700</span></div>
+        <div style="border-top: 1px solid var(--border); margin: 12px 0;"></div>
+        <div class="pricing-commit">3-Month Commitment<br><span class="price">$7,000</span> <span style="font-size:12px; color:var(--text-light);">/mo avg</span></div>
+        <div class="pricing-savings">Save $1,100</div>
+        <div style="margin-top:14px; font-size:12px; color:var(--text-light); line-height:1.5;">Maximum velocity. Best for aggressive market share grabs or multiple simultaneous clusters.</div>
+      </div>
+    </div>
+    <div class="annotation info mt-16" style="margin-top:12px;">
+      <strong>All tiers include:</strong> keyword-targeted articles, internal linking, SEO-optimized headers and meta, and monthly performance reporting. Content is published directly to your CMS or delivered as ready-to-publish HTML.
+    </div>
+    <div style="margin-top:20px;">
+      <h3 class="mb-12" style="font-size:18px;">Add-On: Paid Ads Management — Google + Meta</h3>
+      <div style="background: linear-gradient(135deg, #FFF3E0, #FFF8F0); border: 1px solid var(--orange); border-radius: 12px; padding: 16px 20px; margin-bottom: 16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="font-size:28px; font-weight:900; color:var(--primary-dark);">$1,750<span style="font-size:14px; font-weight:500; color:var(--text-light);">/mo management fee</span></div>
+            <div style="font-size:13px; color:var(--text-light); margin-top:2px;">Covers both Google Ads and Meta Ads — full setup, creative strategy, campaign management, and reporting.</div>
+          </div>
+          <div style="display:flex; gap:24px; text-align:center;">
+            <div><div style="font-size:20px; font-weight:800; color:var(--green);">3–5×</div><div style="font-size:11px; color:var(--text-light);">Google ROAS</div></div>
+            <div><div style="font-size:20px; font-weight:800; color:var(--green);">2–3×</div><div style="font-size:11px; color:var(--text-light);">Meta ROAS</div></div>
+          </div>
+        </div>
+        <div style="border-top:1px solid rgba(230,126,34,0.2); margin-top:12px; padding-top:12px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Recommended Ad Spend by Goal</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+            <div style="background:white; border-radius:8px; padding:10px 14px;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:4px;">Test &amp; Learn</div>
+              <div style="font-size:18px; font-weight:800; color:var(--primary-dark);">$1,500<span style="font-size:12px; font-weight:500;">/mo</span></div>
+              <div style="font-size:12px; color:var(--text-light); margin-top:2px;">$750 Google · $750 Meta</div>
+            </div>
+            <div style="background:white; border-radius:8px; padding:10px 14px; border:1px solid var(--orange);">
+              <div style="font-size:11px; font-weight:700; color:var(--orange); text-transform:uppercase; margin-bottom:4px;">Growth ★</div>
+              <div style="font-size:18px; font-weight:800; color:var(--primary-dark);">$3,500<span style="font-size:12px; font-weight:500;">/mo</span></div>
+              <div style="font-size:12px; color:var(--text-light); margin-top:2px;">$1,750 Google · $1,750 Meta</div>
+            </div>
+            <div style="background:white; border-radius:8px; padding:10px 14px;">
+              <div style="font-size:11px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:4px;">Scale</div>
+              <div style="font-size:18px; font-weight:800; color:var(--primary-dark);">$7,500<span style="font-size:12px; font-weight:500;">/mo</span></div>
+              <div style="font-size:12px; color:var(--text-light); margin-top:2px;">$3,500 Google · $4,000 Meta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <h3 class="mb-16" style="font-size:18px;">Add-On: Reddit + AI Mentions</h3>
+      <div class="three-col">
+        <div class="channel-card" style="padding:18px 20px;">
+          <div style="font-size:32px; font-weight:900; color:var(--primary-dark); line-height:1;">$1,200<span style="font-size:14px; font-weight:500; color:var(--text-light);">/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light); margin-top:8px; line-height:1.5;">5 comments/mo across targeted subreddits. Brand monitoring + monthly report.</div>
+        </div>
+        <div class="channel-card" style="padding:18px 20px;">
+          <div style="font-size:32px; font-weight:900; color:var(--primary-dark); line-height:1;">$1,750<span style="font-size:14px; font-weight:500; color:var(--text-light);">/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light); margin-top:8px; line-height:1.5;">8 comments/mo across targeted subreddits. Thread creation, comment replies, competitor monitoring.</div>
+        </div>
+        <div class="channel-card" style="padding:18px 20px;">
+          <div style="font-size:32px; font-weight:900; color:var(--primary-dark); line-height:1;">$3,500<span style="font-size:14px; font-weight:500; color:var(--text-light);">/mo</span></div>
+          <div style="font-size:13px; color:var(--text-light); margin-top:8px; line-height:1.5;">16 comments/mo + community management, AI response tracking, and quarterly audit of AI citations.</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Growth Looks Like at 50 Articles/Month</h2>
+    <p class="subtitle">Conservative model based on 50 articles/month (3-month commitment). Traffic compounds as content indexes and earns authority over time.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="mb-8">Organic Traffic Trajectory</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="width:80px;">Today</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:4%;">~3K</div></div>
+            <span class="bar-value red">~3,000</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:80px;">Month 3</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:7%;">~5.5K</div></div>
+            <span class="bar-value orange">~5,500</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:80px;">Month 6</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:16%;">~14K</div></div>
+            <span class="bar-value coral">~14,000</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:80px;">Month 9</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:32%;">~28K</div></div>
+            <span class="bar-value teal">~28,000</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:80px;">Month 12</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:58%;">~50K</div></div>
+            <span class="bar-value green">~50,000</span>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--text-light); margin-top:8px;">Conservative model — 1.5–2% organic CTR, 1.5–3% conversion rate</p>
+      </div>
+      <div>
+        <h3 class="mb-16">Revenue Impact at Month 12</h3>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="stat-card">
+            <div class="stat-value green">~50K</div>
+            <div class="stat-label">Monthly organic visitors (from &lt;3K today)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value teal">750–1,500</div>
+            <div class="stat-label">Organic-attributed orders/month (at 1.5–3% CVR)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value orange">$45–90K</div>
+            <div class="stat-label">Est. organic revenue/month (at $60 AOV)</div>
+          </div>
+        </div>
+        <div class="annotation success mt-16">
+          <strong>12-month content investment:</strong> ~$40,800 (50 art/mo × 3-mo commitment, renewed). Potential monthly revenue by month 12: $45–90K organic alone — before paid or email.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Monkeeroos — Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: NEXT STEPS -->
+  <div class="slide dark" data-slide="12">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Build the Engine</h1>
+      <p class="subtitle" style="text-align:center; max-width:640px;">April slots are filling. The sooner content is live, the sooner it compounds. Here's what happens when you say yes.</p>
+      <div style="display:flex; gap:24px; margin-top:32px; margin-bottom:32px;">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:20px 28px; text-align:center; min-width:180px;">
+          <div style="font-size:32px; margin-bottom:8px;">1</div>
+          <div style="font-size:14px; font-weight:600;">Pick Your Tier</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">25, 40, 50, or 100 articles/mo</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:20px 28px; text-align:center; min-width:180px;">
+          <div style="font-size:32px; margin-bottom:8px;">2</div>
+          <div style="font-size:14px; font-weight:600;">Onboarding Call</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Brand voice + priority topics</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:20px 28px; text-align:center; min-width:180px;">
+          <div style="font-size:32px; margin-bottom:8px;">3</div>
+          <div style="font-size:14px; font-weight:600;">First Articles Live</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Within 7–10 business days</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <p style="font-size:20px; font-weight:700; color: var(--accent);">Ready to claim your April slot?</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.5); margin-top:8px;">Reach out to your EmberTribe contact to get started today.</p>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:48px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential — April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

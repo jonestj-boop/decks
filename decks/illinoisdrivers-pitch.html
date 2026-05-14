@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IllinoisDrivers.com — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0B1F3A;
+  --primary-mid: #1A3560;
+  --primary-light: #2B4F8A;
+  --accent: #E87728;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 130px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #bf5a08, var(--accent)); }
+.bar-fill.navy   { background: linear-gradient(90deg, var(--primary-dark), var(--primary-mid)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.navy    { background: #E8EDF5; color: var(--primary-mid); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.accent-color { color: var(--accent); }
+
+/* Subreddit list */
+.sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.sub-item {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.sub-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-mid);
+  margin-bottom: 3px;
+}
+
+.sub-desc {
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.4;
+}
+
+/* Pricing cards */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.price-card {
+  background: #fff;
+  border: 1px solid #dde3ef;
+  border-radius: 12px;
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-card.featured {
+  border: 2px solid var(--primary-mid);
+  position: relative;
+}
+
+.price-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--primary-mid);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.price-tier {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.price-card.featured .price-tier { color: var(--primary-mid); }
+
+.price-amount {
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.price-cadence {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.price-prepay {
+  border-top: 1px solid #e8edf5;
+  padding-top: 12px;
+  margin-top: auto;
+}
+
+.prepay-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary-mid);
+  margin-bottom: 3px;
+}
+
+.prepay-amount {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--primary-mid);
+}
+
+.prepay-eff {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.save-badge {
+  display: inline-block;
+  margin-top: 5px;
+  background: #E8F5E9;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+/* Reddit AEO pricing panels */
+.aeo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.aeo-card {
+  background: #fff;
+  border: 1px solid #dde3ef;
+  border-radius: 12px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.aeo-card.featured {
+  background: #FFF9F4;
+  border: 2px solid var(--accent);
+  position: relative;
+}
+
+.aeo-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.aeo-tier {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 5px;
+}
+
+.aeo-card.featured .aeo-tier { color: var(--accent); }
+
+.aeo-price {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.aeo-tagline {
+  font-size: 11.5px;
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.aeo-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.aeo-features li {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.aeo-features li span.chk {
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.aeo-prepay {
+  border-top: 1px solid #e8edf0;
+  padding-top: 12px;
+}
+
+.aeo-prepay-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 3px;
+}
+
+.aeo-prepay-amt {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.aeo-prepay-eff {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Outcome cards */
+.outcome-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+}
+
+.outcome-card .period {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.outcome-card .metric {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.outcome-card .metric-label {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.outcome-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.outcome-card ul li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.outcome-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .pricing-grid { grid-template-columns: 1fr 1fr; }
+  .aeo-grid { grid-template-columns: 1fr; }
+  .sub-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit</p>
+      <h1>IllinoisDrivers.com</h1>
+      <p class="subtitle">SR-22 is your moat. ChatGPT doesn&rsquo;t know you exist — yet.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">~3,800</div>
+          <div class="stat-label">Monthly organic visits</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">19</div>
+          <div class="stat-label">Authority Score (vs. 48–72 for top competitors)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">~480</div>
+          <div class="stat-label">Ranking keywords — mostly branded</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">0</div>
+          <div class="stat-label">Reddit threads mentioning you — AI sees nothing</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for IllinoisDrivers.com &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Are Today</h2>
+    <p class="subtitle">A focused Illinois insurance broker with a real SR-22 niche — but almost invisible in organic search and completely absent from AI-driven answers.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">~3,800</div>
+        <div class="stat-label">Monthly organic visits (SEMrush)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">~480</div>
+        <div class="stat-label">Ranking keywords</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">19</div>
+        <div class="stat-label">Authority Score</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-mid);">7</div>
+        <div class="stat-label">Service categories (auto, SR-22, moto, commercial…)</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What&rsquo;s Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:10px;">
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">✅ SR-22 specialty — a high-intent niche competitors ignore</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">✅ Same-day policy issuance — strong conversion differentiator</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">✅ Multi-product offering — auto, moto, commercial, renters, home</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">✅ Clear brand voice: "We are your car insurance problem solvers"</li>
+          <li style="padding:6px 0; font-size:14px;">✅ Blog section exists — a content foundation to build on</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What&rsquo;s Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:10px;">
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">🚫 Authority Score of 19 — can&rsquo;t compete for high-volume terms</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">🚫 No city-specific landing pages — invisible in Chicago, Rockford, Peoria</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">🚫 Zero Reddit presence — AI engines can&rsquo;t find community consensus for you</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">🚫 Thin content — no SR-22 guides, comparison articles, or FAQ clusters</li>
+          <li style="padding:6px 0; font-size:14px;">🚫 No backlink strategy — authority gap widens every month you wait</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: TRAFFIC TRENDS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>12-Month Organic Trajectory</h2>
+    <p class="subtitle">Flat-to-modest growth over 12 months — seasonal dips in winter, no compounding signal. Without content velocity, organic will stay plateaued while competitors pull away.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row">
+        <span class="bar-label">May 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:74%;">3,200</div></div>
+        <span class="bar-value">3,200</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jun 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:79%;">3,400</div></div>
+        <span class="bar-value">3,400</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jul 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:84%;">3,620</div></div>
+        <span class="bar-value">3,620</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Aug 2025</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:88%;">3,800</div></div>
+        <span class="bar-value">3,800</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sep 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:80%;">3,460</div></div>
+        <span class="bar-value">3,460</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Oct 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:85%;">3,670</div></div>
+        <span class="bar-value">3,670</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Nov 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:82%;">3,540</div></div>
+        <span class="bar-value">3,540</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dec 2025</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:77%;">3,330</div></div>
+        <span class="bar-value">3,330</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jan 2026</span>
+        <div class="bar-track"><div class="bar-fill navy" style="width:86%;">3,720</div></div>
+        <span class="bar-value">3,720</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Feb 2026</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:91%;">3,940</div></div>
+        <span class="bar-value">3,940</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Mar 2026</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:100%;">4,320</div></div>
+        <span class="bar-value">4,320</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Apr 2026</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:91%;">3,900</div></div>
+        <span class="bar-value">3,900</span>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Key takeaway:</strong> 12-month growth of only ~22% with no content strategy. Competitors publishing 40–100 articles/month are compounding far faster — and owning the AI answer layer where you&rsquo;re completely absent.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMPETITOR LANDSCAPE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up</h2>
+    <p class="subtitle">National brands dominate generic insurance terms. Your path isn&rsquo;t to outspend them — it&rsquo;s to outmaneuver them on SR-22 intent and Illinois city-specific searches where they&rsquo;re lazy.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Site</th>
+          <th>Monthly Organic</th>
+          <th>Ranking Keywords</th>
+          <th>Authority Score</th>
+          <th>SR-22 Focus</th>
+          <th>Reddit / AI Presence</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#FFF9F4;">
+          <td class="bold" style="color:var(--primary-mid);">IllinoisDrivers.com</td>
+          <td>~3,800</td>
+          <td>~480</td>
+          <td><span style="color:var(--red); font-weight:700;">19</span></td>
+          <td><span class="pill green">Yes — Core</span></td>
+          <td><span class="pill red">None</span></td>
+        </tr>
+        <tr>
+          <td class="bold">TheGeneral.com</td>
+          <td>~1.2M</td>
+          <td>~58,000</td>
+          <td><span style="color:var(--green); font-weight:700;">72</span></td>
+          <td><span class="pill orange">Partial</span></td>
+          <td><span class="pill green">Strong</span></td>
+        </tr>
+        <tr>
+          <td class="bold">DirectAuto.com</td>
+          <td>~420,000</td>
+          <td>~32,000</td>
+          <td><span style="color:var(--green); font-weight:700;">62</span></td>
+          <td><span class="pill green">Yes — Heavy</span></td>
+          <td><span class="pill orange">Moderate</span></td>
+        </tr>
+        <tr>
+          <td class="bold">AcceptanceInsurance.com</td>
+          <td>~95,000</td>
+          <td>~14,000</td>
+          <td><span style="color:var(--orange); font-weight:700;">48</span></td>
+          <td><span class="pill green">Yes</span></td>
+          <td><span class="pill orange">Limited</span></td>
+        </tr>
+        <tr>
+          <td class="bold">CheapInsurance.com</td>
+          <td>~55,000</td>
+          <td>~9,800</td>
+          <td><span style="color:var(--orange); font-weight:700;">44</span></td>
+          <td><span class="pill orange">Partial</span></td>
+          <td><span class="pill orange">Limited</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>The real gap:</strong> DirectAuto.com ranks for 32,000 keywords vs. your 480. They have 3× the authority score. But their Illinois city-specific SR-22 content is thin — that&rsquo;s the wedge. A ClusterMagic content blitz targeting &ldquo;sr22 insurance chicago,&rdquo; &ldquo;sr22 rockford il,&rdquo; and 60+ city variants can carve out a defensible traffic base they&rsquo;re not protecting.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: KEYWORD OPPORTUNITIES -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Keyword Opportunities</p>
+    <h2>The Terms Worth Owning</h2>
+    <p class="subtitle">Two clusters drive high-intent buyers: SR-22 specific queries and city-level insurance searches. Both are winnable at your authority level with the right content volume.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="color:var(--primary-mid); margin-bottom:10px;">SR-22 Intent — Highest Conversion</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">sr22 insurance illinois</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:100%;">1,900/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">cheap sr22 illinois</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:31%;">590</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">sr22 insurance chicago</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:38%;">720</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">sr22 without car illinois</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:22%;">420</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">how long sr22 illinois</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:25%;">480</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">sr22 rockford il</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:16%;">310</div></div>
+          </div>
+        </div>
+        <div class="annotation info mt-8" style="font-size:12px;">
+          <strong>You rank for almost none of these.</strong> DirectAuto owns position 1–3 on most. ClusterMagic city pages + SR-22 guides can displace them in 90–180 days.
+        </div>
+      </div>
+      <div>
+        <h4 style="color:var(--primary-mid); margin-bottom:10px;">City-Level Auto Insurance — High Volume</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">car insurance chicago</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:100%;">2,400/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">cheap car insurance IL</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:79%;">1,900</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">car insurance aurora il</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:33%;">790</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">car insurance rockford il</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:29%;">700</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">car insurance naperville</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:25%;">600</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:180px; font-size:12px;">high risk auto ins IL</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:21%;">490</div></div>
+          </div>
+        </div>
+        <div class="annotation success mt-8" style="font-size:12px;">
+          <strong>60+ Illinois cities.</strong> Each needs its own landing page. ClusterMagic produces all 60 in 60 days — city-specific, internally linked, and optimized for AI snippet capture.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We&rsquo;d Grow IllinoisDrivers.com</h2>
+    <p class="subtitle">Three interlocking channels: content velocity to flood SR-22 and city intent, Reddit seeding so AI engines learn to recommend you, and authority backlinks to unlock harder terms.</p>
+    <div class="three-col flex-grow" style="margin-top:20px;">
+      <div class="channel-card">
+        <div class="channel-icon">⚡</div>
+        <h3>ClusterMagic Content</h3>
+        <ul>
+          <li>60 Illinois city insurance landing pages in 60 days</li>
+          <li>SR-22 guide cluster: how-to, city-specific, comparison pages</li>
+          <li>High-risk driver content targeting ChatGPT snippet capture</li>
+          <li>Internal linking architecture to pass equity site-wide</li>
+          <li>FAQ schema on every article — AI Overview bait</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🤖</div>
+        <h3>Reddit AEO — AI Visibility</h3>
+        <ul>
+          <li>Seed illinoisDrivers.com into SR-22 and insurance threads</li>
+          <li>Target r/Illinois, r/chicago, r/personalfinance, r/CarInsurance</li>
+          <li>Create &amp; answer &ldquo;best SR-22 insurance illinois&rdquo; threads AI crawls</li>
+          <li>Monthly AI citation monitoring (ChatGPT, Perplexity, Gemini)</li>
+          <li>Scale from 5 to 15+ placements/month as subreddits prove out</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Authority Backlinks</h3>
+        <ul>
+          <li>2–4 DA40+ links/month targeting illinois insurance and SR-22 anchor text</li>
+          <li>Insurance directory placements (niche, high-trust sources)</li>
+          <li>Guest posts on Illinois local news and personal finance blogs</li>
+          <li>HARO / journalist outreach around SR-22 and high-risk coverage</li>
+          <li>Competitor backlink gap analysis — steal their link sources</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info" style="margin-top:16px;">
+      <strong>Why these three together:</strong> Content builds keyword surface area. Reddit teaches AI engines to recommend you. Backlinks raise your authority so the content ranks faster. Each channel accelerates the other — after 6 months they compound.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: REDDIT AEO STRATEGY -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Reddit AEO — AI Visibility</p>
+    <h2>When Someone Asks ChatGPT &ldquo;Best SR-22 Insurance in Illinois&rdquo; — You Should Be the Answer</h2>
+    <p class="subtitle">Google pays Reddit $60M/yr. OpenAI pays $70M/yr. Reddit is the single largest data source for AI-generated answers. Zero Reddit presence means zero AI mentions — and that gap is widening every month.</p>
+
+    <div class="two-col" style="margin-bottom:14px; align-items:start;">
+      <div>
+        <h4 style="margin-bottom:10px;">Why Reddit Drives AI Recommendations</h4>
+        <div class="stats-row" style="margin:0 0 10px;">
+          <div class="stat-card" style="min-width:0; padding:14px 16px;">
+            <div class="stat-value" style="font-size:28px; color:var(--accent);">~21%</div>
+            <div class="stat-label">of Google AI Overview citations come from Reddit</div>
+          </div>
+          <div class="stat-card" style="min-width:0; padding:14px 16px;">
+            <div class="stat-value" style="font-size:28px; color:var(--primary-mid);">~47%</div>
+            <div class="stat-label">of Perplexity answers cite Reddit content</div>
+          </div>
+        </div>
+        <div class="annotation" style="margin-top:0;">
+          <strong>The mechanism:</strong> When 10–20 Reddit threads independently mention IllinoisDrivers.com in the context of &ldquo;SR-22 insurance in Illinois&rdquo; — across r/illinois, r/personalfinance, r/CarInsurance — AI systems read that as community consensus and start surfacing your brand in answers. This isn&rsquo;t a one-time spike. It&rsquo;s a permanent signal that compounds.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:10px;">Target Subreddits — Illinois Insurance Intent</h4>
+        <div class="sub-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="sub-item">
+            <div class="sub-name">r/Illinois</div>
+            <div class="sub-desc">State-specific — SR-22 &amp; driving record questions surface here constantly</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-name">r/chicago</div>
+            <div class="sub-desc">2M+ members — city insurance, high-risk coverage &amp; cost questions</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-name">r/personalfinance</div>
+            <div class="sub-desc">High AI citation rate — &ldquo;cheapest car insurance&rdquo; + SR-22 threads rank on Google</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-name">r/CarInsurance</div>
+            <div class="sub-desc">Direct audience — &ldquo;best SR-22 illinois&rdquo; questions go here first</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-name">r/frugal</div>
+            <div class="sub-desc">Price-conscious buyers — cheapest insurance, discount stacking threads</div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-name">r/askcarsales</div>
+            <div class="sub-desc">New car buyers asking about insurance &amp; SR-22 before purchase</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:8px;">Sample Threads We&rsquo;d Seed</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+        <div style="font-size:12px; font-weight:700; color:var(--primary-mid); margin-bottom:4px;">r/illinois — Thread Creation</div>
+        <div style="font-size:12px; color:var(--text); font-style:italic; margin-bottom:6px;">&ldquo;Just got my first DUI in IL — how long do I need SR-22 and which companies don&rsquo;t gouge you?&rdquo;</div>
+        <div style="font-size:12px; color:var(--text-light);">Seeded reply positions IllinoisDrivers.com as the local specialist with same-day filing and state-specific expertise — exactly what AI retrieves when asked this question.</div>
+      </div>
+      <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px;">
+        <div style="font-size:12px; font-weight:700; color:var(--primary-mid); margin-bottom:4px;">r/personalfinance — Thread Seeding</div>
+        <div style="font-size:12px; color:var(--text); font-style:italic; margin-bottom:6px;">&ldquo;Best Illinois insurance providers for high-risk drivers — compiled list&rdquo;</div>
+        <div style="font-size:12px; color:var(--text-light);">Ranks on Google for SR-22 queries and gets cited by Perplexity &amp; ChatGPT when users ask for Illinois high-risk insurance options. IllinoisDrivers.com appears in position 1–3 of cited sources.</div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Foundation first, then content velocity, then compounding authority. You&rsquo;ll see ranking movement by day 30 and measurable lead lift by day 60.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation + First Content</h4>
+        <ul>
+          <li>Technical SEO audit &amp; P1 fixes</li>
+          <li>ClusterMagic onboarding — brand voice, cluster map</li>
+          <li>First 25–40 articles published (SR-22 + 5 city pages)</li>
+          <li>Reddit subreddit landscape mapping</li>
+          <li>Backlink target list built</li>
+          <li>Baseline AI visibility benchmark (ChatGPT, Perplexity, Gemini)</li>
+        </ul>
+        <div class="phase-cost accent-color">Month 1 Foundation</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Content Velocity + AEO Live</h4>
+        <ul>
+          <li>City page cluster — 20+ Illinois cities live</li>
+          <li>SR-22 guide cluster fully published</li>
+          <li>First 5 Reddit AEO placements go live</li>
+          <li>First DA40+ backlinks placed</li>
+          <li>FAQ schema across all new articles</li>
+          <li>First ranking movements visible in GSC</li>
+        </ul>
+        <div class="phase-cost accent-color">Content + AEO Begin</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Scale + Compound</h4>
+        <ul>
+          <li>60+ city pages live — all major Illinois metros</li>
+          <li>Reddit threads starting to rank on Google</li>
+          <li>Consistent ChatGPT / Gemini citations beginning</li>
+          <li>Authority Score climbing toward 28–35</li>
+          <li>Monthly AI visibility report vs. DirectAuto</li>
+          <li>Lead volume from organic measurably up</li>
+        </ul>
+        <div class="phase-cost accent-color">Compounding Signals</div>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>By day 90:</strong> IllinoisDrivers.com will have more SR-22 and Illinois city-specific content than any local broker in the state — and an AI recommendation presence that none of your local competitors have started building.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT — ClusterMagic -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>ClusterMagic Content Engine</h2>
+    <p class="subtitle">Billed monthly or at a locked quarterly rate. No setup fees. Every article published to your CMS, internally linked, and FAQ-schema ready.</p>
+
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="price-card">
+        <div class="price-tier">Starter &mdash; 25 articles/mo</div>
+        <div class="price-amount">$700<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="prepay-label">3-Month Prepay</div>
+          <div class="prepay-amount">$1,750</div>
+          <div class="prepay-eff">$583/mo effective</div>
+          <div class="save-badge">Save $350</div>
+        </div>
+      </div>
+
+      <!-- Growth -->
+      <div class="price-card">
+        <div class="price-tier">Growth &mdash; 40 articles/mo</div>
+        <div class="price-amount">$1,100<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="prepay-label">3-Month Prepay</div>
+          <div class="prepay-amount">$2,700</div>
+          <div class="prepay-eff">$900/mo effective</div>
+          <div class="save-badge">Save $600</div>
+        </div>
+      </div>
+
+      <!-- Velocity — Most Popular -->
+      <div class="price-card featured">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-tier">Velocity &mdash; 50 articles/mo</div>
+        <div class="price-amount">$1,350<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="prepay-label" style="color:var(--primary-mid);">3-Month Prepay</div>
+          <div class="prepay-amount">$3,400</div>
+          <div class="prepay-eff">$1,133/mo effective</div>
+          <div class="save-badge">Save $650</div>
+        </div>
+      </div>
+
+      <!-- Scale -->
+      <div class="price-card">
+        <div class="price-tier">Scale &mdash; 100 articles/mo</div>
+        <div class="price-amount">$2,700<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="prepay-label">3-Month Prepay</div>
+          <div class="prepay-amount">$7,000</div>
+          <div class="prepay-eff">$2,333/mo effective</div>
+          <div class="save-badge">Save $1,100</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--primary-dark); border-radius:12px; padding:18px 22px; display:flex; align-items:center; gap:18px; color:#fff; margin-bottom:12px;">
+      <div style="font-size:26px; flex-shrink:0;">🎁</div>
+      <div style="flex:1;">
+        <div style="font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--accent); margin-bottom:3px;">6-Month Agreement &mdash; Included Bonus</div>
+        <div style="font-size:13px; font-weight:700; margin-bottom:4px;">Sign a 6-month agreement: we include two SR-22 pillar pages + P1 technical SEO fixes at no additional cost.</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.65);">2 pillar pages anchoring your SR-22 and Illinois auto insurance clusters, plus all P1 technical issues scoped and resolved at kickoff.</div>
+      </div>
+      <div style="flex-shrink:0; text-align:center; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:10px; padding:12px 16px;">
+        <div style="font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:3px;">Bonus Value</div>
+        <div style="font-size:20px; font-weight:900; color:#fff;">~$2,400</div>
+        <div style="font-size:10px; color:rgba(255,255,255,0.5);">included free</div>
+      </div>
+    </div>
+
+    <div class="annotation info" style="font-size:12px; margin-top:0;">
+      <strong>All tiers include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, internal linking, FAQ schema on every article, and publishing to your CMS as drafts for review.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: INVESTMENT — Reddit AEO / AI Visibility -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Investment</p>
+    <h2>Reddit AEO &mdash; AI Visibility Packages</h2>
+    <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility that turns ChatGPT, Perplexity, and Gemini into lead sources.</p>
+
+    <div class="aeo-grid">
+      <!-- AI Visibility Starter -->
+      <div class="aeo-card">
+        <div class="aeo-tier">AI Visibility Starter</div>
+        <div class="aeo-price">$1,750<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="aeo-tagline">Get IllinoisDrivers.com into AI conversations</div>
+        <ul class="aeo-features">
+          <li><span class="chk">✓</span> 5 AEO Reddit placements / month</li>
+          <li><span class="chk">✓</span> 10 SEO articles / month</li>
+          <li><span class="chk">✓</span> Subreddit landscape mapping</li>
+          <li><span class="chk">✓</span> Thread discovery &amp; comment strategy</li>
+          <li><span class="chk">✓</span> Quarterly AI visibility report</li>
+        </ul>
+        <div class="aeo-prepay">
+          <div class="aeo-prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="aeo-prepay-amt">$4,725</div>
+          <div class="aeo-prepay-eff">$1,575/mo effective</div>
+          <div class="save-badge">Save $525</div>
+        </div>
+      </div>
+
+      <!-- AI Growth Engine — Most Popular -->
+      <div class="aeo-card featured">
+        <div class="aeo-badge">Most Popular</div>
+        <div class="aeo-tier">AI Growth Engine</div>
+        <div class="aeo-price">$3,450<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="aeo-tagline">Accelerate authority + content velocity</div>
+        <ul class="aeo-features">
+          <li><span class="chk">✓</span> 8 AEO Reddit placements / month</li>
+          <li><span class="chk">✓</span> 25 SEO articles / month</li>
+          <li><span class="chk">✓</span> 2 DA40+ authority backlinks / month</li>
+          <li><span class="chk">✓</span> Full thread seeding + new post creation</li>
+          <li><span class="chk">✓</span> Backlink target prioritization</li>
+          <li><span class="chk">✓</span> Keyword cluster expansion</li>
+          <li><span class="chk">✓</span> Quarterly performance reporting</li>
+        </ul>
+        <div class="aeo-prepay">
+          <div class="aeo-prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="aeo-prepay-amt">$9,315</div>
+          <div class="aeo-prepay-eff">$3,105/mo effective</div>
+          <div class="save-badge">Save $1,035</div>
+        </div>
+      </div>
+
+      <!-- AI Authority Accelerator -->
+      <div class="aeo-card">
+        <div class="aeo-tier">AI Authority Accelerator</div>
+        <div class="aeo-price">$5,250<span style="font-size:15px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="aeo-tagline">Dominate Illinois insurance in AI search</div>
+        <ul class="aeo-features">
+          <li><span class="chk">✓</span> 12 AEO Reddit placements / month</li>
+          <li><span class="chk">✓</span> 40 SEO articles / month</li>
+          <li><span class="chk">✓</span> 2 DA50+ authority backlinks / month</li>
+          <li><span class="chk">✓</span> Full competitive displacement strategy</li>
+          <li><span class="chk">✓</span> Technical SEO management</li>
+          <li><span class="chk">✓</span> Quarterly reporting &amp; strategy sessions</li>
+          <li><span class="chk">✓</span> Priority page &amp; content optimization</li>
+        </ul>
+        <div class="aeo-prepay">
+          <div class="aeo-prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="aeo-prepay-amt">$14,175</div>
+          <div class="aeo-prepay-eff">$4,725/mo effective</div>
+          <div class="save-badge">Save $1,575</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation info" style="font-size:12px;">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, Reddit optimization process, and monthly AI visibility benchmarking vs. DirectAuto and top Illinois competitors.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What You Can Expect</h2>
+    <p class="subtitle">Conservative projections based on comparable insurance and high-intent local service clients. Results compound — month 6 is structurally different from month 1.</p>
+    <div class="three-col" style="margin:20px 0;">
+      <div class="outcome-card">
+        <div class="period">Month 1–2 &mdash; Foundation</div>
+        <div class="metric">25–40</div>
+        <div class="metric-label">New articles live; first ranking movements in GSC</div>
+        <ul>
+          <li>SR-22 guide cluster indexed &amp; crawled</li>
+          <li>5–10 new keyword rankings appearing</li>
+          <li>First Reddit placements live</li>
+          <li>Authority Score climb begins</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="period">Month 3–4 &mdash; Velocity</div>
+        <div class="metric">+60%</div>
+        <div class="metric-label">Organic traffic growth vs. baseline</div>
+        <ul>
+          <li>60+ Illinois city pages ranking</li>
+          <li>SR-22 terms top-5 for city variants</li>
+          <li>Reddit threads appearing in Google SERPs</li>
+          <li>First ChatGPT / Gemini citations for IL insurance terms</li>
+        </ul>
+      </div>
+      <div class="outcome-card">
+        <div class="period">Month 6+ &mdash; Compound</div>
+        <div class="metric">3–5×</div>
+        <div class="metric-label">Organic traffic vs. starting baseline</div>
+        <ul>
+          <li>15–30 AI mentions/month across ChatGPT, Perplexity, Gemini</li>
+          <li>Authority Score 35–45 — unlocking harder terms</li>
+          <li>IllinoisDrivers.com the #1 cited local broker for SR-22 in IL</li>
+          <li>Content compounding — new articles rank faster as DA grows</li>
+        </ul>
+      </div>
+    </div>
+    <div class="bar-chart" style="margin-top:0;">
+      <div style="font-size:13px; font-weight:600; color:var(--text-light); margin-bottom:6px;">Estimated Monthly Organic Visits — 12-Month Projection</div>
+      <div class="bar-row">
+        <span class="bar-label">Today</span>
+        <div class="bar-track"><div class="bar-fill red" style="width:20%;">~3,800</div></div>
+        <span class="bar-value">~3,800</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 3</span>
+        <div class="bar-track"><div class="bar-fill yellow" style="width:32%;">~6,200</div></div>
+        <span class="bar-value">~6,200</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 6</span>
+        <div class="bar-track"><div class="bar-fill accent" style="width:56%;">~11,000</div></div>
+        <span class="bar-value">~11,000</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Month 12</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:100%;">~19,500</div></div>
+        <span class="bar-value">~19,500</span>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>ROI framing:</strong> At an average insurance quote conversion of 3–5%, 19,500 monthly organic visits = 585–975 quote requests/month from organic alone. That&rsquo;s before AI mentions, Reddit traffic, and referral compounding kick in.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">IllinoisDrivers.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: NEXT STEPS -->
+  <div class="slide dark" data-slide="12">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Own Illinois Insurance Search?</h1>
+      <p class="subtitle" style="text-align:center; max-width:680px; margin:0 auto 32px;">Your SR-22 niche is a real competitive moat. The window to establish Reddit / AI presence before your competitors do it is open right now — but it closes fast.</p>
+      <div style="display:flex; gap:24px; justify-content:center; flex-wrap:wrap; margin-bottom:32px;">
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 28px; min-width:200px;">
+          <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); margin-bottom:6px;">Step 1</div>
+          <div style="font-size:15px; font-weight:700;">Kick-off call</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55); margin-top:4px;">30 min to confirm package fit &amp; onboarding timeline</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 28px; min-width:200px;">
+          <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); margin-bottom:6px;">Step 2</div>
+          <div style="font-size:15px; font-weight:700;">Month 1 Foundation</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55); margin-top:4px;">Technical audit, cluster map, brand voice, first articles</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 28px; min-width:200px;">
+          <div style="font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); margin-bottom:6px;">Step 3</div>
+          <div style="font-size:15px; font-weight:700;">Reddit AEO Live</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.55); margin-top:4px;">First 5 placements by day 45 — AI citations by day 60</div>
+        </div>
+      </div>
+      <p style="font-size:18px; font-weight:600;">Let&rsquo;s talk this week.</p>
+      <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-top:8px;">tj@embertribe.com &mdash; or reply to this deck</p>
+      <div class="logo-row" style="width:100%; margin-top:40px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

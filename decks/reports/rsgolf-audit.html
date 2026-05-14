@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Audit — Red Stakes Golf | rsgolf.com</title>
+  <style>
+    :root {
+      --brand-blue: #294d69;
+      --brand-yellow: #f0ff2e;
+      --brand-orange: #ff8329;
+      --critical: #dc2626;
+      --critical-bg: #fef2f2;
+      --critical-border: #fecaca;
+      --high: #ea580c;
+      --high-bg: #fff7ed;
+      --high-border: #fed7aa;
+      --medium: #d97706;
+      --medium-bg: #fffbeb;
+      --medium-border: #fde68a;
+      --low: #6b7280;
+      --low-bg: #f9fafb;
+      --low-border: #e5e7eb;
+      --text: #1a1a2e;
+      --muted: #64748b;
+      --divider: #e2e8f0;
+      --green: #16a34a;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f9fb;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────── */
+    .report-header {
+      background: var(--brand-blue);
+      color: white;
+      padding: 56px 0 48px;
+    }
+    .report-header .inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .report-header .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand-yellow);
+      margin-bottom: 12px;
+    }
+    .report-header h1 {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .report-header .url {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+    .report-header .url a { color: rgba(255,255,255,0.7); text-decoration: none; }
+    .meta-row { display: flex; gap: 32px; flex-wrap: wrap; }
+    .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .meta-item .val { font-size: 22px; font-weight: 800; color: var(--brand-yellow); }
+    .meta-item .key { font-size: 12px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── STICKY NAV ──────────────────────────────────────── */
+    .audit-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: white;
+      border-bottom: 2px solid var(--divider);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .audit-nav .inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 32px;
+      display: flex;
+    }
+    .audit-nav a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 3px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .audit-nav a.cro { border-bottom-color: #7c3aed; color: #7c3aed; }
+    .audit-nav a.seo { border-bottom-color: #0891b2; color: #0891b2; }
+    .audit-nav a.ads { border-bottom-color: var(--brand-orange); color: var(--brand-orange); }
+    .audit-nav a.plan { border-bottom-color: var(--green); color: var(--green); }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .cro .nav-dot { background: #7c3aed; }
+    .seo .nav-dot { background: #0891b2; }
+    .ads .nav-dot { background: var(--brand-orange); }
+    .plan .nav-dot { background: var(--green); }
+
+    /* ── LAYOUT ──────────────────────────────────────────── */
+    .body-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── SECTION HEADINGS ────────────────────────────────── */
+    .section-heading {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 56px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--divider);
+    }
+
+    .audit-section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 64px 0 24px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--divider);
+    }
+    .audit-section-header:first-of-type { margin-top: 0; }
+    .audit-pill {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .pill-cro { background: #ede9fe; color: #7c3aed; }
+    .pill-seo { background: #e0f2fe; color: #0891b2; }
+    .pill-ads { background: #fff7ed; color: var(--brand-orange); }
+    .pill-plan { background: var(--green-bg); color: var(--green); }
+    .audit-section-header h2 { font-size: 24px; font-weight: 800; color: var(--brand-blue); }
+
+    /* ── CARDS ───────────────────────────────────────────── */
+    .summary-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+    .summary-card h3 { font-size: 18px; font-weight: 700; color: var(--brand-blue); margin-bottom: 10px; }
+    .summary-card p { font-size: 15px; color: #334155; line-height: 1.75; }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 14px;
+      margin: 28px 0 0;
+    }
+    .score-box {
+      background: var(--brand-blue);
+      border-radius: 10px;
+      padding: 18px 14px;
+      text-align: center;
+      color: white;
+    }
+    .score-box .num { font-size: 28px; font-weight: 800; color: var(--brand-yellow); display: block; }
+    .score-box .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+    /* ── ISSUE CARDS ─────────────────────────────────────── */
+    .issues-list { display: flex; flex-direction: column; gap: 12px; }
+    .issue-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .issue-card.priority-critical { border-left: 4px solid var(--critical); }
+    .issue-card.priority-high     { border-left: 4px solid var(--high); }
+    .issue-card.priority-medium   { border-left: 4px solid var(--medium); }
+    .issue-card.priority-low      { border-left: 4px solid var(--low); }
+    .issue-card.priority-good     { border-left: 4px solid var(--green); }
+
+    .issue-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 18px 24px;
+    }
+    .issue-number {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .priority-critical .issue-number { background: var(--critical-bg); color: var(--critical); }
+    .priority-high     .issue-number { background: var(--high-bg); color: var(--high); }
+    .priority-medium   .issue-number { background: var(--medium-bg); color: var(--medium); }
+    .priority-low      .issue-number { background: var(--low-bg); color: var(--low); }
+    .priority-good     .issue-number { background: var(--green-bg); color: var(--green); }
+
+    .issue-title-block { flex: 1; }
+    .issue-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+    .issue-title { font-size: 15px; font-weight: 700; color: var(--text); }
+    .issue-desc { font-size: 13px; color: #64748b; line-height: 1.6; }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .badge-critical { background: var(--critical-bg); color: var(--critical); border: 1px solid var(--critical-border); }
+    .badge-high     { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+    .badge-medium   { background: var(--medium-bg); color: var(--medium); border: 1px solid var(--medium-border); }
+    .badge-low      { background: var(--low-bg); color: var(--low); border: 1px solid var(--low-border); }
+    .badge-good     { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .badge-page     { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-channel  { background: #fdf4ff; color: #9333ea; border: 1px solid #e9d5ff; }
+    .badge-seo      { background: #e0f2fe; color: #0891b2; border: 1px solid #bae6fd; }
+
+    /* ── INSIGHT BOX ─────────────────────────────────────── */
+    .insight-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #78350f;
+      line-height: 1.65;
+    }
+    .insight-box strong { color: #92400e; }
+    .insight-box.insight-green { background: var(--green-bg); border-color: var(--green-border); color: #14532d; }
+    .insight-box.insight-green strong { color: #166534; }
+    .insight-box.insight-blue { background: #eff6ff; border-color: #bfdbfe; color: #1e3a8a; }
+    .insight-box.insight-blue strong { color: #1e40af; }
+    .insight-box.insight-red { background: var(--critical-bg); border-color: var(--critical-border); color: #7f1d1d; }
+    .insight-box.insight-red strong { color: #991b1b; }
+
+    /* ── CTA BOX ─────────────────────────────────────────── */
+    .cta-box {
+      background: var(--brand-blue);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .cta-box .cta-text h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 6px;
+    }
+    .cta-box .cta-text p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+      max-width: 520px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: var(--brand-yellow);
+      color: var(--brand-blue);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── CHANNEL GRID ────────────────────────────────────── */
+    .channel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .channel-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .channel-card .ch-name { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .channel-card .ch-role { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+    .channel-card .ch-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .status-active { background: var(--green-bg); color: var(--green); }
+    .status-new { background: #eff6ff; color: #1d4ed8; }
+    .status-pivot { background: var(--high-bg); color: var(--high); }
+    .channel-card .ch-note { font-size: 13px; color: #475569; line-height: 1.5; }
+
+    /* ── KEYWORD TABLE ───────────────────────────────────── */
+    .kw-table-wrap {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .kw-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding: 0 4px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--brand-blue); }
+    thead th {
+      padding: 13px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    tbody tr { border-bottom: 1px solid var(--divider); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td { padding: 12px 16px; font-size: 13px; color: #334155; }
+    .kd-low { color: var(--green); font-weight: 700; }
+    .kd-med { color: var(--medium); font-weight: 700; }
+    .kd-high { color: var(--critical); font-weight: 700; }
+    .intent-tofu { background: #f0fdf4; color: var(--green); border: 1px solid var(--green-border); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+    .intent-mofu { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+    .intent-bofu { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
+
+    /* ── ACTION PLAN ─────────────────────────────────────── */
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .plan-col { background: white; border: 1px solid var(--divider); border-radius: 12px; overflow: hidden; }
+    .plan-col-header { padding: 16px 20px; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: white; }
+    .plan-col-header.days-30 { background: var(--critical); }
+    .plan-col-header.days-60 { background: var(--high); }
+    .plan-col-header.days-90 { background: var(--brand-blue); }
+    .plan-col-header .period { font-size: 20px; font-weight: 800; display: block; margin-bottom: 2px; }
+    .plan-items { padding: 16px 20px; }
+    .plan-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; color: #334155; line-height: 1.5; }
+    .plan-item:last-child { margin-bottom: 0; }
+    .plan-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .dot-cro { background: #7c3aed; }
+    .dot-seo { background: #0891b2; }
+    .dot-ads { background: var(--brand-orange); }
+    .plan-tag { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; white-space: nowrap; margin-right: 4px; }
+    .tag-cro { background: #ede9fe; color: #7c3aed; }
+    .tag-seo { background: #e0f2fe; color: #0891b2; }
+    .tag-ads { background: #fff7ed; color: var(--brand-orange); }
+
+    /* ── OPEN QUESTIONS ──────────────────────────────────── */
+    .oq-list { display: flex; flex-direction: column; gap: 10px; }
+    .oq-item {
+      background: white;
+      border: 1px solid var(--divider);
+      border-left: 4px solid var(--brand-orange);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+    }
+    .oq-item strong { color: var(--brand-blue); display: block; margin-bottom: 3px; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .report-footer {
+      background: var(--brand-blue);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      padding: 28px 32px;
+      font-size: 12px;
+    }
+    .report-footer strong { color: rgba(255,255,255,0.8); }
+
+    /* ── DATA SOURCE NOTE ────────────────────────────────── */
+    .data-note {
+      background: #f8fafc;
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    .data-note strong { color: #475569; }
+
+    @media (max-width: 700px) {
+      .report-header h1 { font-size: 26px; }
+      .plan-grid { grid-template-columns: 1fr; }
+      .channel-grid { grid-template-columns: 1fr 1fr; }
+      .audit-nav a { padding: 14px 12px; font-size: 11px; }
+      .audit-nav a span.label { display: none; }
+      .cta-box { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ HEADER -->
+<header class="report-header">
+  <div class="inner">
+    <div class="label">Digital Audit — CRO · SEO · Paid Ads</div>
+    <h1>Red Stakes Golf</h1>
+    <div class="url"><a href="https://www.rsgolf.com" target="_blank">www.rsgolf.com</a></div>
+    <div class="meta-row">
+      <div class="meta-item"><span class="val">~$3,000</span><span class="key">Avg Order Value</span></div>
+      <div class="meta-item"><span class="val">0.05%</span><span class="key">Cart→Checkout Rate</span></div>
+      <div class="meta-item"><span class="val">$20K/mo</span><span class="key">Current Ad Spend</span></div>
+      <div class="meta-item"><span class="val">10×</span><span class="key">Current ROAS</span></div>
+      <div class="meta-item"><span class="val">496K</span><span class="key">Email Contacts</span></div>
+      <div class="meta-item"><span class="val">May 2026</span><span class="key">Audit Date</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════ STICKY NAV -->
+<nav class="audit-nav">
+  <div class="inner">
+    <a href="#cro" class="cro"><span class="nav-dot"></span><span class="label">CRO Audit</span></a>
+    <a href="#seo" class="seo"><span class="nav-dot"></span><span class="label">SEO Audit</span></a>
+    <a href="#ads" class="ads"><span class="nav-dot"></span><span class="label">Paid Ads</span></a>
+    <a href="#plan" class="plan"><span class="nav-dot"></span><span class="label">Action Plan</span></a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════ BODY -->
+<div class="body-wrap">
+
+  <!-- ══════════ EXECUTIVE SUMMARY ══════════ -->
+  <p class="section-heading" style="margin-top:0;">Executive Summary</p>
+
+  <div class="data-note">
+    <strong>Data sources:</strong> CRO findings based on live site audit (rsgolf.com) and client-reported data from discovery call (Apr 15, 2026). Paid ads context sourced from discovery call and strategy brief. SEO keyword data is directional — exact volumes and difficulty scores to be confirmed with SEMrush pull. GA4, GSC, and ad platform data pending access grant from client team.
+  </div>
+
+  <div class="summary-card">
+    <h3>The Big Picture</h3>
+    <p>Red Stakes Golf has rebuilt itself into a genuinely compelling brand — the only American-made golf simulator, a 365-day money-back guarantee, 4.8-star ratings, major retail and brand partnerships (Costco, Dick's, Best Buy, Anheuser-Busch), and a gamified platform that separates it from every competitor in the space. The foundation is strong. The problem is conversion.</p>
+    <p style="margin-top:12px;">Kevin shared the number directly on our call: roughly 300 people add to cart per period, and a fraction of a percent make it to checkout. On a $3,000 average order, closing even a portion of that gap is worth tens of thousands of dollars per month at current traffic levels — before scaling a single dollar of ad spend. Across all three channels, the theme is the same: <strong>strong brand, underdeployed trust signals, and a funnel that isn't built for a high-consideration buyer.</strong></p>
+    <div class="score-grid">
+      <div class="score-box"><span class="num">12</span><span class="lbl">CRO Findings</span></div>
+      <div class="score-box"><span class="num">3</span><span class="lbl">Critical</span></div>
+      <div class="score-box"><span class="num">4</span><span class="lbl">High Priority</span></div>
+      <div class="score-box"><span class="num">5</span><span class="lbl">SEO Gaps</span></div>
+      <div class="score-box"><span class="num">4</span><span class="lbl">Ad Channels</span></div>
+      <div class="score-box"><span class="num">Mar 2025</span><span class="lbl">Domain Live</span></div>
+    </div>
+  </div>
+
+  <div class="insight-box insight-red">
+    <strong>The single most impactful finding across this entire audit:</strong> RSG is selling a $3,000–$12,100 product with no financing option anywhere on the site — no installments, no monthly payment framing, nothing. For a high-consideration purchase, the absence of "as low as $X/month" messaging is one of the primary barriers standing between a browser and a buyer.
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ CRO SECTION -->
+  <div class="audit-section-header" id="cro">
+    <span class="audit-pill pill-cro">CRO Audit</span>
+    <h2>Conversion Rate Optimization</h2>
+  </div>
+
+  <div class="summary-card">
+    <h3>Funnel Reality Check</h3>
+    <p>Kevin shared this directly: ~300 people add to cart per period, but barely anyone completes checkout. That's not a traffic problem — it's a conversion architecture problem. The site was recently rebuilt to reduce friction and add trust signals, and it's heading in the right direction. But there are structural gaps actively blocking the buyer at the exact moment they're ready to act.</p>
+    <div class="score-grid">
+      <div class="score-box"><span class="num">~300</span><span class="lbl">Add to Cart / Period</span></div>
+      <div class="score-box"><span class="num">0.05%</span><span class="lbl">Cart → Checkout</span></div>
+      <div class="score-box"><span class="num">$3K–$12K</span><span class="lbl">Product Price Range</span></div>
+      <div class="score-box"><span class="num">4.8★</span><span class="lbl">Avg Review Score</span></div>
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <strong>A 0.05% cart-to-checkout rate is not a normal Shopify outcome.</strong> Industry benchmarks put cart-to-checkout at 40–60% for healthy stores. Even underperforming stores see 15–20%. Something structural is interrupting the purchase decision — and it's costing RSG significant revenue at current traffic levels alone.
+  </div>
+
+  <p class="section-heading">Critical Issues</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">1</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Financing Options on a $3,000–$12,100 Product</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Site-Wide</span>
+          </div>
+          <p class="issue-desc">No buy-now-pay-later or installment option exists anywhere on the site — not in the hero, product pages, cart, or ads. A buyer mentally blocked at the sticker price never sees a monthly payment alternative and leaves. For a product in this price range, financing messaging is table stakes — and its absence is likely the largest single contributor to cart abandonment.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">2</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">365-Day Guarantee Is Buried — Not a Hero Element</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Homepage + PDPs</span>
+          </div>
+          <p class="issue-desc">A year-long money-back guarantee is arguably the strongest objection killer in this category — and it currently lives in a trust badge row below the fold. For a $3K–$12K purchase decision, this guarantee deserves to be a headline feature on the hero, product pages above the fold, the cart, and every retargeting touchpoint. Right now it exists but doesn't do the heavy lifting it could.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">3</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Real Social Proof on Product Pages</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-page">Product Pages</span>
+          </div>
+          <p class="issue-desc">Product pages show "Avg. Customer Rating 4.8 / 5.0" — a number, not a story. There are no individual review quotes, no real customer photos, no video testimonials. On a $3,000+ purchase, people don't trust aggregate scores — they need to see people like them who made the same decision and don't regret it. The 4.8 rating is a legitimately strong asset that's being completely underdeployed.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-heading">High Priority Issues</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">4</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Hero CTA "Visit The Pro Shop" Doesn't Match Buyer Intent</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Homepage</span>
+          </div>
+          <p class="issue-desc">The homepage hero asks first-time visitors to "Visit The Pro Shop" — a passive, low-intent prompt that doesn't speak to what a cold prospect needs. Someone who landed from a Google search for "home golf simulator" wants guidance, not a browse. The CTA language and structure aren't creating the next step for the right buyer.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">5</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Lead Capture for the 90% Not Ready to Buy Today</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Homepage + PDPs</span>
+          </div>
+          <p class="issue-desc">A $3,000–$12,000 purchase has a 30–90 day consideration cycle. The vast majority of site visitors aren't ready to buy today — they're researching. Right now there is no quiz, email capture, lead magnet, or consultation entry point to capture those people. With 496K contacts already in their database, RSG clearly understands email value — the site just isn't building the list.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">6</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Add to Cart Is Buried Below a Consultation Section</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Product Pages</span>
+          </div>
+          <p class="issue-desc">On the RSG One product page, a "Get A Free Consultation" section with a team photo and phone number appears before the Add to Cart button — meaning a buyer ready to purchase has to scroll past a sales section to take action. The consultation option is a smart tool for high-ticket buyers, but its placement is actively interrupting the purchase flow.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">7</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No "Help Me Choose" Experience Across a $3K–$12K Range</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-page">Collections + PDPs</span>
+          </div>
+          <p class="issue-desc">RSG One vs. RSG Pro. Launch Monitor vs. Starter vs. Studio Edition. Prices ranging from $3,000 to $12,100. A first-time buyer has no guided framework for understanding which product is right for them — and confusion kills conversions. The site lists products but doesn't guide the decision.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-heading">Medium Priority Issues</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">8</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Video on Product Pages</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Product Pages</span>
+          </div>
+          <p class="issue-desc">Buying a $3,000+ simulator without seeing it in action is a significant leap of faith. Static images don't communicate the software experience, setup process, shot tracking, or what the room actually looks like. Video is the closest a buyer can get to an in-person demo — and it's absent on every product page.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">9</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No FAQ on Product Pages</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Product Pages</span>
+          </div>
+          <p class="issue-desc">The homepage has a FAQ accordion, but individual product pages have none. Unanswered questions at the point of decision — room size requirements, ball compatibility, setup time, accuracy, what's included — are a leading cause of cart abandonment on high-consideration products.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">10</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Cart Page Offers No Reassurance at the Moment of Hesitation</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Cart</span>
+          </div>
+          <p class="issue-desc">The cart is a bare-minimum page — subtotal, checkout button, done. No trust signals, no guarantee reminder, no financing option, no social proof. For a buyer who's second-guessing a $3,000+ purchase, this is the highest-anxiety moment in the funnel and the page gives them nothing to push through it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">11</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Navigation Uses Insider Language New Visitors Don't Understand</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">Global Nav</span>
+          </div>
+          <p class="issue-desc">The primary nav — <em>Shop | Tech | Platform | RSG Club</em> — uses terms that mean something internally but not to a first-time visitor. "Tech" and "Platform" create friction and reduce the likelihood someone clicks into the right funnel, particularly critical for a relatively new brand still building awareness.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">12</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Urgency or Reason to Act Today</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-page">PDPs + Cart</span>
+          </div>
+          <p class="issue-desc">Nothing on the site creates a reason to act now rather than later. For a product with a weeks-long consideration cycle, the absence of any urgency — delivery lead times, seasonal availability, upcoming changes — means buyers feel comfortable indefinitely delaying their decision.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="issue-card priority-good" style="margin-top:14px;">
+    <div class="issue-header">
+      <div class="issue-number">✓</div>
+      <div class="issue-title-block">
+        <div class="issue-title-row">
+          <span class="issue-title">What's Already Working</span>
+          <span class="badge badge-good">Strengths</span>
+        </div>
+        <p class="issue-desc">RSG has real assets in place that just need amplification: a <strong>4.8/5.0 customer rating</strong>, an <strong>industry-leading 365-day guarantee</strong>, a clear <strong>Made in America</strong> story, major retail validation (Costco, Dick's, Best Buy), and strong brand partnerships. The Shopify platform foundation is technically solid. The brand has everything it needs to convert at a much higher rate — the gaps are primarily about how and where these proof points are deployed in the buyer journey.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-text">
+      <h4>Want the full CRO playbook?</h4>
+      <p>This overview identifies what's broken. The full audit maps every fix to a specific page, priority level, and expected impact — with a sequenced implementation plan built around your Shopify setup.</p>
+    </div>
+    <a href="https://offers.embertribe.com/seo-growth-roadmap#order" class="cta-button" target="_blank">Get the Full Audit →</a>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ SEO SECTION -->
+  <div class="audit-section-header" id="seo">
+    <span class="audit-pill pill-seo">SEO Audit</span>
+    <h2>Search Engine Optimization</h2>
+  </div>
+
+  <div class="summary-card">
+    <h3>Starting Fresh After a Rebrand</h3>
+    <p>The transition from OptiShot Golf to Red Stakes Golf — incorporated in December 2024, with rsgolf.com live in March 2025 — effectively reset the organic search clock. Years of domain authority, backlinks, and brand search volume built under "OptiShot" are now attached to a different domain. rsgolf.com is 13 months old. The product category has strong organic demand. But the strategy needs to be right from day one, or RSG risks repeating the same lost equity in three years.</p>
+  </div>
+
+  <div class="insight-box insight-red">
+    <strong>Brand equity risk:</strong> "OptiShot golf" still drives thousands of monthly searches from people who've heard of the brand — warm, high-intent prospects. Right now, that traffic is landing on a dead domain or being captured by competitors who rank for OptiShot comparison queries. This is recoverable, but it needs to be addressed deliberately.
+  </div>
+
+  <p class="section-heading">Keyword Opportunities</p>
+
+  <div class="kw-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Est. Volume*</th>
+          <th>Difficulty</th>
+          <th>Intent</th>
+          <th>Why It Matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>golf simulator for home</strong></td>
+          <td>High</td>
+          <td class="kd-med">Medium</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>Core commercial intent — buyer is actively shopping</td>
+        </tr>
+        <tr>
+          <td><strong>home golf simulator setup</strong></td>
+          <td>Medium</td>
+          <td class="kd-low">Low–Med</td>
+          <td><span class="intent-mofu">MOFU</span></td>
+          <td>Strong buying signal, ownable with the right content</td>
+        </tr>
+        <tr>
+          <td><strong>best golf simulator under $5,000</strong></td>
+          <td>Medium</td>
+          <td class="kd-med">Medium</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>Buyer-ready; targets RSG One's exact price point</td>
+        </tr>
+        <tr>
+          <td><strong>indoor golf simulator</strong></td>
+          <td>Very High</td>
+          <td class="kd-high">High</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>High volume, competitive — long-term target</td>
+        </tr>
+        <tr>
+          <td><strong>golf simulator room ideas</strong></td>
+          <td>Medium-High</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-mofu">MOFU</span></td>
+          <td>Visual/inspiration intent — easy to rank, feeds the funnel</td>
+        </tr>
+        <tr>
+          <td><strong>how much does a golf simulator cost</strong></td>
+          <td>Medium</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-mofu">MOFU</span></td>
+          <td>Top of consideration — high click-through, low competition</td>
+        </tr>
+        <tr>
+          <td><strong>golf simulator vs [competitor]</strong></td>
+          <td>Low–Medium</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>Comparison intent — highest buying intent in the category</td>
+        </tr>
+        <tr>
+          <td><strong>OptiShot golf simulator</strong></td>
+          <td>Medium-High</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>RSG's own legacy brand — this traffic should be owned, not lost</td>
+        </tr>
+        <tr>
+          <td><strong>american made golf simulator</strong></td>
+          <td>Low</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>Ownable niche — directly tied to RSG's strongest differentiator</td>
+        </tr>
+        <tr>
+          <td><strong>golf simulator with betting / gamification</strong></td>
+          <td>Low</td>
+          <td class="kd-low">Low</td>
+          <td><span class="intent-bofu">BOFU</span></td>
+          <td>Near-zero competition; RSG is the only brand that owns this angle</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="kw-note">* Volume shown as directional tiers (Low / Medium / High). Exact monthly search volumes and keyword difficulty scores to be confirmed with SEMrush data pull.</p>
+
+  <p class="section-heading">Key SEO Findings</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">S1</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Legacy OptiShot Brand Traffic Is Being Lost</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-seo">SEO</span>
+          </div>
+          <p class="issue-desc">"OptiShot golf" continues to generate significant monthly search volume from warm, brand-aware prospects. With the rebrand complete, that traffic currently lands on a dead domain or gets captured by competitors running OptiShot comparison pages. This is the fastest, most cost-effective SEO win on the table — recapturing awareness that RSG already paid to build.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">S2</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Systematic Content Strategy to Build Topical Authority</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-seo">SEO</span>
+          </div>
+          <p class="issue-desc">A 13-month-old domain needs content volume and structure to establish topical authority in the golf simulator space. The blog exists but there's no evidence of a pillar-and-cluster architecture that builds page authority and routes readers toward product pages. Without it, individual posts are orphaned assets that don't compound.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">S3</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Competitor Comparison Pages — High-Intent BOFU Gap</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-seo">SEO</span>
+          </div>
+          <p class="issue-desc">Bottom-of-funnel buyers compare before they buy. Searches like "RSG One vs SkyTrak," "Red Stakes Golf vs Full Swing," and "OptiShot vs Trackman" carry the highest purchase intent in the category — and RSG currently has no content targeting any of them. Competitors could start ranking for "Red Stakes Golf vs" queries before RSG does.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">S4</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Product Pages Missing Structured Data for Rich Results</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-seo">SEO</span>
+          </div>
+          <p class="issue-desc">Without proper schema markup (Product, Review, FAQ), product pages can't display star ratings, pricing, and availability directly in Google search results. Rich results significantly improve click-through rates — especially important when competing against paid ads for the same search terms. Shopify makes this solvable, but it requires verification and likely some configuration work.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">S5</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">No Strategy for AI/LLM Visibility</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-seo">SEO</span>
+          </div>
+          <p class="issue-desc">ChatGPT, Perplexity, and Google's AI Overviews are increasingly answering "what's the best home golf simulator" directly, without a click. Being cited in those results is the new first page of Google — and it favors brands with authoritative, comparison-rich content and strong backlink profiles from trusted publications. RSG's rebrand means it's starting from zero in the eyes of LLMs.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-box">
+    <div class="cta-text">
+      <h4>Ready to see the full SEO opportunity?</h4>
+      <p>Once we have GSC and SEMrush access, we can show you exactly where RSG ranks today, which keywords are within striking distance, and a content roadmap with projected traffic and revenue impact over 12 months.</p>
+    </div>
+    <a href="https://offers.embertribe.com/seo-growth-roadmap#order" class="cta-button" target="_blank">Get the Full SEO Roadmap →</a>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ PAID ADS SECTION -->
+  <div class="audit-section-header" id="ads">
+    <span class="audit-pill pill-ads">Paid Ads Audit</span>
+    <h2>Paid Advertising Strategy</h2>
+  </div>
+
+  <div class="summary-card">
+    <h3>Current State: Good ROAS, Structural Gaps</h3>
+    <p>RSG is running ~$20K/month across Meta, Google, LinkedIn, and Bing with a reported 10× ROAS — strong performance at a lean spend. The challenge is that the current setup is optimized for direct response, but this product requires a full-funnel architecture. A $3,000–$12,000 purchase is not an impulse buy. The ads need to be built around earning trust, generating leads, and moving prospects through a 30–90 day consideration window — not just sending traffic to product pages and hoping for a sale.</p>
+  </div>
+
+  <div class="channel-grid">
+    <div class="channel-card">
+      <div class="ch-name" style="color:#1a73e8;">Google Ads</div>
+      <div class="ch-role">Top of Funnel · High Intent</div>
+      <div class="ch-status status-active">● Active</div>
+      <div class="ch-note">Primary TOFU engine. High-intent searches live here. Needs dedicated landing pages and competitor campaigns to maximize efficiency.</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name" style="color:#1877f2;">Meta</div>
+      <div class="ch-role">MOFU + BOFU · Retargeting</div>
+      <div class="ch-status status-pivot">↻ Pivoting</div>
+      <div class="ch-note">Cold traffic isn't converting — the pivot away from cold acquisition is right. Meta's real role here is MOFU nurturing and retargeting warm audiences.</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name" style="color:#0a66c2;">LinkedIn</div>
+      <div class="ch-role">Test · B2B Adjacent</div>
+      <div class="ch-status status-new">◆ Testing</div>
+      <div class="ch-note">Just launched. High CPMs but precise targeting. Track CPL obsessively — only scale when the numbers justify it.</div>
+    </div>
+    <div class="channel-card">
+      <div class="ch-name" style="color:#00809d;">Bing</div>
+      <div class="ch-role">Supplemental · Older Demo</div>
+      <div class="ch-status status-active">● Active</div>
+      <div class="ch-note">Right call. Older demographic with lower CPCs — maps well to the RSG buyer profile. Supplement Google; don't over-invest.</div>
+    </div>
+  </div>
+
+  <p class="section-heading">Google Ads Strategy</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-critical">
+      <div class="issue-header">
+        <div class="issue-number">A1</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Dedicated Landing Pages Are Non-Negotiable</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-channel">All Channels</span>
+          </div>
+          <p class="issue-desc">Sending paid traffic to product pages that weren't designed for cold visitors is burning budget. A product page works for someone already interested in a specific SKU. A paid landing page needs to do something different — address the ad's promise, build trust quickly, handle objections, and drive a single clear action. Without dedicated pages, Quality Scores suffer and conversion rates stay artificially low regardless of how good the ads are.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">A2</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Google Campaign Architecture: TOFU, Efficiency, and Competitor Tiers</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-channel">Google Ads</span>
+          </div>
+          <p class="issue-desc">Google is the primary TOFU engine — high intent lives here. The campaign structure needs to reflect the full buyer journey and the economics of each keyword tier. "Golf simulator" is expensive but necessary for brand visibility. "Golf simulator for home" is where efficiency lives. Competitor campaigns targeting Full Swing, SkyTrak, and Trackman are a priority and require their own dedicated landing pages. Brand terms (Red Stakes Golf, RSG One) and legacy brand terms (OptiShot) should be protected in separate campaigns. Ad extensions — 365-day guarantee, Made in USA, financing, free consultation — need to be in every campaign.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-heading">Meta Ads Strategy</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-high">
+      <div class="issue-header">
+        <div class="issue-number">A3</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Meta Is MOFU + Retargeting — Four Creative Angles Running Simultaneously</span>
+            <span class="badge badge-high">High</span>
+            <span class="badge badge-channel">Meta Ads</span>
+          </div>
+          <p class="issue-desc">Meta's strength isn't cold acquisition for a $3K product — it's staying in front of warm audiences while they're in the consideration window. The pivot away from cold traffic is correct. From here, Meta campaigns should run against website visitors, video viewers, email list uploads, and product page visitors — with four distinct creative angles running in parallel rather than one ad doing all the work:</p>
+          <ul style="margin-top:10px; padding-left:18px; font-size:13px; color:#475569; line-height:1.7;">
+            <li><strong>Social proof:</strong> Real customer testimonials, UGC room tours, specific outcomes</li>
+            <li><strong>Guarantee:</strong> "Try it for a full year — return it if you don't love it"</li>
+            <li><strong>Financing:</strong> "Own a Red Stakes Golf Simulator from $X/month"</li>
+            <li><strong>Brand story:</strong> "The only American-made simulator. Built in Michigan since 2005."</li>
+          </ul>
+          <p style="margin-top:10px; font-size:13px; color:#475569;">Anyone who has visited a product page should see heavy social proof ads. Lookalike audiences should be built from purchasers and top email engagers — not cold interest targeting.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-heading">LinkedIn &amp; Bing</p>
+  <div class="issues-list">
+
+    <div class="issue-card priority-medium">
+      <div class="issue-header">
+        <div class="issue-number">A4</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">LinkedIn: Test With Discipline, Scale Only on Data</span>
+            <span class="badge badge-medium">Medium</span>
+            <span class="badge badge-channel">LinkedIn</span>
+          </div>
+          <p class="issue-desc">LinkedIn CPMs run 3–5× higher than Meta — but the targeting precision is unmatched. Job title targeting can reach high-income professionals, country club directors, golf course managers, and commercial real estate buyers who have the budget for a $7K–$12K setup. Kevin mentioned early conversions here, which is a signal worth following carefully. The right approach: lead gen forms over traffic campaigns (LinkedIn users don't want to leave the platform), a commercial angle ("Bring the course to your venue"), and a hard CPL cap before any budget increases. Start tight, prove the unit economics, then scale.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="issue-card priority-low">
+      <div class="issue-header">
+        <div class="issue-number">A5</div>
+        <div class="issue-title-block">
+          <div class="issue-title-row">
+            <span class="issue-title">Bing: Mirror Google, Capture Efficient Supplemental Volume</span>
+            <span class="badge badge-low">Low</span>
+            <span class="badge badge-channel">Bing Ads</span>
+          </div>
+          <p class="issue-desc">Bing's audience skews older, wealthier, and Windows-based — a strong fit for the RSG buyer profile. CPCs run 20–40% below Google for the same terms. Import top Google campaigns directly into Microsoft Ads, start at 8–12% of Google spend, and watch performance. Brand and competitor campaigns are especially efficient here — lower competition means lower CPCs for the same high-intent searches.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="section-heading">Open Questions — Needed Before Finalizing Ad Strategy</p>
+  <div class="oq-list">
+    <div class="oq-item">
+      <strong>Does RSG offer financing? (Shop Pay Installments / Affirm / Splitit)</strong>
+      The single most impactful variable in the entire paid strategy. If financing exists or can be enabled, "from $X/month" becomes the headline of every ad and landing page. If not, enabling it is priority one before scaling spend.
+    </div>
+    <div class="oq-item">
+      <strong>What is the revenue split between direct eComm and sales-assisted closing?</strong>
+      This has a drastic impact on conversion tracking, ROAS calculation, and where to focus budget. If most revenue closes through a sales conversation rather than direct checkout, the ad objective should be consultation bookings — not add-to-carts.
+    </div>
+    <div class="oq-item">
+      <strong>What CRM data is available, and can we track from ad click to closed deal?</strong>
+      Without CRM visibility, lead gen campaigns are flying blind. We need to connect which ad channels and audiences are generating actual revenue — not just clicks or leads.
+    </div>
+    <div class="oq-item">
+      <strong>Is the 365-day guarantee currently featured in all ads, landing pages, and email flows?</strong>
+      If not, this is a quick win across every channel. The guarantee is the primary objection killer for a purchase of this size and should be in every headline, landing page hero, cart, and abandonment sequence.
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════ ACTION PLAN -->
+  <div class="audit-section-header" id="plan">
+    <span class="audit-pill pill-plan">Action Plan</span>
+    <h2>Where We'd Focus First</h2>
+  </div>
+
+  <div class="summary-card" style="margin-bottom:20px;">
+    <h3>The Sequencing Logic</h3>
+    <p>CRO fixes come before scaling ad spend — because every dollar of paid traffic converts better once the funnel is fixed. The single highest-leverage first move is confirming whether financing exists or can be enabled. Everything else builds from there.</p>
+  </div>
+
+  <div class="plan-grid">
+    <div class="plan-col">
+      <div class="plan-col-header days-30">
+        <span class="period">Days 1–30</span>
+        Foundation Fixes
+      </div>
+      <div class="plan-items">
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Confirm and enable financing — surface monthly payment option across site and in all active ads</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Elevate 365-day guarantee to hero placement on homepage and product pages above the fold</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Surface individual customer reviews and photos on product pages</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Add trust signals to cart page — guarantee, financing, rating, Made in USA</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Restructure Meta — pause cold traffic, launch retargeting with 4 creative angles</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Add guarantee + financing to all active Google ad copy and extensions</div></div>
+        <div class="plan-item"><span class="plan-dot dot-seo"></span><div><span class="plan-tag tag-seo">SEO</span>Verify OptiShot redirects and create legacy brand bridge content</div></div>
+      </div>
+    </div>
+    <div class="plan-col">
+      <div class="plan-col-header days-60">
+        <span class="period">Days 30–60</span>
+        Conversion Architecture
+      </div>
+      <div class="plan-items">
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Build lead capture — quiz, consultation booking, or email opt-in for non-ready buyers</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Restructure product page layout to prioritize purchase flow</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Add product-specific FAQs to RSG One and RSG Pro pages</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Build dedicated landing pages per campaign type and competitor</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Launch Google competitor campaigns (Full Swing, SkyTrak, Trackman)</div></div>
+        <div class="plan-item"><span class="plan-dot dot-seo"></span><div><span class="plan-tag tag-seo">SEO</span>Launch first content cluster — buying guides, cost breakdowns, room setup</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Assess LinkedIn CPL — scale or pause based on cost per consultation booked</div></div>
+      </div>
+    </div>
+    <div class="plan-col">
+      <div class="plan-col-header days-90">
+        <span class="period">Days 60–90</span>
+        Scale &amp; Compound
+      </div>
+      <div class="plan-items">
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Add product demo video to PDPs and collect UGC from existing customers</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Launch MOFU Google campaigns to quiz and guide landing pages</div></div>
+        <div class="plan-item"><span class="plan-dot dot-seo"></span><div><span class="plan-tag tag-seo">SEO</span>Publish competitor comparison pages — RSG vs. Full Swing, SkyTrak, Trackman</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Launch email nurture sequences for quiz completers, cart abandoners, consultation no-shows</div></div>
+        <div class="plan-item"><span class="plan-dot dot-cro"></span><div><span class="plan-tag tag-cro">CRO</span>Add comparison table and product selector experience to collections</div></div>
+        <div class="plan-item"><span class="plan-dot dot-seo"></span><div><span class="plan-tag tag-seo">SEO</span>Begin backlink outreach to golf publications and YouTube reviewers</div></div>
+        <div class="plan-item"><span class="plan-dot dot-ads"></span><div><span class="plan-tag tag-ads">Ads</span>Begin Q4 planning — promotions calendar, seasonal campaigns, creative approval</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-box insight-green" style="margin-top:24px;">
+    <strong>The math on fixing the funnel first:</strong> If cart-to-checkout improves from 0.05% to even 5% — still well below industry average — that's roughly 15 potential checkouts per period vs. near zero today. At a $3,000 AOV and 50% checkout completion, that's ~$22,500 in additional revenue per period without spending an additional dollar on ads. Fixing the funnel makes every channel more efficient.
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ FOOTER -->
+<footer class="report-footer">
+  <strong>Red Stakes Golf Digital Audit</strong> · Prepared by EmberTribe · May 2026<br>
+  Questions? Reach out to your EmberTribe growth team.
+</footer>
+
+</body>
+</html>

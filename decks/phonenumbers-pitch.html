@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhoneNumbers.com — EmberTribe Growth Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================================
+   THEME VARIABLES — PhoneNumbers.com
+   ============================================================= */
+:root {
+  --primary-dark: #020617;
+  --primary-mid: #0f172a;
+  --primary-light: #1e293b;
+  --accent: #ef4444;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+/* =============================================================
+   RESET & BASE
+   ============================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* =============================================================
+   DECK & SLIDE LAYOUT
+   ============================================================= */
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* =============================================================
+   TYPOGRAPHY
+   ============================================================= */
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+/* =============================================================
+   STAT CARDS
+   ============================================================= */
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* =============================================================
+   ANNOTATIONS / CALLOUTS
+   ============================================================= */
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+/* =============================================================
+   TABLES
+   ============================================================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+/* =============================================================
+   BAR CHARTS
+   ============================================================= */
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 120px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+  min-width: 36px;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--accent), #f87171); }
+.bar-fill.dark   { background: linear-gradient(90deg, var(--primary-dark), var(--primary-light)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =============================================================
+   PILLS / BADGES
+   ============================================================= */
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.dark    { background: #E8EAF6; color: #283593; }
+
+/* =============================================================
+   LAYOUT: COLUMNS
+   ============================================================= */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+/* =============================================================
+   CHANNEL / STRATEGY CARDS
+   ============================================================= */
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* =============================================================
+   TIMELINE / ROADMAP
+   ============================================================= */
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ember-red);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ember-red);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+/* =============================================================
+   PRICING SECTION
+   ============================================================= */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.pricing-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--ember-red);
+  border-width: 2px;
+}
+
+.pricing-card .featured-tag {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ember-red);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.pricing-tier {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.pricing-price {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.pricing-price span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+.pricing-includes {
+  font-size: 12px;
+  color: var(--text-light);
+  margin: 12px 0 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pricing-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.pricing-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.addon-box {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 16px;
+}
+
+.addon-box h4 {
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addon-items {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.addon-item {
+  flex: 1;
+  min-width: 180px;
+}
+
+.addon-item .addon-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.addon-item .addon-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.addon-item .addon-price span {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+.addon-item .addon-desc {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* =============================================================
+   BACKLINK CATEGORY CARDS
+   ============================================================= */
+.backlink-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.backlink-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.backlink-info { flex: 1; }
+
+.backlink-category {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.backlink-examples {
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.backlink-stat {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.backlink-vol {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.backlink-type {
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* =============================================================
+   PROJECTIONS
+   ============================================================= */
+.projection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  flex: 1;
+  margin-top: 16px;
+}
+
+.projection-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.projection-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.projection-card.p3::before { background: var(--yellow); }
+.projection-card.p6::before { background: var(--teal); }
+.projection-card.p12::before { background: var(--green); }
+
+.projection-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.projection-card.p3 .projection-label { color: var(--yellow); }
+.projection-card.p6 .projection-label { color: var(--teal); }
+.projection-card.p12 .projection-label { color: var(--green); }
+
+.projection-headline {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--primary-dark);
+}
+
+.projection-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.projection-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.projection-card.p3 ul li::before { background: var(--yellow); }
+.projection-card.p6 ul li::before { background: var(--teal); }
+.projection-card.p12 ul li::before { background: var(--green); }
+
+.projection-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+/* =============================================================
+   UTILITY
+   ============================================================= */
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.accent { color: var(--accent); }
+
+/* =============================================================
+   LOGO ROW
+   ============================================================= */
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+/* =============================================================
+   PROGRESS BAR
+   ============================================================= */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+/* =============================================================
+   NAVIGATION
+   ============================================================= */
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 80px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .projection-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============================================================
+       SLIDE 1: TITLE (Dark)
+       ============================================================ -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Strategy &amp; Content Plan</p>
+      <h1>PhoneNumbers.com</h1>
+      <p class="subtitle" style="max-width:700px;">A premium aged domain with legacy authority and zero published content. Here&rsquo;s how we turn that into a compounding organic revenue engine.</p>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">~95K</div>
+          <div class="stat-label">Existing Backlinks (Legacy Domain)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">30</div>
+          <div class="stat-label">Monthly Organic Clicks (Today)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">6.6%</div>
+          <div class="stat-label">Overall CTR &mdash; Strong Branded Intent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">0</div>
+          <div class="stat-label">Commercial Pages Currently Ranking</div>
+        </div>
+      </div>
+
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Niko Touris &mdash; April 17, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 2: CURRENT STATE
+       ============================================================ -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where PhoneNumbers.com Stands Today</h2>
+    <p class="subtitle">The domain has gravity. The content engine hasn&rsquo;t been switched on.</p>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">30</div>
+        <div class="stat-label">Avg. Monthly Clicks (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">459</div>
+        <div class="stat-label">Avg. Monthly Impressions (GSC)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">6.6%</div>
+        <div class="stat-label">Overall CTR</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--red);">100%</div>
+        <div class="stat-label">Traffic Is Branded Queries</div>
+      </div>
+    </div>
+
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What&rsquo;s Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>Premium aged domain</strong> &mdash; phonenumbers.com is the exact-match domain for a massive search category
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>~95K legacy backlinks</strong> &mdash; years of accumulated domain authority ready to be leveraged
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>Strong branded CTR (6.6%)</strong> &mdash; users searching the domain are clicking; high intent signal
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>Global TLD portfolio</strong> &mdash; multiple country variants create a geographic content moat
+          </li>
+          <li style="padding:8px 0; font-size:14px;">
+            <strong>NYMobile proof-of-concept</strong> &mdash; adding a WordPress blog already lifted traffic there
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What&rsquo;s Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>No indexed content</strong> &mdash; the &ldquo;coming soon&rdquo; page gives Google nothing to rank
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>100% branded traffic</strong> &mdash; zero commercial or informational queries driving revenue
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>Declining trend</strong> &mdash; clicks peaked Dec 2025 (39/mo) and have fallen to 11/mo in April
+          </li>
+          <li style="padding:8px 0; border-bottom:1px solid var(--border); font-size:14px;">
+            <strong>No pillar or cluster pages</strong> &mdash; no structure to capture high-volume informational queries
+          </li>
+          <li style="padding:8px 0; font-size:14px;">
+            <strong>Unknown backlink quality</strong> &mdash; 95K legacy links need audit; some may require disavow
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 3: GETVOIP BACKLINK PROFILE
+       ============================================================ -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Competitor Backlink Analysis</p>
+    <h2>The Links That Power GetVoIP.com</h2>
+    <p class="subtitle">7,210 referring domains &nbsp;&middot;&nbsp; 36,720 total backlinks &nbsp;&middot;&nbsp; Built over 14 years &nbsp;&middot;&nbsp; Source: Semrush</p>
+
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:12px;">Referring Domain Categories</h4>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#128202;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">Business &amp; Tech Media</div>
+            <div class="backlink-examples">Entrepreneur.com &bull; Forbes contributors &bull; Business.com &bull; Inc.com</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">High DR</div>
+            <div class="backlink-type">Editorial / PR</div>
+          </div>
+        </div>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#128196;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">SaaS &amp; Software Directories</div>
+            <div class="backlink-examples">Capterra &bull; G2 &bull; GetApp &bull; Software Advice &bull; TrustRadius</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">High Vol</div>
+            <div class="backlink-type">Directory / Review</div>
+          </div>
+        </div>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#128225;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">Telecom &amp; UCaaS Industry Press</div>
+            <div class="backlink-examples">TMCnet &bull; No Jitter &bull; UC Today &bull; Connected Enterprise</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">Niche DR</div>
+            <div class="backlink-type">Trade Media</div>
+          </div>
+        </div>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#128203;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">Business Data &amp; Intelligence</div>
+            <div class="backlink-examples">Crunchbase &bull; ZoomInfo &bull; Owler &bull; LinkedIn company page</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">Confirmed</div>
+            <div class="backlink-type">Data Aggregator</div>
+          </div>
+        </div>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#127760;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">Provider Ecosystems &amp; Affiliate Sites</div>
+            <div class="backlink-examples">VoIP provider blogs &bull; Nextiva &bull; RingCentral partners &bull; review sites</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">High Vol</div>
+            <div class="backlink-type">Affiliate / Partner</div>
+          </div>
+        </div>
+
+        <div class="backlink-card">
+          <div class="backlink-icon">&#128172;</div>
+          <div class="backlink-info">
+            <div class="backlink-category">Community &amp; Q&amp;A Platforms</div>
+            <div class="backlink-examples">Reddit (r/VOIP, r/smallbusiness) &bull; Quora &bull; Stack Overflow</div>
+          </div>
+          <div class="backlink-stat">
+            <div class="backlink-vol">AEO Value</div>
+            <div class="backlink-type">Community</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 style="margin-bottom:12px;">What This Means for PhoneNumbers.com</h4>
+
+        <div style="margin-bottom:14px; padding:14px; background:var(--light-bg); border-radius:10px; border:1px solid var(--border);">
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:var(--primary-dark);">Step 1 &mdash; Audit Your 95K Legacy Links</div>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Before building new links, verify which of your existing ~95K backlinks are quality vs. toxic. A GSC + Semrush audit protects rankings on day one of launch.</p>
+        </div>
+
+        <div style="margin-bottom:14px; padding:14px; background:var(--light-bg); border-radius:10px; border:1px solid var(--border);">
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:var(--primary-dark);">Step 2 &mdash; Claim Easy Directory Wins</div>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Crunchbase, ZoomInfo, G2, and Capterra listings are free, high-DR links GetVoIP has. These are quick wins for PhoneNumbers.com to establish entity presence.</p>
+        </div>
+
+        <div style="margin-bottom:14px; padding:14px; background:var(--light-bg); border-radius:10px; border:1px solid var(--border);">
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:var(--primary-dark);">Step 3 &mdash; Content-Driven Link Acquisition</div>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Pillar pages like &ldquo;US Phone Numbers Guide&rdquo; or &ldquo;UK Country Code +44 Explained&rdquo; naturally attract editorial links from media, educators, and telecom publishers.</p>
+        </div>
+
+        <div style="padding:14px; background:var(--light-bg); border-radius:10px; border:1px solid var(--border);">
+          <div style="font-size:13px; font-weight:700; margin-bottom:4px; color:var(--primary-dark);">Step 4 &mdash; AEO: Reddit + LLM Mentions</div>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Reddit mentions in r/VOIP, r/smallbusiness, and r/entrepreneur seed brand presence in AI-generated answers (ChatGPT, Claude, Perplexity) &mdash; next-gen &ldquo;page one.&rdquo;</p>
+        </div>
+
+        <div class="annotation success mt-16">
+          <strong>Key insight:</strong> GetVoIP built 7,210 referring domains over 14 years. With your existing domain authority and the right content strategy, PhoneNumbers.com can compress that timeline significantly.
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 4: PILLAR-CLUSTER STRATEGY
+       ============================================================ -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Content Architecture</p>
+    <h2>The Pillar-Cluster Framework</h2>
+    <p class="subtitle">Three content layers that work together &mdash; pillars capture broad queries, clusters capture long-tail, revenue pages convert.</p>
+
+    <div class="three-col flex-grow mt-8">
+      <div class="channel-card">
+        <div class="channel-icon">&#127963;</div>
+        <h3>Pillar Pages</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Long-form, authoritative pages targeting high-volume head terms. These are the &ldquo;hub&rdquo; each cluster links back to.</p>
+        <ul>
+          <li>US Phone Numbers &mdash; The Complete Guide</li>
+          <li>UK Phone Numbers (+44) &mdash; Country Guide</li>
+          <li>Canada Phone Numbers (+1) &mdash; How They Work</li>
+          <li>Virtual Phone Numbers &mdash; Ultimate Guide</li>
+          <li>Business Phone Numbers &mdash; Types &amp; Pricing</li>
+          <li>Toll-Free Numbers &mdash; Complete Guide</li>
+          <li>Area Codes A&ndash;Z &mdash; US Area Code Directory</li>
+          <li>International Dialing Codes &mdash; Full Directory</li>
+        </ul>
+        <div style="margin-top:14px; padding:10px; background:white; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light);">Format</div>
+          <div style="font-size:13px; margin-top:2px;">2,500&ndash;4,000 words &bull; Schema &bull; Internal links &bull; Revenue CTA</div>
+        </div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-icon">&#128203;</div>
+        <h3>Cluster Blog Content</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Supporting articles targeting long-tail questions. Each post links to a pillar and to a revenue page.</p>
+        <ul>
+          <li>How to Get a Virtual Phone Number in [Country]</li>
+          <li>Area Code 212 &mdash; New York City Guide</li>
+          <li>Area Code 310 &mdash; Los Angeles Guide</li>
+          <li>How to Port Your Phone Number (Step-by-Step)</li>
+          <li>Best VoIP Apps for International Calls</li>
+          <li>What Is a DID Number? (Direct Inward Dial)</li>
+          <li>How to Check If a Phone Number Is Active</li>
+          <li>Spam Call Statistics 2026 &mdash; Data &amp; Trends</li>
+          <li>How to Get a UK Phone Number from the US</li>
+          <li>Toll-Free vs. Local Numbers &mdash; Which to Choose</li>
+        </ul>
+        <div style="margin-top:14px; padding:10px; background:white; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light);">Format</div>
+          <div style="font-size:13px; margin-top:2px;">1,000&ndash;1,800 words &bull; FAQ schema &bull; Links to pillar + revenue</div>
+        </div>
+      </div>
+
+      <div class="channel-card">
+        <div class="channel-icon">&#127919;</div>
+        <h3>Revenue &amp; AEO Layer</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Bottom-funnel pages and brand-building tactics that convert traffic and seed AI/LLM visibility.</p>
+        <ul>
+          <li>Get a US Phone Number &mdash; Buy Now</li>
+          <li>UK Virtual Number &mdash; Pricing &amp; Plans</li>
+          <li>Business Phone Number Packages</li>
+          <li>Phone Number API &mdash; Enterprise &amp; Dev</li>
+          <li>Dialpad Review &amp; Affiliate Comparison</li>
+          <li>Reddit brand mentions (r/VOIP, r/smallbusiness)</li>
+          <li>Answer Engine seeding via Q&amp;A content</li>
+          <li>Affiliate reviews: Nextiva, RingCentral, Vonage</li>
+        </ul>
+        <div style="margin-top:14px; padding:10px; background:white; border-radius:8px; border:1px solid var(--border);">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-light);">Format</div>
+          <div style="font-size:13px; margin-top:2px;">Conversion-optimized &bull; Schema &bull; AEO-formatted FAQs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation info mt-8">
+      <strong>Publishing stack:</strong> Main site on Astro + WordPress blog attached (same model as NYMobile). EmberTribe writes, publishes, and interlinks directly &mdash; no handoff delays.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 5: KEYWORD OPPORTUNITY MAP
+       ============================================================ -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Keyword Opportunity Map</p>
+    <h2>Where the Traffic Is</h2>
+    <p class="subtitle">Content clusters PhoneNumbers.com can own &mdash; from quick wins to 12-month targets.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Content Cluster</th>
+          <th>Example Keywords</th>
+          <th>Est. Monthly Vol.</th>
+          <th>Difficulty</th>
+          <th>GetVoIP Ranks?</th>
+          <th>PhoneNumbers.com</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Area Code Pages <span class="pill seo" style="margin-left:4px;">Quick Win</span></td>
+          <td class="mono">area code 212, area code 310, area code 415</td>
+          <td>5K&ndash;50K / code</td>
+          <td><span class="green">Low&ndash;Med</span></td>
+          <td>Partial</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Virtual Phone Numbers <span class="pill content" style="margin-left:4px;">Core Revenue</span></td>
+          <td class="mono">virtual phone number, buy virtual number, get us number</td>
+          <td>40K&ndash;80K</td>
+          <td><span class="orange">Medium</span></td>
+          <td>Yes</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Country Phone Guides <span class="pill seo" style="margin-left:4px;">Pillar Opp.</span></td>
+          <td class="mono">uk phone number, canada phone number, australia calling code</td>
+          <td>10K&ndash;30K / country</td>
+          <td><span class="green">Low&ndash;Med</span></td>
+          <td>Partial</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Phone Number Lookup <span class="pill seo" style="margin-left:4px;">Quick Win</span></td>
+          <td class="mono">reverse phone lookup, phone number search, who called me</td>
+          <td>200K&ndash;500K</td>
+          <td><span class="red">High</span></td>
+          <td>No</td>
+          <td>Pos. 19 (branded)</td>
+        </tr>
+        <tr>
+          <td class="bold">Business Phone Numbers <span class="pill content" style="margin-left:4px;">Core Revenue</span></td>
+          <td class="mono">business phone number, toll-free number, DID number</td>
+          <td>20K&ndash;60K</td>
+          <td><span class="orange">Medium</span></td>
+          <td>Yes (heavy)</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+        <tr>
+          <td class="bold">How-To &amp; FAQ Content <span class="pill paid" style="margin-left:4px;">AEO</span></td>
+          <td class="mono">how to get a phone number, how to port a number, can i have 2 numbers</td>
+          <td>5K&ndash;25K</td>
+          <td><span class="green">Low</span></td>
+          <td>Partial</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Available Numbers <span class="pill seo" style="margin-left:4px;">Quick Win</span></td>
+          <td class="mono">available phone numbers, check phone number availability</td>
+          <td>3K&ndash;10K</td>
+          <td><span class="green">Low</span></td>
+          <td>No</td>
+          <td>Pos. 90 (65 imps)</td>
+        </tr>
+        <tr>
+          <td class="bold">VoIP Affiliate Reviews <span class="pill setup" style="margin-left:4px;">PhoneService</span></td>
+          <td class="mono">best voip providers, dialpad review, nextiva vs ringcentral</td>
+          <td>50K&ndash;200K</td>
+          <td><span class="red">High</span></td>
+          <td>Yes (dominant)</td>
+          <td><span class="red">Not ranking</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="annotation success mt-8">
+      <strong>EmberTribe recommendation:</strong> Start with Area Code pages and Country Guides (low difficulty, high volume, structurally perfect for pillar-cluster). These build domain topical authority fast and create natural internal linking paths to revenue pages.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 6: ROADMAP
+       ============================================================ -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Execution Roadmap</p>
+    <h2>First 90 Days: Foundation to Momentum</h2>
+    <p class="subtitle">A phased approach that builds the right infrastructure before scaling &mdash; no wasted spend.</p>
+
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation &amp; Audit</h4>
+        <ul>
+          <li>GSC deep audit &mdash; crawl errors, sitemap, indexation</li>
+          <li>Backlink quality review (95K legacy links)</li>
+          <li>WordPress blog setup &amp; Astro integration</li>
+          <li>Approve content calendar (titles + search volumes)</li>
+          <li>Publish 40 articles (area codes, how-to, country guides)</li>
+          <li>Claim entity listings (Crunchbase, ZoomInfo, G2)</li>
+          <li>Technical SEO cleanup (redirect chains, canonicals)</li>
+        </ul>
+        <div class="phase-cost">$1,100/mo &mdash; 40 articles</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Pillar Build &amp; Launch</h4>
+        <ul>
+          <li>Publish US &amp; UK country pillar pages</li>
+          <li>40 articles linking pillars, clusters &amp; revenue pages</li>
+          <li>Internal linking map &mdash; all revenue pages connected</li>
+          <li>Area code page template &mdash; build first 10 states</li>
+          <li>Schema markup: FAQ, How-To, BreadcrumbList</li>
+          <li>First Reddit AEO brand mentions seeded</li>
+          <li>Performance review: impressions, indexation status</li>
+        </ul>
+        <div class="phase-cost">$1,100/mo &mdash; 40 articles</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Scale &amp; Optimize</h4>
+        <ul>
+          <li>Expand to 3&ndash;5 country pillar pages</li>
+          <li>40 articles/mo across virtual numbers, business use cases &amp; area codes</li>
+          <li>AEO: 10+ Reddit mentions in high-traffic threads</li>
+          <li>PhoneService.com affiliate review cluster (Dialpad, etc.)</li>
+          <li>Affiliate brand content calendar ready for launch</li>
+          <li>Backlink outreach to telecom trade publications</li>
+          <li>Month 3 performance report &amp; scale recommendation</li>
+        </ul>
+        <div class="phase-cost">$1,100&ndash;$3,000/mo &mdash; 40 articles + AEO</div>
+      </div>
+    </div>
+
+    <div class="annotation mt-8">
+      <strong>Publishing model:</strong> EmberTribe approves titles upfront with you, then writes, publishes, and interlinks &mdash; fully hands-off. You review and approve the content calendar once per month.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 7: INVESTMENT
+       ============================================================ -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Scope &amp; Pricing</h2>
+    <p class="subtitle">Choose your monthly article volume. Commit for 3 months to save &mdash; or stay month-to-month.</p>
+
+    <table style="margin-bottom:0;">
+      <thead>
+        <tr>
+          <th>Monthly Articles</th>
+          <th>Monthly Pricing</th>
+          <th>3-Month Commitment <span style="font-weight:400; text-transform:none; letter-spacing:0;">(billed as one invoice)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">25 Articles</td>
+          <td style="font-size:18px; font-weight:800; color:var(--primary-dark);">$700<span style="font-size:13px; font-weight:400; color:var(--text-light);">/mo</span></td>
+          <td>
+            <span style="font-size:18px; font-weight:800; color:var(--primary-dark);">$1,750</span>
+            <span class="pill green" style="margin-left:8px;">Save $350</span>
+          </td>
+        </tr>
+        <tr style="background:rgba(239,68,68,0.04);">
+          <td class="bold">40 Articles <span class="pill red" style="margin-left:6px;">Most Popular</span></td>
+          <td style="font-size:18px; font-weight:800; color:var(--primary-dark);">$1,100<span style="font-size:13px; font-weight:400; color:var(--text-light);">/mo</span></td>
+          <td>
+            <span style="font-size:18px; font-weight:800; color:var(--primary-dark);">$2,700</span>
+            <span class="pill green" style="margin-left:8px;">Save $600</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold">50 Articles</td>
+          <td style="font-size:18px; font-weight:800; color:var(--primary-dark);">$1,350<span style="font-size:13px; font-weight:400; color:var(--text-light);">/mo</span></td>
+          <td>
+            <span style="font-size:18px; font-weight:800; color:var(--primary-dark);">$3,400</span>
+            <span class="pill green" style="margin-left:8px;">Save $650</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="bold">100 Articles</td>
+          <td style="font-size:18px; font-weight:800; color:var(--primary-dark);">$2,700<span style="font-size:13px; font-weight:400; color:var(--text-light);">/mo</span></td>
+          <td>
+            <span style="font-size:18px; font-weight:800; color:var(--primary-dark);">$7,000</span>
+            <span class="pill green" style="margin-left:8px;">Save $1,100</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="addon-box">
+      <h4>&#10133; Pillar Pages &mdash; Add-On Pricing <span class="pill seo" style="margin-left:8px;">One-Time or Bundled</span></h4>
+      <div class="addon-items">
+        <div class="addon-item">
+          <div class="addon-name">Country Pillar Page</div>
+          <div class="addon-price">$1,200<span>/page</span></div>
+          <div class="addon-desc">2,500&ndash;3,500 words &bull; Schema &bull; Link map &bull; Revenue CTA</div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-name">State / City Page</div>
+          <div class="addon-price">$500<span>/page</span></div>
+          <div class="addon-desc">1,500&ndash;2,000 words &bull; Local data &bull; Area code schema</div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-name">Pillar Pack (1 Country + 4 States)</div>
+          <div class="addon-price">$3,500<span>/pack</span></div>
+          <div class="addon-desc">Full hub + spoke setup &bull; Internal linking map included</div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-name">US State Rollout (50 states)</div>
+          <div class="addon-price">Custom</div>
+          <div class="addon-desc">Full coverage &bull; Phased delivery &bull; Volume pricing</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 8: PROJECTED OUTCOMES
+       ============================================================ -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What to Expect at 3, 6, and 12 Months</h2>
+    <p class="subtitle">Conservative projections based on consistent publishing at 40 articles/month.</p>
+
+    <div class="projection-grid">
+      <div class="projection-card p3">
+        <div class="projection-label">3 Months</div>
+        <div class="projection-headline">Foundation &amp; First Signals</div>
+        <ul>
+          <li>20&ndash;40 pages indexed and crawlable</li>
+          <li>Area code &amp; country pages appearing in GSC</li>
+          <li>Impressions growing from 459/mo to 2K&ndash;5K/mo</li>
+          <li>Technical issues resolved &mdash; clean crawl</li>
+          <li>First entity listings live (Crunchbase, ZoomInfo, G2)</li>
+          <li>Blog traffic separating from branded-only baseline</li>
+          <li>Reddit brand mentions seeded in 5+ threads</li>
+        </ul>
+      </div>
+
+      <div class="projection-card p6">
+        <div class="projection-label">6 Months</div>
+        <div class="projection-headline">Early Rankings &amp; Momentum</div>
+        <ul>
+          <li>60&ndash;100 pages indexed across clusters</li>
+          <li>Area code pages ranking positions 5&ndash;20 for target terms</li>
+          <li>Monthly impressions: 15K&ndash;30K</li>
+          <li>Monthly clicks: 500&ndash;1,500 (20x&ndash;50x current)</li>
+          <li>First non-branded clicks from virtual number queries</li>
+          <li>Country pillar pages attracting editorial references</li>
+          <li>AI/LLM brand mentions beginning to appear</li>
+        </ul>
+      </div>
+
+      <div class="projection-card p12">
+        <div class="projection-label">12 Months</div>
+        <div class="projection-headline">Compounding Returns</div>
+        <ul>
+          <li>150&ndash;300+ indexed pages across all clusters</li>
+          <li>Pillar pages ranking top 10 for target terms</li>
+          <li>Monthly impressions: 50K&ndash;150K+</li>
+          <li>Monthly clicks: 2,000&ndash;8,000+ (compounding)</li>
+          <li>Revenue pages converting organic traffic to sales/leads</li>
+          <li>Global country pages driving international traffic</li>
+          <li>Consistent LLM / AEO brand mentions across answer engines</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation mt-8">
+      <strong>Context:</strong> NYMobile saw measurable traffic lift within 60 days of adding its WordPress blog. PhoneNumbers.com starts with stronger domain authority and an exact-match domain &mdash; the growth curve should be steeper.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">PhoneNumbers.com &mdash; Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 9: NEXT STEPS (Dark)
+       ============================================================ -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let&rsquo;s Build This</h1>
+      <p class="subtitle" style="text-align:center; max-width:600px;">PhoneNumbers.com is two weeks from launch. The content strategy can be live and producing results before your competitors notice.</p>
+
+      <div style="margin-top:32px; display:flex; gap:32px; flex-wrap:wrap; justify-content:center;">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:24px 32px; min-width:200px;">
+          <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:8px;">This Weekend</div>
+          <div style="font-size:16px; font-weight:600;">Review this deck</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:4px;">Share with your team</div>
+        </div>
+        <div style="background:rgba(239,68,68,0.15); border:2px solid rgba(239,68,68,0.4); border-radius:12px; padding:24px 32px; min-width:200px;">
+          <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:8px;">Monday 11:00 AM</div>
+          <div style="font-size:16px; font-weight:600;">Working Session</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:4px;">Align on plan &amp; starter scope</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:24px 32px; min-width:200px;">
+          <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.5); margin-bottom:8px;">Month 1</div>
+          <div style="font-size:16px; font-weight:600;">Kickoff &amp; Audit</div>
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:4px;">First posts live within 2 weeks</div>
+        </div>
+      </div>
+
+      <div style="margin-top:40px;">
+        <p style="font-size:14px; color:rgba(255,255,255,0.4); margin-bottom:6px;">Questions before Monday?</p>
+        <p style="font-size:18px; font-weight:600;">tj@embertribe.com</p>
+      </div>
+
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 17, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>

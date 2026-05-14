@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heat Holders — Protecting Your Rankings</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1C0303;
+  --primary-mid: #5C0A0A;
+  --primary-light: #8B1515;
+  --accent: #E85D04;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.stat-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: #1B5E20; }
+.annotation.warning { background: #FFF3E0; border-left-color: var(--orange); }
+.annotation.warning strong { color: #E65100; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 8px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 110px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+  min-width: 48px;
+}
+
+.bar-fill.ember  { background: linear-gradient(90deg, var(--primary-mid), var(--accent)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.red    { background: linear-gradient(90deg, #922b21, var(--red)); }
+.bar-fill.orange { background: linear-gradient(90deg, #a04000, var(--orange)); }
+.bar-fill.teal   { background: linear-gradient(90deg, #0e6b8a, var(--teal)); }
+.bar-fill.dim-bar { background: linear-gradient(90deg, #bdc3c7, #95a5a6); }
+
+.bar-value {
+  width: 72px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.channel-card h3 { margin-bottom: 12px; font-size: 18px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+  flex: 1;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+  flex: 1;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-mid);
+  margin-top: 14px;
+}
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* Peak marker for bar chart */
+.bar-peak-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 48px;
+  text-align: left;
+}
+
+.bar-decline-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 48px;
+  text-align: left;
+}
+
+.divider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 6px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  margin-left: 122px;
+}
+
+.divider-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--red);
+  margin-left: 122px;
+  padding: 2px 0;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============================================================
+       SLIDE 1: TITLE
+       ============================================================ -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Ongoing Growth Strategy</p>
+      <h1 style="max-width:800px;">We Built Something.<br>Now Let's Protect It.</h1>
+      <p class="subtitle">Heat Holders' organic traffic grew 235% under ClusterMagic — then slipped 49% from peak. Here's what's happening, and how we stop it.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">235%</div>
+          <div class="stat-label">Organic traffic growth at peak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">−49%</div>
+          <div class="stat-label">Traffic lost from peak since Jul 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:rgba(255,255,255,0.9);">231</div>
+          <div class="stat-label">Articles published by EmberTribe</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--green);">195%</div>
+          <div class="stat-label">Increase in assisted conversions</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Heat Holders &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 2: WHAT WE BUILT
+       ============================================================ -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Impact Report</p>
+    <h2>What ClusterMagic Delivered</h2>
+    <p class="subtitle">Before diagnosing the problem, here's proof the strategy worked — and still is.</p>
+    <div class="stats-row" style="margin-bottom:12px;">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-mid);">3,629</div>
+        <div class="stat-label">Assisted conversions from organic search</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-mid);">+195%</div>
+        <div class="stat-label">Conversion increase vs. prior period</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-mid);">+43%</div>
+        <div class="stat-label">Click growth (GSC, last 6 months vs. prior 6)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-mid);">+69%</div>
+        <div class="stat-label">Impression growth in the same period</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green" style="margin-bottom:14px;">Keywords Gained</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Nov 2024</th>
+              <th>Peak (Jun 2025)</th>
+              <th>Jan 2026</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">WoW Blog</td>
+              <td>8,954</td>
+              <td class="bold green">33,962</td>
+              <td class="orange">18,494</td>
+            </tr>
+            <tr>
+              <td class="bold">Full Site</td>
+              <td>22,505</td>
+              <td class="bold green">46,871</td>
+              <td class="orange">34,608</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-16">
+          <strong>Key stat:</strong> The WoW Blog alone grew ranked keywords by 279% during active publishing — that's the ClusterMagic engine working exactly as designed.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:14px; color:var(--text);">Publishing Timeline</h3>
+        <table>
+          <thead>
+            <tr><th>Phase</th><th>Period</th><th>Articles</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Phase 1</td><td>Oct–Nov 2023</td><td>13</td></tr>
+            <tr><td>Phase 2</td><td>Jan–May 2024</td><td>82</td></tr>
+            <tr><td>Phase 3</td><td>Oct 2024–Feb 2025</td><td>55</td></tr>
+            <tr><td>Phase 4</td><td>Aug–Oct 2025</td><td>75</td></tr>
+            <tr><td class="bold">Total</td><td></td><td class="bold">231 published</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation warning mt-16">
+          <strong>Notice the gaps:</strong> Apr–Sep 2024, Mar–Jul 2025, Nov 2025–present. Those publishing gaps are directly visible in the traffic data.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 3: TRAFFIC TREND
+       ============================================================ -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>The Rise — and the Slide</h2>
+    <p class="subtitle">Daily organic traffic (SEMrush) — 23-month view showing what we built and what's eroding.</p>
+
+    <div class="bar-chart flex-grow">
+      <div class="bar-row">
+        <span class="bar-label">Jun 2024</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:33%;">~65K</div></div>
+        <span class="bar-value">~65K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sep 2024</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:42%;">~83K</div></div>
+        <span class="bar-value">~83K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Nov 2024</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:51%;">~100K</div></div>
+        <span class="bar-value">~100K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jan 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:56%;">~110K</div></div>
+        <span class="bar-value">~110K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Mar 2025</span>
+        <div class="bar-track"><div class="bar-fill ember" style="width:79%;">~155K</div></div>
+        <span class="bar-value">~155K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">May 2025</span>
+        <div class="bar-track"><div class="bar-fill ember" style="width:94%;">~185K</div></div>
+        <span class="bar-value">~185K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700; color:var(--green);">Jun 2025 ▲</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:100%;">196K — PEAK</div></div>
+        <span class="bar-value bold green">196K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Aug 2025</span>
+        <div class="bar-track"><div class="bar-fill orange" style="width:76%;">~148K</div></div>
+        <span class="bar-value">~148K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Sep 2025</span>
+        <div class="bar-track"><div class="bar-fill orange" style="width:60%;">~117K</div></div>
+        <span class="bar-value">~117K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Nov 2025</span>
+        <div class="bar-track"><div class="bar-fill orange" style="width:56%;">~110K</div></div>
+        <span class="bar-value">~110K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jan 2026</span>
+        <div class="bar-track"><div class="bar-fill red" style="width:51%;">~100K</div></div>
+        <span class="bar-value red">~100K/day</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label" style="font-weight:700; color:var(--red);">Mar 2026 ▼</span>
+        <div class="bar-track"><div class="bar-fill red" style="width:47%;">~93K</div></div>
+        <span class="bar-value bold red">~93K/day</span>
+      </div>
+    </div>
+
+    <div class="annotation danger">
+      <strong>Net position:</strong> Daily organic traffic grew from ~65K → 196K at peak (a 201% lift). It has since dropped to ~93K/day — still above baseline, but 53% below peak and continuing to decline.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 4: WHY IT DECLINES
+       ============================================================ -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Root Cause Analysis</p>
+    <h2>Why Rankings Decay Without Maintenance</h2>
+    <p class="subtitle">Three compounding factors explain the decline — all of them fixable.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card" style="border-top: 3px solid var(--red);">
+        <div class="channel-icon">✍️</div>
+        <h3>Publishing Gaps</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:12px;">Google rewards consistent publishing signals. Long pauses between batches allow competitor content to close the gap.</p>
+        <ul>
+          <li>6-month gap Apr–Sep 2024</li>
+          <li>4-month gap Mar–Jul 2025</li>
+          <li>No publishing Nov 2025 onward</li>
+          <li>Freshness signals decay without new content</li>
+        </ul>
+        <div class="annotation danger" style="margin-top:12px; font-size:13px;">
+          <strong>Result:</strong> Blog keyword rankings dropped from 33,962 → 18,494 after the last publishing pause.
+        </div>
+      </div>
+      <div class="channel-card" style="border-top: 3px solid var(--orange);">
+        <div class="channel-icon">🔗</div>
+        <h3>Link Profile Deteriorating</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:12px;">29,424 total backlinks sounds strong — but only 2.3% carry follow authority, and 385 vital links have already been lost.</p>
+        <ul>
+          <li>Only 679 of 29,424 links are "Best" follow links</li>
+          <li>385 Lost &amp; Vital links need recovery</li>
+          <li>Top backlinks are low-quality directory spam</li>
+          <li>Priority collection pages lack editorial links</li>
+        </ul>
+        <div class="annotation warning" style="margin-top:12px; font-size:13px;">
+          <strong>See next slide</strong> for the full link profile breakdown and impact map.
+        </div>
+      </div>
+      <div class="channel-card" style="border-top: 3px solid var(--yellow);">
+        <div class="channel-icon">🔄</div>
+        <h3>Content Aging</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:12px;">Articles published in 2023–2024 are now 1–2 years old. Without updates, Google progressively de-ranks them in favor of fresher competitors.</p>
+        <ul>
+          <li>Top performers showing declining CTR</li>
+          <li>Seasonal articles need annual refreshes</li>
+          <li>Internal linking gaps between old and new posts</li>
+          <li>Schema markup not maximized on high-traffic pages</li>
+        </ul>
+        <div class="annotation" style="margin-top:12px; font-size:13px;">
+          <strong>Fix:</strong> A content refresh cadence on the top 20 posts by traffic can recapture lost impressions quickly.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 5: LINK BUILDING
+       ============================================================ -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Link Profile Analysis</p>
+    <h2>29,424 Backlinks — But Only 679 That Matter</h2>
+    <p class="subtitle">Quantity is misleading. What Google rewards is follow-link authority from trusted sources — and that's where Heat Holders is critically underinvested.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:14px;">Current Link Profile</h3>
+        <div class="bar-chart" style="margin-bottom:20px;">
+          <div class="bar-row">
+            <span class="bar-label">Total Links</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:100%;">29,424</div></div>
+            <span class="bar-value">29,424</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="color:var(--red);">Follow (Best)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:2.3%;">&nbsp;</div></div>
+            <span class="bar-value bold green">679</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="color:var(--orange);">Top New</span>
+            <div class="bar-track"><div class="bar-fill orange" style="width:0.3%;">&nbsp;</div></div>
+            <span class="bar-value">95</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="color:var(--red);">Lost &amp; Vital</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:1.3%;">&nbsp;</div></div>
+            <span class="bar-value bold red">385</span>
+          </div>
+        </div>
+        <div class="annotation danger">
+          <strong>Only 2.3% of backlinks carry real ranking authority.</strong> The remaining 97.7% are nofollow, directory spam, or low-authority — invisible to Google's ranking algorithm.
+        </div>
+        <div class="annotation warning mt-16">
+          <strong>385 "Lost &amp; Vital" links</strong> are links Heat Holders previously had from trusted sources that have since been removed. Recovering these alone would have an immediate positive impact on rankings.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:14px;">What Targeted Link Building Does</h3>
+        <table>
+          <thead>
+            <tr><th>Priority Page</th><th>Ranking Keywords</th><th>Highest Keyword</th><th>Position</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>/collections/mens-gloves</td>
+              <td>418</td>
+              <td>men's gloves winter</td>
+              <td class="red bold">15 <span style="font-size:11px; color:var(--text-light);">↓ was #1</span></td>
+            </tr>
+            <tr>
+              <td>/collections/womens-gloves</td>
+              <td>597</td>
+              <td>gloves winter womens</td>
+              <td class="green bold">1</td>
+            </tr>
+            <tr>
+              <td>/collections/mens-hats</td>
+              <td>395</td>
+              <td>winter hat men</td>
+              <td class="green bold">1</td>
+            </tr>
+            <tr>
+              <td>/collections/mens-thermal-underwear</td>
+              <td>303</td>
+              <td>long underwear for men</td>
+              <td class="green bold">1</td>
+            </tr>
+            <tr>
+              <td>/collections/mens-crew-length-socks</td>
+              <td>20</td>
+              <td>crew socks length</td>
+              <td class="orange bold">18</td>
+            </tr>
+            <tr>
+              <td>/collections/childrens-gloves</td>
+              <td>114</td>
+              <td>kids gloves</td>
+              <td class="orange bold">21 <span style="font-size:11px; color:var(--text-light);">↓ was 11</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-16">
+          <strong>The pattern is clear:</strong> pages with existing backlinks (womens-gloves, mens-hats, thermals) hold #1 positions. Pages without them (mens-gloves, crew socks, childrens-gloves) are slipping. Links are the differentiator.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 6: KEYWORD OPPORTUNITY (was 5)
+       ============================================================ -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">What's at Stake</p>
+    <h2>Rankings Within Reach — and Rankings at Risk</h2>
+    <p class="subtitle">Page 2 positions are one push from page 1. Page 6+ positions will keep declining without active support.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="color:var(--green); margin-bottom:12px;">Page 2 → Page 1 Opportunities</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Keywords currently ranking positions 11–20 that are one link or refresh away from a top-10 position:</p>
+        <table>
+          <thead>
+            <tr><th>Keyword</th><th>Page</th><th>Current Pos.</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>mens crew length socks</td><td>/mens-crew-length-socks</td><td class="orange bold">18</td></tr>
+            <tr><td>fingerless gloves</td><td>/products/mens-fingerless-gloves</td><td class="orange bold">36 <span class="pill orange" style="font-size:10px;">↑ from 54</span></td></tr>
+            <tr><td>mens gloves winter</td><td>/collections/mens-gloves</td><td class="orange bold">15 <span class="pill orange" style="font-size:10px;">↓ from 1</span></td></tr>
+            <tr><td>kids gloves</td><td>/collections/childrens-gloves</td><td class="orange bold">21 <span class="pill orange" style="font-size:10px;">↓ from 11</span></td></tr>
+            <tr><td>neck warmer</td><td>/products/womens-neck-warmers</td><td class="red bold">18 <span class="pill red" style="font-size:10px;">↓ from 34</span></td></tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-16">
+          <strong>Note:</strong> mens gloves was <em>ranked #1</em> — it's now at 15. This is an active ranking regression that link building can reverse.
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--text); margin-bottom:12px;">Current Ranking Distribution (Jan 2026)</h3>
+        <div class="bar-chart" style="margin-top:8px;">
+          <div class="bar-row">
+            <span class="bar-label">Page 1 (1–10)</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:71%;">6,720</div></div>
+            <span class="bar-value">6,720</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Page 2 (11–20)</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:36%;">3,398</div></div>
+            <span class="bar-value">3,398</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Pages 3–5</span>
+            <div class="bar-track"><div class="bar-fill orange" style="width:76%;">7,204</div></div>
+            <span class="bar-value">7,204</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Page 6+</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:85%;">8,026</div></div>
+            <span class="bar-value red">8,026</span>
+          </div>
+        </div>
+        <div class="annotation danger mt-16">
+          <strong>8,026 keywords stuck on page 6+</strong> — these are articles we published that haven't received link authority yet. With links, these move forward. Without them, they drift backward.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 7: STRATEGY
+       ============================================================ -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three-Track Ongoing Engagement</h2>
+    <p class="subtitle">Stop the bleed, defend the gains, and push toward new traffic highs — running in parallel.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card" style="border-top:3px solid var(--primary-mid);">
+        <div class="channel-icon">📝</div>
+        <h3>Content Engine</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Consistent monthly publishing to maintain freshness signals and capture new keyword opportunities.</p>
+        <ul>
+          <li>8–12 new articles per month</li>
+          <li>Seasonal content calendar (winter prep starts in August)</li>
+          <li>Refresh top 20 performing posts quarterly</li>
+          <li>Internal linking audit + optimization</li>
+          <li>Schema markup on all high-traffic pages</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--accent);">
+        <div class="channel-icon">🔗</div>
+        <h3>Link Building</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Targeted authority links to the collection and product pages that are one push away from dominant page-1 rankings.</p>
+        <ul>
+          <li>4–6 high-authority links per month</li>
+          <li>Priority: gloves, thermals, slipper socks, hats collections</li>
+          <li>Competitor link gap analysis monthly</li>
+          <li>Digital PR for seasonal campaigns</li>
+          <li>Anchor text strategy protecting existing rankings</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--teal);">
+        <div class="channel-icon">📊</div>
+        <h3>Performance &amp; Reporting</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Monthly visibility into what's moving, what needs attention, and where the next opportunities are.</p>
+        <ul>
+          <li>Monthly traffic + ranking report</li>
+          <li>Assisted conversion tracking (GA4)</li>
+          <li>Quarterly content audit</li>
+          <li>Competitor position monitoring</li>
+          <li>Impact deck updates for stakeholders</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 8: ROADMAP
+       ============================================================ -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days: Stabilize, Defend, Grow</h2>
+    <p class="subtitle">Immediate focus on stopping the decline, then building toward a second traffic peak ahead of the winter selling season.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Stabilize</span>
+        <h4>Stop the Bleed</h4>
+        <ul>
+          <li>Content audit: identify top 20 declining pages</li>
+          <li>Refresh highest-traffic articles with updated content + schema</li>
+          <li>Fix internal linking gaps across blog</li>
+          <li>Backlink audit: map competitor link profiles</li>
+          <li>Resume publishing (first 4 new articles live)</li>
+          <li>Establish monthly reporting baseline</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Defend</span>
+        <h4>Protect Page 1</h4>
+        <ul>
+          <li>First link building batch: mens/womens gloves, hats priority pages</li>
+          <li>8 new articles published (seasonal forward planning)</li>
+          <li>Recover regressed keywords (mens gloves #1 target)</li>
+          <li>GSC position tracking on all priority pages</li>
+          <li>First monthly performance report delivered</li>
+          <li>Identify next backlink targets</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Grow</span>
+        <h4>Push Toward New Highs</h4>
+        <ul>
+          <li>Link building: thermals, slipper socks, baselayers</li>
+          <li>8–10 new articles + seasonal push for winter prep</li>
+          <li>Page 6+ keyword push campaign (high-volume targets)</li>
+          <li>Q1 content audit + strategy adjustment</li>
+          <li>Set trajectory toward 5M+ monthly traffic by Q4 2026</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Target:</strong> Stabilize traffic by Month 2, return to 4M+ monthly by Q3 2026, push toward a new peak of 6M+ ahead of the 2026 winter season.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 8: INVESTMENT
+       ============================================================ -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Two-Track Engagement — Flexible Pricing</h2>
+    <p class="subtitle">Choose your content volume and billing cadence. Bundle with backlinks for a package discount on all articles.</p>
+
+    <div class="two-col flex-grow" style="gap:24px;">
+
+      <!-- TRACK 1: CONTENT -->
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+          <span style="font-size:20px;">📝</span>
+          <h3 style="margin:0;">Content Only</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Articles / Month</th>
+              <th>Monthly</th>
+              <th>Quarterly <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:11px; color:var(--green);">save 10%</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">25 articles</td>
+              <td>$1,000</td>
+              <td><span class="bold">$2,700</span> <span style="font-size:12px; color:var(--green);">−$300</span></td>
+            </tr>
+            <tr>
+              <td class="bold">40 articles</td>
+              <td>$1,500</td>
+              <td><span class="bold">$4,000</span> <span style="font-size:12px; color:var(--green);">−$500</span></td>
+            </tr>
+            <tr>
+              <td class="bold">50 articles</td>
+              <td>$1,750</td>
+              <td><span class="bold">$4,500</span> <span style="font-size:12px; color:var(--green);">−$750</span></td>
+            </tr>
+            <tr>
+              <td class="bold">100 articles</td>
+              <td>$3,250</td>
+              <td><span class="bold">$8,750</span> <span style="font-size:12px; color:var(--green);">−$1,000</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation info" style="margin-top:12px; font-size:13px;">
+          <strong>All tiers include</strong> cluster articles, internal linking, and monthly reporting. Quarterly billing locks in your rate for the season.
+        </div>
+      </div>
+
+      <!-- TRACK 2: BACKLINKS + BUNDLE -->
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+          <span style="font-size:20px;">🔗</span>
+          <h3 style="margin:0;">Add Backlinks — Bundle &amp; Save</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Backlinks / Month</th>
+              <th>Monthly</th>
+              <th>Bundled with Content</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">10 backlinks</td>
+              <td>$2,500</td>
+              <td><span class="bold green">Discount applied</span><br><span style="font-size:12px; color:var(--text-light);">to all article tiers</span></td>
+            </tr>
+            <tr>
+              <td class="bold">20 backlinks</td>
+              <td>$4,500</td>
+              <td><span class="bold green">Discount applied</span><br><span style="font-size:12px; color:var(--text-light);">to all article tiers</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation success" style="margin-top:12px; font-size:13px;">
+          <strong>Bundle discount:</strong> Add a backlink package to any content tier and the article pricing drops. The more you invest together, the better the rate.
+        </div>
+        <div style="margin-top:12px; background:var(--light-bg); border:1px solid var(--border); border-radius:10px; padding:16px;">
+          <p style="font-size:13px; font-weight:600; margin-bottom:6px;">Example: Most Popular</p>
+          <p style="font-size:13px; color:var(--text-light); line-height:1.6;">50 articles/mo <span class="bold" style="color:var(--text);">$1,750</span> + 10 backlinks/mo <span class="bold" style="color:var(--text);">$2,500</span><br>
+          Billed quarterly → <span class="bold" style="color:var(--primary-mid); font-size:15px;">~$4,500 + $2,500/mo</span> with bundle discount on articles</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Heat Holders — Ongoing Growth Strategy</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SLIDE 9: NEXT STEPS
+       ============================================================ -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">What Happens Next</p>
+      <h1 style="max-width:700px;">The Rankings You Built Are Worth Defending.</h1>
+      <p class="subtitle" style="text-align:center; max-width:600px;">You already paid to grow this asset. Every month without active maintenance is a month of compounding loss — and another month competitors use to close the gap.</p>
+      <div class="mt-24" style="display:flex; flex-direction:column; gap:16px; align-items:center;">
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:20px 40px; text-align:center;">
+          <p style="font-size:16px; font-weight:700; margin-bottom:4px;">Step 1 — Choose Your Tier</p>
+          <p style="font-size:14px; color:rgba(255,255,255,0.55);">Maintain &amp; Recover ($6K/mo) or Aggressive Growth ($9.5K/mo)</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:20px 40px; text-align:center;">
+          <p style="font-size:16px; font-weight:700; margin-bottom:4px;">Step 2 — Sign &amp; Kick Off</p>
+          <p style="font-size:14px; color:rgba(255,255,255,0.55);">We can be live with Month 1 content and link targets within 2 weeks</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:20px 40px; text-align:center;">
+          <p style="font-size:16px; font-weight:700; margin-bottom:4px;">Step 3 — Watch the Trend Reverse</p>
+          <p style="font-size:14px; color:rgba(255,255,255,0.55);">First position improvements typically visible within 60–90 days</p>
+        </div>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:32px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; April 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+  document.querySelector(`.slide[data-slide="${current}"]`).scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
