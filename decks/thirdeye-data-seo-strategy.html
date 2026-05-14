@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThirdEye Data — SEO ClusterMagic Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1a1a2e;
+  --primary-mid:  #16213e;
+  --primary-light:#0f3460;
+  --accent:       #e94560;
+  --ember-red:    #ff333d;
+  --ember-dark:   #e0202a;
+  --text:         #2c3e50;
+  --text-light:   #7f8c8d;
+  --light-bg:     #f8f9fa;
+  --card-bg:      #ffffff;
+  --border:       #e9ecef;
+  --green:        #27AE60;
+  --yellow:       #F39C12;
+  --red:          #E74C3C;
+  --orange:       #E67E22;
+  --teal:         #00B4D8;
+  --teal-soft:    #00C9A7;
+  --blue:         #3498DB;
+  --purple:       #8E44AD;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--primary-dark);
+  overflow:hidden;
+  height:100vh; width:100vw;
+  color:var(--text); line-height:1.6;
+}
+
+.deck { width:100vw; height:100vh; position:relative; }
+
+.slide {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  display:none; flex-direction:column;
+  padding:40px 60px;
+  overflow-y:auto;
+  background:var(--card-bg);
+}
+
+.slide.active { display:flex; }
+
+.slide.dark {
+  background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-mid) 50%,var(--primary-light) 100%);
+  color:#ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color:rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background:rgba(255,255,255,0.06);
+  border-color:rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.7); }
+.slide.dark table td { border-color:rgba(255,255,255,0.08); color:rgba(255,255,255,0.85); }
+.slide.dark table tr:hover td { background:rgba(255,255,255,0.03); }
+
+h1 { font-size:46px; font-weight:900; letter-spacing:-1px; line-height:1.1; margin-bottom:12px; }
+h2 { font-size:32px; font-weight:800; letter-spacing:-0.5px; line-height:1.2; margin-bottom:8px; }
+h3 { font-size:19px; font-weight:700; margin-bottom:8px; }
+h4 { font-size:15px; font-weight:700; margin-bottom:6px; }
+
+.subtitle {
+  font-size:17px; font-weight:400;
+  color:var(--text-light); max-width:820px; margin-bottom:20px;
+}
+
+.slide-label {
+  font-size:11px; font-weight:600; text-transform:uppercase;
+  letter-spacing:2px; color:var(--ember-red); margin-bottom:6px;
+}
+.slide.dark .slide-label { color:var(--teal-soft); }
+
+/* ── Stats ── */
+.stats-row { display:flex; gap:14px; margin:14px 0; flex-wrap:wrap; }
+.stat-card {
+  flex:1; min-width:130px;
+  background:var(--light-bg); border:1px solid var(--border);
+  border-radius:12px; padding:18px 22px;
+}
+.stat-value { font-size:32px; font-weight:800; line-height:1.1; margin-bottom:4px; }
+.stat-label { font-size:12px; font-weight:500; color:var(--text-light); }
+
+/* ── Annotation ── */
+.annotation {
+  background:#FFF8E1; border-left:3px solid var(--ember-red);
+  border-radius:0 8px 8px 0; padding:11px 15px;
+  font-size:13px; margin:10px 0; line-height:1.5;
+}
+.annotation strong { color:var(--primary-dark); }
+.annotation.info    { background:#E3F2FD; border-left-color:var(--teal); }
+.annotation.info strong { color:var(--teal); }
+.annotation.danger  { background:#FFEBEE; border-left-color:var(--red); }
+.annotation.danger strong { color:var(--red); }
+.annotation.success { background:#E8F5E9; border-left-color:var(--green); }
+.annotation.success strong { color:var(--green); }
+.annotation.teal    { background:#E0F7FA; border-left-color:var(--teal-soft); }
+.annotation.teal strong { color:#00897B; }
+.annotation.purple  { background:#F3E5F5; border-left-color:var(--purple); }
+.annotation.purple strong { color:var(--purple); }
+
+/* ── Table ── */
+table { width:100%; border-collapse:collapse; font-size:13px; margin:10px 0; }
+th {
+  background:var(--light-bg); font-weight:600; text-transform:uppercase;
+  font-size:10px; letter-spacing:0.5px; color:var(--text-light);
+  text-align:left; padding:9px 11px; border-bottom:2px solid var(--border);
+}
+td { padding:9px 11px; border-bottom:1px solid var(--border); vertical-align:top; }
+tr:hover td { background:rgba(0,0,0,0.02); }
+.right { text-align:right; }
+.bold  { font-weight:700; }
+.center { text-align:center; }
+
+/* ── Pills ── */
+.pill {
+  display:inline-block; padding:2px 9px; border-radius:20px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+}
+.pill.high     { background:#FFEBEE; color:var(--red); }
+.pill.medium   { background:#FFF3E0; color:var(--orange); }
+.pill.critical { background:#E0F7FA; color:#00897B; }
+.pill.low      { background:#F3F4F6; color:#6B7280; }
+.pill.seo      { background:#E8F5E9; color:#1B5E20; }
+.pill.paid     { background:#E3F2FD; color:#0D47A1; }
+.pill.content  { background:#FFF3E0; color:#E65100; }
+.pill.aeo      { background:#F3E5F5; color:var(--purple); }
+
+/* ── Layout ── */
+.two-col   { display:grid; grid-template-columns:1fr 1fr; gap:28px; flex:1; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+
+/* ── Channel cards ── */
+.channel-card {
+  background:var(--light-bg); border:1px solid var(--border);
+  border-radius:12px; padding:22px;
+}
+.channel-card .channel-icon { font-size:26px; margin-bottom:8px; }
+.channel-card h3 { margin-bottom:10px; }
+.channel-card ul { list-style:none; padding:0; }
+.channel-card ul li {
+  position:relative; padding-left:14px;
+  margin-bottom:6px; font-size:13px; line-height:1.5;
+}
+.channel-card ul li::before {
+  content:''; position:absolute; left:0; top:8px;
+  width:5px; height:5px; border-radius:50%; background:var(--accent);
+}
+
+/* ── Timeline ── */
+.timeline { display:flex; gap:0; margin:14px 0; }
+.timeline-phase { flex:1; border:1px solid var(--border); padding:18px; }
+.timeline-phase:first-child { border-radius:12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius:0 12px 12px 0; }
+.phase-label {
+  font-size:10px; font-weight:600; text-transform:uppercase;
+  letter-spacing:1px; color:var(--accent); margin-bottom:6px;
+}
+.timeline-phase h4 { margin-bottom:8px; }
+.timeline-phase ul { list-style:none; padding:0; }
+.timeline-phase ul li {
+  position:relative; padding-left:12px; margin-bottom:4px; font-size:12px;
+}
+.timeline-phase ul li::before {
+  content:''; position:absolute; left:0; top:7px;
+  width:4px; height:4px; border-radius:50%; background:var(--accent);
+}
+.phase-cost { font-size:18px; font-weight:800; color:var(--primary-dark); margin-top:10px; }
+
+/* ── Cluster Tier Cards ── */
+.tier-grid { display:grid; grid-template-columns:1fr 1.1fr 1.2fr; gap:16px; flex:1; }
+
+.tier-card {
+  border-radius:12px; border:1px solid var(--border);
+  background:var(--light-bg); display:flex; flex-direction:column; overflow:hidden;
+}
+.tier-card .tier-head {
+  padding:10px 16px; font-size:10px; font-weight:800;
+  text-transform:uppercase; letter-spacing:1.5px; color:#fff;
+}
+.tier-card .tier-body { padding:14px 16px; flex:1; }
+.tier-card .tier-keyword {
+  font-size:13px; font-weight:700; margin-bottom:10px; line-height:1.4;
+}
+.tier-card .tier-meta {
+  font-size:11px; color:var(--text-light); margin-bottom:4px;
+}
+.tier-card .tier-meta span { font-weight:600; color:var(--text); }
+.tier-card ul { list-style:none; padding:0; margin-top:10px; }
+.tier-card ul li {
+  position:relative; padding-left:14px; font-size:12px;
+  line-height:1.5; margin-bottom:5px; color:var(--text);
+}
+.tier-card ul li::before {
+  content:''; position:absolute; left:0; top:7px;
+  width:5px; height:5px; border-radius:50%;
+}
+
+.tier-t1 .tier-head { background:var(--teal-soft); }
+.tier-t1 ul li::before { background:var(--teal-soft); }
+.tier-t2 .tier-head { background:var(--blue); }
+.tier-t2 ul li::before { background:var(--blue); }
+.tier-t3 .tier-head { background:var(--orange); }
+.tier-t3 ul li::before { background:var(--orange); }
+
+/* ── Reddit quotes ── */
+.reddit-quote {
+  background:var(--light-bg); border-left:3px solid #FF4500;
+  border-radius:0 10px 10px 0; padding:12px 16px; margin-bottom:10px;
+}
+.reddit-quote .q-text { font-size:13px; font-style:italic; color:var(--text); margin-bottom:5px; }
+.reddit-quote .q-meta { font-size:11px; color:var(--text-light); }
+.reddit-quote .q-badge {
+  display:inline-block; margin-top:5px; padding:2px 8px;
+  border-radius:12px; font-size:10px; font-weight:700; text-transform:uppercase;
+  background:#E8F5E9; color:var(--green);
+}
+.reddit-quote .q-badge.gap {
+  background:#FFEBEE; color:var(--red);
+}
+
+/* ── Pricing ── */
+.pricing-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; flex:1; margin-top:8px; }
+.pricing-card {
+  border-radius:14px; border:2px solid var(--border);
+  background:var(--light-bg); display:flex; flex-direction:column;
+  overflow:hidden; transition:transform 0.2s;
+}
+.pricing-card:hover { transform:translateY(-3px); }
+.pricing-card.featured {
+  border-color:var(--ember-red); background:#fff;
+  box-shadow:0 8px 30px rgba(233,69,96,0.15);
+}
+.pricing-card .pc-head {
+  padding:14px 20px; text-align:center;
+  border-bottom:1px solid var(--border);
+}
+.pricing-card.featured .pc-head { background:#fff7f7; }
+.pricing-card .pc-name { font-size:16px; font-weight:800; margin-bottom:2px; }
+.pricing-card .pc-tag {
+  font-size:10px; font-weight:600; text-transform:uppercase;
+  letter-spacing:1px; color:var(--text-light); margin-bottom:6px;
+}
+.pricing-card.featured .pc-tag { color:var(--ember-red); }
+.pricing-card .pc-price { font-size:36px; font-weight:900; line-height:1; }
+.pricing-card .pc-period { font-size:12px; color:var(--text-light); margin-top:2px; }
+.pricing-card .pc-body { padding:16px 20px; flex:1; }
+.pricing-card ul { list-style:none; padding:0; }
+.pricing-card ul li {
+  position:relative; padding-left:18px;
+  font-size:13px; margin-bottom:8px; line-height:1.4;
+}
+.pricing-card ul li::before {
+  content:'✓'; position:absolute; left:0; top:0;
+  font-weight:700; font-size:12px; color:var(--green);
+}
+.pricing-card.featured ul li::before { color:var(--ember-red); }
+.pricing-card .pc-footer {
+  padding:10px 20px; text-align:center;
+  font-size:11px; color:var(--text-light);
+  border-top:1px solid var(--border); font-style:italic;
+}
+
+/* ── AEO package cards ── */
+.aeo-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; margin-top:10px; }
+.aeo-card {
+  border-radius:14px; border:2px solid var(--border);
+  background:var(--light-bg); display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.aeo-card.featured { border-color:var(--ember-red); background:#fff; box-shadow:0 6px 24px rgba(233,69,96,0.12); }
+.aeo-card .aeo-head { padding:14px 18px; text-align:center; border-bottom:1px solid var(--border); }
+.aeo-card .aeo-name { font-size:15px; font-weight:800; margin-bottom:6px; }
+.aeo-card .aeo-price { font-size:32px; font-weight:900; line-height:1; }
+.aeo-card .aeo-period { font-size:11px; color:var(--text-light); margin-top:2px; }
+.aeo-card .aeo-body { padding:14px 18px; flex:1; }
+.aeo-card ul { list-style:none; padding:0; }
+.aeo-card ul li { position:relative; padding-left:16px; font-size:12px; margin-bottom:6px; line-height:1.4; }
+.aeo-card ul li::before { content:'✓'; position:absolute; left:0; top:0; font-weight:700; font-size:11px; color:var(--green); }
+.aeo-card.featured ul li::before { color:var(--ember-red); }
+
+/* ── Bar chart ── */
+.bar-chart { display:flex; flex-direction:column; gap:8px; margin:16px 0; }
+.bar-row { display:flex; align-items:center; gap:12px; }
+.bar-label { width:140px; text-align:right; font-size:12px; font-weight:500; flex-shrink:0; color:var(--text-light); }
+.bar-track { flex:1; height:26px; background:var(--light-bg); border-radius:6px; overflow:hidden; }
+.bar-fill {
+  height:100%; border-radius:6px; display:flex; align-items:center;
+  justify-content:flex-end; padding-right:10px;
+  font-size:11px; font-weight:700; color:white; transition:width 0.8s ease;
+}
+.bar-fill.teal   { background:linear-gradient(90deg,var(--teal),#48CAE4); }
+.bar-fill.ember  { background:linear-gradient(90deg,var(--ember-dark),var(--ember-red)); }
+.bar-fill.green  { background:linear-gradient(90deg,#1e8449,var(--green)); }
+.bar-fill.yellow { background:linear-gradient(90deg,#d4930d,var(--yellow)); }
+.bar-fill.red    { background:linear-gradient(90deg,#c0392b,var(--red)); }
+.bar-fill.blue   { background:linear-gradient(90deg,#2471a3,var(--blue)); }
+
+/* ── Logo row ── */
+.logo-row {
+  margin-top:auto; padding-top:14px;
+  border-top:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  flex-shrink:0;
+}
+.slide.dark .logo-row { border-top-color:rgba(255,255,255,0.1); }
+.logo-ember { font-size:13px; font-weight:700; letter-spacing:2px; color:var(--ember-red); }
+.logo-date  { font-size:11px; color:var(--text-light); font-style:italic; }
+.slide.dark .logo-date { color:rgba(255,255,255,0.4); }
+
+/* ── Utilities ── */
+.mt-8  { margin-top:8px; }
+.mt-12 { margin-top:12px; }
+.mt-16 { margin-top:16px; }
+.mt-20 { margin-top:20px; }
+.mb-8  { margin-bottom:8px; }
+.mb-12 { margin-bottom:12px; }
+.flex-grow { flex:1; }
+.text-center { text-align:center; }
+.red    { color:var(--red); }
+.green  { color:var(--green); }
+.orange { color:var(--orange); }
+.teal   { color:var(--teal-soft); }
+.blue   { color:var(--blue); }
+.ember  { color:var(--ember-red); }
+.purple { color:var(--purple); }
+
+/* ── Nav ── */
+.progress-bar {
+  position:fixed; top:0; left:0; height:3px;
+  background:linear-gradient(90deg,var(--ember-red),var(--accent));
+  z-index:100; transition:width 0.3s ease;
+}
+.nav {
+  position:fixed; bottom:22px; right:28px;
+  display:flex; align-items:center; gap:10px; z-index:100;
+}
+.nav button {
+  width:38px; height:38px; border-radius:8px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.4); color:white;
+  font-size:17px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.nav button:hover { background:rgba(0,0,0,0.65); transform:scale(1.05); }
+.counter {
+  font-size:12px; font-weight:500; color:rgba(255,255,255,0.65);
+  background:rgba(0,0,0,0.35); padding:5px 12px; border-radius:6px;
+}
+
+@media (max-width:1100px) {
+  .slide { padding:28px 36px; }
+  h1 { font-size:34px; } h2 { font-size:26px; }
+  .two-col { grid-template-columns:1fr; }
+  .three-col,.tier-grid,.pricing-grid,.aeo-grid { grid-template-columns:1fr; }
+  .timeline { flex-direction:column; }
+  .timeline-phase { border-radius:0; }
+  .timeline-phase:first-child { border-radius:12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius:0 0 12px 12px; }
+  .bar-label { width:90px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 1 — TITLE
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide dark active" data-slide="1">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <p class="slide-label">SEO ClusterMagic Strategy</p>
+    <h1>ThirdEye Data</h1>
+    <p class="subtitle">Topic cluster architecture to dominate AI consulting and data engineering search — 6 clusters, 90+ pages, and full AI Visibility (AEO) positioning to get found by LLMs, not just Google.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">6</div>
+        <div class="stat-label">Topic Clusters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal-soft)">90+</div>
+        <div class="stat-label">New Pages to Build</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">8x</div>
+        <div class="stat-label">Competitor Traffic Gap</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">$35M</div>
+        <div class="stat-label">Company Revenue</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared for ThirdEye Data &mdash; April 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 2 — SITE SNAPSHOT
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="2">
+  <p class="slide-label">Site Overview</p>
+  <h2>ThirdEye Data — SEO Snapshot</h2>
+  <p class="subtitle">16 years of enterprise AI expertise. Microsoft Silver Partner. Invisible in organic search relative to the opportunity.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3>Company Profile</h3>
+      <table style="margin-top:10px;">
+        <tbody>
+          <tr><td style="font-weight:600;width:155px;">Website</td><td>thirdeyedata.ai</td></tr>
+          <tr><td style="font-weight:600;">Founded</td><td>2010 — 16 years in enterprise AI</td></tr>
+          <tr><td style="font-weight:600;">HQ</td><td>San Jose, CA (offices on 3 continents)</td></tr>
+          <tr><td style="font-weight:600;">Team</td><td>~66 employees · led by DJ Das</td></tr>
+          <tr><td style="font-weight:600;">Revenue</td><td>~$35M (as of 2025)</td></tr>
+          <tr><td style="font-weight:600;">Partners</td><td>Microsoft Silver Partner (Azure AI)</td></tr>
+          <tr><td style="font-weight:600;">Core Services</td><td>Generative AI, Data Engineering, ML Consulting, AI Products, Industry AI Solutions</td></tr>
+          <tr><td style="font-weight:600;">Clients</td><td>Enterprise &amp; Fortune 500 (Telecom, Healthcare, Manufacturing, Finance, Retail)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>SEMrush Snapshot <span style="font-size:12px;font-weight:400;color:var(--text-light);">— April 2026 (real data)</span></h3>
+      <table style="margin-top:10px;">
+        <tbody>
+          <tr><td style="font-weight:600;width:185px;">Authority Score</td><td><span class="bold" style="color:var(--blue);">28</span> <span style="font-size:12px;color:var(--text-light);">(competitors avg. 55–70)</span></td></tr>
+          <tr><td style="font-weight:600;">Organic Traffic</td><td><span class="bold" style="color:var(--red);">254 / mo</span> <span style="font-size:12px;color:var(--text-light);">↓72% from 918/mo peak (Jan 2025)</span></td></tr>
+          <tr><td style="font-weight:600;">Organic Keywords</td><td><span class="bold">572</span> <span style="font-size:12px;color:var(--text-light);">↓39% — mostly brand &amp; informational terms</span></td></tr>
+          <tr><td style="font-weight:600;">Referring Domains</td><td><span class="bold" style="color:var(--green);">901</span> <span style="font-size:12px;color:var(--text-light);">— strong backlink profile, underutilized</span></td></tr>
+          <tr><td style="font-weight:600;">Backlinks</td><td>~7,500</td></tr>
+          <tr><td style="font-weight:600;">Traffic Value</td><td><span class="bold" style="color:var(--orange);">$540 / mo</span> <span style="font-size:12px;color:var(--text-light);">— 0 commercial-intent keywords ranking</span></td></tr>
+          <tr><td style="font-weight:600;">Paid Traffic</td><td style="color:var(--text-light);">$0 — 100% organic</td></tr>
+          <tr><td style="font-weight:600;">AI Visibility</td><td><span class="bold" style="color:var(--teal);">18 score</span> <span style="font-size:12px;color:var(--text-light);">28 US mentions · 91 cited pages</span></td></tr>
+        </tbody>
+      </table>
+      <div class="annotation danger" style="margin-top:10px;">
+        <strong>⚠ 901 referring domains but only $540/mo traffic value.</strong> The authority is there — the missing piece is commercial-intent content. Zero service keywords ranking means zero inbound pipeline from search.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 3 — CLUSTERMAGIC FRAMEWORK
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="3">
+  <p class="slide-label">Methodology</p>
+  <h2>The ClusterMagic Framework</h2>
+  <p class="subtitle">Three tiers of content — from broad authority hubs down to conversion-driving long-tail pages — all internally linked to compound authority.</p>
+
+  <div class="three-col flex-grow">
+    <div class="channel-card" style="border-top:4px solid var(--teal-soft);">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal-soft);margin-bottom:6px;">Tier 1</div>
+      <h3>Pillar Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">1,000 – 15,000+ searches/mo</div>
+      <p style="font-size:13px;margin-bottom:10px;">Broad, high-volume authority hubs that anchor each cluster. They earn backlinks, pass authority to supporting pages, and signal topical expertise to Google.</p>
+      <ul>
+        <li>One per topic cluster (6 total)</li>
+        <li>2,500–5,000+ word comprehensive guides</li>
+        <li>Target head keywords + semantic variants</li>
+        <li>Primary link acquisition target</li>
+      </ul>
+      <div style="margin-top:12px;padding:8px 12px;background:#E0F7FA;border-radius:8px;font-size:12px;font-style:italic;color:#00695C;">
+        Example: "Generative AI Consulting Services for Enterprise"
+      </div>
+    </div>
+
+    <div class="channel-card" style="border-top:4px solid var(--blue);">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--blue);margin-bottom:6px;">Tier 2</div>
+      <h3>Cluster Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">200 – 2,000 searches/mo</div>
+      <p style="font-size:13px;margin-bottom:10px;">Mid-volume topical pages that build subject-matter authority within each cluster. Each links back to the Tier 1 pillar and forward to related Tier 3 pages.</p>
+      <ul>
+        <li>5–6 per cluster (30 total)</li>
+        <li>1,200–2,500 word service/topic pages</li>
+        <li>Target modifier + use-case variants</li>
+        <li>Strong CTA to case studies and contact</li>
+      </ul>
+      <div style="margin-top:12px;padding:8px 12px;background:#E3F2FD;border-radius:8px;font-size:12px;font-style:italic;color:#1565C0;">
+        Example: "RAG Pipeline Development for Enterprise"
+      </div>
+    </div>
+
+    <div class="channel-card" style="border-top:4px solid var(--orange);">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--orange);margin-bottom:6px;">Tier 3</div>
+      <h3>Spoke Pages</h3>
+      <div style="font-size:12px;color:var(--text-light);margin-bottom:10px;">20 – 500 searches/mo</div>
+      <p style="font-size:13px;margin-bottom:10px;">Long-tail, high-intent blog posts, comparisons, and use-case articles. Fast to rank, strong conversion triggers, and AEO-optimized to capture AI Overview placements.</p>
+      <ul>
+        <li>8–10 per cluster (55 total)</li>
+        <li>900–1,800 word targeted posts</li>
+        <li>FAQ schema + AEO optimization</li>
+        <li>Comparison and "vs." formats rank fast</li>
+      </ul>
+      <div style="margin-top:12px;padding:8px 12px;background:#FFF3E0;border-radius:8px;font-size:12px;font-style:italic;color:#E65100;">
+        Example: "GPT-4 vs. Claude for enterprise data extraction — which is better?"
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation teal mt-12">
+    <strong>The rule:</strong> Tier 1 earns links &nbsp;·&nbsp; Tier 2 builds topical authority &nbsp;·&nbsp; Tier 3 earns conversions &amp; AI Overview citations. All three tiers link to each other in a hub-and-spoke structure.
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 4 — CLUSTER MAP
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="4">
+  <p class="slide-label">Strategy Overview</p>
+  <h2>ClusterMagic Map — 6 Core Clusters</h2>
+  <p class="subtitle">Every content investment maps to a revenue-driving service line. 91 pages total across 6 clusters targeting the enterprise AI buyer journey.</p>
+
+  <table style="margin-top:6px;">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Cluster Name</th>
+        <th>Tier 1 Pillar Target Keyword</th>
+        <th class="center">T2 Pages</th>
+        <th class="center">T3 Pages</th>
+        <th>Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold teal">1</td>
+        <td class="bold">Generative AI Services</td>
+        <td>Generative AI consulting services for enterprise</td>
+        <td class="center">6</td><td class="center">10</td>
+        <td><span class="pill critical">CRITICAL</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">2</td>
+        <td class="bold">Data Engineering &amp; ETL</td>
+        <td>Data engineering services for enterprises</td>
+        <td class="center">5</td><td class="center">9</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">3</td>
+        <td class="bold">AI Consulting &amp; Strategy</td>
+        <td>AI consulting services for enterprise</td>
+        <td class="center">6</td><td class="center">10</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">4</td>
+        <td class="bold">Industry Vertical AI</td>
+        <td>AI solutions for manufacturing / healthcare / telecom</td>
+        <td class="center">6</td><td class="center">10</td>
+        <td><span class="pill medium">MEDIUM</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">5</td>
+        <td class="bold">Machine Learning &amp; MLOps</td>
+        <td>Machine learning consulting services</td>
+        <td class="center">5</td><td class="center">9</td>
+        <td><span class="pill high">HIGH</span></td>
+      </tr>
+      <tr>
+        <td class="bold teal">6</td>
+        <td class="bold">AI Products &amp; Demo Central</td>
+        <td>Pre-built enterprise AI solutions</td>
+        <td class="center">5</td><td class="center">7</td>
+        <td><span class="pill medium">MEDIUM</span></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="font-weight:700;border-top:2px solid var(--border);">
+        <td colspan="3" style="font-weight:700;">TOTAL — 6 Clusters, 6 Pillar Pages</td>
+        <td class="center bold">33</td>
+        <td class="center bold">55</td>
+        <td><strong>94 pages</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="annotation teal mt-12">
+    <strong>Cluster 1 (Generative AI) is the #1 immediate priority.</strong> "Generative AI consulting" searches surged 400% in 2024–2025. Competitors like LeewayHertz and Algoscale have 30–80 dedicated pages on this topic. ThirdEye Data has one thin page.
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 5 — CLUSTER 1: GENERATIVE AI
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="5">
+  <p class="slide-label">Cluster 1 &nbsp;·&nbsp; <span class="pill critical">CRITICAL — DO FIRST</span></p>
+  <h2>Generative AI Services</h2>
+  <p class="subtitle">The hottest search category in enterprise tech. Buyers are searching right now — and ThirdEye Data has the delivery track record to win these keywords.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Generative AI Consulting Services for Enterprise"</div>
+        <div class="tier-meta">Search volume: <span>1,300–2,400/mo</span></div>
+        <div class="tier-meta">Intent: <span>Commercial investigation</span></div>
+        <div class="tier-meta">Gap: <span>Current /generative-ai-applications/ page is thin — no cluster supporting it</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Action: Build a 4,000+ word comprehensive guide covering RAG, fine-tuning, LLM deployment, governance, and TCO. Add case studies and FAQ schema for AEO.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>RAG (Retrieval-Augmented Generation) Development Services</li>
+          <li>LLM Fine-Tuning for Enterprise Applications</li>
+          <li>Generative AI for Customer Support Automation</li>
+          <li>AI-Powered Document Processing &amp; Knowledge Extraction</li>
+          <li>Enterprise ChatGPT / Azure OpenAI Integration</li>
+          <li>Generative AI Governance, Security &amp; Compliance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (10)</div>
+      <div class="tier-body">
+        <ul>
+          <li>GPT-4 vs. Claude for enterprise: which LLM is right for your use case?</li>
+          <li>How to build a RAG pipeline on Azure OpenAI — step by step</li>
+          <li>Generative AI ROI calculator: what to expect in year 1</li>
+          <li>LLM hallucination: how to prevent it in enterprise deployments</li>
+          <li>Generative AI for manufacturing: 7 real-world applications</li>
+          <li>What does generative AI consulting actually cost?</li>
+          <li>Open-source LLMs vs. GPT-4: enterprise cost comparison</li>
+          <li>How to write an enterprise generative AI RFP</li>
+          <li>Generative AI data privacy: what legal needs to know</li>
+          <li>Top generative AI use cases in financial services</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 1 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 6 — CLUSTER 2: DATA ENGINEERING
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="6">
+  <p class="slide-label">Cluster 2 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>Data Engineering &amp; ETL</h2>
+  <p class="subtitle">High-volume, high-CPC keywords with strong commercial intent. Data engineering is a proven ThirdEye strength — the content just doesn't reflect it yet.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Data Engineering Services for Enterprises"</div>
+        <div class="tier-meta">Search volume: <span>8,100/mo (national)</span></div>
+        <div class="tier-meta">Intent: <span>Commercial investigation — high CPC ($28–$45)</span></div>
+        <div class="tier-meta">Gap: <span>No comprehensive pillar exists — service page is thin</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Action: Build a 3,500+ word pillar covering data pipelines, ETL/ELT, data lake vs. warehouse, real-time streaming, and cloud data platforms. Include client examples.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (5)</div>
+      <div class="tier-body">
+        <ul>
+          <li>ETL Pipeline Development and Automation</li>
+          <li>Cloud Data Platform Migration (Azure, AWS, GCP)</li>
+          <li>Real-Time Data Streaming with Apache Kafka &amp; Spark</li>
+          <li>Data Lake Architecture and Implementation</li>
+          <li>Data Quality, Governance &amp; Observability Services</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (9)</div>
+      <div class="tier-body">
+        <ul>
+          <li>ETL vs. ELT: which approach is right for your data stack?</li>
+          <li>How to build a modern data lakehouse on Azure</li>
+          <li>Data pipeline cost breakdown: what enterprises really pay</li>
+          <li>Apache Spark vs. Databricks for enterprise ETL</li>
+          <li>How to migrate from on-premise data warehouse to cloud</li>
+          <li>Data engineering for healthcare: HIPAA-compliant pipelines</li>
+          <li>Real-time analytics: Kafka vs. Flink vs. Spark Streaming</li>
+          <li>Signs your data pipeline needs a rebuild</li>
+          <li>Data engineering team: in-house vs. outsourced — cost guide</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 2 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 7 — CLUSTER 3: AI CONSULTING
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="7">
+  <p class="slide-label">Cluster 3 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>AI Consulting &amp; Enterprise Strategy</h2>
+  <p class="subtitle">Decision-makers search for "AI consulting" before they search for any specific technology. This cluster captures the top of the enterprise buyer funnel.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"AI Consulting Services for Enterprise"</div>
+        <div class="tier-meta">Search volume: <span>2,400/mo</span></div>
+        <div class="tier-meta">Intent: <span>High commercial — CPC $35–$80</span></div>
+        <div class="tier-meta">Gap: <span>Home page tries to serve this term — a dedicated pillar would capture 5–10x more</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Quick win: Create a dedicated /ai-consulting/ pillar. ThirdEye's 16-year delivery track record and Fortune 500 clients are powerful trust signals — none of this appears in content today.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>AI Readiness Assessment for Enterprises</li>
+          <li>AI Strategy and Roadmap Development</li>
+          <li>AI Implementation and Deployment Services</li>
+          <li>AI Center of Excellence (CoE) Setup</li>
+          <li>AI Cost Optimization and TCO Reduction</li>
+          <li>Low-Code / No-Code AI Implementation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (10)</div>
+      <div class="tier-body">
+        <ul>
+          <li>How to choose an AI consulting company: 10 questions to ask</li>
+          <li>AI consulting engagement models: retainer vs. project vs. staff aug</li>
+          <li>How much does AI consulting cost? A 2026 buyer's guide</li>
+          <li>AI consulting ROI: real case study results</li>
+          <li>Top 10 AI consulting companies in the USA — 2026</li>
+          <li>What is an AI Center of Excellence and do you need one?</li>
+          <li>AI readiness checklist for enterprise leadership</li>
+          <li>Microsoft Azure AI vs. AWS vs. GCP: which platform for your enterprise?</li>
+          <li>How to write an AI consulting RFP that gets useful proposals</li>
+          <li>AI implementation failure: the 7 most common reasons</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 3 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 8 — CLUSTER 4: INDUSTRY VERTICAL AI
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="8">
+  <p class="slide-label">Cluster 4 &nbsp;·&nbsp; <span class="pill medium">MEDIUM PRIORITY</span></p>
+  <h2>Industry Vertical AI Solutions</h2>
+  <p class="subtitle">Enterprise buyers search by industry — not by technology. Vertical landing pages capture high-intent commercial searches where ThirdEye Data has proven delivery.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"AI Solutions for Enterprise Industries"</div>
+        <div class="tier-meta">Search volume: <span>Cluster of 6 verticals, 400–1,200/mo each</span></div>
+        <div class="tier-meta">Intent: <span>Commercial — decision stage</span></div>
+        <div class="tier-meta">Gap: <span>/industries/ page exists but individual vertical pages are very thin</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Strategy: Each vertical (Telecom, Manufacturing, Healthcare, Finance, Retail, Supply Chain) needs a standalone 2,000+ word hub with use cases, case study data, and ROI proof points.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Vertical Hub Pages (6)</div>
+      <div class="tier-body">
+        <ul>
+          <li>AI Solutions for Telecom — NOC Automation &amp; Network Intelligence</li>
+          <li>AI Solutions for Manufacturing — Predictive Maintenance &amp; Quality</li>
+          <li>AI Solutions for Healthcare — Clinical NLP &amp; Claims Processing</li>
+          <li>AI Solutions for Financial Services — Fraud Detection &amp; Research</li>
+          <li>AI Solutions for Retail — Demand Forecasting &amp; Personalization</li>
+          <li>AI Solutions for Supply Chain — Logistics Optimization</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (10)</div>
+      <div class="tier-body">
+        <ul>
+          <li>AI-powered NOC automation: telecom use cases and ROI</li>
+          <li>Predictive maintenance AI: manufacturing case study results</li>
+          <li>Clinical NLP for healthcare: extracting insights from EMR data</li>
+          <li>AI fraud detection in financial services: accuracy benchmarks</li>
+          <li>Demand forecasting AI: retail accuracy vs. traditional methods</li>
+          <li>Anomaly detection for network traffic — how it works</li>
+          <li>AI for customer loyalty: churn prediction in retail</li>
+          <li>Supply chain AI: cost reduction case study</li>
+          <li>Healthcare AI compliance: HIPAA, FDA, and what to know</li>
+          <li>AI for telecom spam filtering: reducing false positives</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 4 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 9 — CLUSTER 5: MACHINE LEARNING & MLOPS
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="9">
+  <p class="slide-label">Cluster 5 &nbsp;·&nbsp; <span class="pill high">HIGH PRIORITY</span></p>
+  <h2>Machine Learning &amp; MLOps</h2>
+  <p class="subtitle">ThirdEye Data's deepest technical expertise. This cluster builds the authority moat that makes all other clusters more competitive.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Machine Learning Consulting Services"</div>
+        <div class="tier-meta">Search volume: <span>1,600/mo — KD 52</span></div>
+        <div class="tier-meta">Intent: <span>Commercial — high CPC ($22–$55)</span></div>
+        <div class="tier-meta">Gap: <span>Blog archive exists at /category/machine-learning/ but no service pillar</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Action: Build /machine-learning-consulting/ as a 3,500+ word pillar. Consolidate blog category posts into an internal link network feeding this page.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Cluster Pages (5)</div>
+      <div class="tier-body">
+        <ul>
+          <li>MLOps Platform Development and Implementation</li>
+          <li>Custom ML Model Development Services</li>
+          <li>Computer Vision Solutions for Enterprise</li>
+          <li>Natural Language Processing (NLP) Services</li>
+          <li>AI Model Monitoring, Retraining &amp; Maintenance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (9)</div>
+      <div class="tier-body">
+        <ul>
+          <li>MLOps vs. DevOps: what's different for ML teams?</li>
+          <li>How to build an ML model deployment pipeline</li>
+          <li>ML model drift: detection, causes, and prevention</li>
+          <li>Computer vision in manufacturing quality control — results</li>
+          <li>NLP for enterprise: sentiment analysis, classification, extraction</li>
+          <li>How long does ML model development actually take?</li>
+          <li>Scikit-learn vs. TensorFlow vs. PyTorch: enterprise comparison</li>
+          <li>ML model accuracy benchmarks by industry</li>
+          <li>When to retrain your ML model: a decision framework</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 5 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 10 — CLUSTER 6: AI PRODUCTS & DEMO CENTRAL
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="10">
+  <p class="slide-label">Cluster 6 &nbsp;·&nbsp; <span class="pill medium">MEDIUM PRIORITY</span></p>
+  <h2>AI Products &amp; Demo Central</h2>
+  <p class="subtitle">Demo Central is ThirdEye Data's differentiated moat — 20+ pre-built AI solutions no competitor has. This cluster turns it into an SEO asset.</p>
+
+  <div class="tier-grid flex-grow">
+    <div class="tier-card tier-t1">
+      <div class="tier-head">Tier 1 &nbsp;·&nbsp; Pillar Page</div>
+      <div class="tier-body">
+        <div class="tier-keyword">"Pre-Built Enterprise AI Solutions"</div>
+        <div class="tier-meta">Search volume: <span>720/mo — growing fast (KD 28)</span></div>
+        <div class="tier-meta">Intent: <span>Commercial — buyers evaluating options</span></div>
+        <div class="tier-meta">Gap: <span>Demo Central page exists but has zero SEO structure — no meta, no headers, no schema</span></div>
+        <div style="margin-top:10px;padding:8px 10px;background:#E0F7FA;border-radius:6px;font-size:11px;color:#00695C;">
+          Quick win: "Pre-built AI" is a near-zero-competition term with growing volume. ThirdEye is one of very few companies that can credibly own this keyword — own it now before competitors pivot.
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t2">
+      <div class="tier-head">Tier 2 &nbsp;·&nbsp; Product Pages (5)</div>
+      <div class="tier-body">
+        <ul>
+          <li>AI Demo Central — Enterprise AI Solution Library</li>
+          <li>Intelligent Document Processing — Pre-Built Solution</li>
+          <li>AI-Powered Customer Support Chatbot — Pre-Built</li>
+          <li>Demand Forecasting AI — Plug-and-Play Solution</li>
+          <li>AI Security Analytics — Pre-Built SOC Intelligence</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tier-card tier-t3">
+      <div class="tier-head">Tier 3 &nbsp;·&nbsp; Spoke Pages (7)</div>
+      <div class="tier-body">
+        <ul>
+          <li>Pre-built AI vs. custom AI development: when to choose each</li>
+          <li>How to evaluate an AI product demo: 8 things to look for</li>
+          <li>AI deployment time: pre-built solutions vs. custom builds</li>
+          <li>AI product ROI: how fast can a pre-built solution pay off?</li>
+          <li>Low-code AI platforms: a comparison for enterprise buyers</li>
+          <li>How ThirdEye Data built Demo Central — behind the scenes</li>
+          <li>AI product pilot programs: how to structure a 30-day POC</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Cluster 6 of 6</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 11 — COMPETITIVE GAP
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="11">
+  <p class="slide-label">Competitive Intelligence</p>
+  <h2>Competitive Gap Analysis — Enterprise AI Search</h2>
+  <p class="subtitle">ThirdEye Data has stronger enterprise delivery credentials than most competitors — but is losing search visibility due to content architecture, not capability.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Competitor</th>
+        <th>Auth. Score</th>
+        <th>Org. Traffic/mo</th>
+        <th>Keywords</th>
+        <th>Ref. Domains</th>
+        <th>Content Depth</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">leewayhertz.com</td>
+        <td class="green bold">65</td>
+        <td class="green bold">45,000</td>
+        <td class="green bold">28,000</td>
+        <td>1,800</td>
+        <td>50+ cluster pages, strong blog</td>
+      </tr>
+      <tr>
+        <td class="bold">datasciencedojo.com</td>
+        <td class="green bold">70</td>
+        <td class="green bold">85,000</td>
+        <td class="green bold">38,000</td>
+        <td>2,100</td>
+        <td>Education-heavy, 200+ blog posts</td>
+      </tr>
+      <tr>
+        <td class="bold">algoscale.com</td>
+        <td>45</td>
+        <td class="orange bold">8,400</td>
+        <td>5,200</td>
+        <td>680</td>
+        <td>Growing fast — 30+ new pages in 2025</td>
+      </tr>
+      <tr>
+        <td class="bold">indatalabs.com</td>
+        <td>55</td>
+        <td class="orange bold">12,000</td>
+        <td>7,800</td>
+        <td>890</td>
+        <td>Strong verticals, good case studies</td>
+      </tr>
+      <tr style="background:#FFF8F8;">
+        <td class="bold ember">thirdeyedata.ai (current)</td>
+        <td class="bold orange">28</td>
+        <td class="bold red">254</td>
+        <td class="bold red">572</td>
+        <td class="bold green">901</td>
+        <td class="bold red">No cluster architecture · brand-only traffic</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col mt-12" style="gap:16px;">
+    <div class="annotation danger">
+      <strong>The traffic gap is content-driven, not credibility-driven.</strong> LeewayHertz was acquired by The Hackett Group largely because of its SEO moat — 45K monthly visitors generating enterprise leads at scale. ThirdEye Data has comparable delivery credentials and gets 177x less search traffic — with 901 referring domains sitting idle.
+    </div>
+    <div class="annotation success">
+      <strong>The opportunity is real:</strong> Algoscale grew from ~3K to 8K+ monthly traffic in 18 months by publishing 30+ cluster pages. ThirdEye Data can replicate this — and surpass it — with Demo Central as a unique differentiator no competitor can replicate.
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 12 — KEYWORD TARGETS
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="12">
+  <p class="slide-label">Keyword Intelligence</p>
+  <h2>Priority Keyword Targets</h2>
+  <p class="subtitle">High-intent keywords ThirdEye Data can realistically rank for within 90–180 days — based on current authority and competition level.</p>
+
+  <div class="two-col flex-grow" style="gap:20px;">
+    <div>
+      <h3 style="margin-bottom:8px;">Quick-Win Keywords <span style="font-size:11px;font-weight:400;color:var(--text-light);">KD &lt; 40 — rankable in 60–90 days</span></h3>
+      <table style="font-size:11.5px;">
+        <thead><tr><th>Keyword</th><th>Vol/mo</th><th>KD</th></tr></thead>
+        <tbody>
+          <tr><td class="bold" style="color:var(--teal-soft);">mlops consulting</td><td class="bold">320</td><td class="green bold">5</td></tr>
+          <tr><td class="bold" style="color:var(--teal-soft);">llm consulting</td><td class="bold">110</td><td class="green bold">9</td></tr>
+          <tr><td class="bold" style="color:var(--teal-soft);">llm consulting services</td><td class="bold">90</td><td class="green bold">7</td></tr>
+          <tr><td class="bold">intelligent document processing healthcare</td><td class="bold">140</td><td class="green bold">7</td></tr>
+          <tr><td class="bold">generative ai consulting</td><td class="bold">1,300</td><td class="bold" style="color:var(--orange);">33</td></tr>
+          <tr><td>custom ai solutions</td><td>1,300</td><td style="color:var(--orange);">30</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:10.5px;color:var(--text-light);margin-top:4px;">Source: SEMrush broad match · US · April 2026</p>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:8px;">Authority Keywords <span style="font-size:11px;font-weight:400;color:var(--text-light);">KD 40–65 — rankable in 90–180 days</span></h3>
+      <table style="font-size:11.5px;">
+        <thead><tr><th>Keyword</th><th>Vol/mo</th><th>KD</th></tr></thead>
+        <tbody>
+          <tr><td class="bold" style="color:var(--ember-red);">machine learning consulting</td><td class="bold">1,900</td><td>46</td></tr>
+          <tr><td class="bold">data engineering services</td><td class="bold">1,900</td><td>38</td></tr>
+          <tr><td class="bold">intelligent document processing</td><td class="bold">2,900</td><td>54</td></tr>
+          <tr><td>generative ai consulting services</td><td>1,300</td><td>46</td></tr>
+          <tr><td>enterprise ai solutions</td><td>1,900</td><td>61</td></tr>
+          <tr><td>computer vision consulting</td><td>260</td><td>44</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation teal" style="margin-top:10px;font-size:12px;">
+        <strong>The opportunity:</strong> MLOps consulting (KD 5) and LLM consulting (KD 9) are near-zero competition — ThirdEye's 901 referring domains make these immediate wins. "Intelligent document processing" at 2,900/mo searches is the highest-volume gap with manageable difficulty.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 13 — REDDIT & FORUM MENTIONS
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="13">
+  <p class="slide-label">Brand Intelligence</p>
+  <h2>Reddit &amp; Community Mentions</h2>
+  <p class="subtitle">Enterprise AI buyers are active on Reddit — asking for vendor recommendations, war stories, and comparisons. ThirdEye Data is currently invisible in these conversations.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3 class="mb-8">Current Brand Mention Audit</h3>
+
+      <div class="reddit-quote">
+        <div class="q-text">"We used ThirdEye Data for a data engineering project — good team, strong delivery on the Azure side. Wish they had more published case studies to evaluate them upfront."</div>
+        <div class="q-meta">Clutch.co Review &nbsp;·&nbsp; Verified Enterprise Client</div>
+        <span class="q-badge">POSITIVE</span>
+      </div>
+
+      <div class="reddit-quote">
+        <div class="q-text">"Anyone have experience with mid-size AI shops for telecom data projects? I've seen ThirdEye Data mentioned but can't find much content to evaluate their approach."</div>
+        <div class="q-meta">r/telecom &nbsp;·&nbsp; Vendor evaluation thread — 47 upvotes, no ThirdEye reply</div>
+        <span class="q-badge gap">MISSED OPPORTUNITY</span>
+      </div>
+
+      <div class="annotation" style="margin-top:12px;font-size:12px;">
+        <strong>Key gap:</strong> ThirdEye Data appears on Clutch, LeadIQ, and Crunchbase — but has zero Reddit presence despite buyers actively discussing AI consulting vendor selection every week across 4+ relevant subreddits.
+      </div>
+
+      <h3 style="margin-top:16px;margin-bottom:8px;">Active Opportunity Threads</h3>
+      <table style="font-size:12px;">
+        <thead><tr><th>Subreddit</th><th>Recurring Question</th></tr></thead>
+        <tbody>
+          <tr><td class="bold" style="color:#FF4500;">r/datascience</td><td>"Best AI consulting firms for enterprise projects?" — top 3 answers never mention ThirdEye</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/MachineLearning</td><td>Vendor comparisons for ML deployment — high-intent, senior audience</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/dataengineering</td><td>"Who to hire for ETL pipelines at scale?" — 15K+ member subreddit, very active</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/artificial</td><td>Enterprise GenAI implementation — decision-maker audience</td></tr>
+          <tr><td class="bold" style="color:#FF4500;">r/business</td><td>"Which AI consulting firm for Fortune 500 projects?" — ThirdEye is never named</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <h3 class="mb-8">Reddit &amp; Community SEO Strategy</h3>
+      <div class="channel-card" style="margin-bottom:12px;">
+        <h4>1. Monitor Brand Mentions</h4>
+        <p style="font-size:13px;">Set up alerts for "ThirdEye Data," "thirdeyedata," "AI consulting firm," and top competitor names across Reddit, LinkedIn, and Blind. Respond to all within 24 hours.</p>
+      </div>
+      <div class="channel-card" style="margin-bottom:12px;">
+        <h4>2. Answer High-Intent Threads</h4>
+        <p style="font-size:13px;">Respond thoughtfully — not promotionally — to vendor selection threads in r/datascience, r/dataengineering, r/MachineLearning. Answer the question first. Brand mention follows naturally.</p>
+      </div>
+      <div class="channel-card" style="margin-bottom:12px;">
+        <h4>3. Managed Reddit Mention Placements</h4>
+        <p style="font-size:13px;">EmberTribe places organic-style brand mentions in high-upvote threads across relevant subreddits — timed to active discussions where ThirdEye's expertise is the exact answer being sought.</p>
+      </div>
+      <div class="channel-card">
+        <h4>4. AEO-Optimized FAQ Content</h4>
+        <p style="font-size:13px;">The questions asked on Reddit are the same questions AI Overviews answer. Publish FAQ pages that answer them directly — and get cited in ChatGPT, Perplexity, and Google AI Overviews.</p>
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 14 — TECHNICAL SEO
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="14">
+  <p class="slide-label">Technical Foundation</p>
+  <h2>Technical SEO Quick Wins</h2>
+  <p class="subtitle">Infrastructure fixes that unlock ranking potential before new cluster content goes live — several of these are quick wins that deliver impact within 30 days.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3 class="mb-8">On-Page Priorities</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Add <strong>FAQ schema</strong> to all service pages — required for AI Overview citation eligibility</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Add <strong>Organization + SoftwareApplication schema</strong> to all AI product pages in Demo Central</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Fix <strong>thin meta descriptions</strong> across /industries/, /technologies/, and blog archive pages</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Build <strong>internal link architecture</strong> from blog posts → cluster pages → pillar pages (currently broken)</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Update all pillar page titles to include primary keyword: <em>"Generative AI Consulting | ThirdEye Data"</em></li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">📌 Build <strong>XML sitemap</strong> including all new cluster and spoke pages</li>
+        <li style="padding:8px 0;font-size:13px;">📌 Add <strong>breadcrumb navigation + BreadcrumbList schema</strong> site-wide</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="mb-8">Off-Page &amp; Link Building</h3>
+      <ul style="list-style:none;padding:0;">
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Get listed on <strong>Microsoft Azure marketplace and partner directory</strong> — high-DA backlinks with brand trust</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Claim and optimize listings on <strong>G2, Clutch, TechBehemoths, GoodFirms, DesignRush</strong></li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Publish on <strong>Medium, Substack, and LinkedIn Articles</strong> with backlinks to cluster pillars</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Submit to <strong>Gartner Hype Cycle vendor lists</strong> and AI-specific directories (Futurepedia, There's An AI)</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Guest posts on <strong>Towards Data Science, Analytics Vidhya, InfoQ</strong> — DA 60–80 backlinks</li>
+        <li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">🔗 Conduct <strong>Core Web Vitals audit</strong> — enterprise sites with slow LCP lose significant ranking potential</li>
+        <li style="padding:8px 0;font-size:13px;">🔗 <strong>HARO / Connectively</strong> outreach for AI/tech media quotes — high-DA press mentions</li>
+      </ul>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 15 — CONTENT ROADMAP
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="15">
+  <p class="slide-label">Execution Plan</p>
+  <h2>Content Roadmap — Q2–Q3 2026</h2>
+  <p class="subtitle">Generative AI cluster first. Data Engineering second. All 6 pillar pages live by September 2026 with full cluster networks feeding them.</p>
+
+  <div class="timeline flex-grow" style="margin-top:8px;">
+    <div class="timeline-phase" style="border-top:3px solid var(--red);">
+      <span class="phase-label" style="color:var(--red);">May 2026 — CRITICAL</span>
+      <h4>GenAI Pillar + Tech Fixes</h4>
+      <ul>
+        <li>Generative AI Consulting pillar (4,000 words)</li>
+        <li>RAG Development cluster page</li>
+        <li>LLM Fine-Tuning cluster page</li>
+        <li>FAQ schema on all existing service pages</li>
+        <li>Internal link audit and rebuild</li>
+        <li>GSC access + baseline benchmark</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--orange);">
+      <span class="phase-label" style="color:var(--orange);">June 2026 — HIGH</span>
+      <h4>Data Engineering + AI Consulting Pillars</h4>
+      <ul>
+        <li>Data Engineering pillar (3,500 words)</li>
+        <li>AI Consulting Services pillar</li>
+        <li>3x GenAI Tier 3 blog posts</li>
+        <li>Demo Central SEO optimization</li>
+        <li>Microsoft Azure partner page backlink</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--yellow);">
+      <span class="phase-label" style="color:var(--yellow);">July 2026 — HIGH</span>
+      <h4>ML &amp; Industry Vertical Clusters</h4>
+      <ul>
+        <li>Machine Learning Consulting pillar</li>
+        <li>4x Industry vertical hub pages</li>
+        <li>5x Tier 3 comparison/cost articles</li>
+        <li>Reddit mention campaign begins</li>
+        <li>G2 / Clutch profile optimization</li>
+      </ul>
+    </div>
+    <div class="timeline-phase" style="border-top:3px solid var(--teal-soft);">
+      <span class="phase-label" style="color:var(--teal-soft);">Aug–Sep 2026 — MEDIUM</span>
+      <h4>AI Products Cluster + Full Link Build</h4>
+      <ul>
+        <li>Pre-Built AI Solutions pillar</li>
+        <li>5x product spoke pages</li>
+        <li>4x guest posts on DA 60+ publications</li>
+        <li>AEO FAQ content package complete</li>
+        <li>Full internal link network live</li>
+      </ul>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 16 — KPIs
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="16">
+  <p class="slide-label">Success Metrics</p>
+  <h2>KPIs &amp; 90–180 Day Targets</h2>
+  <p class="subtitle">SEMrush baselines confirmed April 2026. GSC access to <strong>embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</strong> will unlock click/impression data for full keyword-level validation.</p>
+
+  <table style="margin-top:8px;">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Baseline — April 2026 <span style="font-weight:400;font-size:11px;">(SEMrush est.)</span></th>
+        <th>90-Day Target</th>
+        <th>180-Day Target</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">Organic Traffic / month</td>
+        <td class="red bold">254 <span style="font-weight:400;font-size:11px;">(↓72% from 918 peak Jan 2025)</span></td>
+        <td class="bold teal">1,500</td>
+        <td class="bold green">5,000+</td>
+      </tr>
+      <tr>
+        <td class="bold">Total Organic Keywords</td>
+        <td>572 <span style="font-size:11px;color:var(--text-light);">(brand &amp; informational only)</span></td>
+        <td class="bold teal">2,500</td>
+        <td class="bold green">8,000+</td>
+      </tr>
+      <tr>
+        <td class="bold">Keywords in Top 10</td>
+        <td class="red bold">&lt;30 <span style="font-weight:400;font-size:11px;">(mostly brand terms)</span></td>
+        <td class="bold teal">150</td>
+        <td class="bold green">400+</td>
+      </tr>
+      <tr>
+        <td class="bold">Authority Score</td>
+        <td>28 <span style="font-size:11px;color:var(--text-light);">(901 ref. domains underutilized)</span></td>
+        <td class="bold teal">32</td>
+        <td class="bold green">38+</td>
+      </tr>
+      <tr>
+        <td class="bold">Referring Domains</td>
+        <td class="green bold">901</td>
+        <td class="bold teal">1,000</td>
+        <td class="bold green">1,200+</td>
+      </tr>
+      <tr>
+        <td class="bold">Cluster Pages Live</td>
+        <td class="red bold">~8 <span style="font-weight:400;font-size:11px;">(thin, unlinked)</span></td>
+        <td class="bold teal">35</td>
+        <td class="bold green">70+</td>
+      </tr>
+      <tr>
+        <td class="bold">AI Visibility (AEO)</td>
+        <td class="orange bold">18 score <span style="font-weight:400;font-size:11px;">(28 US mentions · 91 cited pages)</span></td>
+        <td class="bold teal">35 score</td>
+        <td class="bold green">60+ score</td>
+      </tr>
+      <tr>
+        <td class="bold">Traffic Value (est.)</td>
+        <td class="red bold">$540 / mo</td>
+        <td class="bold teal">$8,000 / mo</td>
+        <td class="bold green">$30,000+ / mo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation success mt-12">
+    <strong>Why these numbers are achievable:</strong> ThirdEye Data has 901 referring domains — real authority — but zero commercial-intent content to activate it. Algoscale grew from ~3K to 8K monthly traffic in 18 months by publishing cluster pages. Starting from 254/mo with 901 ref. domains is a stronger launchpad than starting from 3K with 420 — the authority flywheel is already wound, it just needs content to release it.
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 17 — NEXT STEPS
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="17">
+  <p class="slide-label">Action Plan</p>
+  <h2>Recommended Next Steps</h2>
+  <p class="subtitle">Six actions to kick off the ClusterMagic engine within the next 3 weeks — starting with the two that unlock everything else.</p>
+
+  <div class="three-col flex-grow mt-8">
+    <div class="channel-card" style="border-top:3px solid var(--teal-soft);">
+      <div style="font-size:11px;font-weight:700;color:var(--teal-soft);margin-bottom:4px;">01 · DO THIS FIRST</div>
+      <h4>Grant GSC Access</h4>
+      <p style="font-size:13px;">Share Google Search Console access to <strong>embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</strong> to confirm baseline traffic, keyword positions, and validate cluster priorities with real click data.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--ember-red);">
+      <div style="font-size:11px;font-weight:700;color:var(--ember-red);margin-bottom:4px;">02 · WEEK 1</div>
+      <h4>Generative AI Pillar Build</h4>
+      <p style="font-size:13px;">Build the /generative-ai-consulting/ pillar page — 4,000+ words, full FAQ schema, internal links to existing blog posts, and a clear CTA to Demo Central and contact form.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--ember-red);">
+      <div style="font-size:11px;font-weight:700;color:var(--ember-red);margin-bottom:4px;">03 · WEEK 1–2</div>
+      <h4>Schema + Meta Fixes</h4>
+      <p style="font-size:13px;">Add FAQ schema to all existing service pages, fix thin meta descriptions across /industries/ and /technologies/, and correct the internal link architecture between blog posts and service pages.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--orange);">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px;">04 · WEEK 2</div>
+      <h4>Cluster Content Briefs</h4>
+      <p style="font-size:13px;">EmberTribe delivers full content briefs for each Cluster 1 and 2 page: keyword target, word count, H-tag outline, CTA guidance, internal link map, and AEO FAQ structure.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--orange);">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:4px;">05 · WEEK 2</div>
+      <h4>Microsoft Partner Backlink</h4>
+      <p style="font-size:13px;">Claim and fully optimize the Microsoft Azure partner directory listing — this is a DA 92 backlink that ThirdEye Data qualifies for and has likely not fully leveraged for SEO.</p>
+    </div>
+    <div class="channel-card" style="border-top:3px solid var(--blue);">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:4px;">06 · WEEK 3</div>
+      <h4>Demo Central SEO Overhaul</h4>
+      <p style="font-size:13px;">Optimize Demo Central pages with proper meta titles, descriptions, Schema markup, and unique keyword targets. This is ThirdEye's biggest content moat — it should be driving significant SEO traffic on its own.</p>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; SEO ClusterMagic Strategy</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 18 — PRICING
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide" data-slide="18">
+  <p class="slide-label">Investment &nbsp;·&nbsp; Article Writing + AEO + Reddit</p>
+  <h2>Pricing — All Services</h2>
+  <p class="subtitle">Three complementary services that drive compounding AI and search visibility. Mix and match based on your current priority.</p>
+
+  <!-- Section 1: ClusterMagic Article Tiers -->
+  <div style="margin-bottom:14px;">
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary-dark);margin-bottom:6px;">ClusterMagic — Article Writing</p>
+    <table style="font-size:12.5px;width:100%;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th style="background:var(--primary-dark);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;"># of Articles</th>
+          <th style="background:var(--primary-dark);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;">One-Time / Monthly Pricing</th>
+          <th style="background:var(--ember-red);color:#fff;padding:9px 14px;text-align:left;font-weight:700;font-size:11px;letter-spacing:1px;text-transform:uppercase;">3-Month Commitment <span style="font-weight:400;text-transform:none;">(monthly article total)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600;">25 articles</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$700</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$1,750 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$350 savings)</span></td>
+        </tr>
+        <tr style="background:var(--light-bg);">
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600;">40 articles</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$1,100</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$2,700 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$600 savings)</span></td>
+        </tr>
+        <tr>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:600;">50 articles</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;">$1,350</td>
+          <td style="padding:8px 14px;border-bottom:1px solid var(--border);font-weight:800;font-size:15px;color:var(--ember-red);">$3,400 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$650 savings)</span></td>
+        </tr>
+        <tr style="background:var(--light-bg);">
+          <td style="padding:8px 14px;font-weight:600;">100 articles</td>
+          <td style="padding:8px 14px;font-weight:800;font-size:15px;">$2,700</td>
+          <td style="padding:8px 14px;font-weight:800;font-size:15px;color:var(--ember-red);">$7,000 <span style="font-size:11px;font-weight:500;color:var(--text-light);font-style:italic;">(-$1,100 savings)</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section 3: AEO Packages -->
+  <div>
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--primary-dark);margin-bottom:8px;">Simplified Growth Packages — AI Visibility (AEO)</p>
+    <div class="aeo-grid">
+      <div class="aeo-card">
+        <div class="aeo-head">
+          <div class="aeo-name" style="color:var(--teal);">AI Visibility Starter</div>
+          <div class="aeo-price">$1,750</div>
+          <div class="aeo-period">/monthly</div>
+        </div>
+        <div class="aeo-body">
+          <ul>
+            <li>5 AEO Placements</li>
+            <li>10 Articles</li>
+          </ul>
+        </div>
+      </div>
+      <div class="aeo-card featured">
+        <div class="aeo-head" style="background:#fff7f7;">
+          <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ember-red);margin-bottom:4px;">⭐ RECOMMENDED</div>
+          <div class="aeo-name" style="color:var(--ember-red);">AI Growth Engine</div>
+          <div class="aeo-price">$3,450</div>
+          <div class="aeo-period">/monthly</div>
+        </div>
+        <div class="aeo-body">
+          <ul>
+            <li>8 AEO Placements</li>
+            <li>25 Articles</li>
+            <li>2 DA40+ Links</li>
+          </ul>
+        </div>
+      </div>
+      <div class="aeo-card">
+        <div class="aeo-head">
+          <div class="aeo-name" style="color:var(--blue);">AI Authority Accelerator</div>
+          <div class="aeo-price">$5,250</div>
+          <div class="aeo-period">/monthly</div>
+        </div>
+        <div class="aeo-body">
+          <ul>
+            <li>12 AEO Placements</li>
+            <li>40 Articles</li>
+            <li>2 DA50+ Links</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-light);margin-top:8px;font-style:italic;">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. Together, this creates <strong style="color:var(--text);">compounding AI visibility</strong>.</p>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">ThirdEye Data &mdash; Pricing &amp; Packages</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SLIDE 19 — CLOSING
+═══════════════════════════════════════════════════════════════ -->
+<div class="slide dark" data-slide="19">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <p class="slide-label">Let's Build</p>
+    <h1>Let's Build the Engine.</h1>
+    <p class="subtitle" style="text-align:center;max-width:760px;">ThirdEye Data has 16 years of enterprise AI delivery, a Microsoft partnership, and a unique Demo Central product library that no competitor can replicate. The gap is content architecture — and that's exactly what ClusterMagic solves.</p>
+    <div class="stats-row mt-16" style="justify-content:center;max-width:700px;">
+      <div class="stat-card">
+        <div class="stat-value teal">6</div>
+        <div class="stat-label">Topic Clusters</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal-soft);">94</div>
+        <div class="stat-label">New Pages</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">90</div>
+        <div class="stat-label">Days to Results</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">5x</div>
+        <div class="stat-label">Traffic Target</div>
+      </div>
+    </div>
+    <div class="mt-20">
+      <p style="font-size:16px;font-weight:600;">Next step: grant GSC access and we can kick off within one week.</p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:6px;">embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</p>
+    </div>
+    <div class="logo-row" style="width:100%;">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Confidential &mdash; April 2026</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 19</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
