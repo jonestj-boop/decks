@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>doctronic.ai — AI Visibility Optimization</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0A0A10;
+  --primary-mid: #14141F;
+  --primary-light: #1E1E2E;
+  --accent: #38BDF8;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+
+.bar-row { display: flex; align-items: center; gap: 12px; }
+
+.bar-label { width: 130px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+
+.bar-track { flex: 1; height: 30px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #0284C7, var(--accent)); }
+.bar-fill.dark   { background: linear-gradient(90deg, #374151, #6B7280); }
+
+.bar-value { width: 80px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul { list-style: none; padding: 0; }
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+.sample-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
+.s-url { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; color: var(--teal); margin-bottom: 4px; }
+.s-grade { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.s-detail { font-size: 13px; color: var(--text-light); }
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.sky    { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AI Visibility Optimization</p>
+      <h1>doctronic.ai is writing great content.<br>AI isn't citing it.</h1>
+      <p class="subtitle">You took content in-house — smart move. Now let's make sure every piece you publish gets found, cited, and surfaced by AI systems.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value red">19<span style="font-size:20px; font-weight:500;">/100</span></div>
+          <div class="stat-label">Current AI Visibility Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value sky">74.4%</div>
+          <div class="stat-label">Mentions concentrated in one platform</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">2.3%</div>
+          <div class="stat-label">ChatGPT citation rate (lowest LLM)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">↑</div>
+          <div class="stat-label">Upward momentum in AI mentions (6M)</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for doctronic.ai &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE OPPORTUNITY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Opportunity</p>
+    <h2>You Have Momentum. The Gap Is Optimization, Not Volume.</h2>
+    <p class="subtitle">AI mention data from the past 6 months shows doctronic.ai is growing — but competitors are outpacing you by a wide margin despite comparable content output.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--green);display:block;"></span>
+            AI Overview is picking you up — 877 mentions in 6 months, trending up
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--green);display:block;"></span>
+            US market dominance — 85.1% of all AI mentions are domestic (ideal for US-focused growth)
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--green);display:block;"></span>
+            In-house content team in place — no ramp-up lag, just optimization
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--green);display:block;"></span>
+            Gemini is also citing you (19%) — multi-LLM presence is already forming
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:12px;">
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--red);display:block;"></span>
+            19/100 score means 81% of AI visibility potential is untapped
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--red);display:block;"></span>
+            ChatGPT — the most-used AI in the US — cites you only 27 times total
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--red);display:block;"></span>
+            74% concentration in AI Overview creates a single point of failure
+          </li>
+          <li style="padding-left:20px; position:relative; margin-bottom:10px; font-size:15px; line-height:1.5;">
+            <span style="position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--red);display:block;"></span>
+            Content isn't structured the way LLMs retrieve and cite information
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: AI VISIBILITY BREAKDOWN -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">AI Visibility Data</p>
+    <h2>Where Your Mentions Come From — And Where They Don't</h2>
+    <p class="subtitle">1,178 total AI mentions in 6 months. The distribution tells the real story.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h4 style="margin-bottom:16px;">Mentions by LLM Platform</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">AI Overview</span>
+            <div class="bar-track"><div class="bar-fill accent" style="width:74%;">74.4%</div></div>
+            <span class="bar-value" style="color:var(--blue);">877</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Gemini</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:19%;">19%</div></div>
+            <span class="bar-value">224</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">AI Mode</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:4.2%;">4.2%</div></div>
+            <span class="bar-value">50</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">ChatGPT</span>
+            <div class="bar-track"><div class="bar-fill dark" style="width:2.3%;">2.3%</div></div>
+            <span class="bar-value">27</span>
+          </div>
+        </div>
+        <div class="annotation danger mt-16">
+          <strong>Risk:</strong> 93% of mentions are Google-owned products. A single algorithm shift could erase most of your AI visibility overnight.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:16px;">Mentions by Country</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">United States</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:85%;">85.1%</div></div>
+            <span class="bar-value" style="color:var(--green);">1,000+</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Mexico</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:3.5%;">3.5%</div></div>
+            <span class="bar-value">41</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Canada</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:2.3%;">2.3%</div></div>
+            <span class="bar-value">27</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Other</span>
+            <div class="bar-track"><div class="bar-fill dark" style="width:9.1%;">9.1%</div></div>
+            <span class="bar-value">107</span>
+          </div>
+        </div>
+        <div class="annotation info mt-16">
+          <strong>Advantage:</strong> US-heavy mention distribution aligns perfectly with your core market. AEO optimization here has the highest ROI.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: THE CONTENT PROBLEM -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Content Audit</p>
+    <h2>Writing Content ≠ Getting Cited by AI</h2>
+    <p class="subtitle">LLMs retrieve and cite content differently than search engines. Most in-house teams are optimizing for the wrong signals.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h4 style="margin-bottom:12px;">What LLMs look for when citing a source</h4>
+        <div class="sample-card">
+          <div class="s-grade" style="color:var(--green);">✓ Citation-Ready Format</div>
+          <div class="s-detail">Direct Q&A structure, clear definitions, FAQ schema markup, short declarative sentences, named entities (author, date, organization)</div>
+        </div>
+        <div class="sample-card">
+          <div class="s-grade" style="color:var(--red);">✗ Commonly Missing on In-House Content</div>
+          <div class="s-detail">No FAQ schema, no structured definitions block, headers written for humans not LLMs, no citation-anchor text, thin "about us" authority signals</div>
+        </div>
+        <div class="sample-card">
+          <div class="s-grade" style="color:var(--orange);">⚠ The Gap</div>
+          <div class="s-detail">Great medical content gets written — then published without the structural layer that tells AI systems "this is the authoritative answer to X"</div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:12px;">Typical page types and their AEO gaps</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Page Type</th>
+              <th>Common Gap</th>
+              <th>Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">Condition pages</td>
+              <td><span class="pill red">Missing</span></td>
+              <td>FAQ schema + definition blocks</td>
+            </tr>
+            <tr>
+              <td class="bold">Blog posts</td>
+              <td><span class="pill orange">Partial</span></td>
+              <td>Q&A headers, TL;DR summaries</td>
+            </tr>
+            <tr>
+              <td class="bold">How-it-works</td>
+              <td><span class="pill red">Missing</span></td>
+              <td>Step schema, numbered structure</td>
+            </tr>
+            <tr>
+              <td class="bold">About / Experts</td>
+              <td><span class="pill red">Missing</span></td>
+              <td>Author schema, credentials markup</td>
+            </tr>
+            <tr>
+              <td class="bold">Comparison pages</td>
+              <td><span class="pill red">Missing</span></td>
+              <td>Structured comparison tables + schema</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-8">
+          <strong>The good news:</strong> These fixes don't require new content — they restructure and annotate what you've already written.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: STRATEGY -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Optimize What You Have. Enable What You'll Write.</h2>
+    <p class="subtitle">We're not here to replace your content team — we're here to make every piece they produce work 10x harder in AI search.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card">
+        <div class="channel-icon">🔍</div>
+        <h3>AEO Content Audit</h3>
+        <ul>
+          <li>Full crawl of existing content — scored for AI citability</li>
+          <li>Page-by-page recommendations (schema, structure, rewrites)</li>
+          <li>Priority queue: highest-traffic pages optimized first</li>
+          <li>Quick-win implementations included in Month 1</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🗺️</div>
+        <h3>Topical Authority Mapping</h3>
+        <ul>
+          <li>Identify questions AI is answering where you're not cited</li>
+          <li>Map competitor content that's capturing your share</li>
+          <li>Flag coverage gaps your team should prioritize</li>
+          <li>Monthly gap analysis as AI models update</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">✍️</div>
+        <h3>Writer Enablement</h3>
+        <ul>
+          <li>AI-optimized brief templates for your in-house team</li>
+          <li>Page structure guidelines (headers, schema, definitions)</li>
+          <li>Checklist so every new piece is citation-ready on publish</li>
+          <li>Quarterly template refreshes as LLM behavior evolves</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>The model:</strong> EmberTribe handles the AEO layer — audit, optimization, tracking, and writer tooling. Your team handles creation. You keep full control of your voice and content calendar.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ROADMAP -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Start with quick wins on existing content, build the infrastructure for ongoing gains, then hand your team the tools to sustain it.</p>
+    <div class="timeline flex-grow mt-16">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Audit & Quick Wins</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Full AEO audit of top 20 pages</li>
+          <li>FAQ schema deployed site-wide</li>
+          <li>Author / organization schema on key pages</li>
+          <li>Baseline AI Visibility score documented</li>
+          <li>Competitive citation gap report</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Restructure & Enable</span>
+        <h4>Build</h4>
+        <ul>
+          <li>Top-priority pages restructured for LLM citation</li>
+          <li>Topical authority map delivered</li>
+          <li>Writer brief templates + AEO checklist</li>
+          <li>Definition blocks added to condition / service pages</li>
+          <li>First monthly AI Visibility report</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Optimize & Track</span>
+        <h4>Scale</h4>
+        <ul>
+          <li>Second batch of page optimizations</li>
+          <li>ChatGPT citation gap analysis + targeted fixes</li>
+          <li>AI Visibility score comparison (Month 1 vs 3)</li>
+          <li>Updated brief templates based on LLM behavior</li>
+          <li>90-day strategy review + next-quarter plan</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Target:</strong> Score improvement from 19/100 toward 35–45/100 by end of Month 3, with meaningful ChatGPT and AI Mode citation gains.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: INVESTMENT -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Designed for teams that are already writing — not teams that need someone to write for them.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Monthly</th>
+          <th>What's Included</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">AEO Audit &amp; Quick Wins <span class="pill setup" style="margin-left:6px;">Month 1</span></td>
+          <td class="bold">$1,500</td>
+          <td>Full site audit, top-20 page scoring, FAQ + author schema, citation gap report</td>
+        </tr>
+        <tr>
+          <td class="bold">Ongoing AEO Optimization</td>
+          <td class="bold">$2,000 / mo</td>
+          <td>Page restructuring sprints, topical gap analysis, monthly AI Visibility report, LLM citation tracking</td>
+        </tr>
+        <tr>
+          <td class="bold">Writer Enablement Package <span class="pill green" style="margin-left:6px;">Add-on</span></td>
+          <td class="bold">$500 / mo</td>
+          <td>AEO brief templates, publish checklist, quarterly template refreshes as LLMs evolve</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Full Program</td>
+          <td>Starting at $2,000 / mo</td>
+          <td>Month 1 audit + ongoing optimization</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>What you get:</strong> A dedicated AEO layer on top of your existing content operation — without adding headcount or handing back content control. Every piece your team publishes gets more AI visibility over time.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Progress Looks Like</h2>
+    <p class="subtitle">Based on comparable AEO programs for healthcare AI and medical tech companies starting from a 19/100 baseline.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card">
+        <div style="font-size:40px; font-weight:900; color:var(--orange); margin-bottom:4px;">3 mo</div>
+        <h3>Foundation Gains</h3>
+        <ul>
+          <li>Score: 19 → 35–42/100</li>
+          <li>ChatGPT mentions: 27 → 80–120</li>
+          <li>AI Overview mentions: +30–40%</li>
+          <li>FAQ schema live site-wide</li>
+          <li>Writer team briefed &amp; enabled</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div style="font-size:40px; font-weight:900; color:var(--blue); margin-bottom:4px;">6 mo</div>
+        <h3>Compounding Visibility</h3>
+        <ul>
+          <li>Score: 42–55/100</li>
+          <li>Multi-LLM presence established</li>
+          <li>Topical authority clusters closing</li>
+          <li>New content published citation-ready from day one</li>
+          <li>Competitor gap narrowing</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div style="font-size:40px; font-weight:900; color:var(--green); margin-bottom:4px;">12 mo</div>
+        <h3>Sustained Authority</h3>
+        <ul>
+          <li>Score: 55–70/100 target</li>
+          <li>ChatGPT on par with AI Overview share</li>
+          <li>doctronic.ai cited across all major LLMs</li>
+          <li>AI Visibility as a measurable revenue driver</li>
+          <li>Full AEO content infrastructure in place</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation mt-16">
+      <strong>Note:</strong> AI Visibility scores are influenced by LLM training cycles and third-party platform changes. Projections are directional targets based on AEO best practices, not guarantees.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">doctronic.ai &mdash; AI Visibility Optimization</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Your content team is already doing the hard part.<br>Let's make it count.</h1>
+      <p class="subtitle" style="text-align:center; max-width:700px; margin:0 auto 32px;">AEO optimization is the missing layer between what you publish and what AI systems cite. We can start the audit within a week.</p>
+      <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center; margin-top:8px;">
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 32px;">
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Step 1</div>
+          <div style="font-size:16px; font-weight:600;">30-min strategy call</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Walk through the audit scope &amp; priorities</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 32px;">
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Step 2</div>
+          <div style="font-size:16px; font-weight:600;">AEO Audit kicks off</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Full site scored within 2 weeks</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:20px 32px;">
+          <div style="font-size:14px; color:rgba(255,255,255,0.5); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Step 3</div>
+          <div style="font-size:16px; font-weight:600;">First wins live</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5); margin-top:4px;">Schema + quick-fix pages published</div>
+        </div>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:48px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; May 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
