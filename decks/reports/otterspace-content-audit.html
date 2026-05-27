@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Audit — OtterSpace | inotterspace.com</title>
+  <style>
+    :root {
+      --brand-blue: #294d69;
+      --brand-yellow: #f0ff2e;
+      --brand-orange: #ff8329;
+      --brand-offwhite: #fffdf5;
+      --critical: #dc2626;
+      --critical-bg: #fef2f2;
+      --critical-border: #fecaca;
+      --high: #ea580c;
+      --high-bg: #fff7ed;
+      --high-border: #fed7aa;
+      --medium: #d97706;
+      --medium-bg: #fffbeb;
+      --medium-border: #fde68a;
+      --low: #6b7280;
+      --low-bg: #f9fafb;
+      --low-border: #e5e7eb;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+      --text: #1a1a2e;
+      --muted: #64748b;
+      --divider: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f8f9fb;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* HEADER */
+    .report-header {
+      background: var(--brand-blue);
+      color: white;
+      padding: 56px 0 48px;
+    }
+    .report-header .inner {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+    .report-header .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--brand-yellow);
+      margin-bottom: 12px;
+    }
+    .report-header h1 {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .report-header .url {
+      font-size: 15px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 32px;
+    }
+    .report-header .url a { color: rgba(255,255,255,0.7); text-decoration: none; }
+    .meta-row { display: flex; gap: 32px; flex-wrap: wrap; }
+    .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    .meta-item .val { font-size: 22px; font-weight: 800; color: var(--brand-yellow); }
+    .meta-item .key { font-size: 12px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* LAYOUT */
+    .body-wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* SECTION HEADINGS */
+    .section-heading {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 56px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--divider);
+    }
+    .section-heading:first-of-type { margin-top: 0; }
+
+    /* SUMMARY CARD */
+    .summary-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .summary-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .summary-card p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .summary-card p:last-child { margin-bottom: 0; }
+
+    /* STAT GRID */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      padding: 20px 20px 16px;
+    }
+    .stat-card .num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--brand-blue);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-card .num.warn { color: var(--high); }
+    .stat-card .num.good { color: var(--success); }
+    .stat-card .num.alert { color: var(--critical); }
+    .stat-card .lbl {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* OPPORTUNITY CARDS */
+    .opp-card {
+      background: white;
+      border: 1px solid var(--divider);
+      border-left: 4px solid var(--divider);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    .opp-card.critical { border-left-color: var(--critical); }
+    .opp-card.high { border-left-color: var(--high); }
+    .opp-card.medium { border-left-color: var(--medium); }
+    .opp-card.low { border-left-color: var(--low); }
+    .opp-card.success { border-left-color: var(--success); }
+    .opp-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+    .opp-title { font-size: 17px; font-weight: 700; }
+    .priority-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tag-critical { background: var(--critical-bg); color: var(--critical); }
+    .tag-high { background: var(--high-bg); color: var(--high); }
+    .tag-medium { background: var(--medium-bg); color: var(--medium); }
+    .tag-low { background: var(--low-bg); color: var(--low); }
+    .tag-success { background: var(--success-bg); color: var(--success); }
+    .opp-card p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      line-height: 1.65;
+    }
+    .opp-card p:last-child { margin-bottom: 0; }
+    .opp-impact {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brand-blue);
+      padding: 8px 12px;
+      background: #f0f4f8;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    /* DATA TABLES */
+    .data-table-wrap {
+      background: white;
+      border: 1px solid var(--divider);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 16px 0 28px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      background: #f8f9fb;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--divider);
+    }
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #f1f4f8;
+      vertical-align: top;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: #fafbfc; }
+    .article-link {
+      color: var(--brand-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .article-link:hover { text-decoration: underline; }
+    .issue-detail {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-style: italic;
+    }
+    .small-text { font-size: 12px; color: var(--muted); }
+
+    /* STATUS BADGES */
+    .pub-yes { color: var(--success); font-size: 12px; font-weight: 600; }
+    .pub-no { color: var(--muted); font-size: 12px; }
+    .wc-thin { color: var(--critical); font-size: 12px; font-weight: 600; }
+    .wc-med { color: var(--high); font-size: 12px; font-weight: 600; }
+    .wc-ok { color: var(--success); font-size: 12px; }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .badge-critical { background: var(--critical-bg); color: var(--critical); }
+    .badge-high { background: var(--high-bg); color: var(--high); }
+    .badge-medium { background: var(--medium-bg); color: var(--medium); }
+    .badge-low { background: var(--low-bg); color: var(--low); }
+    .badge-success { background: var(--success-bg); color: var(--success); }
+
+    /* CHART BARS */
+    .bar-chart { margin: 16px 0; }
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 13px; }
+    .bar-label { width: 180px; flex-shrink: 0; color: var(--muted); }
+    .bar-track { flex: 1; background: #f1f4f8; border-radius: 4px; height: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; background: var(--brand-blue); }
+    .bar-count { width: 40px; text-align: right; font-weight: 600; color: var(--text); flex-shrink: 0; }
+
+    /* TWO-COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* INSIGHT BOX */
+    .insight-box {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #14532d;
+      line-height: 1.6;
+    }
+    .insight-box strong { color: var(--success); }
+
+    /* FOOTER */
+    .report-footer {
+      background: var(--brand-blue);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      font-size: 12px;
+      padding: 24px 32px;
+    }
+    .report-footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="report-header">
+  <div class="inner">
+    <div class="label">EmberTribe Content Services</div>
+    <h1>Content Audit</h1>
+    <div class="url"><a href="https://inotterspace.com" target="_blank">inotterspace.com</a> &mdash; Blog Content Analysis</div>
+    <div class="meta-row">
+      <div class="meta-item"><span class="val">104</span><span class="key">Total Articles</span></div>
+      <div class="meta-item"><span class="val">49</span><span class="key">Published</span></div>
+      <div class="meta-item"><span class="val">55</span><span class="key">Drafts</span></div>
+      <div class="meta-item"><span class="val">1,043w</span><span class="key">Avg Word Count</span></div>
+      <div class="meta-item"><span class="val">May 27, 2026</span><span class="key">Audit Date</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <p class="section-heading">Executive Summary</p>
+
+  <div class="summary-card">
+    <h2>What this audit covers</h2>
+    <p>This report reviews all 104 blog articles across two OtterSpace content hubs: <strong>Essentials</strong> (23 articles) and <strong>Sleep Guides</strong> (81 articles). The analysis looks at content depth, publishing status, SEO signals, topic coverage, and structural opportunities that could improve organic visibility and on-site conversion.</p>
+    <p>The site has a strong content foundation with clear topical authority around sleep science, nursery setup, and blackout solutions. The primary opportunities are around <strong>content depth</strong>, <strong>unlocking draft inventory</strong>, and <strong>missing visual assets</strong> that are limiting indexability and engagement for a significant portion of the library.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num alert">55</div><div class="lbl">Articles in Draft (unpublished)</div></div>
+    <div class="stat-card"><div class="num warn">81</div><div class="lbl">Articles Missing Featured Image</div></div>
+    <div class="stat-card"><div class="num warn">35</div><div class="lbl">Articles Under 700 Words</div></div>
+    <div class="stat-card"><div class="num warn">56</div><div class="lbl">Articles with Title Issues</div></div>
+    <div class="stat-card"><div class="num good">20</div><div class="lbl">Long-Form Articles (1,500w+)</div></div>
+    <div class="stat-card"><div class="num good">31</div><div class="lbl">Draft Articles Ready to Publish</div></div>
+  </div>
+
+  <p class="section-heading">Top Opportunities</p>
+
+  <div class="opp-card critical">
+    <div class="opp-header">
+      <div class="opp-title">55 articles are sitting as unpublished drafts</div>
+      <span class="priority-tag tag-critical">Critical</span>
+    </div>
+    <p>More than half the content library (55 of 104 articles) is not indexed by Google. These articles were written, uploaded to Shopify, but never published, which means they are generating zero organic traffic and zero revenue. Many of them are over 700 words and fully written.</p>
+    <p>Publishing even a portion of this backlog could significantly accelerate organic impressions without any new writing required.</p>
+    <span class="opp-impact">Impact: Immediate indexation of up to 55 additional URLs. Fastest ROI on the table.</span>
+  </div>
+
+  <div class="opp-card high">
+    <div class="opp-header">
+      <div class="opp-title">81 of 104 articles have no featured image</div>
+      <span class="priority-tag tag-high">High Priority</span>
+    </div>
+    <p>Featured images are surfaced in Google Image Search, social previews (OG tags), and on-site blog listings. Articles without images appear as blank cards in blog grids, reducing click-through and time-on-site. This is especially impactful for a visually-driven product category like blackout window solutions.</p>
+    <p>Even a single branded lifestyle image per article would meaningfully improve how the blog presents across Google and social channels.</p>
+    <span class="opp-impact">Impact: Improved CTR in Google Search image packs, social share previews, and on-site engagement.</span>
+  </div>
+
+  <div class="opp-card high">
+    <div class="opp-header">
+      <div class="opp-title">35 articles are under 700 words, limiting search competitiveness</div>
+      <span class="priority-tag tag-high">High Priority</span>
+    </div>
+    <p>Articles under 700 words often struggle to rank for informational queries because they cannot cover a topic with enough depth to satisfy search intent. Google's Helpful Content guidelines specifically reward articles that comprehensively answer the question a user typed in. Short articles risk being seen as "thin content" and may suppress rankings for the whole domain.</p>
+    <p>4 articles are under 400 words and are a particular concern. Expanding these to 700-900 words each with added FAQ sections, supporting tips, or product context would be a lightweight, high-value content update.</p>
+    <span class="opp-impact">Impact: Better rankings for competitive informational queries. Stronger topical authority signals.</span>
+  </div>
+
+  <div class="opp-card medium">
+    <div class="opp-header">
+      <div class="opp-title">60 article titles contain internal notes or exceed 60 characters</div>
+      <span class="priority-tag tag-medium">Medium Priority</span>
+    </div>
+    <p>Titles are the single most important on-page SEO element. Several articles have internal production notes in their titles (e.g., "{pillar: baby sleeping on back}"), which appear in Google Search results and Shopify blog listings, making the site look unpolished to visitors and signals poor content governance to crawlers.</p>
+    <p>Additionally, many titles exceed 60 characters and will be truncated by Google in SERPs, reducing click-through rates. Tightening titles to 50-60 characters with a clear keyword and value proposition is a low-effort, high-signal improvement.</p>
+    <span class="opp-impact">Impact: Cleaner SERP appearance, higher CTR, and removal of content quality flags.</span>
+  </div>
+
+  <div class="opp-card medium">
+    <div class="opp-header">
+      <div class="opp-title">Heavy topic concentration on nursery/baby with thin coverage elsewhere</div>
+      <span class="priority-tag tag-medium">Medium Priority</span>
+    </div>
+    <p>34 of 104 articles target nursery and baby sleep, creating deep coverage in one cluster. Meanwhile, high-intent categories like <strong>shift workers</strong> (6 articles), <strong>travel</strong> (5 articles), and <strong>gaming</strong> (8 articles) are underserved, despite these audiences being proven buyers of blackout solutions. Adding 4-6 well-targeted articles per underserved cluster could open new traffic channels with less keyword competition.</p>
+    <span class="opp-impact">Impact: New organic traffic channels from high-converting but underserved audience segments.</span>
+  </div>
+
+  <div class="opp-card low">
+    <div class="opp-header">
+      <div class="opp-title">Keyword overlap across nursery and sleep-science articles</div>
+      <span class="priority-tag tag-low">Low Priority</span>
+    </div>
+    <p>Several high-frequency terms (baby, sleep, blackout, brain, curtain) appear across a large number of articles, with multiple posts targeting nearly identical informational queries. For example, there are several distinct articles on baby brain development, newborn sleep science, and REM sleep in infants that may compete with each other for the same search queries. A consolidation pass, or stronger internal linking between related pieces, would help Google understand which article is the canonical answer for each topic.</p>
+    <span class="opp-impact">Impact: Stronger page authority on key topics, reduced keyword cannibalization risk.</span>
+  </div>
+
+  <p class="section-heading">Content Depth Breakdown</p>
+
+  <div class="summary-card">
+    <div class="bar-chart">
+      <div class="bar-row"><div class="bar-label">Under 400 words</div><div class="bar-track"><div class="bar-fill" style="width:4%;background:var(--critical);"></div></div><div class="bar-count">4</div></div>
+      <div class="bar-row"><div class="bar-label">400-700 words</div><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--high);"></div></div><div class="bar-count">31</div></div>
+      <div class="bar-row"><div class="bar-label">700-1,500 words</div><div class="bar-track"><div class="bar-fill" style="width:47%;background:var(--medium);"></div></div><div class="bar-count">49</div></div>
+      <div class="bar-row"><div class="bar-label">1,500+ words</div><div class="bar-track"><div class="bar-fill" style="width:19%;background:var(--success);"></div></div><div class="bar-count">20</div></div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Very thin articles (under 400 words) — priority for expansion</p>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Article</th><th>Status</th><th>Words</th><th>Action</th></tr></thead>
+      <tbody><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/newborn-day-night-confusion-sleep-tips" target="_blank" class="article-link">Newborn Day-Night Confusion: Sleep Tips</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-thin">10w</span></td>
+      <td><span class="badge badge-critical">+390w to baseline</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/5-reasons-why-otterspace-blackout-curtains-are-perfect-for-travel" target="_blank" class="article-link">5 Reasons Why OtterSpace Blackout Curtains Are Perfect for Travel</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-thin">351w</span></td>
+      <td><span class="badge badge-critical">+49w to baseline</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/dorm-blackout-curtains-the-ultimate-solution-for-better-sleep-in-college" target="_blank" class="article-link">Dorm Blackout Curtains: The Ultimate Solution for Better Sleep in…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-thin">379w</span></td>
+      <td><span class="badge badge-critical">+21w to baseline</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/newborn-twitching-in-sleep-whats-really-happening-according-to-a-neuroscientist" target="_blank" class="article-link">Newborn Twitching in Sleep: What's Really Happening, According to…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-thin">397w</span></td>
+      <td><span class="badge badge-critical">+3w to baseline</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Short articles (400-700 words) — candidates for expansion</p>
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Article</th><th>Status</th><th>Words</th><th>Words to Add</th></tr></thead>
+      <tbody><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/portable-blackout-curtains-for-better-sleep-while-traveling" target="_blank" class="article-link">Portable Blackout Curtains for Better Sleep While Traveling</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">446w</span></td>
+      <td><span class="badge badge-medium">+254w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-your-babys-potential-how-sleep-shapes-newborn-cognitive-development-and-emotional-well-being" target="_blank" class="article-link">Unlocking Your Baby's Potential: How Sleep Shapes Newborn Cogniti…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">478w</span></td>
+      <td><span class="badge badge-medium">+222w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlock-your-gaming-potential-why-blackout-curtains-are-a-must-have-for-every-serious-gamer" target="_blank" class="article-link">* NOT READY* Unlock Your Gaming Potential: Why Blackout Curtains …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">493w</span></td>
+      <td><span class="badge badge-medium">+207w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-babies-really-sleep-more-when-they-re-growing-insights-from-neuroscientist-melissa-smith-that-may-surprise-you" target="_blank" class="article-link">Do Babies Really Sleep More When They’re Growing? Insights from N…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">540w</span></td>
+      <td><span class="badge badge-medium">+160w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/create-the-ideal-toddler-sleep-environment-myths-and-must-know-tips-for-effortless-naptime-success" target="_blank" class="article-link">Create the Ideal Toddler Sleep Environment: Myths and Must-Know T…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">553w</span></td>
+      <td><span class="badge badge-medium">+147w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/the-ultimate-blackout-solution-for-gamers-elevate-your-setup-with-gamer-blackout-curtains" target="_blank" class="article-link">The Ultimate Blackout Solution for Gamers: Elevate Your Setup wit…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">555w</span></td>
+      <td><span class="badge badge-medium">+145w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/is-deep-sleep-dangerous-for-babies-insights-from-a-neuroscientist" target="_blank" class="article-link">Is Deep Sleep Dangerous for Babies? Insights from a Neuroscientis…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">558w</span></td>
+      <td><span class="badge badge-medium">+142w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-setup-why-comfort-and-focus-matter-more-than-rgb-lights" target="_blank" class="article-link">Transform Your Gaming Setup: Why Comfort and Focus Matter More Th…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">569w</span></td>
+      <td><span class="badge badge-medium">+131w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/does-lack-of-sleep-really-make-your-brain-eat-itself-insights-from-neuroscience-explained" target="_blank" class="article-link">Does Lack of Sleep Really Make Your Brain Eat Itself? Insights fr…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">585w</span></td>
+      <td><span class="badge badge-medium">+115w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-sleep-the-one-room-update-that-will-revolutionize-your-bedtime-routine" target="_blank" class="article-link">How to Build a Calmer Bedtime Routine With One Room Update</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">586w</span></td>
+      <td><span class="badge badge-medium">+114w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-the-truth-why-7-9-hours-of-sleep-is-essential-for-optimal-brain-function" target="_blank" class="article-link">Unlocking the Truth: Why 7-9 Hours of Sleep is Essential for Opti…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">587w</span></td>
+      <td><span class="badge badge-medium">+113w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-do-babies-sleep-so-much-unraveling-the-neuroscience-behind-their-sleep-needs" target="_blank" class="article-link">Why Do Babies Sleep So Much? Unraveling the Neuroscience Behind T…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">592w</span></td>
+      <td><span class="badge badge-medium">+108w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-sleep-how-light-control-can-revolutionize-shift-work-well-being" target="_blank" class="article-link">Transform Your Sleep: How Light Control Can Revolutionize Shift W…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">611w</span></td>
+      <td><span class="badge badge-medium">+89w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-performance-how-blackout-rooms-defy-light-pollution-myths" target="_blank" class="article-link">*Not Ready* Transform Your Gaming Performance: How Blackout Rooms…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">613w</span></td>
+      <td><span class="badge badge-medium">+87w to expand</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-experience-soundproofing-and-blackout-solutions-you-didnt-know-you-needed" target="_blank" class="article-link">Transform Your Gaming Experience: Soundproofing and Blackout Solu…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">617w</span></td>
+      <td><span class="badge badge-medium">+83w to expand</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p class="section-heading">Unpublished Draft Inventory</p>
+
+  <div class="insight-box">
+    <strong>31 draft articles are over 700 words</strong> and appear ready to publish. Activating this backlog would nearly double the indexed content library without any additional writing investment.
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Article</th><th>Status</th><th>Words</th><th>Note</th></tr></thead>
+      <tbody><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/tips-for-getting-newborns-to-sleep-effective-strategies-for-restful-nights" target="_blank" class="article-link">Tips for Getting Newborns to Sleep: Effective Strategies for Rest…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,695w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/how-to-help-your-baby-sleep-in-a-bassinet" target="_blank" class="article-link">How to Help Your Baby Sleep in a Bassinet [Pillar: newborn wont s…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,103w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-sleep-5-ways-to-blackout-your-bedroom-without-renovating-or-painting" target="_blank" class="article-link">*Not Ready* Transform Your Sleep: 5 Ways to Blackout Your Bedroom…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">770w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-room-aesthetic-on-a-budget-5-cost-effective-tips-for-style-and-comfort" target="_blank" class="article-link">*Not Ready* Transform Your Gaming Room Aesthetic on a Budget: 5 C…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">778w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-surprising-truth-about-the-effects-of-lack-of-sleep-on-your-brain-what-most-people-get-wrong" target="_blank" class="article-link">The Surprising Truth About the Effects of Lack of Sleep on Your B…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">700w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-better-sleep-for-your-baby-the-surprising-truth-about-daylight-and-darkness" target="_blank" class="article-link">Unlocking Better Sleep for Your Baby: The Surprising Truth About …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">752w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/improve-your-streams-appeal-why-your-background-and-lighting-matter-more-than-you-think" target="_blank" class="article-link">Improve Your Stream's Appeal: Why Your Background and Lighting Ma…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">824w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/draft-bedtime-as-your-family-s-quiet-landing-place" target="_blank" class="article-link">Back-to-School Bedtime Routines: How to Bring More Calm to Your F…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,262w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/better-sleep-for-night-shift-workers-effective-solutions-to-overcome-misconceptions-and-sleep-challenges" target="_blank" class="article-link">How Night Shift Workers Can Finally Get Better Sleep During the D…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">800w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/7-essential-tips-for-baby-proofing-nursery-windows-you-didnt-know-you-needed" target="_blank" class="article-link">7 Essential Tips for Baby-Proofing Nursery Windows You Didn't Kno…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">759w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/blackout-your-bedroom-without-renovation-simple-stylish-solutions" target="_blank" class="article-link">Blackout Your Bedroom Without Renovation: Simple, Stylish Solutio…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">778w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-the-power-of-naps-how-they-shape-brain-development-and-boost-cognitive-function" target="_blank" class="article-link">Unlocking the Power of Naps: How They Shape Brain Development and…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">718w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/how-sleep-shapes-infant-neurological-development-a-neuroscientist-explains" target="_blank" class="article-link">Unlocking the Mystery: How Sleep Directly Fuels Infant Neurologic…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">752w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/what-happens-in-the-brain-at-night-a-neuroscientist-explores" target="_blank" class="article-link">What Happens in the Brain at Night? A Neuroscientist Explores</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">787w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/what-happens-to-your-brain-on-vacation-a-neuroscientists-perspective" target="_blank" class="article-link">What Happens to Your Brain on Vacation? A Neuroscientist's Perspe…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">713w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-effects-of-lack-of-sleep-on-the-brain-a-neuroscientists-view" target="_blank" class="article-link">The Effects of Lack of Sleep on the Brain: A Neuroscientist's Vie…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">740w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/understanding-baby-brain-development-a-neuroscientists-view-1" target="_blank" class="article-link">Understanding Baby Brain Development: A Neuroscientist's View</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">730w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-impact-of-light-exposure-on-sleep-a-neuroscientists-insight" target="_blank" class="article-link">The Impact of Light Exposure on Sleep: A Neuroscientist's Insight</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">747w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-babies-need-to-nap-in-a-dark-room-heres-what-a-neuroscientist-says" target="_blank" class="article-link">Do Babies Need to Nap in a Dark Room? Here's What a Neuroscientis…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">782w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/can-letting-babies-cry-it-out-cause-brain-damage-a-neuroscientist-weighs-in" target="_blank" class="article-link">Can Letting Babies Cry It Out Cause Brain Damage? A Neuroscientis…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,014w</span></td>
+      <td><span class="badge badge-low">Ready to publish</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p class="section-heading">Title Quality Issues</p>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Article</th><th>Status</th><th>Words</th><th>Issue</th></tr></thead>
+      <tbody><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/tips-for-getting-newborns-to-sleep-effective-strategies-for-restful-nights" target="_blank" class="article-link">Tips for Getting Newborns to Sleep: Effective Strategies for Rest…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,695w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/how-to-help-your-baby-sleep-in-a-bassinet" target="_blank" class="article-link">How to Help Your Baby Sleep in a Bassinet [Pillar: newborn wont s…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,103w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/the-ultimate-blackout-solution-for-gamers-elevate-your-setup-with-gamer-blackout-curtains" target="_blank" class="article-link">The Ultimate Blackout Solution for Gamers: Elevate Your Setup wit…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">555w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/the-ultimate-guide-to-choosing-the-perfect-blackout-drapes-and-curtains-for-better-sleep-and-privacy" target="_blank" class="article-link">The Ultimate Guide to Choosing the Perfect Blackout Drapes and Cu…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">2,505w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/best-blackout-curtains-guide" target="_blank" class="article-link">Ultimate Guide to Finding the Best Blackout Curtains for a Perfec…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">2,775w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/essentials/dorm-blackout-curtains-the-ultimate-solution-for-better-sleep-in-college" target="_blank" class="article-link">Dorm Blackout Curtains: The Ultimate Solution for Better Sleep in…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-thin">379w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlock-your-gaming-potential-why-blackout-curtains-are-a-must-have-for-every-serious-gamer" target="_blank" class="article-link">* NOT READY* Unlock Your Gaming Potential: Why Blackout Curtains …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">493w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlock-better-sleep-essential-tips-for-night-shift-workers-to-combat-exhaustion-and-energize-your-shifts" target="_blank" class="article-link">Unlock Better Sleep: Essential Tips for Night Shift Workers to Co…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">690w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/ultimate-gamer-gift-guide-must-have-accessories-that-boost-performance-and-sleep-quality-in-2025" target="_blank" class="article-link">*Not Ready* Ultimate Gamer Gift Guide: Must-Have Accessories That…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">642w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-sleep-how-light-control-can-revolutionize-shift-work-well-being" target="_blank" class="article-link">Transform Your Sleep: How Light Control Can Revolutionize Shift W…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">611w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-sleep-5-ways-to-blackout-your-bedroom-without-renovating-or-painting" target="_blank" class="article-link">*Not Ready* Transform Your Sleep: 5 Ways to Blackout Your Bedroom…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">770w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-setup-why-comfort-and-focus-matter-more-than-rgb-lights" target="_blank" class="article-link">Transform Your Gaming Setup: Why Comfort and Focus Matter More Th…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">569w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-room-aesthetic-on-a-budget-5-cost-effective-tips-for-style-and-comfort" target="_blank" class="article-link">*Not Ready* Transform Your Gaming Room Aesthetic on a Budget: 5 C…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">778w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-performance-how-blackout-rooms-defy-light-pollution-myths" target="_blank" class="article-link">*Not Ready* Transform Your Gaming Performance: How Blackout Rooms…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">613w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-gaming-experience-soundproofing-and-blackout-solutions-you-didnt-know-you-needed" target="_blank" class="article-link">Transform Your Gaming Experience: Soundproofing and Blackout Solu…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">617w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/transform-your-babys-sleep-7-nursery-design-myths-that-are-keeping-you-up-at-night" target="_blank" class="article-link">* Not Ready* Transform Your Baby's Sleep: 7 Nursery Design Myths …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">633w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-surprising-truth-about-the-effects-of-lack-of-sleep-on-your-brain-what-most-people-get-wrong" target="_blank" class="article-link">The Surprising Truth About the Effects of Lack of Sleep on Your B…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">700w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-crucial-role-of-sleep-in-baby-brain-development-what-every-parent-should-know" target="_blank" class="article-link">The Crucial Role of Sleep in Baby Brain Development: What Every P…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">695w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/maximize-your-tiny-gaming-space-unlocking-big-wins-with-smart-design-strategies" target="_blank" class="article-link">Maximize Your Tiny Gaming Space: Unlocking Big Wins with Smart De…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">683w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-better-sleep-for-your-baby-the-surprising-truth-about-daylight-and-darkness" target="_blank" class="article-link">Unlocking Better Sleep for Your Baby: The Surprising Truth About …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">752w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/end-the-naptime-struggles-discover-the-secrets-behind-toddler-sleep-battles-and-solutions-that-work" target="_blank" class="article-link">End the Naptime Struggles: Discover the Secrets Behind Toddler Sl…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">670w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/improve-your-streams-appeal-why-your-background-and-lighting-matter-more-than-you-think" target="_blank" class="article-link">Improve Your Stream's Appeal: Why Your Background and Lighting Ma…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">824w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/does-lack-of-sleep-really-make-your-brain-eat-itself-insights-from-neuroscience-explained" target="_blank" class="article-link">Does Lack of Sleep Really Make Your Brain Eat Itself? Insights fr…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">585w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-babies-really-sleep-more-when-they-re-growing-insights-from-neuroscientist-melissa-smith-that-may-surprise-you" target="_blank" class="article-link">Do Babies Really Sleep More When They’re Growing? Insights from N…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">540w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/create-the-ideal-toddler-sleep-environment-myths-and-must-know-tips-for-effortless-naptime-success" target="_blank" class="article-link">Create the Ideal Toddler Sleep Environment: Myths and Must-Know T…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">553w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/draft-bedtime-as-your-family-s-quiet-landing-place" target="_blank" class="article-link">Back-to-School Bedtime Routines: How to Bring More Calm to Your F…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,262w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/how-to-create-a-dark-sleep-space-for-your-toddler-without-screwing-up-naps" target="_blank" class="article-link">How to Create a Dark Sleep Space for Your Toddler (Without Screwi…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">645w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/blackout-curtains-vs-sleep-masks-the-surprising-truth-about-what-really-helps-shift-workers-sleep-better" target="_blank" class="article-link">Blackout Curtains vs. Sleep Masks: What Actually Works for Shift …</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">631w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/7-essential-tips-for-baby-proofing-nursery-windows-you-didnt-know-you-needed" target="_blank" class="article-link">7 Essential Tips for Baby-Proofing Nursery Windows You Didn't Kno…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">759w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-darkness-is-key-to-baby-sleep-how-to-create-the-ideal-sleep-environment" target="_blank" class="article-link">Why Darkness Is Key to Baby Sleep: How to Create the Ideal Sleep …</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">1,056w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-do-babies-sleep-so-much-unraveling-the-neuroscience-behind-their-sleep-needs" target="_blank" class="article-link">Why Do Babies Sleep So Much? Unraveling the Neuroscience Behind T…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">592w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/what-long-flights-really-do-to-your-body-surprising-effects-and-solutions-you-need-to-know" target="_blank" class="article-link">What Long Flights Really Do to Your Body: Surprising Effects and …</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">678w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unveiling-the-truth-which-part-of-the-brain-really-controls-sleep-insights-and-misconceptions-explained" target="_blank" class="article-link">Unveiling the Truth: Which Part of the Brain Really Controls Slee…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">1,245w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-your-babys-potential-how-sleep-shapes-newborn-cognitive-development-and-emotional-well-being" target="_blank" class="article-link">Unlocking Your Baby's Potential: How Sleep Shapes Newborn Cogniti…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">478w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-your-babys-brain-why-rem-sleep-in-infants-is-more-crucial-than-you-think" target="_blank" class="article-link">Unlocking Your Baby's Brain: Why REM Sleep in Infants is More Cru…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">642w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-the-truth-why-7-9-hours-of-sleep-is-essential-for-optimal-brain-function" target="_blank" class="article-link">Unlocking the Truth: Why 7-9 Hours of Sleep is Essential for Opti…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-med">587w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/unlocking-the-power-of-naps-how-they-shape-brain-development-and-boost-cognitive-function" target="_blank" class="article-link">Unlocking the Power of Naps: How They Shape Brain Development and…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">718w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/how-sleep-shapes-infant-neurological-development-a-neuroscientist-explains" target="_blank" class="article-link">Unlocking the Mystery: How Sleep Directly Fuels Infant Neurologic…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">752w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/circadian-rhythm-and-light-how-they-affect-sleep-according-to-a-neuroscientist" target="_blank" class="article-link">How Circadian Rhythm and Light Are Misunderstood and Why Blackout…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-med">653w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/newborn-twitching-in-sleep-whats-really-happening-according-to-a-neuroscientist" target="_blank" class="article-link">Newborn Twitching in Sleep: What's Really Happening, According to…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-thin">397w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-babies-need-to-nap-in-a-dark-room-heres-what-a-neuroscientist-says" target="_blank" class="article-link">Do Babies Need to Nap in a Dark Room? Here's What a Neuroscientis…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">782w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/can-letting-babies-cry-it-out-cause-brain-damage-a-neuroscientist-weighs-in" target="_blank" class="article-link">Can Letting Babies Cry It Out Cause Brain Damage? A Neuroscientis…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,014w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/does-the-brain-eat-itself-without-sleep-the-science-behind-sleep-deprivation" target="_blank" class="article-link">Does the Brain “Eat Itself” Without Sleep? The Science Behind Sle…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">741w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-babies-really-sleep-more-when-they-re-growing" target="_blank" class="article-link">Do Babies Really Sleep More When They’re Growing? Insights from N…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">894w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-sleep-isnt-just-a-luxury-the-essential-role-of-sleep-in-baby-brain-development" target="_blank" class="article-link">Why Sleep Isn't Just a Luxury: The Essential Role of Sleep in Bab…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">781w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-your-babys-excessive-sleep-is-essential-for-their-brain-development-and-learning" target="_blank" class="article-link">Why Your Baby's Excessive Sleep is Essential for Their Brain Deve…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">925w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/decoding-the-ideal-sleep-duration-for-teens" target="_blank" class="article-link">Decoding the Ideal Sleep Duration for Teens {pillar: baby sleepin…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,005w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/help-my-baby-wakes-up-every-hour" target="_blank" class="article-link">Help! My Baby Wakes Up Every Hour {pillar: sleep on back}</a><div class="issue-detail">Help! My Baby Wakes Up Every Hour {pillar: sleep on back}</div></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,949w</span></td>
+      <td><span class="badge badge-medium">Title has internal notes</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/navigating-bassinet-sleep-expert-advice-for-parents" target="_blank" class="article-link">Navigating Bassinet Sleep: Expert Advice for Parents {Pillar: sle…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,763w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-newborns-only-sleep-when-held" target="_blank" class="article-link">Why Newborns Only Sleep When Held {Pillar: Baby only sleeps on ba…</a><div class="issue-detail">Why Newborns Only Sleep When Held {Pillar: Baby only sleeps on back}</div></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,062w</span></td>
+      <td><span class="badge badge-medium">Title has internal notes</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/why-newborns-struggle-to-sleep-on-their-backs" target="_blank" class="article-link">Why Newborns Struggle to Sleep on Their Backs [PILLAR]</a><div class="issue-detail">Why Newborns Struggle to Sleep on Their Backs [PILLAR]</div></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">2,088w</span></td>
+      <td><span class="badge badge-medium">Title has internal notes</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/charming-draperies-to-transform-your-bedroom" target="_blank" class="article-link">Charming Draperies to Transform Your Bedroom (pillar: nursery bla…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">967w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/sleep-better-benefits-of-dark-room-curtains" target="_blank" class="article-link">Sleep Better: Benefits of Dark Room Curtains (pillar: nursery bla…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,609w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/do-blackout-curtains-help-with-heat" target="_blank" class="article-link">Do blackout curtains help with heat? (pillar: nursery blackout cu…</a></td>
+      <td><span class="pub-no">Draft</span></td>
+      <td><span class="wc-ok">1,452w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-essential-guide-to-quality-sleep-for-shift-workers-how-blackout-curtains-can-help" target="_blank" class="article-link">The Essential Guide to Quality Sleep for Shift Workers: How Black…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">1,070w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr><tr>
+      <td><a href="https://inotterspace.com/blogs/sleep-guides/the-neuroscience-of-sleep-enhancing-your-restful-hours-for-better-health" target="_blank" class="article-link">The Neuroscience of Sleep: Enhancing Your Restful Hours for Bette…</a></td>
+      <td><span class="pub-yes">Published</span></td>
+      <td><span class="wc-ok">837w</span></td>
+      <td><span class="badge badge-medium">Title too long</span></td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p class="section-heading">Topic Cluster Coverage</p>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Topic Cluster</th><th>Total Articles</th><th>Published</th><th>Draft</th><th>Avg Length</th></tr></thead>
+      <tbody><tr>
+      <td><strong>nursery/baby</strong></td>
+      <td>34</td>
+      <td>13</td>
+      <td>21</td>
+      <td>1,103w avg</td>
+    </tr><tr>
+      <td><strong>neuroscience/sleep science</strong></td>
+      <td>20</td>
+      <td>6</td>
+      <td>14</td>
+      <td>752w avg</td>
+    </tr><tr>
+      <td><strong>general sleep</strong></td>
+      <td>18</td>
+      <td>10</td>
+      <td>8</td>
+      <td>1,287w avg</td>
+    </tr><tr>
+      <td><strong>blackout product guides</strong></td>
+      <td>13</td>
+      <td>13</td>
+      <td>0</td>
+      <td>1,491w avg</td>
+    </tr><tr>
+      <td><strong>gaming</strong></td>
+      <td>8</td>
+      <td>1</td>
+      <td>7</td>
+      <td>618w avg</td>
+    </tr><tr>
+      <td><strong>shift worker</strong></td>
+      <td>6</td>
+      <td>2</td>
+      <td>4</td>
+      <td>822w avg</td>
+    </tr><tr>
+      <td><strong>travel</strong></td>
+      <td>5</td>
+      <td>4</td>
+      <td>1</td>
+      <td>693w avg</td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p class="section-heading">Keyword Overlap Risk</p>
+
+  <div class="summary-card">
+    <p>The following terms appear in the titles or handles of 5 or more articles. Where multiple articles target nearly the same query, Google may split ranking signals across them instead of concentrating authority on one strong page. Internal linking and potential consolidation of near-duplicate posts could help address this.</p>
+  </div>
+
+  <div class="data-table-wrap">
+    <table class="data-table">
+      <thead><tr><th>Keyword</th><th>Articles Containing It</th><th>Example Articles</th></tr></thead>
+      <tbody><tr>
+      <td><strong>"sleep"</strong></td>
+      <td>133</td>
+      <td class="small-text">Transform Your Sleep with Blackout …, Transform Your Sleep with Blackout …, Transform Your Space with Blackout …</td>
+    </tr><tr>
+      <td><strong>"blackout"</strong></td>
+      <td>61</td>
+      <td class="small-text">Discover Benefits of Blue Blackout …, Discover Benefits of Blue Blackout …, Transform Your Sleep with Blackout …</td>
+    </tr><tr>
+      <td><strong>"curtains"</strong></td>
+      <td>46</td>
+      <td class="small-text">Discover Benefits of Blue Blackout …, Discover Benefits of Blue Blackout …, Choosing Ideal Curtains for Your Nu…</td>
+    </tr><tr>
+      <td><strong>"brain"</strong></td>
+      <td>39</td>
+      <td class="small-text">How One Simple Trick Can Help New M…, How One Simple Trick Can Help New M…, The Surprising Truth About the Effe…</td>
+    </tr><tr>
+      <td><strong>"transform"</strong></td>
+      <td>24</td>
+      <td class="small-text">Transform Your Sleep with Blackout …, Transform Your Sleep with Blackout …, Transform Your Space with Blackout …</td>
+    </tr><tr>
+      <td><strong>"better"</strong></td>
+      <td>22</td>
+      <td class="small-text">The Ultimate Guide to Choosing the …, The Ultimate Guide to Choosing the …, Dorm Blackout Curtains: The Ultimat…</td>
+    </tr><tr>
+      <td><strong>"neuroscientist"</strong></td>
+      <td>22</td>
+      <td class="small-text">Do Babies Really Sleep More When Th…, Do Babies Really Sleep More When Th…, Unlocking the Mystery: How Sleep Di…</td>
+    </tr><tr>
+      <td><strong>"development"</strong></td>
+      <td>18</td>
+      <td class="small-text">The Crucial Role of Sleep in Baby B…, The Crucial Role of Sleep in Baby B…, Unlocking Your Baby's Potential: Ho…</td>
+    </tr><tr>
+      <td><strong>"unlocking"</strong></td>
+      <td>16</td>
+      <td class="small-text">How One Simple Trick Can Help New M…, Unlocking Better Baby Sleep: Why a …, Unlocking Better Baby Sleep: Why a …</td>
+    </tr><tr>
+      <td><strong>"babies"</strong></td>
+      <td>16</td>
+      <td class="small-text">Do Babies Really Sleep More When Th…, Do Babies Really Sleep More When Th…, Why Do Babies Sleep So Much? Unrave…</td>
+    </tr></tbody>
+    </table>
+  </div>
+
+  <p class="section-heading">Recommended Next Steps</p>
+
+  <div class="two-col">
+    <div class="opp-card success" style="margin-bottom:0;">
+      <div class="opp-header"><div class="opp-title">Quick Wins (no new content required)</div><span class="priority-tag tag-success">Do First</span></div>
+      <p style="margin-top:8px;">1. <strong>Publish the 31 draft articles</strong> that are already written and 700w+<br>2. <strong>Clean up titles</strong> with internal notes (26 articles)<br>3. <strong>Add featured images</strong> to top 20 published articles with no image</p>
+    </div>
+    <div class="opp-card medium" style="margin-bottom:0;">
+      <div class="opp-header"><div class="opp-title">Content Expansion (light rewrite)</div><span class="priority-tag tag-medium">Phase 2</span></div>
+      <p style="margin-top:8px;">1. <strong>Expand the 4 thin articles</strong> under 400 words to 700w+ each<br>2. <strong>Expand top 10 short articles</strong> (400-700w) with FAQ sections and product context<br>3. <strong>Add internal links</strong> between related nursery and sleep science posts</p>
+    </div>
+  </div>
+
+  <div class="opp-card low" style="margin-top:20px;">
+    <div class="opp-header"><div class="opp-title">Strategic Content Gaps (new articles)</div><span class="priority-tag tag-low">Phase 3</span></div>
+    <p>The shift worker (6 articles) and travel (5 articles) clusters are underserved relative to their commercial intent. These audiences search with high purchase motivation. Adding 4-6 targeted articles per cluster, built around specific queries ("blackout curtains for overnight nurses", "hotel room blackout curtain hack", "portable blackout for travel"), could open new revenue-generating traffic channels with relatively low competition.</p>
+  </div>
+
+</div>
+
+<div class="report-footer">
+  Prepared by <a href="https://embertribe.com">EmberTribe</a> for OtterSpace &mdash; May 27, 2026 &mdash; inotterspace.com
+</div>
+
+</body>
+</html>
