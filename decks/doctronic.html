@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctronic.ai — EmberTribe SEO Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #050F1F;
+  --primary-mid: #0A1E3D;
+  --primary-light: #103A70;
+  --accent: #2DD4BF;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #2DD4BF;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 15px;
+  font-size: 14px;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E0FBF8; border-left-color: var(--teal); }
+.annotation.info strong { color: #0D7A6E; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 2px solid var(--border);
+}
+td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+.dim { opacity: 0.45; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 80px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-label.wide { width: 110px; }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+  min-width: 40px;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, #0D9488, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #1a6aa3, var(--blue)); }
+.bar-fill.gray   { background: linear-gradient(90deg, #95a5a6, #bdc3c7); }
+.bar-value { width: 68px; text-align: right; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.pill.red    { background: #FFEBEE; color: var(--red); }
+.pill.green  { background: #E8F5E9; color: var(--green); }
+.pill.yellow { background: #FFF8E1; color: #B8860B; }
+.pill.teal   { background: #E0FBF8; color: #0D7A6E; }
+.pill.gray   { background: #F5F5F5; color: #666; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child  { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; }
+.timeline-phase h4 { margin-bottom: 8px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 13px; margin-bottom: 4px; font-size: 12px; line-height: 1.45; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed; bottom: 24px; right: 32px;
+  display: flex; align-items: center; gap: 12px; z-index: 100;
+}
+.nav button {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white; font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px; }
+
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.flex-grow { flex: 1; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+
+/* drop-alert accent line */
+.alert-line {
+  border-left: 3px solid var(--red);
+  padding-left: 12px;
+  margin: 4px 0;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 26px; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child  { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ── SLIDE 1: TITLE ─────────────────────────────────────── -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">SEO Audit &amp; Recovery Analysis</p>
+      <h1>Doctronic.ai</h1>
+      <p class="subtitle" style="max-width:680px;">12× organic growth in 15 months — then a 55% traffic drop in 9 days. Here's what happened, what got hit, and how to get it back.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">365K</div>
+          <div class="stat-label">Monthly clicks at peak (May 2026)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--ember-red);">−55%</div>
+          <div class="stat-label">Click drop in 9 days post-May 22</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--yellow);">12.1</div>
+          <div class="stat-label">Avg position post-drop (was 9.0)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">12×</div>
+          <div class="stat-label">Traffic growth Feb 2025 → May 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared for Doctronic.ai &mdash; June 2026</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 2: TRAFFIC TRAJECTORY ───────────────────────── -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Traffic Trajectory</p>
+    <h2>16 Months of Organic Growth</h2>
+    <p class="subtitle">Doctronic grew faster than nearly any health site we've audited — then hit a wall in late May 2026.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row"><span class="bar-label">Feb '25</span><div class="bar-track"><div class="bar-fill teal" style="width:8%;">29.9K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Mar '25</span><div class="bar-track"><div class="bar-fill teal" style="width:9%;">33.8K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Apr '25</span><div class="bar-track"><div class="bar-fill teal" style="width:10%;">34.7K</div></div></div>
+      <div class="bar-row"><span class="bar-label">May '25</span><div class="bar-track"><div class="bar-fill teal" style="width:11%;">38.6K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jun '25</span><div class="bar-track"><div class="bar-fill teal" style="width:11%;">40.3K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jul '25</span><div class="bar-track"><div class="bar-fill teal" style="width:14%;">50.9K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Aug '25</span><div class="bar-track"><div class="bar-fill teal" style="width:13%;">47.7K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Sep '25</span><div class="bar-track"><div class="bar-fill teal" style="width:15%;">53.8K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Oct '25</span><div class="bar-track"><div class="bar-fill teal" style="width:19%;">68.3K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Nov '25</span><div class="bar-track"><div class="bar-fill teal" style="width:19%;">69.3K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Dec '25</span><div class="bar-track"><div class="bar-fill teal" style="width:20%;">72.9K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jan '26</span><div class="bar-track"><div class="bar-fill blue" style="width:28%;">103.7K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Feb '26</span><div class="bar-track"><div class="bar-fill blue" style="width:33%;">121.1K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Mar '26</span><div class="bar-track"><div class="bar-fill blue" style="width:61%;">222.2K</div></div></div>
+      <div class="bar-row"><span class="bar-label">Apr '26</span><div class="bar-track"><div class="bar-fill blue" style="width:83%;">305.1K</div></div></div>
+      <div class="bar-row"><span class="bar-label">May '26</span><div class="bar-track"><div class="bar-fill ember" style="width:100%;">365.9K ⚠ drop mid-month</div></div></div>
+    </div>
+    <div class="annotation danger">
+      <strong>May anomaly:</strong> Month total looks strong, but daily clicks peaked at 15,700 on May 11–18 and collapsed to ~7,000 by May 30 — a 55% intra-month drop after May 22.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 3: THE DROP ──────────────────────────────────── -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Drop</p>
+    <h2>May 22 — A Clean Algorithm Break</h2>
+    <p class="subtitle">Daily clicks and impressions fell off a cliff on a single day, pointing to a Google algorithm update rather than a manual action.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Daily Clicks — May 2026</h3>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">May 11</span><div class="bar-track"><div class="bar-fill green" style="width:100%;">15,729</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 13</span><div class="bar-track"><div class="bar-fill green" style="width:93%;">14,688</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 15</span><div class="bar-track"><div class="bar-fill green" style="width:87%;">13,728</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 18</span><div class="bar-track"><div class="bar-fill green" style="width:98%;">15,395</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 20</span><div class="bar-track"><div class="bar-fill yellow" style="width:88%;">13,841</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="font-weight:700; color:#c0392b;">May 22 ⚠</span><div class="bar-track"><div class="bar-fill red" style="width:66%;">10,420</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 23</span><div class="bar-track"><div class="bar-fill red" style="width:59%;">9,276</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 24</span><div class="bar-track"><div class="bar-fill red" style="width:52%;">8,188</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 27</span><div class="bar-track"><div class="bar-fill red" style="width:51%;">8,089</div></div></div>
+          <div class="bar-row"><span class="bar-label">May 30</span><div class="bar-track"><div class="bar-fill red" style="width:44%;">6,977</div></div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">What the signals tell us</h3>
+        <div class="annotation danger">
+          <strong>Impressions halved.</strong> Daily impressions dropped from 3.3M to 1.7M — rankings themselves fell out of view, not just CTR.
+        </div>
+        <div class="annotation danger mt-8">
+          <strong>Average position: 9.0 → 12.1.</strong> Broad page-2 push across hundreds of queries in a single rollout window.
+        </div>
+        <div class="annotation info mt-8">
+          <strong>No manual action.</strong> GSC shows no manual penalty. This is an algorithmic devaluation — likely Google's May 2026 Core Update targeting YMYL health content.
+        </div>
+        <div class="annotation success mt-8">
+          <strong>Branded queries held.</strong> "ai doctor" (pos 1.8→2.1), "doctronic ai" (pos 1.1→1.0). Google still trusts the product — it's the blog content under scrutiny.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 4: WHAT GOT HIT ──────────────────────────────── -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Content Audit</p>
+    <h2>What Got Hit vs. What Survived</h2>
+    <p class="subtitle">Not all content was treated equally. The update had clear preferences by content type.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Sample Pages</th>
+          <th class="right">Before/day</th>
+          <th class="right">After/day</th>
+          <th class="right">Change</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Best-Of Listicles</td>
+          <td class="mono">best-blood-pressure-medication, best-time-to-take-plavix</td>
+          <td class="right">411–50</td>
+          <td class="right">89–0</td>
+          <td class="right bold red">−78% to −100%</td>
+          <td><span class="pill red">Crushed</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Dr. Gina Sam (Influencer)</td>
+          <td class="mono">7-second-morning-ritual blog post</td>
+          <td class="right">437</td>
+          <td class="right">110</td>
+          <td class="right bold red">−75%</td>
+          <td><span class="pill red">Crushed</span></td>
+        </tr>
+        <tr>
+          <td class="bold">GLP-1 / Weight Loss</td>
+          <td class="mono">retatrutide-dosage-chart, cagrilintide-dosage</td>
+          <td class="right">207–41</td>
+          <td class="right">68–13</td>
+          <td class="right bold" style="color:var(--orange);">−24% to −68%</td>
+          <td><span class="pill yellow">Moderate Hit</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Vomiting / Emetic</td>
+          <td class="mono">how-to-induce-vomiting, how-to-make-yourself-throw-up</td>
+          <td class="right">177–29</td>
+          <td class="right">77–0</td>
+          <td class="right bold red">−56% to −100%</td>
+          <td><span class="pill red">Crushed</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Men's Sexual Health</td>
+          <td class="mono">venous-leak, ejaculation-frequency</td>
+          <td class="right">136–47</td>
+          <td class="right">68–17</td>
+          <td class="right bold" style="color:var(--orange);">−50% to −66%</td>
+          <td><span class="pill yellow">Moderate Hit</span></td>
+        </tr>
+        <tr>
+          <td class="bold">General Health Blog</td>
+          <td class="mono">amoxicillin-timing, betamethasone-interactions</td>
+          <td class="right">79–27</td>
+          <td class="right">30–0</td>
+          <td class="right bold" style="color:var(--orange);">−10% to −100%</td>
+          <td><span class="pill yellow">Mixed</span></td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td class="bold">Branded / AI Tool Queries</td>
+          <td class="mono">"ai doctor", "doctronic ai", homepage</td>
+          <td class="right">~900</td>
+          <td class="right">~710</td>
+          <td class="right bold green">−21%</td>
+          <td><span class="pill green">Held</span></td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td class="bold">Evergreen STI / Herpes</td>
+          <td class="mono">herpes-cure-2025-update</td>
+          <td class="right">81</td>
+          <td class="right">99</td>
+          <td class="right bold green">+23%</td>
+          <td><span class="pill teal">Gained</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation info mt-8">
+      <strong>Key insight:</strong> Google penalized the blog's breadth play while leaving the core AI product and its branded queries nearly untouched. The brand is safe — the content strategy needs surgery.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 5: ROOT CAUSE ────────────────────────────────── -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Root Cause Analysis</p>
+    <h2>The March 2026 Content Sprint</h2>
+    <p class="subtitle">Publish dates reveal the smoking gun: a burst of "best-of" health articles published in a tight window — exactly the pattern Google's SpamBrain flags as scaled content production.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:10px;">March 2026 Pages — All Crushed</h3>
+        <table>
+          <thead><tr><th>Page</th><th>Published</th><th>Drop</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">best-blood-pressure-medication</td><td>Mar 19</td><td class="bold red">−78%</td></tr>
+            <tr><td class="mono">best-antibiotic-for-skin-infection</td><td>Mar 19</td><td class="bold red">−66%</td></tr>
+            <tr><td class="mono">best-time-to-take-plavix</td><td>Mar 20</td><td class="bold red">−81%</td></tr>
+            <tr><td class="mono">best-time-to-take-clopidogrel-75-mg</td><td>Mar 20</td><td class="bold red">−100%</td></tr>
+            <tr><td class="mono">best-time-to-take-psyllium-husk</td><td>Mar 20</td><td class="bold red">−74%</td></tr>
+            <tr><td class="mono">best-time-to-take-sertraline</td><td>Mar 20</td><td class="bold red">−46%</td></tr>
+            <tr><td class="mono">best-time-to-take-estradiol-pills</td><td>Mar 20</td><td class="bold red">−36%</td></tr>
+            <tr><td class="mono">lexapro-5mg-vs-10mg</td><td>Mar 20</td><td class="bold red">−32%</td></tr>
+            <tr><td class="mono">how-long-can-you-go-without-pooping</td><td>Mar 17</td><td class="bold red">−44%</td></tr>
+            <tr><td class="mono">how-many-hours-apart-amoxicillin</td><td>Mar 18</td><td class="bold red">−62%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">Why Google flagged this</h3>
+        <div class="annotation danger">
+          <strong>Velocity signal.</strong> Publishing 10+ medication-specific articles in a single week is a textbook scaled AI content pattern. These pages barely ranked before the update wiped them.
+        </div>
+        <div class="annotation danger mt-8">
+          <strong>YMYL without E-E-A-T.</strong> "Best blood pressure medication" and "best antibiotic" are high-stakes medical recommendations. Without author credentials, citations, and reviewer bylines, Google applies maximum skepticism to health-advice content.
+        </div>
+        <div class="annotation danger mt-8">
+          <strong>Domain trust drag.</strong> The March sprint likely pulled down trust signals site-wide — explaining why even older, unrelated pages lost rankings when the update rolled out.
+        </div>
+        <div class="annotation success mt-8">
+          <strong>Good news:</strong> Pages published mid-2025 are holding significantly better, even in the same topic categories. The foundation is solid; the March sprint is the acute problem.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 6: BRIGHT SPOTS ──────────────────────────────── -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Opportunity Map</p>
+    <h2>What's Working — and Why It Matters</h2>
+    <p class="subtitle">The pages that survived (or grew) show exactly what Google wants from Doctronic. These are the templates to clone.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green" style="margin-bottom:12px;">Pages That Held or Gained</h3>
+        <table>
+          <thead><tr><th>Page</th><th>Published</th><th>Change</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">herpes-cure-2025-update</td><td>Jan '26</td><td class="bold green">+23%</td></tr>
+            <tr><td class="mono">retatrutide-dosage-chart-v2</td><td>Jan '26</td><td class="bold green">+25%</td></tr>
+            <tr><td class="mono">dr-gina-sam Q&amp;A page</td><td>unknown</td><td class="bold green">+22%</td></tr>
+            <tr><td class="mono">tirzepatide-interactions</td><td>Dec '25</td><td class="bold green">+22%</td></tr>
+            <tr><td class="mono">semaglutide-to-tirzepatide conversion</td><td>Oct '25</td><td class="bold teal">−24%</td></tr>
+            <tr><td class="mono">normal-penis-size-by-age Q&amp;A</td><td>unknown</td><td class="bold teal">0%</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-12">
+          <strong>Pattern:</strong> Specific, data-driven content with a clear searcher utility — dosage charts, interaction guides, cure updates — outperformed generic "best of" advice.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Untapped Impression Opportunities</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">High-impression pages with low CTR — rankings are there, but click-through needs work.</p>
+        <table>
+          <thead><tr><th>Page</th><th>Impressions/mo</th><th>CTR</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">retatrutide-side-effects</td><td>1.77M</td><td class="bold red">0.61%</td></tr>
+            <tr><td class="mono">how-many-times-ejaculate</td><td>2.82M</td><td class="bold red">0.54%</td></tr>
+            <tr><td class="mono">ai-dermatologist</td><td>~2M</td><td class="bold red">0.55%</td></tr>
+            <tr><td class="mono">medical-ai (query)</td><td>129K</td><td class="bold red">5.1%</td></tr>
+            <tr><td class="mono">symptom-checker</td><td>665K</td><td class="bold" style="color:var(--orange);">2.6%</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-12">
+          <strong>Quick win:</strong> Title tag and meta description rewrites on high-impression pages could recover 20–30K clicks/month without touching rankings.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 7: RECOVERY ROADMAP ─────────────────────────── -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recovery Strategy</p>
+    <h2>How We'd Fix This</h2>
+    <p class="subtitle">A three-phase approach: stop the bleeding, rebuild trust, then scale content the right way.</p>
+    <div class="timeline flex-grow" style="align-items:stretch;">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Triage</span>
+        <h4>Stop the Bleeding</h4>
+        <ul>
+          <li>Full content audit: tag every page as Keep / Fix / Remove</li>
+          <li>Noindex or consolidate March 2026 "best-of" pages that can't be meaningfully improved</li>
+          <li>Add author bylines + credentials to all remaining blog posts</li>
+          <li>Submit recrawl requests via GSC after cleanup</li>
+          <li>Title tag + meta rewrites for top 20 high-impression, low-CTR pages</li>
+        </ul>
+        <div class="phase-cost">$3,500 / mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Rebuild</span>
+        <h4>E-E-A-T Remediation</h4>
+        <ul>
+          <li>Rewrite the 15 highest-traffic damaged pages with physician review</li>
+          <li>Add clinical citations + "medically reviewed by" schema markup</li>
+          <li>Build an About/Team page establishing medical credentials</li>
+          <li>Differentiate surviving GLP-1 content with original dosing data</li>
+          <li>Internal linking audit — consolidate duplicate topic clusters</li>
+        </ul>
+        <div class="phase-cost">$4,500 / mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3+ — Scale</span>
+        <h4>Sustainable Growth</h4>
+        <ul>
+          <li>New content brief framework: no publish velocity spikes</li>
+          <li>Prioritize tool/calculator pages (proven to survive updates)</li>
+          <li>Expand Q&amp;A format pages — outperforming blog posts in data</li>
+          <li>Build topical authority in 3–4 core clusters vs. spray-and-pray</li>
+          <li>Monthly GSC monitoring cadence with threshold alerts</li>
+        </ul>
+        <div class="phase-cost">$3,000 / mo</div>
+      </div>
+    </div>
+    <div class="annotation success mt-12">
+      <strong>Expected outcome:</strong> Based on comparable core update recoveries, sites that complete E-E-A-T remediation and content cleanup typically recover 60–80% of lost traffic within 2–3 Google core update cycles (4–6 months).
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 8: INVESTMENT ────────────────────────────────── -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Flexible engagement — start with triage, scale up as recovery takes hold.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Monthly</th>
+          <th>Key Deliverables</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">SEO Content Audit &amp; Strategy</td>
+          <td class="bold">$2,000–$3,000</td>
+          <td>Full page audit, content triage matrix, monthly brief queue, GSC reporting</td>
+        </tr>
+        <tr>
+          <td class="bold">E-E-A-T Content Remediation</td>
+          <td class="bold">$2,500–$4,000</td>
+          <td>Physician-reviewed rewrites, author schema, citation sourcing, meta optimization</td>
+        </tr>
+        <tr>
+          <td class="bold">Technical SEO</td>
+          <td class="bold">$1,000–$1,500</td>
+          <td>Schema markup, crawl cleanup, internal linking, Core Web Vitals</td>
+        </tr>
+        <tr>
+          <td class="bold">Ongoing Content Production</td>
+          <td class="bold">$1,500–$2,500</td>
+          <td>4–6 differentiated articles/mo in surviving topic clusters; no velocity spikes</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Total (starting at)</td>
+          <td>$7,000–$11,000 / mo</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-12">
+      <strong>Context:</strong> At peak, Doctronic was generating ~15,000 clicks/day. The May drop cost roughly 200,000+ monthly visits. Even a partial recovery is worth multiples of this engagement.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Doctronic.ai &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- ── SLIDE 9: NEXT STEPS ────────────────────────────────── -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Get the Traffic Back</h1>
+      <p class="subtitle" style="text-align:center; max-width:600px;">The brand is intact. The AI product is ranking. The blog content is the acute problem — and it's fixable.</p>
+      <div class="mt-24" style="display:flex; gap:32px; justify-content:center; flex-wrap:wrap;">
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:24px 32px; max-width:200px;">
+          <div style="font-size:28px; margin-bottom:8px;">01</div>
+          <div style="font-weight:700; margin-bottom:4px;">Content Triage Call</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5);">Walk through the audit findings together</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:24px 32px; max-width:200px;">
+          <div style="font-size:28px; margin-bottom:8px;">02</div>
+          <div style="font-weight:700; margin-bottom:4px;">Month 1 Kickoff</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5);">Triage sprint + author setup + quick CTR wins</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:24px 32px; max-width:200px;">
+          <div style="font-size:28px; margin-bottom:8px;">03</div>
+          <div style="font-weight:700; margin-bottom:4px;">Next Core Update</div>
+          <div style="font-size:13px; color:rgba(255,255,255,0.5);">Positioned to recover, not get hit again</div>
+        </div>
+      </div>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Book a strategy call with EmberTribe</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-top:6px;">embertribe.com</p>
+      </div>
+    </div>
+    <div class="logo-row" style="width:100%;">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Confidential &mdash; June 2026</span>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
