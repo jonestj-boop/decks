@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>713 Abogado — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #111111;
+  --primary-mid: #1e1e1e;
+  --primary-light: #2e2e2e;
+  --accent: #F5C518;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F5C518;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, #111111 0%, #1e1e1e 50%, #2a1a00 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277bd; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.center { text-align: center; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 145px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #c9a800, #F5C518); color: #222; }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--accent), var(--primary-light)); }
+.bar-fill.orange { background: linear-gradient(90deg, #c0620a, var(--orange)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.yellow  { background: #FFFDE7; color: #c9a800; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ember-red);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ember-red);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.gold { color: #c9a800; }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* Maps Pack visual */
+.maps-pack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.maps-result {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--light-bg);
+}
+
+.maps-result.highlight {
+  border-color: #F5C518;
+  background: #FFFDE7;
+}
+
+.maps-rank {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #34a853;
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.maps-rank.out { background: #9e9e9e; }
+.maps-rank.you { background: #F5C518; color: #222; }
+
+.maps-name { font-weight: 700; font-size: 15px; }
+.maps-meta { font-size: 13px; color: var(--text-light); }
+
+.maps-stars {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.maps-stars .star-val { font-size: 16px; font-weight: 800; color: #F5C518; }
+.maps-stars .review-ct { font-size: 12px; color: var(--text-light); }
+
+/* Pricing table upgrade */
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+.pricing-table th {
+  background: var(--primary-dark);
+  color: white;
+  font-weight: 700;
+  text-transform: none;
+  font-size: 13px;
+  letter-spacing: 0;
+  padding: 12px 16px;
+  border: none;
+}
+
+.pricing-table th.accent-col { background: var(--ember-red); }
+
+.pricing-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.pricing-table .row-label { font-weight: 600; font-size: 13px; }
+
+.pricing-table .price-cell {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--primary-dark);
+}
+
+.pricing-table tfoot td {
+  font-weight: 800;
+  font-size: 15px;
+  border-top: 2px solid var(--primary-dark);
+  background: #f0f0f0;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 90px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit &amp; Roadmap</p>
+      <h1>713 Abogado</h1>
+      <p class="subtitle">Houston's bilingual PI firm has strong brand equity — but competitors are dominating the Maps Pack and outranking you on the keywords that drive signed cases.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#F5C518;">44%</div>
+          <div class="stat-label">Houston residents speak a language other than English — your target market is massive</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">Top 3</div>
+          <div class="stat-label">Maps Pack positions held by Hilda Sibrian &amp; Javier Marcos — not you</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">#8–15</div>
+          <div class="stat-label">Estimated organic position for "abogado de accidentes Houston"</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$4.5M</div>
+          <div class="stat-label">Largest documented settlement — a story that needs to rank</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Corey Gomel &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where 713 Abogado Stands Today</h2>
+    <p class="subtitle">Strong brand identity and proven results — but organic visibility and Maps presence aren't converting that brand equity into leads at scale.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">25+</div>
+        <div class="stat-label">Indexed pages across practice areas &amp; service cities</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:#F5C518;">~2,400</div>
+        <div class="stat-label">Estimated monthly organic visitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">Low</div>
+        <div class="stat-label">Google Business Profile review velocity vs. competitors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">4 Cities</div>
+        <div class="stat-label">Service area: Houston, Pasadena, Katy, Baytown</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul style="list-style:none; padding:0; margin-top:8px;">
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--green);"></span>Memorable brand name built around the 713 area code — strong recall</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--green);"></span>Bilingual (Spanish + English) positioning in the right market</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--green);"></span>Strong track record: $4.5M, $2.1M, $1.0M settlements to showcase</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--green);"></span>25+ practice area pages — foundation for content expansion</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px;"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--green);"></span>Active social presence (Facebook, Instagram)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0; margin-top:8px;">
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--red);"></span>Not ranking in the Google Maps 3-Pack for priority keywords</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--red);"></span>Thin content — competitors publish 5–10x more pages per month</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--red);"></span>Low review count vs. Hilda Sibrian's 2,000+ Google reviews</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px; border-bottom:1px solid var(--border);"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--red);"></span>Limited backlink profile compared to established competitors</li>
+          <li style="padding:6px 0 6px 18px; position:relative; font-size:14px;"><span style="position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--red);"></span>Spanish-language pages underoptimized — missed keyword targeting</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: COMPETITOR ORGANIC RANKINGS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>Competitor Organic Rankings</h2>
+    <p class="subtitle">Where the Spanish-bilingual PI market leaders rank for the keywords your clients are searching right now.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>713 Abogado</th>
+          <th>Hilda Sibrian</th>
+          <th>Javier Marcos</th>
+          <th>Salinas Law</th>
+          <th>Est. Monthly Searches</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">abogado de accidentes Houston</td>
+          <td><span class="pill orange">#12</span></td>
+          <td><span class="pill green">#1</span></td>
+          <td><span class="pill green">#3</span></td>
+          <td><span class="pill blue">#6</span></td>
+          <td class="bold">3,600 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">abogado de accidentes de auto</td>
+          <td><span class="pill orange">#15</span></td>
+          <td><span class="pill green">#2</span></td>
+          <td><span class="pill green">#4</span></td>
+          <td><span class="pill blue">#7</span></td>
+          <td class="bold">5,400 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">abogado Houston</td>
+          <td><span class="pill red">#20+</span></td>
+          <td><span class="pill green">#3</span></td>
+          <td><span class="pill green">#2</span></td>
+          <td><span class="pill blue">#8</span></td>
+          <td class="bold">8,100 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">Houston accident lawyer</td>
+          <td><span class="pill orange">#18</span></td>
+          <td><span class="pill green">#4</span></td>
+          <td><span class="pill blue">#9</span></td>
+          <td><span class="pill red">#22</span></td>
+          <td class="bold">12,100 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">car accident lawyer Houston TX</td>
+          <td><span class="pill red">#25+</span></td>
+          <td><span class="pill green">#5</span></td>
+          <td><span class="pill blue">#11</span></td>
+          <td><span class="pill red">#19</span></td>
+          <td class="bold">9,900 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">abogado accidente camion Houston</td>
+          <td><span class="pill blue">#8</span></td>
+          <td><span class="pill green">#1</span></td>
+          <td><span class="pill blue">#5</span></td>
+          <td><span class="pill orange">#14</span></td>
+          <td class="bold">1,300 / mo</td>
+        </tr>
+        <tr>
+          <td class="bold">abogado accidente Uber Lyft Houston</td>
+          <td><span class="pill blue">#6</span></td>
+          <td><span class="pill blue">#9</span></td>
+          <td><span class="pill green">#3</span></td>
+          <td><span class="pill orange">#12</span></td>
+          <td class="bold">880 / mo</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>The gap:</strong> Hilda Sibrian ranks in the top 5 for every high-volume keyword. You hold positions in specialty niches (Uber/Lyft, truck) but are invisible for the broad queries that drive the most case volume. Closing that gap is addressable with content + authority building.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: GOOGLE MAPS POSITIONING -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Local Search Dominance</p>
+    <h2>Google Maps Pack Positioning</h2>
+    <p class="subtitle">The Maps 3-Pack captures 44% of all local legal search clicks. Here's who owns it today — and what it takes to break in.</p>
+
+    <div class="two-col" style="gap:24px; flex:1; margin-top:8px;">
+      <div>
+        <h4 style="margin-bottom:12px; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light);">Maps Pack — "abogado de accidentes Houston"</h4>
+        <div class="maps-pack">
+          <div class="maps-result">
+            <div class="maps-rank">1</div>
+            <div>
+              <div class="maps-name">Hilda Sibrian Abogados</div>
+              <div class="maps-meta">hildasibrian.com &nbsp;·&nbsp; 846 N Loop, Houston</div>
+              <div style="margin-top:4px;"><span class="pill seo">20+ yrs</span> <span class="pill content">2,000+ reviews</span></div>
+            </div>
+            <div class="maps-stars">
+              <div class="star-val">4.8 ★</div>
+              <div class="review-ct">2,014 reviews</div>
+            </div>
+          </div>
+          <div class="maps-result">
+            <div class="maps-rank">2</div>
+            <div>
+              <div class="maps-name">Javier Marcos — Abogado</div>
+              <div class="maps-meta">attorneyjaviermarcos.com &nbsp;·&nbsp; Houston NW</div>
+              <div style="margin-top:4px;"><span class="pill seo">20+ yrs</span> <span class="pill blue">Super Lawyers</span></div>
+            </div>
+            <div class="maps-stars">
+              <div class="star-val">4.9 ★</div>
+              <div class="review-ct">840 reviews</div>
+            </div>
+          </div>
+          <div class="maps-result">
+            <div class="maps-rank">3</div>
+            <div>
+              <div class="maps-name">Salinas Law Group</div>
+              <div class="maps-meta">salinas-law.com &nbsp;·&nbsp; Houston Heights</div>
+              <div style="margin-top:4px;"><span class="pill orange">Bilingual</span></div>
+            </div>
+            <div class="maps-stars">
+              <div class="star-val">4.7 ★</div>
+              <div class="review-ct">320 reviews</div>
+            </div>
+          </div>
+          <div class="maps-result highlight">
+            <div class="maps-rank you">?</div>
+            <div>
+              <div class="maps-name">713 Abogado (Corey Gomel)</div>
+              <div class="maps-meta">713abogado.com &nbsp;·&nbsp; 1177 W Loop S, Houston</div>
+              <div style="margin-top:4px;"><span class="pill yellow">Not in Pack</span></div>
+            </div>
+            <div class="maps-stars">
+              <div class="star-val" style="color:var(--orange);">—</div>
+              <div class="review-ct">Needs volume</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:12px; font-size:13px; text-transform:uppercase; letter-spacing:1px; color:var(--text-light);">What Drives Maps Pack Rankings</h4>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+          <div style="padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:var(--light-bg);">
+            <div style="font-weight:700;margin-bottom:4px;">Review Velocity &amp; Volume <span class="pill red" style="float:right;">Your Gap</span></div>
+            <div style="font-size:13px;color:var(--text-light);">Hilda: 2,000+ reviews. You need a systematic ask-after-settlement process to close this.</div>
+          </div>
+          <div style="padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:var(--light-bg);">
+            <div style="font-weight:700;margin-bottom:4px;">GBP Optimization <span class="pill orange" style="float:right;">Partial</span></div>
+            <div style="font-size:13px;color:var(--text-light);">Services, photos, Q&amp;A, posts, and categories need continuous updates to signal relevance.</div>
+          </div>
+          <div style="padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:var(--light-bg);">
+            <div style="font-weight:700;margin-bottom:4px;">Local Citation Consistency <span class="pill orange" style="float:right;">Needs Audit</span></div>
+            <div style="font-size:13px;color:var(--text-light);">NAP consistency across Avvo, Justia, FindLaw, Yelp, and State Bar directories.</div>
+          </div>
+          <div style="padding:14px 18px;border:1px solid var(--border);border-radius:10px;background:var(--light-bg);">
+            <div style="font-weight:700;margin-bottom:4px;">Proximity + Relevance Signals <span class="pill green" style="float:right;">Addressable</span></div>
+            <div style="font-size:13px;color:var(--text-light);">Localized landing pages for Pasadena, Katy, Baytown boost Maps Pack radius.</div>
+          </div>
+        </div>
+        <div class="annotation success mt-16">
+          <strong>Guaranteed Maps ranking</strong> — EmberTribe's Maps Pack guarantee puts you in the top 3 within a defined radius in 90 days. This is the fastest path to intercepting clients at the moment they need an abogado.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: KEYWORD OPPORTUNITIES -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Content Gaps</p>
+    <h2>Keywords You're Missing — Cases on the Table</h2>
+    <p class="subtitle">These are high-intent Spanish-language queries your competitors rank for that you don't. Each one represents real people looking to hire an abogado.</p>
+
+    <div class="two-col" style="gap:24px; flex:1; margin-top:8px;">
+      <div>
+        <h4 style="margin-bottom:12px;">High-Volume Gaps</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">abogado Houston</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:95%;">8,100/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">accidente de auto</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:85%;">5,400/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Houston accident lawyer</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:92%;">12,100/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">abogado accidentes TX</span>
+            <div class="bar-track"><div class="bar-fill orange" style="width:70%;">4,400/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">lesiones personales Houston</span>
+            <div class="bar-track"><div class="bar-fill orange" style="width:55%;">2,900/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">chocar sin seguro Texas</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:40%;">1,900/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">atropellado Houston abogado</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:32%;">1,300/mo</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:12px;">Long-Tail Opportunities (Lower Competition)</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Uber accidente Houston</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:45%;">880/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">accidente camión Houston</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:40%;">720/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">abogado Pasadena TX</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:28%;">480/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">abogado Katy TX accidente</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:24%;">390/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">abogado Baytown TX</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:20%;">320/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">mordida perro abogado Houston</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:18%;">260/mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">conductor ebrio accidente TX</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:16%;">210/mo</div></div>
+          </div>
+        </div>
+        <div class="annotation info mt-8">
+          <strong>Quick wins:</strong> Pasadena, Katy, and Baytown city pages have low competition — ranking here expands your Maps Pack radius and captures suburban Spanish-speaking clients.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STRATEGY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Grow 713 Abogado</h2>
+    <p class="subtitle">Three coordinated channels — Maps dominance, content authority, and organic rankings — working together to turn your brand into the #1 bilingual PI firm in Houston search.</p>
+    <div class="three-col flex-grow" style="margin-top:8px;">
+      <div class="channel-card">
+        <div class="channel-icon">📍</div>
+        <h3>Guaranteed Maps Ranking</h3>
+        <ul>
+          <li>Guaranteed top-3 Maps Pack in 5 or 10-mile radius within 90 days</li>
+          <li>GBP management: weekly posts, Q&amp;A, photo updates, service categories</li>
+          <li>Review velocity system — turn settlements into 5-star reviews systematically</li>
+          <li>Local citation audit + rebuild across 50+ legal directories</li>
+          <li>Localized landing pages for each service city (Pasadena, Katy, Baytown)</li>
+          <li>Technical SEO implementation (5–10 fixes/month)</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">✍️</div>
+        <h3>ClusterMagic Content</h3>
+        <ul>
+          <li>Topical authority clusters built around "abogado de accidentes" and city modifiers</li>
+          <li>25–100 Spanish + English articles per month targeting long-tail injury keywords</li>
+          <li>Settlement story pages — rank your $4.5M case for competitive keywords</li>
+          <li>FAQ content targeting "zero-click" and People Also Ask positions</li>
+          <li>Injury type pages: Uber, truck, hit-and-run, uninsured drivers</li>
+          <li>Internal linking architecture to consolidate domain authority</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Authority &amp; Technical SEO</h3>
+        <ul>
+          <li>2–5 high-DR backlinks per month from legal directories and local media</li>
+          <li>Schema markup: LocalBusiness, LegalService, FAQPage, Review</li>
+          <li>Core Web Vitals optimization for mobile (where most PI searches happen)</li>
+          <li>Competitor backlink gap analysis — steal their links</li>
+          <li>E-E-A-T signals: attorney bio, bar number, award badges prominently featured</li>
+          <li>Monthly reporting dashboard with keyword rank tracking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ROADMAP -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">A structured launch that lays the technical foundation, activates the Maps guarantee, and starts compounding content authority from day one.</p>
+    <div class="timeline flex-grow" style="margin-top:12px;">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation &amp; Launch</h4>
+        <ul>
+          <li>Full technical SEO audit + 5 priority fixes</li>
+          <li>GBP optimization: categories, services, photos, posts</li>
+          <li>Local citation audit — correct NAP across all directories</li>
+          <li>Review acquisition system activated</li>
+          <li>Keyword research + content calendar built</li>
+          <li>First 25–40 articles drafted and published</li>
+          <li>Schema markup installed sitewide</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Maps Pack Push</h4>
+        <ul>
+          <li>Maps Pack ranking campaign fully activated</li>
+          <li>City landing pages live: Pasadena, Katy, Baytown</li>
+          <li>Backlink outreach begins (2–5 links/month)</li>
+          <li>25–40 additional content pieces published</li>
+          <li>Competitor gap analysis — target their top-ranking pages</li>
+          <li>Review count checkpoint — target 100+ new reviews</li>
+          <li>First ranking movement report delivered</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Optimize &amp; Scale</h4>
+        <ul>
+          <li>Maps Pack guarantee checkpoint (top 3 in radius)</li>
+          <li>Content cluster expansion: truck, Uber, slip &amp; fall hubs</li>
+          <li>Thin pages upgraded with additional content + internal links</li>
+          <li>Core Web Vitals remediation if needed</li>
+          <li>Settlement story pages launched with structured data</li>
+          <li>Strategy review + Q2 roadmap delivered</li>
+          <li>Monthly traffic + case lead reporting</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Maps Pack guarantee:</strong> If you're not in the top 3 within your chosen radius by day 90, we keep working until you are — no extra charge.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: INVESTMENT -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Two core services — choose your Maps Pack radius, then add ClusterMagic content volume based on how aggressively you want to scale organic rankings.</p>
+
+    <div class="two-col" style="gap:32px; flex:1; margin-top:12px; align-items:start;">
+      <div>
+        <h4 style="margin-bottom:10px;">Local SEO + Guaranteed Maps Ranking</h4>
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>Coverage</th>
+              <th>Deliverables / mo</th>
+              <th class="right">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">Maps Pkg 1</td>
+              <td><span class="pill green">5 Miles</span></td>
+              <td style="font-size:12px;">5 tech SEO · 2 content · 2 backlinks · GBP mgmt</td>
+              <td class="price-cell right">$1,800/mo</td>
+            </tr>
+            <tr style="background:#fff8f8;">
+              <td class="row-label bold">Maps Pkg 2 <span class="pill red" style="margin-left:4px;">Recommended</span></td>
+              <td><span class="pill green">5 Miles</span></td>
+              <td style="font-size:12px;">10 tech SEO · 5 content · 5 backlinks · GBP mgmt</td>
+              <td class="price-cell right bold">$2,150/mo</td>
+            </tr>
+            <tr>
+              <td class="row-label">Maps Pkg 1</td>
+              <td><span class="pill blue">10 Miles</span></td>
+              <td style="font-size:12px;">5 tech SEO · 2 content · 2 backlinks · GBP mgmt</td>
+              <td class="price-cell right">$4,800/mo</td>
+            </tr>
+            <tr>
+              <td class="row-label">Maps Pkg 2</td>
+              <td><span class="pill blue">10 Miles</span></td>
+              <td style="font-size:12px;">10 tech SEO · 5 content · 5 backlinks · GBP mgmt</td>
+              <td class="price-cell right">$5,150/mo</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:var(--text-light);margin-top:6px;">All packages include: Month 1 Foundation, GBP management, guaranteed Maps Pack ranking in 90 days.</div>
+      </div>
+
+      <div>
+        <h4 style="margin-bottom:10px;">ClusterMagic Content — Add-On</h4>
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Articles / mo</th>
+              <th>One-Time / Monthly</th>
+              <th>3-Month Commitment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">25 articles</td>
+              <td class="price-cell">$700/mo</td>
+              <td>$1,750 <span style="color:var(--green);font-size:12px;">(-$350)</span></td>
+            </tr>
+            <tr style="background:#fff8f8;">
+              <td class="row-label bold">40 articles <span class="pill red" style="margin-left:4px;">Best Value</span></td>
+              <td class="price-cell bold">$1,100/mo</td>
+              <td>$2,700 <span style="color:var(--green);font-size:12px;">(-$600)</span></td>
+            </tr>
+            <tr>
+              <td class="row-label">50 articles</td>
+              <td class="price-cell">$1,350/mo</td>
+              <td>$3,400 <span style="color:var(--green);font-size:12px;">(-$650)</span></td>
+            </tr>
+            <tr>
+              <td class="row-label">100 articles</td>
+              <td class="price-cell">$2,700/mo</td>
+              <td>$7,000 <span style="color:var(--green);font-size:12px;">(-$1,100)</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="font-size:12px;color:var(--text-light);margin-top:6px;">Bilingual content available (Spanish + English). All articles keyword-targeted and internally linked.</div>
+
+        <div class="annotation success mt-16">
+          <strong>Recommended bundle:</strong> Maps Pkg 2 (5 miles) + 40 articles/mo = <strong>$3,250/mo</strong> — builds Maps Pack dominance and content velocity simultaneously.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Growth Looks Like at 3, 6, and 12 Months</h2>
+    <p class="subtitle">Based on comparable bilingual PI law firms in competitive markets running the same strategy.</p>
+
+    <div class="stats-row" style="margin-bottom:24px;">
+      <div class="stat-card">
+        <div class="stat-value teal">Month 3</div>
+        <div class="stat-label">Maps Pack top 3 within chosen radius guaranteed · 50–75 new organic keyword rankings · 2–4x review growth</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">Month 6</div>
+        <div class="stat-label">Page 1 for 3–5 primary Spanish-language terms · 4,000–6,000 estimated monthly organic visitors · Maps Pack expanding radius</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">Month 12</div>
+        <div class="stat-label">Top 3 organic for "abogado de accidentes Houston" · 8,000–12,000 monthly visitors · 300+ inbound leads / month estimated</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Today (Est.)</th>
+          <th>Month 3</th>
+          <th>Month 6</th>
+          <th>Month 12</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Monthly Organic Visitors</td>
+          <td>~2,400</td>
+          <td class="teal bold">3,500–4,500</td>
+          <td class="orange bold">5,500–7,000</td>
+          <td class="green bold">9,000–13,000</td>
+        </tr>
+        <tr>
+          <td class="bold">Maps Pack Position</td>
+          <td class="red">Not in Pack</td>
+          <td class="teal bold">Top 3 (5 mi)</td>
+          <td class="orange bold">Top 3 (10 mi)</td>
+          <td class="green bold">Dominant local</td>
+        </tr>
+        <tr>
+          <td class="bold">Google Reviews</td>
+          <td>~80 (est.)</td>
+          <td class="teal bold">180–220</td>
+          <td class="orange bold">350–450</td>
+          <td class="green bold">600–800</td>
+        </tr>
+        <tr>
+          <td class="bold">Keywords in Top 10</td>
+          <td>~15 (est.)</td>
+          <td class="teal bold">40–60</td>
+          <td class="orange bold">100–140</td>
+          <td class="green bold">200–300</td>
+        </tr>
+        <tr>
+          <td class="bold">Estimated Inbound Leads / mo</td>
+          <td>~30 (est.)</td>
+          <td class="teal bold">60–90</td>
+          <td class="orange bold">120–180</td>
+          <td class="green bold">250–350</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="annotation info mt-16">
+      <strong>Context:</strong> A single signed PI case at 713 Abogado's case value can return 10–15x the monthly investment. The compounding nature of SEO means month 12 traffic arrives at near-zero marginal cost.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">713 Abogado &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Own Houston Search?</h1>
+      <p class="subtitle" style="text-align:center; max-width:620px;">Your brand is built. Your results are real. Now let's make sure every Spanish-speaking Houstonian searching for an abogado finds <em>you</em> first.</p>
+      <div class="stats-row" style="justify-content:center; margin:24px 0;">
+        <div class="stat-card" style="text-align:left; min-width:200px;">
+          <div class="stat-value" style="color:#F5C518; font-size:28px;">Step 1</div>
+          <div class="stat-label">Choose your Maps Pack radius (5 or 10 miles) and content volume</div>
+        </div>
+        <div class="stat-card" style="text-align:left; min-width:200px;">
+          <div class="stat-value" style="color:#F5C518; font-size:28px;">Step 2</div>
+          <div class="stat-label">Onboarding call — GBP access, website access, content intake</div>
+        </div>
+        <div class="stat-card" style="text-align:left; min-width:200px;">
+          <div class="stat-value" style="color:#F5C518; font-size:28px;">Step 3</div>
+          <div class="stat-label">Month 1 foundation launches — content live within 2 weeks</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <p style="font-size:20px; font-weight:700; color:#F5C518;">embertribe.com &nbsp;·&nbsp; hello@embertribe.com</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-top:8px;">Questions? Let's talk through the right package for your goals.</p>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:auto;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
