@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Revival Science — Shopify Build Proposal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap');
+
+:root {
+  --primary-dark: #0B1C2E;
+  --primary-mid:  #142437;
+  --primary-light: #2E8FA3;
+
+  --accent:  #47AABF;
+  --teallt:  #B8DFE8;
+  --warm:    #f2ece4;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #111d2b;
+  --text-light: #4a6070;
+  --light-bg: #f7f5f2;
+  --card-bg: #ffffff;
+  --border: #dde5ea;
+  --green: #5a9e6a;
+  --yellow: #b8903a;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 60%, #1a3a4a 100%);
+  color: #ffffff;
+}
+
+.slide.warm-bg { background: var(--warm); }
+
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.6); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.6);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* molecule dot grid on dark slides */
+.slide.dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(71,170,191,.12) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide.dark > * { position: relative; z-index: 1; }
+
+h1 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 52px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  line-height: 1.08;
+  margin-bottom: 12px;
+}
+
+h1 em { font-style: italic; color: var(--accent); }
+
+h2 {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+h2 em { font-style: italic; color: var(--primary-light); }
+
+h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 17px;
+  font-weight: 300;
+  color: var(--text-light);
+  max-width: 780px;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.slide-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--teallt); }
+
+.stats-row {
+  display: flex;
+  gap: 14px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 18px 22px;
+}
+
+.slide:not(.dark) .stat-card {
+  background: var(--light-bg);
+  border-color: var(--border);
+}
+
+.stat-value {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+  letter-spacing: 0.3px;
+}
+
+.annotation {
+  background: #FFF9F0;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 15px;
+  font-size: 13.5px;
+  margin: 10px 0;
+  line-height: 1.55;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #EAF6F9; border-left-color: var(--primary-light); }
+.annotation.info strong { color: #1a6e80; }
+.annotation.danger { background: #FEF0EF; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #EFF7F2; border-left-color: var(--green); }
+.annotation.success strong { color: #3d7a4f; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 10px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.6px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.015); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 7px; margin: 14px 0; }
+
+.bar-row { display: flex; align-items: center; gap: 10px; }
+
+.bar-label {
+  width: 150px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: var(--light-bg);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, #1a6e80, var(--accent)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #3d7a4f, #5a9e6a); }
+.bar-fill.navy   { background: linear-gradient(90deg, var(--primary-dark), #2a4a65); }
+.bar-fill.warm   { background: linear-gradient(90deg, #9c7a5a, #c8a07a); }
+.bar-fill.gold   { background: linear-gradient(90deg, #8a6820, #b8903a); }
+
+.pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.pill.teal    { background: #EAF6F9; color: #1a6e80; }
+.pill.navy    { background: #EAF0F5; color: var(--primary-dark); }
+.pill.green   { background: #EFF7F2; color: #3d7a4f; }
+.pill.content { background: #FFF3E8; color: #8a4f1a; }
+.pill.setup   { background: #EAF6F9; color: #1a6e80; }
+.pill.seo     { background: #EFF7F2; color: #3d7a4f; }
+.pill.warm    { background: #FAF3EC; color: #7a5a3a; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-light);
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary-light);
+}
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 18px;
+}
+
+.timeline-phase:first-child { border-radius: 10px 0 0 10px; }
+.timeline-phase:last-child { border-radius: 0 10px 10px 0; }
+
+.phase-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--primary-light);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 8px; }
+
+.timeline-phase ul { list-style: none; padding: 0; }
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 12px;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  color: var(--text-light);
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary-light);
+}
+
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.flex-grow { flex: 1; }
+
+.teal  { color: var(--primary-light); }
+.accent { color: var(--accent); }
+.ember { color: var(--ember-red); }
+.green-text { color: var(--green); }
+.gold-text  { color: var(--yellow); }
+.navy-text  { color: var(--primary-dark); }
+
+/* product tags */
+.prod-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: #EAF6F9;
+  border: 1px solid rgba(46,143,163,.25);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary-light);
+  margin: 2px 3px;
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 11px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.35); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-light), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 22px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.45);
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+
+.counter {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.35);
+  padding: 5px 13px;
+  border-radius: 6px;
+}
+
+/* roadmap-specific */
+.roadmap-phase {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.roadmap-phase .rp-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+
+.roadmap-phase h4 { font-size: 16px; margin-bottom: 10px; }
+
+.roadmap-phase ul { list-style: none; padding: 0; }
+
+.roadmap-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.roadmap-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+}
+
+.rp-teal ul li::before  { background: var(--primary-light); }
+.rp-navy ul li::before  { background: var(--primary-dark); }
+.rp-green ul li::before { background: var(--green); }
+
+.rp-teal  { border-top: 3px solid var(--primary-light); }
+.rp-navy  { border-top: 3px solid var(--primary-dark); }
+.rp-green { border-top: 3px solid var(--green); }
+
+.rp-teal  .rp-label { color: var(--primary-light); }
+.rp-navy  .rp-label { color: var(--primary-dark); }
+.rp-green .rp-label { color: var(--green); }
+
+.kpi-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.kpi-chip {
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(46,143,163,0.1);
+  color: var(--primary-light);
+  border: 1px solid rgba(46,143,163,0.2);
+}
+
+.rp-navy .kpi-chip { background: rgba(11,28,46,0.08); color: var(--primary-dark); border-color: rgba(11,28,46,0.15); }
+.rp-green .kpi-chip { background: rgba(90,158,106,0.1); color: var(--green); border-color: rgba(90,158,106,0.2); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 28px 36px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .bar-label { width: 110px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 1 — TITLE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Shopify Build Proposal — Prestige Theme</p>
+      <h1>Skin Revival <em>Science</em></h1>
+      <p class="subtitle" style="max-width:680px;">A premium DTC launch built for trust — medically credible, emotionally resonant, and engineered to convert a mother's first visit into a lifelong customer.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">Prestige</div>
+          <div class="stat-label">Shopify Base Theme</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--teallt);">5</div>
+          <div class="stat-label">Cryoluxe™ Products</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--yellow);">21 days</div>
+          <div class="stat-label">Launch Timeline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--green);">$2,000</div>
+          <div class="stat-label">Build Investment</div>
+        </div>
+      </div>
+
+      <!-- product line -->
+      <div style="margin:16px 0 0;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:rgba(255,255,255,0.35); margin-bottom:10px;">Products in Scope</p>
+        <div>
+          <span class="prod-tag">🧊 Cryoluxe™ Revive — Eye</span>
+          <span class="prod-tag">🤱 Cryoluxe™ Nursing</span>
+          <span class="prod-tag">👶 Happy Skin by Cryoluxe™</span>
+          <span class="prod-tag">✨ Cryoluxe™ C-Skin</span>
+          <span class="prod-tag">💊 Cryoluxe™ Clear</span>
+        </div>
+      </div>
+
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Skin Revival Science &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 2 — PROJECT OVERVIEW
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Project Overview</p>
+    <h2>What We're <em>Building</em></h2>
+    <p class="subtitle">Cryoluxe™ is the first-ever water-stable gel with HOCl — a genuine scientific breakthrough. The site must make that feel true in the first five seconds.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h3 class="teal mb-8">Why Prestige Theme</h3>
+        <ul style="list-style:none; padding:0; margin-top:10px;">
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">✓ Built for premium DTC brands — clean editorial layouts that prioritize photography</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">✓ Supports large hero sections with science/clinical content blocks</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">✓ Built-in storytelling sections ideal for ingredient + HOCl education</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">✓ Strong mobile performance — mothers shop on phones</li>
+          <li style="padding:7px 0; font-size:13.5px; color:var(--text-light);">✓ Theme editor means you own updates post-launch, no code needed</li>
+        </ul>
+        <div class="annotation info mt-16">
+          <strong>The brand challenge:</strong> Skin Revival Science must feel simultaneously medical-grade and emotionally safe — no other skincare brand in the mother/baby space has HOCl + CryoGel™ at this quality level. The site is the proof.
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--ember-red); margin-bottom:8px;">What We Deliver</h3>
+        <ul style="list-style:none; padding:0; margin-top:10px;">
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ Custom homepage — editorial hero, science credibility bar, product spotlight</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ All 5 Cryoluxe™ product pages — HOCl benefits, CryoGel™ callouts, trust badges</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ Science / HOCl education page — ingredient story, clinical positioning</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ Mother + Baby journey pages — emotional connection by life stage</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ Waitlist landing + Klaviyo flow — email capture from day one</li>
+          <li style="padding:7px 0; border-bottom:1px solid var(--border); font-size:13.5px; color:var(--text-light);">→ GA4 + Meta Pixel installed and verified</li>
+          <li style="padding:7px 0; font-size:13.5px; color:var(--text-light);">→ Mobile-optimized + SEO foundations set before launch</li>
+        </ul>
+        <div class="annotation success mt-16">
+          <strong>Goal:</strong> A Shopify store that earns trust in five seconds, educates over two minutes, and converts — with every page built for the mother who is skeptical, hopeful, and very online.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 3 — SCOPE OF WORK
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Scope of Work</p>
+    <h2>Full <em>Build</em> Specification</h2>
+    <p class="subtitle">Every page, integration, and trust signal — built to launch-ready standard.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Page / Area</th>
+              <th>What We Build</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="pill teal">Homepage</span></td>
+              <td>Custom hero, science credibility bar, featured Cryoluxe™ system, HOCl proof points, brand story, newsletter CTA</td>
+            </tr>
+            <tr>
+              <td><span class="pill teal">Product Pages × 5</span></td>
+              <td>Image gallery, variant selects, HOCl + CryoGel™ ingredient callouts, trust badges (hypoallergenic, fragrance-free), Add to Cart, FAQ</td>
+            </tr>
+            <tr>
+              <td><span class="pill navy">Science Page</span></td>
+              <td>HOCl explainer, CryoGel™ technology, "World's First" positioning, clinical language made accessible</td>
+            </tr>
+            <tr>
+              <td><span class="pill warm">Journey Pages × 2</span></td>
+              <td>Pregnancy / postpartum path — emotional storytelling + product pairings by life stage</td>
+            </tr>
+            <tr>
+              <td><span class="pill green">Collections Page</span></td>
+              <td>Full product grid, filter by concern (eyes, skin, baby, nursing), hover states</td>
+            </tr>
+            <tr>
+              <td><span class="pill teal">Waitlist Page</span></td>
+              <td>Pre-launch capture form, email incentive block, wired to Klaviyo</td>
+            </tr>
+            <tr>
+              <td><span class="pill navy">About + Contact</span></td>
+              <td>Founder story, science credibility, contact form</td>
+            </tr>
+            <tr>
+              <td><span class="pill teal">Cart + Header/Footer</span></td>
+              <td>AJAX cart, persistent nav, trust footer, social links</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 style="margin-bottom:14px; color:var(--primary-dark);">Integrations &amp; Technical Setup</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Klaviyo</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:100%;">Waitlist + Post-purchase flows</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">GA4</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:95%;">Events + ecommerce tracking</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Meta Pixel</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:90%;">Purchase + AddToCart events</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">SEO Foundations</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:88%;">Titles, metas, schema, URLs</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Mobile Optimization</span>
+            <div class="bar-track"><div class="bar-fill navy" style="width:85%;">All breakpoints, touch UX</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Theme Editor</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:80%;">All sections configurable</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Shopify Payments</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:75%;">Verified + test-purchased</div></div>
+          </div>
+        </div>
+        <div class="annotation info" style="margin-top:12px;">
+          <strong>Trust signal design:</strong> Every product page includes hypoallergenic / fragrance-free / non-greasy badges, "World's First HOCl + CryoGel™" callout, and safety-for-mom-and-baby copy — built in, not bolted on.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 4 — PRODUCTS + BRAND EXECUTION
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Product &amp; Brand Execution</p>
+    <h2>Built for the <em>Mother</em> — and the Doctor She Trusts</h2>
+    <p class="subtitle">Each product sits at the intersection of clinical credibility and maternal care. The site must make both true simultaneously.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <th>Cryoluxe™ Product</th>
+              <th>Key Messaging</th>
+              <th>Target Moment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">Revive — Eye</td>
+              <td>Recharge tired eyes. HOCl + CryoGel™ cooling</td>
+              <td>Postpartum exhaustion</td>
+            </tr>
+            <tr>
+              <td class="bold">Nursing</td>
+              <td>The care nursing moms need. Safe for mom + baby</td>
+              <td>Breastfeeding discomfort</td>
+            </tr>
+            <tr>
+              <td class="bold">Happy Skin (Baby)</td>
+              <td>Healthy-looking skin, 0+ months. Gentle + proven</td>
+              <td>Newborn skin care</td>
+            </tr>
+            <tr>
+              <td class="bold">C-Skin</td>
+              <td>Comfort &amp; care for post-birth skin. C-section recovery</td>
+              <td>Post-surgical healing</td>
+            </tr>
+            <tr>
+              <td class="bold">Clear</td>
+              <td>Pregnancy-safe blemish mask. No compromise</td>
+              <td>Pregnancy hormonal skin</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation" style="margin-top:12px;">
+          <strong>All 5 products share:</strong> Hypoallergenic · Fragrance Free · Non-Greasy · CryoGel™ Technology · HOCl (World's First Water-Stable Formula)
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:10px; padding:18px;">
+          <h4 style="margin-bottom:10px;">Trust Signal Architecture</h4>
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:6px;">
+            <li style="font-size:13px; display:flex; gap:8px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">→</span> <strong style="color:var(--text);">Medical credibility bar</strong> — "World's First" badge, HOCl science callout, exclusive rights</li>
+            <li style="font-size:13px; display:flex; gap:8px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">→</span> <strong style="color:var(--text);">Ingredient transparency</strong> — HOCl deep-dive page, CryoGel™ explainer with simple language</li>
+            <li style="font-size:13px; display:flex; gap:8px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">→</span> <strong style="color:var(--text);">Emotional safety signals</strong> — "Safe for mom and baby," "0+ months," pregnancy-safe callouts</li>
+            <li style="font-size:13px; display:flex; gap:8px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">→</span> <strong style="color:var(--text);">Social proof structure</strong> — review sections on every product page, ready for UGC</li>
+            <li style="font-size:13px; display:flex; gap:8px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">→</span> <strong style="color:var(--text);">Journey-based navigation</strong> — "I'm pregnant," "I just gave birth," "I'm nursing" pathways</li>
+          </ul>
+        </div>
+        <div class="annotation info">
+          <strong>Global exclusive rights:</strong> The "World's First Water-Stable HOCl" story is a genuine competitive moat. We design around it — not just mention it — on every page that matters.
+        </div>
+        <div class="annotation success">
+          <strong>Premium brand execution:</strong> Navy + teal + warm off-white palette, DM Serif Display for editorial headings, molecule-pattern science textures — applied site-wide to match the brand identity you've already built in your packaging.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 5 — TIMELINE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Timeline</p>
+    <h2>21-Day <em>Build</em> — Phased for Quality</h2>
+    <p class="subtitle">Three focused weeks. Structured so you can review, provide feedback, and see real progress at each milestone.</p>
+    <div class="two-col flex-grow mt-8">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Phase</th><th>Days</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold teal">1</td>
+            <td><strong>Brand Foundation</strong> — Prestige installed, navy/teal palette, DM Serif typography, global tokens, molecule textures</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold teal">2</td>
+            <td><strong>Header + Footer</strong> — sticky nav, journey-based menu ("Pregnant / Postpartum / Baby"), trust footer, social</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td class="bold teal">3</td>
+            <td><strong>Homepage</strong> — editorial hero, "World's First" credibility bar, Cryoluxe™ product grid, HOCl proof section, newsletter CTA</td>
+            <td>2.5</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--yellow);">4</td>
+            <td><strong>Product Pages × 5</strong> — gallery, variants, HOCl callouts, trust badges, FAQ accordion, Add to Cart</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--yellow);">5</td>
+            <td><strong>Science Page</strong> — HOCl mechanism, CryoGel™ tech, exclusive rights story, clinical-to-plain-language explainer</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td class="bold" style="color:var(--yellow);">6</td>
+            <td><strong>Journey Pages × 2</strong> — Pregnancy path + Postpartum/Nursing path — product pairings by life stage</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td class="bold teal">7</td>
+            <td><strong>Waitlist + About + Contact</strong> — email capture, Klaviyo wiring, founder story, contact form</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold teal">8</td>
+            <td><strong>Integrations</strong> — Klaviyo flows, GA4 events, Meta Pixel, Shopify Payments verified</td>
+            <td>1.5</td>
+          </tr>
+          <tr>
+            <td class="bold teal">9</td>
+            <td><strong>SEO + Mobile QA</strong> — titles, metas, schema, URL structure, all breakpoints, cross-browser pass</td>
+            <td>2</td>
+          </tr>
+          <tr style="background:rgba(46,143,163,0.04);">
+            <td class="bold green-text">10</td>
+            <td><strong>Client Revisions + Launch</strong> — feedback round, final polish, live on your Shopify store</td>
+            <td>3</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="font-weight:700; border-top:2px solid var(--border);">
+            <td colspan="2">Total</td>
+            <td>~21 days</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div class="timeline" style="flex-direction:column; margin:0; gap:0;">
+          <div class="timeline-phase" style="border-radius:10px 10px 0 0;">
+            <span class="phase-label">Week 1 — Foundation to Homepage</span>
+            <h4>Phases 1–3</h4>
+            <ul>
+              <li>Brand identity applied throughout</li>
+              <li>Homepage fully built on dev store</li>
+              <li>Client review checkpoint</li>
+            </ul>
+          </div>
+          <div class="timeline-phase">
+            <span class="phase-label">Week 2 — Products + Content Pages</span>
+            <h4>Phases 4–6</h4>
+            <ul>
+              <li>All 5 product pages complete</li>
+              <li>Science page live on dev store</li>
+              <li>Journey pages built and reviewed</li>
+            </ul>
+          </div>
+          <div class="timeline-phase" style="border-radius:0 0 10px 10px;">
+            <span class="phase-label">Week 3 — Integration, QA &amp; Launch</span>
+            <h4>Phases 7–10</h4>
+            <ul>
+              <li>Klaviyo, GA4, Meta Pixel live</li>
+              <li>SEO + mobile pass complete</li>
+              <li>Revision round + go-live</li>
+            </ul>
+          </div>
+        </div>
+        <div class="annotation info" style="margin:0;">
+          <strong>Kickoff requirement:</strong> Logo files, any brand guidelines, and product photography at kickoff. Build starts within 3 business days of payment + asset handoff.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 6 — WHY EMBERTRIBE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Why EmberTribe</p>
+    <h2>Not a Build. A <em>Partnership.</em></h2>
+    <p class="subtitle">Other agencies build websites. We build the growth engine behind them — and we're already invested in your success before the first line of code is written.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card" style="border-top:3px solid var(--primary-light);">
+        <div class="channel-icon">🤝</div>
+        <h3>We Already Know You</h3>
+        <ul>
+          <li>We've worked through brand strategy together on a previous project — we understand how you think, what you care about, and how you want to be positioned</li>
+          <li>No two-week discovery phase to explain your vision from scratch</li>
+          <li>That context shows in the work — faster, more aligned, less back-and-forth</li>
+          <li>You're not project #312 in a queue — you have a direct line</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--primary-dark);">
+        <div class="channel-icon">📈</div>
+        <h3>Committed to Growth</h3>
+        <ul>
+          <li>Launch day is not the finish line — it's the start of the SEO compound curve</li>
+          <li>We offer ClusterMagic content that builds organic traffic month over month</li>
+          <li>Every page we build is also built to rank — structure, schema, copy, and intent-match are deliberate from day one</li>
+          <li>We track results and report — not just ship and disappear</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--green);">
+        <div class="channel-icon">🧬</div>
+        <h3>Category Fit</h3>
+        <ul>
+          <li>Skincare and mother/baby are trust-sensitive categories — we've built for this dynamic</li>
+          <li>We understand what drives conversions in the wellness DTC space: clinical credibility + emotional safety signals working together</li>
+          <li>We've designed for skeptical, research-driven buyers before — HOCl is a story worth telling right</li>
+          <li>Reviews aren't just a checkbox for us — we advise on the full trust architecture</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation" style="margin-top:14px; border-left-color:var(--primary-light); background:#EAF6F9;">
+      <strong>The real difference is what happens after launch.</strong> Other agencies hand over a password and move on. We stay accountable for results — conversion rate, email subscribers, organic traffic, revenue. If something isn't working, we say so and we fix it. You're not managing a vendor; you have a growth partner who already cares about this brand.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 7 — SEO ROADMAP
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">SEO Roadmap</p>
+    <h2>Organic Growth <em>Strategy</em></h2>
+    <p class="subtitle">Skincare + mother/baby is a high-intent search category. The right content, published consistently, compounds into a traffic moat that paid ads can't replicate.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="roadmap-phase rp-teal">
+        <p class="rp-label">Month 1 — Foundation</p>
+        <h4>SEO + Content + Paid — All at Once</h4>
+        <ul>
+          <li><strong style="color:var(--text);">Technical SEO:</strong> keyword research, title tags, meta descriptions, schema markup, clean URLs, Core Web Vitals, GSC + GA4 live</li>
+          <li><strong style="color:var(--text);">Content velocity:</strong> 25 articles/month from day one — TOFU ("is HOCl safe during pregnancy," "best eye care for new moms") and MOFU ("Cryoluxe vs nursing pads")</li>
+          <li><strong style="color:var(--text);">Internal linking:</strong> Science page feeds product pages; collection pages gain authority with every article</li>
+          <li><strong style="color:var(--text);">Meta ads live:</strong> waitlist audience fires on launch day — awareness creative (HOCl story), retargeting pool starts building immediately</li>
+          <li><strong style="color:var(--text);">Amazon:</strong> listings + Sponsored Products campaigns running week one</li>
+        </ul>
+        <div class="kpi-row">
+          <span class="kpi-chip">KPIs: Indexed pages</span>
+          <span class="kpi-chip">Meta ROAS</span>
+          <span class="kpi-chip">GSC impressions</span>
+          <span class="kpi-chip">Amazon BSR</span>
+        </div>
+      </div>
+      <div class="roadmap-phase rp-navy">
+        <p class="rp-label">Months 3–6 — Compounding</p>
+        <h4>Rankings Establish, Paid Optimizes</h4>
+        <ul>
+          <li>Early keyword rankings appear — content begins driving free traffic to product pages</li>
+          <li>Meta campaigns split-tested: creative iterations, audience refinement, lookalike expansion from purchasers</li>
+          <li>Amazon reviews accumulate (Vine + post-purchase flow) — feeds social proof on Shopify + Meta ad creative</li>
+          <li>Quarterly keyword refresh — pivot to commercial-intent terms as informational rankings stabilize</li>
+          <li>Klaviyo cross-sell flows fire — Revive buyer → Nursing → C-Skin lifecycle</li>
+          <li>FAQ content captures featured snippets on HOCl and pregnancy-safe skincare queries</li>
+        </ul>
+        <div class="kpi-row">
+          <span class="kpi-chip">KPIs: Organic clicks</span>
+          <span class="kpi-chip">Ranking keywords</span>
+          <span class="kpi-chip">ACOS trend</span>
+          <span class="kpi-chip">Email revenue</span>
+        </div>
+      </div>
+      <div class="roadmap-phase rp-green">
+        <p class="rp-label">Months 7–12 — Authority</p>
+        <h4>Traffic Compounding</h4>
+        <ul>
+          <li>Backlink plan — maternity blogs, wellness publishers, mom influencer sites</li>
+          <li>Quarterly site audit — new opportunities, technical drift, competitor gaps</li>
+          <li>HOCl as owned keyword category — SRS should own "HOCl skincare" SERPs at 12 months</li>
+          <li>Content calendar pivots to commercial intent as rankings establish</li>
+          <li>Review velocity from email flows feeds product page authority</li>
+          <li>Organic traffic begins displacing paid CAC for top-of-funnel</li>
+        </ul>
+        <div class="kpi-row">
+          <span class="kpi-chip">KPIs: Domain Rating</span>
+          <span class="kpi-chip">Organic revenue %</span>
+          <span class="kpi-chip">CAC vs organic</span>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Why start SEO at launch:</strong> Every month of content compound interest lost at launch can't be recovered later. We build the technical foundations into the site so content can start ranking from week one — not after a retroactive audit six months in.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 8 — GO-TO-MARKET PLAN
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Go-to-Market Plan</p>
+    <h2>Launch Across Every <em>Channel</em></h2>
+    <p class="subtitle">The Shopify store is the hub — Meta ads and Amazon are the two engines that drive volume from day one while SEO builds the long-term moat.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card" style="border-top:3px solid var(--primary-light);">
+        <div class="channel-icon">🛍️</div>
+        <h3>Amazon Launch</h3>
+        <ul>
+          <li><strong style="color:var(--text);">Storefront + listings</strong> — A+ content for all 5 Cryoluxe™ products, keyword-rich bullet points, HOCl science woven into copy</li>
+          <li><strong style="color:var(--text);">Sponsored Products</strong> — exact-match campaigns targeting "hypochlorous acid skincare," "pregnancy safe eye mask," "nursing breast pads cooling"</li>
+          <li><strong style="color:var(--text);">Sponsored Brand ads</strong> — headline banner driving to your Amazon Storefront once ACOS is dialed in</li>
+          <li><strong style="color:var(--text);">Review velocity</strong> — Vine enrollment + post-purchase email sequence to accelerate early review count</li>
+          <li><strong style="color:var(--text);">Bundle strategy</strong> — "New Mom Kit" virtual bundle to increase AOV and capture broad search</li>
+        </ul>
+        <div class="kpi-row" style="margin-top:12px;">
+          <span class="kpi-chip">KPIs: ACOS</span>
+          <span class="kpi-chip">Review count</span>
+          <span class="kpi-chip">BSR rank</span>
+        </div>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--ember-red);">
+        <div class="channel-icon">📱</div>
+        <h3>Meta Ads (Facebook + Instagram)</h3>
+        <ul>
+          <li><strong style="color:var(--text);">Awareness layer</strong> — video creative showing the HOCl science story + CryoGel™ texture; target: women 25–40, new/expecting moms, wellness buyers</li>
+          <li><strong style="color:var(--text);">Consideration layer</strong> — carousel of all 5 products by life stage ("Just found out you're pregnant? Start here"), retargeting site visitors</li>
+          <li><strong style="color:var(--text);">Conversion layer</strong> — single-product DPA ads + waitlist traffic campaign; pixel events verified at checkout</li>
+          <li><strong style="color:var(--text);">Klaviyo + Meta sync</strong> — email list pushed as Custom Audience, lookalike audience built from purchasers</li>
+          <li><strong style="color:var(--text);">Creative hooks</strong> — "World's First," "Safe for you and your baby," before/after testimonial UGC as social proof ads</li>
+        </ul>
+        <div class="kpi-row" style="margin-top:12px;">
+          <span class="kpi-chip" style="background:rgba(255,51,61,0.08); color:var(--ember-red); border-color:rgba(255,51,61,0.2);">KPIs: ROAS</span>
+          <span class="kpi-chip" style="background:rgba(255,51,61,0.08); color:var(--ember-red); border-color:rgba(255,51,61,0.2);">CPP</span>
+          <span class="kpi-chip" style="background:rgba(255,51,61,0.08); color:var(--ember-red); border-color:rgba(255,51,61,0.2);">Waitlist signups</span>
+        </div>
+      </div>
+      <div class="channel-card" style="border-top:3px solid var(--green);">
+        <div class="channel-icon">📈</div>
+        <h3>How the Channels Work Together</h3>
+        <ul>
+          <li><strong style="color:var(--text);">Meta → Shopify</strong> — paid traffic hits a landing page built to convert, with trust signals and HOCl education doing the heavy lifting</li>
+          <li><strong style="color:var(--text);">Amazon → Reviews</strong> — Amazon review count feeds social proof on Shopify product pages and in Meta ad creative</li>
+          <li><strong style="color:var(--text);">SEO → Lower CAC</strong> — as organic rankings build, paid budgets shift from top-of-funnel awareness to bottom-of-funnel retargeting</li>
+          <li><strong style="color:var(--text);">Klaviyo → Repeat</strong> — post-purchase flows cross-sell across the Cryoluxe™ range (Revive buyer → Nursing → C-Skin)</li>
+          <li><strong style="color:var(--text);">Waitlist → Launch spike</strong> — email list built pre-launch fires on day one, seeding both Amazon BSR and Shopify conversion data for Meta algorithm</li>
+        </ul>
+        <div class="kpi-row" style="margin-top:12px;">
+          <span class="kpi-chip" style="background:rgba(90,158,106,0.1); color:var(--green); border-color:rgba(90,158,106,0.2);">KPIs: Blended CAC</span>
+          <span class="kpi-chip" style="background:rgba(90,158,106,0.1); color:var(--green); border-color:rgba(90,158,106,0.2);">LTV</span>
+          <span class="kpi-chip" style="background:rgba(90,158,106,0.1); color:var(--green); border-color:rgba(90,158,106,0.2);">Repeat rate</span>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Phase approach:</strong> Waitlist capture starts now. Soft launch on Shopify + Amazon simultaneously on day 21. Meta ads go live immediately with waitlist audience + broad cold targeting. SEO content begins in month one while paid channels establish baseline ROAS data.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 9 — INVESTMENT
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Project Pricing <em>&amp;</em> Terms</h2>
+    <p class="subtitle">One-time website build + optional ongoing SEO content and paid media management — everything you need, one partner accountable for results.</p>
+    <div class="three-col flex-grow mt-8">
+
+      <!-- COL 1: WEBSITE BUILD -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--primary-light);">One-Time &mdash; Prestige Shopify Build</p>
+        <table style="margin:0;">
+          <thead><tr><th>Deliverable</th><th style="width:36px;">✓</th></tr></thead>
+          <tbody>
+            <tr><td>Custom Prestige theme — full SRS brand</td><td class="bold teal">✓</td></tr>
+            <tr><td>Homepage + all 5 product pages</td><td class="bold teal">✓</td></tr>
+            <tr><td>HOCl Science + Journey pages</td><td class="bold teal">✓</td></tr>
+            <tr><td>Waitlist page + Klaviyo integration</td><td class="bold teal">✓</td></tr>
+            <tr><td>GA4 + Meta Pixel installed + verified</td><td class="bold teal">✓</td></tr>
+            <tr><td>Mobile optimization + SEO foundations</td><td class="bold teal">✓</td></tr>
+            <tr><td>1 revision round + 30 days support</td><td class="bold teal">✓</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex; gap:10px; margin-top:4px;">
+          <div style="flex:1; background:#EAF6F9; border:1px solid rgba(46,143,163,.25); border-radius:10px; padding:14px; text-align:center;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--primary-light); margin-bottom:4px;">One-Time</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:32px; color:var(--primary-dark);">$2,000</div>
+          </div>
+        </div>
+        <div class="annotation success" style="margin:0; font-size:12.5px;">
+          <strong>Build begins</strong> within 3 business days of payment + asset handoff. Prestige theme ($350 value) purchased directly by client via Shopify Theme Store.
+        </div>
+      </div>
+
+      <!-- COL 2: CLUSTERMAGIC SEO -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--ember-red);">Monthly &mdash; ClusterMagic™ SEO Content</p>
+        <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:10px; padding:14px; flex:1;">
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:5px;">
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> 25 ready-to-publish articles/month</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> Quarterly keyword research + content plan (KD 0–49)</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> TOFU &amp; MOFU — informational + commercial intent</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> H1s, meta descriptions, alt tags, internal links</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> FAQ sections — featured snippet targeting</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--primary-light); font-weight:700;">✓</span> Published to your Shopify store on your behalf</li>
+          </ul>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <div style="flex:1; background:#EAF6F9; border:1px solid rgba(46,143,163,.25); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--primary-light); margin-bottom:4px;">Month-to-Month</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:26px; color:var(--primary-dark);">$700</div>
+            <div style="font-size:11px; color:var(--text-light); margin-top:2px;">per month</div>
+          </div>
+          <div style="flex:1; background:linear-gradient(135deg,#E0F4F8,#EAF6F9); border:2px solid var(--primary-light); border-radius:10px; padding:12px; text-align:center; position:relative;">
+            <div style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--primary-dark); color:#fff; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:2px 8px; border-radius:20px; white-space:nowrap;">Best Value</div>
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--primary-light); margin-bottom:4px;">Quarterly</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:26px; color:var(--primary-dark);">$1,750</div>
+            <div style="font-size:11px; color:var(--text-light); margin-top:2px;">~$583/mo</div>
+          </div>
+        </div>
+        <div class="annotation info" style="margin:0; font-size:12px;">
+          <strong>Quarterly bonus:</strong> Backlink plan + site audit included.
+        </div>
+      </div>
+
+      <!-- COL 3: PAID MEDIA -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--yellow);">Monthly &mdash; Paid Media Management</p>
+        <div style="background:var(--light-bg); border:1px solid var(--border); border-radius:10px; padding:14px; flex:1;">
+          <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); margin-bottom:6px;">Month 1 Includes</p>
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:4px; margin-bottom:10px;">
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Intake + Brand Discovery Call</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Strategy + research (CRO Roadmap; Market Research)</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Build new ads (Launch Plan + call)</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Confirm product feeds + tracking environments</li>
+          </ul>
+          <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:var(--text-light); margin-bottom:6px;">Ongoing Every Month</p>
+          <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:4px;">
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Bi-weekly opportunities + experiment summary</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Learnings Journal · Experiment Tracker · Metrics Dashboard</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Monthly strategy call with Account Manager + Digital Strategist</li>
+            <li style="font-size:12.5px; display:flex; gap:7px; color:var(--text-light);"><span style="color:var(--yellow); font-weight:700;">✓</span> Includes 1 channel (Meta/Instagram) — +$1,000/mo per additional</li>
+          </ul>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <div style="flex:1; background:#FEF9EC; border:1px solid rgba(184,144,58,.25); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--yellow); margin-bottom:4px;">Month-to-Month</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:26px; color:var(--primary-dark);">$2,000</div>
+            <div style="font-size:11px; color:var(--text-light); margin-top:2px;">per month</div>
+          </div>
+          <div style="flex:1; background:linear-gradient(135deg,#FEF3D0,#FEF9EC); border:2px solid var(--yellow); border-radius:10px; padding:12px; text-align:center; position:relative;">
+            <div style="position:absolute; top:-9px; left:50%; transform:translateX(-50%); background:var(--yellow); color:#fff; font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:2px 8px; border-radius:20px; white-space:nowrap;">Save 10%</div>
+            <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--yellow); margin-bottom:4px;">Quarterly Prepay</div>
+            <div style="font-family:'DM Serif Display',serif; font-size:26px; color:var(--primary-dark);">$5,400</div>
+            <div style="font-size:11px; color:var(--text-light); margin-top:2px;">~$1,800/mo</div>
+          </div>
+        </div>
+        <div class="annotation" style="margin:0; font-size:12px; border-left-color:var(--yellow); background:#FEF9EC;">
+          <strong>Ad spend not included</strong> — paid directly to platforms. Client owns all ad accounts.
+        </div>
+      </div>
+
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Skin Revival Science &mdash; Shopify Proposal</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SLIDE 9 — NEXT STEPS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to <em>Launch?</em></h1>
+      <p class="subtitle" style="text-align:center; max-width:620px; margin:0 auto 28px;">Cryoluxe™ is a world-first. Let's build a store worthy of that claim.</p>
+      <div style="display:flex; flex-direction:column; gap:14px; max-width:520px; width:100%; text-align:left;">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:var(--primary-dark);">1</div>
+          <div>
+            <p style="font-weight:600; font-size:15px;">Approve this proposal</p>
+            <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin-top:3px;">Reply by email — we'll send a simple one-page agreement.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--ember-red); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff;">2</div>
+          <div>
+            <p style="font-weight:600; font-size:15px;">Sign + one-time payment ($2,000)</p>
+            <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin-top:3px;">Secures your spot and starts the 21-day clock.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:var(--primary-dark);">3</div>
+          <div>
+            <p style="font-weight:600; font-size:15px;">Asset handoff + kickoff call</p>
+            <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin-top:3px;">Logo files, product photography, any brand guidelines — then we're building.</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:32px; height:32px; border-radius:50%; background:var(--ember-red); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; color:#fff;">4</div>
+          <div>
+            <p style="font-weight:600; font-size:15px;">Launch in 21 days</p>
+            <p style="font-size:13.5px; color:rgba(255,255,255,0.5); margin-top:3px;">A premium Shopify store that earns trust, tells the HOCl story, and converts — live.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-24">
+        <p style="font-size:15px; font-weight:600; color:var(--accent);">tj@embertribe.com</p>
+        <p style="font-size:12px; color:rgba(255,255,255,0.35); margin-top:4px;">or reply directly to the link you received</p>
+      </div>
+      <div class="logo-row" style="width:100%; max-width:700px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+  document.querySelector(`.slide[data-slide="${current}"]`).scrollTop = 0;
+  current = next;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.add('active');
+  document.querySelector(`.slide[data-slide="${current}"]`).scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
