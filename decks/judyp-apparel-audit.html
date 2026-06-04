@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>judypapparel.com — SEO Technical Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1C1027;
+  --primary-mid: #2E1A47;
+  --primary-light: #4A2E6E;
+  --accent: #E8A87C;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+/* STAT CARDS */
+.stats-row {
+  display: flex;
+  gap: 14px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* ANNOTATIONS */
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277bd; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.warning { background: #FFF3E0; border-left-color: var(--orange); }
+.annotation.warning strong { color: var(--orange); }
+
+/* TABLES */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+.dim { opacity: 0.5; }
+
+/* BAR CHARTS */
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 12px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 130px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.purple { background: linear-gradient(90deg, var(--primary-mid), var(--primary-light)); }
+
+.bar-value {
+  width: 70px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* PILLS */
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.pill.onetime  { background: #FFEBEE; color: var(--red); }
+.pill.ongoing  { background: #E8F5E9; color: var(--green); }
+.pill.critical { background: #FCE4EC; color: #C2185B; }
+.pill.high     { background: #FFF3E0; color: var(--orange); }
+.pill.medium   { background: #E3F2FD; color: var(--blue); }
+
+/* COLUMNS */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+/* CHANNEL CARDS */
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.channel-card .channel-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 10px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* PRIORITY LIST */
+.priority-list { list-style: none; padding: 0; margin: 12px 0; }
+
+.priority-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: var(--card-bg);
+}
+
+.priority-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.priority-num.red    { background: #FFEBEE; color: var(--red); }
+.priority-num.orange { background: #FFF3E0; color: var(--orange); }
+.priority-num.blue   { background: #E3F2FD; color: var(--blue); }
+.priority-num.green  { background: #E8F5E9; color: var(--green); }
+
+.priority-body h4 { font-size: 14px; margin-bottom: 3px; }
+.priority-body p  { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+
+/* OPPORTUNITY MATH */
+.opp-box {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  background: var(--light-bg);
+}
+
+.opp-box .opp-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.opp-box .opp-val {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.opp-box .opp-note {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* LOGO ROW */
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 11px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.35); }
+
+/* PROGRESS BAR */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+/* NAV */
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* UTILITY */
+.mt-8  { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.accent { color: var(--accent); }
+.purple { color: var(--primary-light); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .bar-label { width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">SEO Technical Audit</p>
+      <h1>judypapparel.com</h1>
+      <p class="subtitle">You have 4 million impressions and a 0.38% CTR.<br>The rankings are there — the clicks aren't coming.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">4.0M</div>
+          <div class="stat-label">Total Impressions (6 mo.)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">15,108</div>
+          <div class="stat-label">Total Clicks (6 mo.)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0.38%</div>
+          <div class="stat-label">Avg CTR — critically low</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">96</div>
+          <div class="stat-label">Striking-Distance Keywords</div>
+        </div>
+      </div>
+      <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-top:8px;">Data: Google Search Console · Nov 2025 – May 2026</p>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; June 2026</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: TRAFFIC TRENDS -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>Organic Click Trajectory</h2>
+    <p class="subtitle">Traffic dipped hard in Dec–Jan, recovered strongly March onward — but still constrained by CTR, not rankings.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row">
+        <span class="bar-label">Nov 2025</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:97%;">2,799 clicks</div></div>
+        <span class="bar-value teal bold">2,799</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Dec 2025</span>
+        <div class="bar-track"><div class="bar-fill red" style="width:53%;">1,539 clicks</div></div>
+        <span class="bar-value red bold">1,539</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Jan 2026</span>
+        <div class="bar-track"><div class="bar-fill red" style="width:48%;">1,387 clicks</div></div>
+        <span class="bar-value red bold">1,387</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Feb 2026</span>
+        <div class="bar-track"><div class="bar-fill yellow" style="width:63%;">1,832 clicks</div></div>
+        <span class="bar-value bold" style="color:var(--yellow);">1,832</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Mar 2026</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:88%;">2,543 clicks</div></div>
+        <span class="bar-value green bold">2,543</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Apr 2026</span>
+        <div class="bar-track"><div class="bar-fill green" style="width:87%;">2,504 clicks</div></div>
+        <span class="bar-value green bold">2,504</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">May 2026 <span style="font-size:10px;">(partial)</span></span>
+        <div class="bar-track"><div class="bar-fill blue" style="width:87%;">2,504 clicks</div></div>
+        <span class="bar-value blue bold">2,504</span>
+      </div>
+    </div>
+    <div class="annotation warning">
+      <strong>Dec–Jan dip:</strong> Traffic fell 50% while impressions stayed relatively high (797K in Dec). Rankings held — but CTR and crawl budget issues caused the drop. This is a solvable problem, not a Google penalty.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE CTR CRISIS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Core Problem</p>
+    <h2>4 Million Impressions. 0.38% CTR.</h2>
+    <p class="subtitle">The biggest pages are ranking but barely being clicked. Bad title tags and meta descriptions are leaking massive traffic.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Page</th>
+          <th class="right">Impressions</th>
+          <th class="right">Actual CTR</th>
+          <th class="right">Actual Clicks</th>
+          <th class="right">At 2% CTR</th>
+          <th class="right">Clicks Left on Table</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="mono">/capsule-wardrobe-basics</td>
+          <td class="right bold">1,653,660</td>
+          <td class="right red bold">0.22%</td>
+          <td class="right">3,705</td>
+          <td class="right green">33,073</td>
+          <td class="right bold red">+29,368</td>
+        </tr>
+        <tr>
+          <td class="mono">/capsule-wardrobe-checklist</td>
+          <td class="right bold">137,546</td>
+          <td class="right red bold">0.09%</td>
+          <td class="right">126</td>
+          <td class="right green">2,751</td>
+          <td class="right bold red">+2,625</td>
+        </tr>
+        <tr>
+          <td class="mono">/best-fabric-for-hot-weather</td>
+          <td class="right bold">124,204</td>
+          <td class="right red bold">0.12%</td>
+          <td class="right">154</td>
+          <td class="right green">2,484</td>
+          <td class="right bold red">+2,330</td>
+        </tr>
+        <tr>
+          <td class="mono">/american-made-sustainable-clothing</td>
+          <td class="right bold">101,805</td>
+          <td class="right red bold">0.15%</td>
+          <td class="right">157</td>
+          <td class="right green">2,036</td>
+          <td class="right bold red">+1,879</td>
+        </tr>
+        <tr>
+          <td class="mono">/moisture-wicking-vs-quick-dry</td>
+          <td class="right bold">92,569</td>
+          <td class="right red bold">0.16%</td>
+          <td class="right">148</td>
+          <td class="right green">1,851</td>
+          <td class="right bold red">+1,703</td>
+        </tr>
+        <tr>
+          <td class="mono">/what-is-wrinkle-resistant-fabric</td>
+          <td class="right bold">68,199</td>
+          <td class="right red bold">0.18%</td>
+          <td class="right">120</td>
+          <td class="right green">1,364</td>
+          <td class="right bold red">+1,244</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-12">
+      <strong>These 6 pages alone are missing ~39,000 clicks per 6 months</strong> vs. a modest 2% CTR benchmark — purely from weak title tags and meta descriptions. Rankings are already there.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: ONE-TIME FIXES -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Fix Once, Benefit Forever</p>
+    <h2>One-Time Fixes <span class="pill onetime" style="font-size:13px; vertical-align:middle;">Do Once</span></h2>
+    <p class="subtitle">These are structural problems. Fix them once and the improvement compounds indefinitely.</p>
+
+    <ul class="priority-list">
+      <li class="priority-item">
+        <div class="priority-num red">1</div>
+        <div class="priority-body">
+          <h4>Rewrite title tags + meta descriptions on 6 high-impression pages <span class="pill critical">Critical</span></h4>
+          <p>The capsule-wardrobe-basics page has 1.6M impressions at pos 4 with a 0.22% CTR. The title is almost certainly generic. Rewrite to be curiosity-driven and keyword-specific. Same for checklist, hot weather, sustainable clothing, moisture wicking, wrinkle-resistant. This is the single highest-ROI task in this audit.</p>
+        </div>
+      </li>
+      <li class="priority-item">
+        <div class="priority-num red">2</div>
+        <div class="priority-body">
+          <h4>Push tunic-tops-for-leggings from page 2 to page 1 <span class="pill high">High</span></h4>
+          <p>96,807 impressions at avg position 12.3 — stuck just off page 1. Expand the content (add size guides, styling tips, buyer's guide section), improve the H1/H2 structure, and build 3–5 internal links from the capsule wardrobe and smart casual pages.</p>
+        </div>
+      </li>
+      <li class="priority-item">
+        <div class="priority-num orange">3</div>
+        <div class="priority-body">
+          <h4>Consolidate blog cannibalization between the two blog categories <span class="pill high">High</span></h4>
+          <p>Two categories (<span class="mono">judyp-fabrics</span> and <span class="mono">my-inspiration</span>) have competing pages: american-made (2+ pages), wrinkle-free (2+ pages), travel clothes (multiple pages). Pick one canonical URL per topic, internally link the others to it, and consider 301 redirects for the weakest duplicate. Google is splitting authority across these.</p>
+        </div>
+      </li>
+      <li class="priority-item">
+        <div class="priority-num orange">4</div>
+        <div class="priority-body">
+          <h4>Build an internal linking hub for the smart casual cluster <span class="pill high">High</span></h4>
+          <p>44 keywords drive 1,115 clicks to the smart casual topic — but they land on multiple URLs with no hub-and-spoke structure. Create a main "smart casual" pillar page and link every related post to it. This consolidates signals and will lift all positions in the cluster.</p>
+        </div>
+      </li>
+      <li class="priority-item">
+        <div class="priority-num blue">5</div>
+        <div class="priority-body">
+          <h4>Add FAQ schema to the top 10 blog posts <span class="pill medium">Medium</span></h4>
+          <p>FAQ rich results increase SERP real estate, which boosts CTR without changing ranking position. The tencel, smart casual, and capsule wardrobe posts are natural candidates — they're already answering specific questions.</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: ONGOING WORK -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Continuous Improvement</p>
+    <h2>Ongoing Work <span class="pill ongoing" style="font-size:13px; vertical-align:middle;">Monthly</span></h2>
+    <p class="subtitle">These aren't set-and-forget. They require regular attention to compound over time.</p>
+
+    <div class="two-col flex-grow">
+      <div>
+        <div class="channel-card" style="margin-bottom:14px;">
+          <div class="channel-icon">📊</div>
+          <h3>Strike-Distance Monitoring</h3>
+          <ul>
+            <li>96 keywords stuck in positions 11–30 — review monthly</li>
+            <li>Priority targets: "smart casual women" (pos 12.7, 7.6K impressions), "tunic tops for leggings" (pos 11.8, 6K impressions)</li>
+            <li>When a keyword hits position 11–12, content refresh or link push will flip it to page 1</li>
+            <li>"luxury fabrics" and "tunic tops" are at position 25+ — need dedicated content expansion</li>
+          </ul>
+        </div>
+        <div class="channel-card">
+          <div class="channel-icon">✏️</div>
+          <h3>CTR Iteration</h3>
+          <ul>
+            <li>After title/meta rewrites, track CTR weekly in GSC for 30–60 days</li>
+            <li>A/B test title variations on the top 3 pages — GSC shows which variant wins</li>
+            <li>Flag any page that drops CTR after rewrite — revert or try again</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="channel-card" style="margin-bottom:14px;">
+          <div class="channel-icon">🔄</div>
+          <h3>Content Refresh Cadence</h3>
+          <ul>
+            <li>Quarterly refresh on the top 10 pages — update examples, add new sections, re-optimize headers</li>
+            <li>Freshness signals matter especially on style and dress-code content (trends change)</li>
+            <li>Add current year to titles where appropriate ("2026 Guide to...")</li>
+          </ul>
+        </div>
+        <div class="channel-card">
+          <div class="channel-icon">📝</div>
+          <h3>New Content for High-Volume Gaps</h3>
+          <ul>
+            <li>"luxury fabrics" — 2,533 impressions at pos 25.3, no strong page targeting it directly</li>
+            <li>"plus size tunics to wear with leggings" — 655 impressions at pos 27.5</li>
+            <li>"extra long tunic tops for leggings" — 472 impressions at pos 16.8</li>
+            <li>"v neck top" — 2,251 impressions at pos 12.2, no dedicated product page</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STRIKING DISTANCE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Positions 11–30</p>
+    <h2>96 Keywords One Push from Page 1</h2>
+    <p class="subtitle">These are ranking but not earning clicks. A content update or internal link push is often all it takes.</p>
+
+    <div class="two-col">
+      <div>
+        <h3 class="mb-8">Highest-Volume Opportunities</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Keyword</th>
+              <th class="right">Pos</th>
+              <th class="right">Impressions</th>
+              <th class="right">Fix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>smart casual women</td><td class="right bold orange">12.7</td><td class="right">7,636</td><td><span class="pill high">content</span></td></tr>
+            <tr><td>smart casual attire women</td><td class="right bold orange">4.2</td><td class="right">7,098</td><td><span class="pill medium">CTR</span></td></tr>
+            <tr><td>tunic tops for leggings</td><td class="right bold red">11.8</td><td class="right">6,007</td><td><span class="pill high">content</span></td></tr>
+            <tr><td>smart casual for women</td><td class="right bold red">11.3</td><td class="right">5,109</td><td><span class="pill high">links</span></td></tr>
+            <tr><td>long tunic tops for leggings</td><td class="right bold red">11.6</td><td class="right">4,440</td><td><span class="pill high">content</span></td></tr>
+            <tr><td>luxury fabrics</td><td class="right bold red">25.3</td><td class="right">2,533</td><td><span class="pill onetime">new page</span></td></tr>
+            <tr><td>v neck top</td><td class="right bold red">12.2</td><td class="right">2,251</td><td><span class="pill onetime">product page</span></td></tr>
+            <tr><td>womens tunic tops for leggings</td><td class="right bold red">12.5</td><td class="right">1,631</td><td><span class="pill high">links</span></td></tr>
+            <tr><td>high quality women's clothing</td><td class="right bold red">11.5</td><td class="right">1,103</td><td><span class="pill medium">CTR</span></td></tr>
+            <tr><td>made in usa dresses</td><td class="right bold red">13.0</td><td class="right">965</td><td><span class="pill high">content</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="mb-8">What Moves These</h3>
+        <div class="annotation info mb-12">
+          <strong>Content expansion</strong> — pages in positions 11–15 usually need more depth. Add a buying guide section, FAQs, or a comparison table to the existing post.
+        </div>
+        <div class="annotation info mb-12">
+          <strong>Internal links</strong> — the capsule wardrobe basics page has 1.6M impressions. One contextual link from it to a striking-distance page can move it 2–4 positions.
+        </div>
+        <div class="annotation info mb-12">
+          <strong>New page</strong> — for positions 20–30, the current page isn't the right match. A dedicated page for "luxury fabrics" or "v neck tops" will outrank a generic mention.
+        </div>
+        <div class="annotation success">
+          <strong>Quick math:</strong> If 10 of the top striking-distance keywords move from position 12 → 8, that's roughly +3,000–5,000 additional clicks per month at no additional content cost.
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: THE OPPORTUNITY -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">The Upside</p>
+    <h2>4× More Traffic. Same Rankings.</h2>
+    <p class="subtitle">Every fix in this audit works on existing impressions — no new keywords, no new content required for the first wave of gains.</p>
+
+    <div class="three-col mt-16">
+      <div class="opp-box">
+        <div class="opp-label">Today</div>
+        <div class="opp-val red">0.38%</div>
+        <div class="opp-note">Avg CTR on 4M impressions<br>= 15,108 clicks / 6 months</div>
+      </div>
+      <div class="opp-box" style="border-color: var(--yellow); background: #FFFDE7;">
+        <div class="opp-label">Conservative Target</div>
+        <div class="opp-val" style="color:var(--yellow);">1.5%</div>
+        <div class="opp-note">After title/meta rewrites<br>= ~60,000 clicks / 6 months</div>
+      </div>
+      <div class="opp-box" style="border-color: var(--green); background: #E8F5E9;">
+        <div class="opp-label">Full Optimization</div>
+        <div class="opp-val green">2.5%</div>
+        <div class="opp-note">CTR + rankings + new content<br>= ~100,000 clicks / 6 months</div>
+      </div>
+    </div>
+
+    <div class="mt-24">
+      <h3 class="mb-12">Fix Priority vs. Effort</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Fix</th>
+            <th>Type</th>
+            <th>Effort</th>
+            <th>Impact</th>
+            <th>Timeframe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">Rewrite title tags + meta on 6 pages</td>
+            <td><span class="pill onetime">One-Time</span></td>
+            <td class="green">Low</td>
+            <td class="bold red">Critical</td>
+            <td>Week 1–2</td>
+          </tr>
+          <tr>
+            <td class="bold">Smart casual internal linking hub</td>
+            <td><span class="pill onetime">One-Time</span></td>
+            <td class="green">Low</td>
+            <td class="bold orange">High</td>
+            <td>Week 2–3</td>
+          </tr>
+          <tr>
+            <td class="bold">Tunic tops page 2 → page 1 push</td>
+            <td><span class="pill onetime">One-Time</span></td>
+            <td class="orange">Medium</td>
+            <td class="bold orange">High</td>
+            <td>Month 1</td>
+          </tr>
+          <tr>
+            <td class="bold">Blog cannibalization consolidation</td>
+            <td><span class="pill onetime">One-Time</span></td>
+            <td class="orange">Medium</td>
+            <td class="bold orange">High</td>
+            <td>Month 1–2</td>
+          </tr>
+          <tr>
+            <td class="bold">FAQ schema on top 10 posts</td>
+            <td><span class="pill onetime">One-Time</span></td>
+            <td class="green">Low</td>
+            <td class="bold blue">Medium</td>
+            <td>Month 1</td>
+          </tr>
+          <tr>
+            <td class="bold">Strike-distance monitoring + content refresh</td>
+            <td><span class="pill ongoing">Ongoing</span></td>
+            <td class="orange">Medium</td>
+            <td class="bold orange">High</td>
+            <td>Monthly</td>
+          </tr>
+          <tr>
+            <td class="bold">New pages: luxury fabrics, plus-size tunics, v-neck</td>
+            <td><span class="pill ongoing">Ongoing</span></td>
+            <td class="orange">Medium</td>
+            <td class="bold blue">Medium</td>
+            <td>Month 2–3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">judypapparel.com &mdash; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: SUMMARY / NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="8">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Audit Summary</p>
+      <h1>What Happens Next</h1>
+      <p class="subtitle">Two tracks. One immediate, one ongoing.</p>
+
+      <div class="two-col mt-16" style="max-width:900px;">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:28px;">
+          <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:12px;">One-Time Fixes · Weeks 1–6</p>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Rewrite title tags + metas on 6 pages</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Build smart casual internal linking hub</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Expand tunic tops page — push to page 1</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Consolidate duplicate blog category pages</li>
+            <li style="padding:6px 0; font-size:14px;">✦ Deploy FAQ schema on top 10 posts</li>
+          </ul>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:28px;">
+          <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:12px;">Ongoing · Monthly Cadence</p>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Monitor 96 striking-distance keywords</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Track CTR after title rewrites, iterate</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ Quarterly content refreshes on top 10 pages</li>
+            <li style="padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:14px;">✦ New content: luxury fabrics, plus-size tunics</li>
+            <li style="padding:6px 0; font-size:14px;">✦ CTR benchmarking vs. 2% target</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-24" style="background:rgba(232,168,124,0.1); border:1px solid rgba(232,168,124,0.3); border-radius:12px; padding:20px 24px; max-width:900px;">
+        <p style="font-size:16px; font-weight:600; color:var(--accent);">The headline number:</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.75); margin-top:6px;">judypapparel.com is already ranking for the right things. Moving CTR from <strong style="color:white;">0.38% to 1.5%</strong> on existing impressions adds approximately <strong style="color:white;">~45,000 clicks per 6 months</strong> — without ranking for a single new keyword.</p>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared by EmberTribe &mdash; June 2026</span>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 8</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
