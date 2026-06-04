@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DogiZone — Paid Ads Audit (Internal)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #003D5C;
+  --primary-mid: #005578;
+  --primary-light: #007A9A;
+  --accent: #00B4D0;
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 17px; font-weight: 400; color: var(--text-light); max-width: 860px; margin-bottom: 20px; }
+
+.slide-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 6px;
+}
+
+.internal-badge {
+  display: inline-block; background: #FFF3E0; color: var(--orange);
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1; min-width: 130px;
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 10px 14px;
+  font-size: 13px; margin: 10px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.warning { background: #FFF8E1; border-left-color: var(--yellow); }
+.annotation.warning strong { color: #E65100; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 10px; letter-spacing: 0.5px; color: var(--text-light);
+  text-align: left; padding: 9px 11px; border-bottom: 2px solid var(--border);
+}
+
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.45; }
+.center { text-align: center; }
+
+.pill {
+  display: inline-block; padding: 2px 9px; border-radius: 20px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+}
+.pill.green { background: #E8F5E9; color: #1B5E20; }
+.pill.red { background: #FFEBEE; color: var(--red); }
+.pill.orange { background: #FFF3E0; color: var(--orange); }
+.pill.blue { background: #E3F2FD; color: #0D47A1; }
+.pill.yellow { background: #FFFDE7; color: #F57F17; }
+.pill.purple { background: #F3E5F5; color: #6A1B9A; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 7px; margin: 12px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 130px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px; display: flex; align-items: center;
+  justify-content: flex-end; padding-right: 8px; font-size: 11px;
+  font-weight: 700; color: white; min-width: 40px;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, #007A9A, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.orange { background: linear-gradient(90deg, #CA6F1E, var(--orange)); }
+.bar-fill.purple { background: linear-gradient(90deg, #6C3483, #A569BD); }
+.bar-value { width: 70px; text-align: right; font-size: 12px; font-weight: 600; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px;
+}
+.channel-card .icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 14px; margin-bottom: 5px;
+  font-size: 13px; line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 13px; margin-bottom: 4px; font-size: 12px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+.logo-row {
+  margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100; transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed; bottom: 22px; right: 28px;
+  display: flex; align-items: center; gap: 10px; z-index: 100;
+}
+.nav button {
+  width: 38px; height: 38px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);
+  color: white; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 6px; }
+
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mb-8 { margin-bottom: 8px; }
+.flex-grow { flex: 1; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+.trend-up { color: var(--green); font-weight: 700; }
+.trend-down { color: var(--red); font-weight: 700; }
+.trend-flat { color: var(--yellow); font-weight: 700; }
+
+.number-big { font-size: 48px; font-weight: 900; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 28px 36px; }
+  h1 { font-size: 34px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <div class="internal-badge">Internal Use Only</div>
+      <p class="slide-label">Paid Ads Audit</p>
+      <h1>DogiZone</h1>
+      <p class="subtitle">June 2026 full account review across Google Ads and Meta. Budget is underspent, signals are diluted, and the most efficient campaigns are underfunded. All three are fixable.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">$11,250</div>
+          <div class="stat-label">Monthly ad budget</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">80%</div>
+          <div class="stat-label">Avg budget utilized (Feb&ndash;Apr)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">169</div>
+          <div class="stat-label">April new customers (goal: 300)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$3.42</div>
+          <div class="stat-label">PMAX Training CPL (best campaign)</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared by Melissa Cedeno &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE LEAD GAP -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Core Problem</p>
+    <h2>Platform Conversions vs. Real Leads</h2>
+    <p class="subtitle">Andrew measures leads as new customer accounts created in Gingr, not Google/Meta conversion events. These two numbers have never been aligned in reporting.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Month-by-Month Reality</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th class="right">Platform Leads</th>
+              <th class="right">Gingr Accounts</th>
+              <th class="right">Gingr/Platform</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bold">January</td>
+              <td class="right">415</td>
+              <td class="right bold">137</td>
+              <td class="right trend-down">33%</td>
+            </tr>
+            <tr>
+              <td class="bold">February</td>
+              <td class="right">469</td>
+              <td class="right bold">124</td>
+              <td class="right trend-down">26%</td>
+            </tr>
+            <tr>
+              <td class="bold">March</td>
+              <td class="right">651</td>
+              <td class="right bold" style="color:var(--green);">207</td>
+              <td class="right" style="color:var(--green); font-weight:700;">32%</td>
+            </tr>
+            <tr>
+              <td class="bold">April</td>
+              <td class="right">585</td>
+              <td class="right bold">169</td>
+              <td class="right trend-down">29%</td>
+            </tr>
+            <tr style="background:#FFF8E1;">
+              <td class="bold">May</td>
+              <td class="right">607</td>
+              <td class="right bold dim">Pending</td>
+              <td class="right dim">Pending</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation warning mt-12">
+          <strong>Reporting gap:</strong> Every Learning Journal reports platform leads (400&ndash;650/mo). Andrew is looking at Gingr (124&ndash;207/mo). We have been measuring different things.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">What Andrew Actually Counts</h3>
+        <div style="background:var(--light-bg); border-radius:12px; padding:20px; margin-bottom:12px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:8px;">Andrew's Definition of a Lead</div>
+          <p style="font-size:14px; line-height:1.6;">"When I say 300 leads per month, those are 300 new customers in our database each month. People that have called in. Because everybody that calls in, we create a profile."</p>
+          <p style="font-size:12px; color:var(--text-light); margin-top:8px; font-style:italic;">May 21 call, 35:11</p>
+        </div>
+        <div style="background:var(--light-bg); border-radius:12px; padding:20px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-light); margin-bottom:12px;">The Gap Explained</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+              <span>Platform "conversions" include</span>
+              <span class="red bold">Get Directions (673)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+              <span>Platform "conversions" include</span>
+              <span class="red bold">Store Visits (22 campaigns)</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+              <span>Platform "conversions" include</span>
+              <span class="orange bold">Book Appointments</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+              <span>Calls counted: click-only, no CallRail</span>
+              <span class="orange bold">No verification</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; border-top:1px solid var(--border); padding-top:8px; font-weight:700;">
+              <span>What maps to Gingr accounts</span>
+              <span class="green">Completed inbound calls</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: GOOGLE CAMPAIGN SCORECARD -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Google Ads</p>
+    <h2>4-Month Campaign Scorecard (Feb&ndash;May 27)</h2>
+    <p class="subtitle">Two campaigns drive most efficiency. Three campaigns are above their own tCPA targets. Budget allocation is inverted relative to performance.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Campaign</th>
+          <th>Type</th>
+          <th class="right">4-Mo Spend</th>
+          <th class="right">Total Convs</th>
+          <th class="right">Calls</th>
+          <th class="right">Avg CPL</th>
+          <th>tCPA</th>
+          <th>Trend</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Brand Search</td>
+          <td><span class="pill blue">BOFU</span></td>
+          <td class="right">$767</td>
+          <td class="right">900</td>
+          <td class="right">1,020</td>
+          <td class="right bold green">$0.85</td>
+          <td>tROAS 377%</td>
+          <td><span class="trend-flat">&#8594; Flat</span></td>
+          <td><span class="pill orange">Underspending</span></td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td class="bold">PMAX Training</td>
+          <td><span class="pill purple">PMAX</span></td>
+          <td class="right">$1,816</td>
+          <td class="right">531</td>
+          <td class="right">565</td>
+          <td class="right bold" style="color:var(--green);">$3.42</td>
+          <td>Max Conv.</td>
+          <td><span class="trend-up">&#8593; Strong</span></td>
+          <td><span class="pill red">Underfunded</span></td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td class="bold">PMAX Boarding+DC</td>
+          <td><span class="pill purple">PMAX</span></td>
+          <td class="right">$2,551</td>
+          <td class="right">135</td>
+          <td class="right">175</td>
+          <td class="right bold" style="color:var(--teal);">$18.90*</td>
+          <td>Max Conv.</td>
+          <td><span class="trend-up">&#8593; Improving</span></td>
+          <td><span class="pill green">Now funded</span></td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td class="bold">Daycare Search</td>
+          <td><span class="pill blue">Search</span></td>
+          <td class="right">$630</td>
+          <td class="right">36</td>
+          <td class="right">34</td>
+          <td class="right bold" style="color:var(--green);">$17.50</td>
+          <td>tCPA $60</td>
+          <td><span class="trend-up">&#8593; Efficient</span></td>
+          <td><span class="pill red">Underfunded</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Grooming Search</td>
+          <td><span class="pill blue">Search</span></td>
+          <td class="right">$4,721</td>
+          <td class="right">117</td>
+          <td class="right">158</td>
+          <td class="right bold orange">$40.35</td>
+          <td>tCPA $40</td>
+          <td><span class="trend-down">&#8595; Declining</span></td>
+          <td><span class="pill yellow">At tCPA</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Boarding Search</td>
+          <td><span class="pill blue">Search</span></td>
+          <td class="right">$8,446</td>
+          <td class="right">190</td>
+          <td class="right">124</td>
+          <td class="right bold red">$44.46</td>
+          <td>tCPA $37.50</td>
+          <td><span class="trend-down">&#8595; Declining</span></td>
+          <td><span class="pill red">Over tCPA</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Training Search</td>
+          <td><span class="pill blue">Search</span></td>
+          <td class="right">$7,017</td>
+          <td class="right">130</td>
+          <td class="right">110</td>
+          <td class="right bold red">$53.98</td>
+          <td>Max Conv.</td>
+          <td><span class="trend-down">&#8595; &minus;41% vol</span></td>
+          <td><span class="pill orange">DSA only</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>*PMAX Boarding CPL trend:</strong> $41.25 (Feb) &rarr; $22.97 (Mar) &rarr; $17.81 (Apr) &rarr; $14.33 (May). The budget increase to $110/day on May 19 is already showing results.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: BUDGET MISALLOCATION -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Budget Problem</p>
+    <h2>Money Is Going to the Wrong Campaigns</h2>
+    <p class="subtitle">Legacy search campaigns absorb 57% of Google budget but have CPLs 3&ndash;15x higher than PMAX. Brand Search has a $3,720 monthly budget cap but spends $209.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Current Monthly Allocation</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Boarding Search</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:29%;">$2,551</div></div>
+            <span class="bar-value red">CPL $44</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Training Search</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:21%;">$1,841</div></div>
+            <span class="bar-value red">CPL $54</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Daycare Search</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:18%;">$1,576</div></div>
+            <span class="bar-value green">CPL $18</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Grooming Search</span>
+            <div class="bar-track"><div class="bar-fill yellow" style="width:15%;">$1,311</div></div>
+            <span class="bar-value orange">CPL $40</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">PMAX Training</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:7%;">$620</div></div>
+            <span class="bar-value" style="color:var(--green);">CPL $3</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Brand Search</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:3%;">$209</div></div>
+            <span class="bar-value" style="color:var(--green);">CPL $0.85</span>
+          </div>
+        </div>
+        <div class="annotation danger mt-12">
+          <strong>The math:</strong> Boarding Search + Training Search = $4,392/month at CPL $48 avg. PMAX Training = $620/month at CPL $3.42. Budget is concentrated in the least efficient campaigns.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Why Brand Search Underspends</h3>
+        <div style="background:var(--light-bg); border-radius:12px; padding:18px; margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text-light); text-transform:uppercase; margin-bottom:8px;">Brand Search Budget vs. Actual</div>
+          <div style="display:flex; gap:20px; margin-bottom:12px;">
+            <div>
+              <div style="font-size:28px; font-weight:900; color:var(--red);">$3,720</div>
+              <div style="font-size:11px; color:var(--text-light);">Monthly budget cap</div>
+            </div>
+            <div style="font-size:28px; font-weight:400; color:var(--text-light); line-height:2;">vs.</div>
+            <div>
+              <div style="font-size:28px; font-weight:900; color:var(--green);">$209</div>
+              <div style="font-size:11px; color:var(--text-light);">Actual monthly spend</div>
+            </div>
+          </div>
+          <p style="font-size:13px; color:var(--text-light);">The tROAS target of 377% is too aggressive. The algorithm cannot find enough impression volume at that conversion value threshold and throttles delivery to ~$7/day of a $120/day budget.</p>
+        </div>
+        <h3 style="margin-bottom:10px;">Recommended Reallocation</h3>
+        <table>
+          <thead>
+            <tr><th>Campaign</th><th class="right">Current</th><th class="right">Recommended</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>PMAX Training</td><td class="right">$620</td><td class="right bold green">$1,550</td></tr>
+            <tr><td>Daycare Search</td><td class="right">$1,576</td><td class="right bold green">$2,015</td></tr>
+            <tr><td>Brand Search (fix tROAS)</td><td class="right">$209 actual</td><td class="right bold green">$930 actual</td></tr>
+            <tr><td>Boarding Search</td><td class="right">$2,551</td><td class="right bold red">$1,200</td></tr>
+            <tr><td>Training Search</td><td class="right">$1,841</td><td class="right bold orange">$1,395</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CONVERSION SIGNAL DILUTION -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Technical Problem</p>
+    <h2>Smart Bidding Is Optimizing for the Wrong Things</h2>
+    <p class="subtitle">Five primary conversion action types are active simultaneously. The algorithm treats Get Directions and Store Visits with equal weight to phone call leads, diluting the signal toward low-value actions.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Active Primary Conversion Actions (Feb&ndash;May 27)</h3>
+        <table>
+          <thead>
+            <tr><th>Action</th><th class="right">Volume</th><th>Priority</th><th>Should Be</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Phone Call Leads (Calls from Ads)</td>
+              <td class="right bold">1,053</td>
+              <td><span class="pill green">Primary</span></td>
+              <td><span class="pill green">Primary</span></td>
+            </tr>
+            <tr>
+              <td>Phone Call Leads (Website)</td>
+              <td class="right bold">476</td>
+              <td><span class="pill green">Primary</span></td>
+              <td><span class="pill yellow">Secondary*</span></td>
+            </tr>
+            <tr style="background:#FFEBEE;">
+              <td class="bold">Get Directions</td>
+              <td class="right bold red">673</td>
+              <td><span class="pill red">Primary</span></td>
+              <td><span class="pill red">Remove</span></td>
+            </tr>
+            <tr style="background:#FFEBEE;">
+              <td class="bold">Store Visits (22 campaigns)</td>
+              <td class="right bold red">Active</td>
+              <td><span class="pill red">Primary</span></td>
+              <td><span class="pill red">Remove</span></td>
+            </tr>
+            <tr>
+              <td>Book Appointments (3 actions)</td>
+              <td class="right">434</td>
+              <td><span class="pill orange">Primary</span></td>
+              <td><span class="pill yellow">Secondary</span></td>
+            </tr>
+            <tr>
+              <td>Submit Lead Form</td>
+              <td class="right">259</td>
+              <td><span class="pill blue">Secondary</span></td>
+              <td><span class="pill blue">Secondary</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="annotation danger mt-12">
+          <strong>Impact:</strong> "Get Directions" generated 673 conversions, more than double all form submissions. The algorithm is rewarding ad clicks that drive map taps, not calls. Every dollar of Smart Bidding optimization is partially misdirected.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">What This Costs Us</h3>
+        <div style="background:var(--light-bg); border-radius:12px; padding:18px; margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--text-light); letter-spacing:1px; margin-bottom:12px;">The Conversion Funnel Mismatch</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="background:white; border:1px solid var(--border); border-radius:8px; padding:12px;">
+              <div style="font-size:11px; font-weight:600; color:var(--text-light); margin-bottom:4px;">ANDREW MEASURES SUCCESS AS</div>
+              <div style="font-size:15px; font-weight:700; color:var(--green);">Phone call &rarr; Gingr profile created</div>
+            </div>
+            <div style="text-align:center; font-size:20px; color:var(--text-light);">&#8597;</div>
+            <div style="background:white; border:1px solid var(--red); border-radius:8px; padding:12px;">
+              <div style="font-size:11px; font-weight:600; color:var(--red); margin-bottom:4px;">SMART BIDDING OPTIMIZES FOR</div>
+              <div style="font-size:15px; font-weight:700; color:var(--red);">Calls + Directions + Store Visits + Bookings</div>
+            </div>
+          </div>
+        </div>
+        <h3 style="margin-bottom:10px;">The Fix (This Week)</h3>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px;"><span style="font-weight:700; color:var(--green);">1.</span> Remove Get Directions from primary actions on all lead campaigns</div>
+          <div style="background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px;"><span style="font-weight:700; color:var(--green);">2.</span> Remove Store Visits as account-default goal on lead campaigns</div>
+          <div style="background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px;"><span style="font-weight:700; color:var(--green);">3.</span> Set Book Appointments to secondary on all non-booking campaigns</div>
+          <div style="background:var(--light-bg); border-radius:8px; padding:10px 14px; font-size:13px;"><span style="font-weight:700; color:var(--green);">4.</span> Consolidate phone call primary to a single action (Calls from Ads only until CallRail live)</div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: META -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Meta Ads</p>
+    <h2>Meta: Small Budget, Growing, But With Real Gaps</h2>
+    <p class="subtitle">Meta is 14% of total ad budget ($1,550/month) and improving on CPL. April was the best month yet. But a form/call imbalance, pixel errors, and no customer list are all limiting scale.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Campaign Performance (Feb&ndash;May)</h3>
+        <table>
+          <thead>
+            <tr><th>Month</th><th class="right">Spend</th><th class="right">Calls</th><th class="right">Forms</th><th class="right">CPL</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>February</td><td class="right">$925</td><td class="right">13</td><td class="right">3</td><td class="right">$57.81</td></tr>
+            <tr><td>March</td><td class="right">$1,002</td><td class="right">28</td><td class="right">3</td><td class="right bold green">$32.32</td></tr>
+            <tr><td>April</td><td class="right">$1,566</td><td class="right">14</td><td class="right bold red">34</td><td class="right">$32.62</td></tr>
+            <tr><td>May (to 5/21)</td><td class="right">$1,032</td><td class="right">4</td><td class="right">5</td><td class="right">$41.39</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation warning mt-8">
+          <strong>April form surge:</strong> April restructure shifted from call-only to form+contact campaigns. Forms jumped to 34 but calls dropped to 14. Since calls convert to Gingr at a higher rate, this likely hurt Andrew's numbers. June plan correctly returns to call-primary.
+        </div>
+        <h3 style="margin-bottom:10px; margin-top:14px;">Best Performing Campaigns</h3>
+        <table>
+          <thead>
+            <tr><th>Campaign</th><th class="right">CPL</th><th>Note</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>MOFU Contact (Training+Boarding)</td>
+              <td class="right bold green">$13.84</td>
+              <td>Most efficient in account</td>
+            </tr>
+            <tr>
+              <td>TOFU Call-Only (Training+Boarding)</td>
+              <td class="right bold">$26.83</td>
+              <td>March best: 23 calls</td>
+            </tr>
+            <tr>
+              <td>TOFU Contact (Boarding)</td>
+              <td class="right">$37.23</td>
+              <td>High volume, forms only</td>
+            </tr>
+            <tr>
+              <td>TOFU Lead/Contact (Training)</td>
+              <td class="right orange">$57.68</td>
+              <td>Expensive, monitor</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Active Pixel Errors</h3>
+        <div style="background:#FFEBEE; border:1px solid #FFCDD2; border-radius:12px; padding:16px; margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--red); margin-bottom:8px;">Error 1 of 2</div>
+          <div style="font-size:14px; font-weight:700; margin-bottom:6px;">Lead Events Missing Price/Currency</div>
+          <p style="font-size:13px; color:var(--text-light);">100% of website Lead events are not sending value data. Meta estimates this is suppressing ROAS by 5%. Affects 7 ad sets.</p>
+          <div style="font-size:12px; font-weight:600; color:var(--green); margin-top:8px;">Fix: Add value: 1, currency: 'USD' to Lead event in GTM. 30 minutes.</div>
+        </div>
+        <div style="background:#FFEBEE; border:1px solid #FFCDD2; border-radius:12px; padding:16px; margin-bottom:12px;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; color:var(--red); margin-bottom:8px;">Error 2 of 2</div>
+          <div style="font-size:14px; font-weight:700; margin-bottom:6px;">Unconfirmed Domain: dogizoneold.wpengine.com</div>
+          <p style="font-size:13px; color:var(--text-light);">Old staging site detected May 27. Sending pixel events that inflate counts and contaminate attribution.</p>
+          <div style="font-size:12px; font-weight:600; color:var(--green); margin-top:8px;">Fix: Exclude in Business Settings. 5 minutes.</div>
+        </div>
+        <h3 style="margin-bottom:10px;">The Customer List Gap</h3>
+        <div style="background:var(--light-bg); border-radius:12px; padding:16px;">
+          <p style="font-size:13px; line-height:1.6;">The customer list has been requested repeatedly since March. Without it: no suppression audience (we are spending on existing customers), no lookalike audiences for prospecting, and retargeting relies only on pixel visitors. This is the single highest-leverage data asset DogiZone has not shared. Once received, it unlocks a 1% LAL that will outperform interest-based targeting.</p>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: CALL TRACKING -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Tracking Gap</p>
+    <h2>CallRail: The Missing Foundation</h2>
+    <p class="subtitle">Without CallRail, every campaign optimization is built on incomplete data. The decision to use Option 3 was made on May 7 but implementation has stalled at cost discussions. This needs to close this week.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">What We Can't Measure Without CallRail</h3>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="background:#FFEBEE; border-radius:8px; padding:12px 14px; font-size:13px;"><span style="font-weight:700; color:var(--red);">No call completion verification.</span> Google counts a call as a conversion when someone taps the phone number. It does not verify the call connected or lasted long enough to qualify as a lead.</div>
+          <div style="background:#FFEBEE; border-radius:8px; padding:12px 14px; font-size:13px;"><span style="font-weight:700; color:var(--red);">No campaign-to-call attribution.</span> Andrew reported 3,090 total inbound calls in March. Google attributed 665. The 2,425 gap cannot be explained without tracking numbers on each campaign.</div>
+          <div style="background:#FFEBEE; border-radius:8px; padding:12px 14px; font-size:13px;"><span style="font-weight:700; color:var(--red);">No call quality data.</span> We cannot assess whether calls from Boarding convert to Gingr at the same rate as calls from Training. Andrew confirmed they do not all convert equally.</div>
+          <div style="background:#FFEBEE; border-radius:8px; padding:12px 14px; font-size:13px;"><span style="font-weight:700; color:var(--red);">No call recording for lead quality.</span> Cannot verify whether calls are from genuine new leads or existing customers calling for service.</div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Cost Comparison to Close the Loop</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Andrew's concern: 144 hrs 57 min of monthly inbound calls = ~8,697 minutes. Well above standard plan limits. Need to present a clear cost comparison.</p>
+        <table>
+          <thead>
+            <tr><th>Tool</th><th>Plan</th><th class="right">Base</th><th class="right">Est. Overage</th><th class="right">Total/Mo</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="bold">CallRail</td><td>Pro (500 min)</td><td class="right">$95</td><td class="right red">~$294</td><td class="right bold red">~$389</td></tr>
+            <tr><td class="bold">WhatConverts</td><td>Plus (250 min)</td><td class="right">$30</td><td class="right orange">~$330</td><td class="right bold orange">~$360</td></tr>
+            <tr style="background:#E8F5E9;"><td class="bold">CallTrackingMetrics</td><td>Starter</td><td class="right">$39</td><td class="right orange">~$295</td><td class="right bold green">~$334</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-12">
+          <strong>Recommendation:</strong> Present CallTrackingMetrics as the lowest-cost option that still integrates with Google Ads and Meta. Build the case around the $40&ndash;50 monthly savings vs CallRail. The 60-second call minimum we have on Google Ads already filters out junk calls, which reduces the effective minute count.
+        </div>
+        <div class="annotation info mt-8">
+          <strong>Setup agreed:</strong> Option 3 (static number on website + dynamic numbers per ad) was approved by Andrew on May 7. Just need a tool decision and someone to implement the JavaScript snippet on WordPress.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: WHAT'S WORKING -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Wins</p>
+    <h2>What Is Actually Working</h2>
+    <p class="subtitle">The account has real strengths. These should be the foundation of the conversation with Andrew, not an afterthought.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="icon">&#128200;</div>
+        <h3>PMAX Training</h3>
+        <ul>
+          <li>$3.42 avg CPL over 4 months. Lowest cost per conversion in the account by 10x.</li>
+          <li>531 total conversions on $1,816 spend. This campaign is the most efficient dollar spent.</li>
+          <li>Should be at $1,550/month, not $620. Straightforward reallocation.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="icon">&#128640;</div>
+        <h3>PMAX Boarding+DC</h3>
+        <ul>
+          <li>CPL dropped from $41.25 in Feb to $14.33 in May. A 65% efficiency improvement in 4 months.</li>
+          <li>Budget increase to $110/day on May 19 was the right call and is already yielding results.</li>
+          <li>Best-in-class trajectory for a 4-month-old PMAX campaign.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="icon">&#128222;</div>
+        <h3>Brand Search</h3>
+        <ul>
+          <li>CPL of $0.85 with a 47% conversion rate. Capturing existing demand at near-zero cost.</li>
+          <li>DogiZone brand searches are growing. 1,840 paid brand clicks in May alone.</li>
+          <li>Once tROAS is adjusted to allow spending, this becomes a volume engine at minimal cost.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="icon">&#128997;</div>
+        <h3>Daycare Search</h3>
+        <ul>
+          <li>April CPL was $11.76 against a $60 tCPA target. One of the most efficient paid search campaigns in the account.</li>
+          <li>$50.86/day budget is too thin. At $65/day it would generate 30&ndash;40% more volume.</li>
+          <li>Highly local targeting (15mi + specific zip codes) is working as intended.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="icon">&#129303;</div>
+        <h3>Meta MOFU</h3>
+        <ul>
+          <li>MOFU Contact campaign delivered $13.84 CPL in April. Outperformed all TOFU campaigns.</li>
+          <li>Retargeting funnel structure is working. The engaged audience is converting well.</li>
+          <li>With a customer list for exclusion+LAL, this campaign would improve further.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="icon">&#128104;&#8205;&#127891;</div>
+        <h3>Ad Quality &amp; Creative</h3>
+        <ul>
+          <li>Boarding RSA (ET | Dog Kennel KW) has "Excellent" ad strength. Boarding Pet Boarding RSA also "Excellent."</li>
+          <li>Real facility photography and staff images are strong. DogiZone has better creative assets than most local pet service accounts.</li>
+          <li>Dedicated paid landing pages (/dog-boarding-paid/, etc.) are the right setup.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: OTHER ISSUES -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Additional Issues</p>
+    <h2>Quick Fixes and Secondary Problems</h2>
+    <p class="subtitle">These items are not the root causes but each degrades performance in a measurable way. Most can be resolved in one work session.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Account-Level Sitelink Contamination</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Promotional and service-specific sitelinks set at account level are appearing on unrelated campaigns. Observed in screenshots:</p>
+        <table>
+          <thead>
+            <tr><th>Sitelink Seen On</th><th>Wrong Campaign</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>"Sample Saturdays"</td><td class="red">Boarding search ad</td></tr>
+            <tr><td>"Group Dog Training Class"</td><td class="red">Boarding search ad</td></tr>
+            <tr><td>"Free Training Evaluation"</td><td class="red">Grooming search ad</td></tr>
+            <tr><td>"Dog Training Camps"</td><td class="red">Boarding search ad</td></tr>
+            <tr><td>"Memorial Day Weekend"</td><td class="red">Grooming search ad</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation danger mt-10">
+          <strong>Fix:</strong> Move all promotional and service-specific sitelinks to campaign level. Only universal sitelinks (About Us, Location and Hours) should remain at account level.
+        </div>
+        <h3 style="margin-bottom:10px; margin-top:16px;">Training Search Is One-Legged</h3>
+        <p style="font-size:13px; color:var(--text-light);">All Training Search keyword ad groups are paused. The entire $1,841/month budget runs through a single Dynamic Search Ads (DSA) ad group with uncontrolled query matching. If DSA matching degrades, there is no fallback. Either reactivate 2&ndash;3 keyword ad groups or consolidate budget into PMAX Training.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Grooming Search Losing Efficiency</h3>
+        <div style="display:flex; gap:16px; margin-bottom:12px;">
+          <div style="text-align:center; background:var(--light-bg); border-radius:8px; padding:14px; flex:1;">
+            <div style="font-size:22px; font-weight:800; color:var(--green);">$35.62</div>
+            <div style="font-size:11px; color:var(--text-light);">March CPL</div>
+          </div>
+          <div style="font-size:24px; color:var(--text-light); line-height:2.5;">&#8594;</div>
+          <div style="text-align:center; background:var(--light-bg); border-radius:8px; padding:14px; flex:1;">
+            <div style="font-size:22px; font-weight:800; color:var(--red);">$42.54</div>
+            <div style="font-size:11px; color:var(--text-light);">May CPL</div>
+          </div>
+        </div>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">The active Grooming RSA has "Average" ad strength, the lowest of any active search ad. Recommendations: add keywords to headlines and descriptions. Also lost 25.59% impression share to budget in April.</p>
+        <div class="annotation mt-10">
+          <strong>Fix:</strong> Refresh Grooming RSA with keyword-rich headlines matching grooming search queries. Target "Good" or "Excellent" rating.
+        </div>
+        <h3 style="margin-bottom:10px; margin-top:16px;">Business Profile Mismatch</h3>
+        <p style="font-size:13px; color:var(--text-light);">Google Business Profile is categorized as "Dog trainer" and this label appears in boarding search ads. A user searching "dog boarding near me" sees "Dog trainer" as the business type, which creates trust friction. Secondary category should be "Pet boarding service."</p>
+        <div class="annotation danger mt-10">
+          <strong>Fix:</strong> Add "Pet boarding service" and "Pet grooming service" as secondary categories in the Google Business Profile. This change propagates to ad extensions automatically.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: ACTION PLAN -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Action Plan</p>
+    <h2>Prioritized Fixes in Order of Impact</h2>
+    <p class="subtitle">Ordered by business impact. The first three items cost nothing to implement and should be done before the Thursday call with Andrew.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">This Week</span>
+        <h4>Signal &amp; Tracking</h4>
+        <ul>
+          <li>Remove Get Directions from primary conversion actions</li>
+          <li>Remove Store Visits from lead campaign goals</li>
+          <li>Consolidate phone call primary to Calls from Ads only</li>
+          <li>Fix Meta Lead event: add price/currency in GTM</li>
+          <li>Exclude dogizoneold.wpengine.com in Meta Business Settings</li>
+          <li>Present CallRail vs alternatives cost comparison to Andrew</li>
+          <li>Move promotional sitelinks to campaign level</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Week 2</span>
+        <h4>Budget &amp; Bidding</h4>
+        <ul>
+          <li>Increase PMAX Training from $20/day to $50/day</li>
+          <li>Increase Daycare Search from $50.86/day to $65/day</li>
+          <li>Reduce Boarding Search from $82/day to $40/day</li>
+          <li>Reduce Training Search from $59/day to $45/day</li>
+          <li>Adjust Brand Search tROAS from 377% to 200% to unlock spend</li>
+          <li>Raise Boarding Search tCPA from $37.50 to $50 to match actual performance</li>
+          <li>Implement CallRail once tool decision is made</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Week 3</span>
+        <h4>Creative &amp; Audiences</h4>
+        <ul>
+          <li>Refresh Grooming RSA headlines with keyword-rich copy</li>
+          <li>Build customer list exclusion audience on Meta (requires list from DogiZone)</li>
+          <li>Launch 1% LAL from customer list on Meta TOFU</li>
+          <li>Launch May/June Training Campaign (playbook ready, approved)</li>
+          <li>Add secondary GBP category: Pet boarding service</li>
+          <li>Clean up paused ad groups from pre-ET era</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Week 4</span>
+        <h4>Measure &amp; Scale</h4>
+        <ul>
+          <li>Review CallRail data: first call attribution by campaign</li>
+          <li>Recalibrate Smart Bidding with call-only primary signal</li>
+          <li>Assess PMAX Boarding performance at new $110/day rate</li>
+          <li>Evaluate whether Boarding Search needs further budget cut</li>
+          <li>Present June Gingr data alongside platform numbers</li>
+          <li>Set shared monthly reporting format with Andrew</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: PATH TO 300 -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">The Goal</p>
+    <h2>What Getting to 300 New Customers Requires</h2>
+    <p class="subtitle">March hit 207. The gap to 300 is 45%. Based on the data, this is achievable in Q3 2026 with the right campaign mix and proper call tracking in place.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">The Math</h3>
+        <table>
+          <thead>
+            <tr><th>Scenario</th><th class="right">Monthly New Customers</th><th>Key Enabler</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Current state (April)</td><td class="right bold red">169</td><td>No changes</td></tr>
+            <tr><td>After Week 1&ndash;2 fixes</td><td class="right bold orange">200&ndash;220</td><td>Conversion signal cleanup + budget shift</td></tr>
+            <tr><td>After CallRail live</td><td class="right bold yellow">230&ndash;250</td><td>Smart Bidding optimizes for real calls</td></tr>
+            <tr><td>After customer list + LAL</td><td class="right bold" style="color:var(--green);">260&ndash;280</td><td>Higher quality Meta prospecting</td></tr>
+            <tr style="background:#E8F5E9;"><td class="bold">Full optimization (Q3)</td><td class="right bold" style="color:var(--green);">280&ndash;320</td><td>All levers pulled, budget at right allocation</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-12">
+          <strong>Key assumption:</strong> These projections hold the budget flat at $11,250/month. The same spend, better allocated, should produce 60&ndash;90% more new Gingr accounts.
+        </div>
+        <div class="annotation warning mt-8">
+          <strong>Gingr data gap:</strong> May Gingr report is still pending. This table will be updated once actual May new customer count is confirmed. May platform leads (607) are the highest since March, which is a positive signal.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">Revenue Context</h3>
+        <div style="background:var(--light-bg); border-radius:12px; padding:18px; margin-bottom:12px;">
+          <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--text-light); margin-bottom:10px;">April Revenue by Service</div>
+          <div class="bar-chart" style="margin:0;">
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Lodging</span>
+              <div class="bar-track"><div class="bar-fill teal" style="width:95%;">$117,552</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Day Care</span>
+              <div class="bar-track"><div class="bar-fill blue" style="width:83%;">$101,429</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Retail</span>
+              <div class="bar-track"><div class="bar-fill orange" style="width:38%;">$47,071</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Activities</span>
+              <div class="bar-track"><div class="bar-fill yellow" style="width:47%;">$58,366</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Training</span>
+              <div class="bar-track"><div class="bar-fill green" style="width:46%;">$56,427</div></div>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label" style="width:110px;">Grooming</span>
+              <div class="bar-track"><div class="bar-fill ember" style="width:37%;">$45,332</div></div>
+            </div>
+          </div>
+          <div style="margin-top:10px; font-size:13px; font-weight:700; color:var(--primary-dark);">Total April Revenue: $435,104 &bull; MER: 50x</div>
+        </div>
+        <div class="annotation success">
+          <strong>MER context:</strong> DogiZone is generating $44&ndash;50 in revenue for every $1 of ad spend. This is a strong return that justifies hitting the full $11,250 budget every month. The underspend issue costs more than the management fee.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone Paid Ads Audit &mdash; Internal</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="12">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <div class="internal-badge" style="background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.7);">Internal</div>
+      <p class="slide-label">Before Thursday</p>
+      <h1>What We Need to Do</h1>
+      <p class="subtitle">Andrew's call is Thursday. These three things need to happen before we get on that call.</p>
+      <div class="three-col mt-16">
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px;">
+          <div style="font-size:32px; font-weight:900; color:var(--accent); margin-bottom:8px;">1</div>
+          <h3>Get the Gingr Report</h3>
+          <p style="font-size:14px; color:rgba(255,255,255,0.65); margin-top:8px;">Pull May new customer accounts created and first reservations from Gingr. This is the number Andrew will ask about first. We need to know it before he does.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px;">
+          <div style="font-size:32px; font-weight:900; color:var(--accent); margin-bottom:8px;">2</div>
+          <h3>Fix Conversion Actions</h3>
+          <p style="font-size:14px; color:rgba(255,255,255,0.65); margin-top:8px;">Remove Get Directions and Store Visits from primary actions today. This takes 15 minutes and is the fastest performance improvement available. Do not wait for the Thursday call to implement.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:24px;">
+          <div style="font-size:32px; font-weight:900; color:var(--accent); margin-bottom:8px;">3</div>
+          <h3>CallRail Decision</h3>
+          <p style="font-size:14px; color:rgba(255,255,255,0.65); margin-top:8px;">Send Andrew the 3-tool comparison with estimated monthly costs before Thursday. Get a yes on one tool. This has been open since April 30 and needs to close.</p>
+        </div>
+      </div>
+      <div class="logo-row" style="margin-top:32px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Internal &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  document.querySelector(`.slide[data-slide="${current}"]`).classList.remove('active');
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+</body>
+</html>
