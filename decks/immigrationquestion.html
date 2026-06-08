@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ImmigrationQuestion.com — EmberTribe Growth Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #072b1a;
+  --primary-mid: #0d5c3a;
+  --primary-light: #1a9d6e;
+  --accent: #1a9d6e;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, #1a5c3a 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+  line-height: 1.55;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E8F5E9; border-left-color: var(--accent); }
+.annotation.info strong { color: var(--accent); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 140px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, #0096b4, #00B4D8); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #0d7a4a, var(--accent)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #c87d00, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.orange { background: linear-gradient(90deg, #c0671d, var(--orange)); }
+.bar-value { width: 70px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.reddit  { background: #FFECE6; color: #d93900; }
+.pill.ai      { background: #EDE7F6; color: #512DA8; }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; font-size: 18px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); margin-bottom: 6px;
+  display: block;
+}
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 14px; }
+
+/* Pricing cards */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+.pricing-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  position: relative;
+  background: #fff;
+}
+.pricing-card.featured {
+  border: 2px solid var(--accent);
+  background: #f0fdf7;
+}
+.pricing-badge {
+  position: absolute;
+  top: -11px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 20px;
+}
+.pricing-tier { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); margin-bottom: 6px; }
+.pricing-price { font-size: 30px; font-weight: 900; color: var(--primary-dark); line-height: 1; margin-bottom: 2px; }
+.pricing-price span { font-size: 15px; font-weight: 400; color: var(--text-light); }
+.pricing-sub { font-size: 12px; color: var(--text-light); margin-bottom: 14px; }
+.pricing-card ul { list-style: none; padding: 0; }
+.pricing-card ul li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 1.55;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.pricing-card ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+.pricing-prepay {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-light);
+}
+.pricing-prepay strong { color: var(--accent); font-size: 14px; display: block; }
+.pricing-save { color: var(--green); font-weight: 600; font-size: 11px; margin-top: 2px; }
+
+/* Reddit strategy table */
+.reddit-table td:first-child { font-weight: 600; color: #d93900; }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed; bottom: 24px; right: 32px;
+  display: flex; align-items: center; gap: 12px;
+  z-index: 100;
+}
+.nav button {
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px; border-radius: 6px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red    { color: var(--red); }
+.green  { color: var(--green); }
+.orange { color: var(--orange); }
+.teal   { color: var(--teal); }
+.blue   { color: var(--blue); }
+.ember  { color: var(--ember-red); }
+.accent { color: var(--accent); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 90px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Discovery — Growth Plan</p>
+      <h1 style="font-size:44px;">ImmigrationQuestion.com</h1>
+      <p class="subtitle" style="font-size:20px; color:rgba(255,255,255,0.75); max-width:720px;">Immigration is one of the highest-intent search categories online. Your platform has the authority edge — attorneys, free access, real answers. Here's how we turn that into organic growth at scale.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#4ade80;">11M+</div>
+          <div class="stat-label">U.S. immigration searches / month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#f97316;">220K+</div>
+          <div class="stat-label">Members in r/immigration alone</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#60a5fa;">73%</div>
+          <div class="stat-label">Of ChatGPT/Perplexity immigration answers cite general web pages — not Q&amp;A platforms</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#facc15;">3×</div>
+          <div class="stat-label">More conversions from organic vs. paid in legal/immigration verticals</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for ImmigrationQuestion.com &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE MARKET OPPORTUNITY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Market Opportunity</p>
+    <h2>The Immigration Search Gold Rush</h2>
+    <p class="subtitle">U.S. immigration is a uniquely high-intent, evergreen, and emotionally charged search category — and it's getting bigger, not smaller.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:16px;">Why Immigration Search Is Different</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Search Volume</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:95%;">11M+ / mo</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Avg. CPC</span>
+            <div class="bar-track"><div class="bar-fill blue" style="width:80%;">$8–$22</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Buyer Intent</span>
+            <div class="bar-track"><div class="bar-fill orange" style="width:90%;">Very High</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">AI Disruption</span>
+            <div class="bar-track"><div class="bar-fill ember" style="width:75%;">Rapidly Growing</div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Reddit Demand</span>
+            <div class="bar-track"><div class="bar-fill teal" style="width:88%;">Exploding in 2025–26</div></div>
+          </div>
+        </div>
+
+        <div class="annotation info mt-16">
+          <strong>Political tailwind:</strong> 7 new immigration subreddits launched since January 2025 as demand for trustworthy answers surged. People are more desperate for clarity than ever — and less trusting of government sources.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:16px;">The Content Gap Opportunity</h3>
+        <table>
+          <thead>
+            <tr><th>Query Type</th><th>Monthly Searches</th><th>Difficulty</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Green card process questions</td><td>~420K</td><td><span class="pill seo">Medium</span></td></tr>
+            <tr><td>Visa interview questions</td><td>~390K</td><td><span class="pill seo">Medium</span></td></tr>
+            <tr><td>USCIS form help</td><td>~280K</td><td><span class="pill green">Low–Med</span></td></tr>
+            <tr><td>Immigration lawyer cost</td><td>~210K</td><td><span class="pill orange">Medium</span></td></tr>
+            <tr><td>Deportation / rights questions</td><td>~180K</td><td><span class="pill green">Low</span></td></tr>
+            <tr><td>Work visa eligibility</td><td>~340K</td><td><span class="pill seo">Medium</span></td></tr>
+            <tr><td>Citizenship test prep</td><td>~260K</td><td><span class="pill green">Low</span></td></tr>
+          </tbody>
+        </table>
+        <div class="annotation success mt-8">
+          <strong>Your edge:</strong> Licensed attorney answers carry E-E-A-T weight that generic legal content sites can't match. Google's Helpful Content updates favor exactly what you do.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: CURRENT DIGITAL PRESENCE -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Are Today</h2>
+    <p class="subtitle">Strong platform foundation, real attorney network, and a mobile app — but organic discovery is leaving significant lead volume on the table.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green" style="margin-bottom:14px;">What's Working</h3>
+        <div class="channel-card" style="margin-bottom:14px;">
+          <ul>
+            <li>Licensed U.S. attorney network — genuine E-E-A-T credibility signal Google rewards</li>
+            <li>Free-to-ask model drives high submission volume and repeat engagement</li>
+            <li>Mobile app extends reach beyond desktop search</li>
+            <li>Multilingual support — reaches non-English speakers underserved by competitors</li>
+            <li>Attorney directory creates natural internal linking opportunities</li>
+            <li>Blog at blog.immigrationquestion.com — content infrastructure exists</li>
+            <li>Open forum creates unique user-generated content (UGC) signals</li>
+          </ul>
+        </div>
+        <div class="annotation success">
+          <strong>Structural advantage:</strong> Attorney-verified answers are a content moat competitors cannot easily replicate. This is your primary differentiator in search and AI citation.
+        </div>
+      </div>
+      <div>
+        <h3 class="red" style="margin-bottom:14px;">What's Holding Growth Back</h3>
+        <div class="channel-card" style="margin-bottom:14px;">
+          <ul>
+            <li>Blog content volume is low relative to the size of the search opportunity</li>
+            <li>Limited keyword cluster coverage — most immigration long-tail queries go unanswered</li>
+            <li>Reddit presence: minimal — the platform isn't being cited in community discussions where future users are actively asking</li>
+            <li>AI visibility: not surfacing in ChatGPT / Perplexity / Gemini immigration answer citations</li>
+            <li>Thin topical authority signals outside of Q&amp;A forum — content depth is uneven</li>
+            <li>Backlink profile likely thin vs. established competitors (VisaJourney, Boundless)</li>
+          </ul>
+        </div>
+        <div class="annotation danger">
+          <strong>The core problem:</strong> Millions of people search for exactly what your attorneys answer — but most of that traffic lands on competitors, not you.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: COMPETITIVE LANDSCAPE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up Against the Field</h2>
+    <p class="subtitle">Several well-funded platforms dominate immigration organic search — but none of them have your attorney-verified Q&amp;A model. That's the gap we exploit.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Est. Monthly Traffic</th>
+          <th>Content Volume</th>
+          <th>Attorney Answers</th>
+          <th>Reddit Presence</th>
+          <th>AI Citations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#f0fdf7;">
+          <td class="bold" style="color:var(--accent);">ImmigrationQuestion.com</td>
+          <td class="bold">Growing</td>
+          <td><span class="pill orange">Light</span></td>
+          <td><span class="pill seo">✓ Licensed</span></td>
+          <td><span class="pill red">Minimal</span></td>
+          <td><span class="pill red">Low</span></td>
+        </tr>
+        <tr>
+          <td class="bold">VisaJourney.com</td>
+          <td>~500K–800K</td>
+          <td><span class="pill seo">Very High (forum)</span></td>
+          <td><span class="pill red">✗ Community only</span></td>
+          <td><span class="pill seo">Active</span></td>
+          <td><span class="pill orange">Moderate</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Boundless.com</td>
+          <td>~400K–600K</td>
+          <td><span class="pill seo">High</span></td>
+          <td><span class="pill orange">Partial</span></td>
+          <td><span class="pill orange">Moderate</span></td>
+          <td><span class="pill seo">High</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Nolo.com</td>
+          <td>~2M+</td>
+          <td><span class="pill seo">Massive</span></td>
+          <td><span class="pill red">✗ Editorial only</span></td>
+          <td><span class="pill orange">Cited often</span></td>
+          <td><span class="pill seo">Very High</span></td>
+        </tr>
+        <tr>
+          <td class="bold">immihelp.com</td>
+          <td>~300K–500K</td>
+          <td><span class="pill orange">Moderate</span></td>
+          <td><span class="pill red">✗</span></td>
+          <td><span class="pill orange">Occasional</span></td>
+          <td><span class="pill orange">Moderate</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-8">
+      <strong>The gap:</strong> Every high-traffic competitor relies on community answers or editorial content. None have verified attorneys backing responses. Your content is inherently more trustworthy — it just needs volume and distribution.
+    </div>
+    <div class="annotation info mt-8">
+      <strong>Opportunity:</strong> Boundless ranks for hundreds of attorney-intent queries with editorial content. ImmigrationQuestion.com can outrank them with attorney-verified answers — if we publish at scale.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: REDDIT SEEDING STRATEGY -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Reddit Seeding Strategy</p>
+    <h2>Own the Conversations Where Your Audience Lives</h2>
+    <p class="subtitle">Reddit has become the primary community for immigrants navigating U.S. immigration — and these discussions directly influence AI citations, backlinks, and referral traffic.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 style="margin-bottom:12px;">Target Communities</h3>
+        <table class="reddit-table">
+          <thead>
+            <tr><th>Subreddit</th><th>Members</th><th>Best Content Type</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>r/immigration</td><td>220K+</td><td>Process FAQs, rights questions</td></tr>
+            <tr><td>r/USCIS</td><td>~85K</td><td>Form help, wait times, RFEs</td></tr>
+            <tr><td>r/visa</td><td>~70K</td><td>Visa interview prep, denials</td></tr>
+            <tr><td>r/greencard</td><td>~60K</td><td>GC timeline, I-485, adjustment</td></tr>
+            <tr><td>r/legaladvice</td><td>2M+</td><td>Deportation, employer issues</td></tr>
+            <tr><td>r/AskImmigration</td><td>~40K</td><td>General Q&amp;A support</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-12">
+          <strong>Why Reddit matters for SEO:</strong> Google indexes Reddit threads heavily. ChatGPT and Perplexity use Reddit content in training data and citations. A brand mention in a high-upvoted immigration thread creates real referral traffic AND authority signals.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px;">The Seeding Playbook</h3>
+        <div class="channel-card">
+          <div class="channel-icon">🎯</div>
+          <h3 style="font-size:16px;">Phase 1 — Landscape Mapping</h3>
+          <ul>
+            <li>Identify top 50 recurring question threads weekly</li>
+            <li>Map which questions align with existing attorney answers on the platform</li>
+            <li>Flag threads with 50+ upvotes and no authoritative link in top comments</li>
+          </ul>
+        </div>
+        <div class="channel-card mt-8">
+          <div class="channel-icon">💬</div>
+          <h3 style="font-size:16px;">Phase 2 — Value-First Engagement</h3>
+          <ul>
+            <li>Post substantive attorney-informed answers (not promotional)</li>
+            <li>Include platform link only when it adds direct value ("full attorney answer here")</li>
+            <li>Build account karma through consistent helpful contributions before linking</li>
+          </ul>
+        </div>
+        <div class="channel-card mt-8">
+          <div class="channel-icon">📝</div>
+          <h3 style="font-size:16px;">Phase 3 — Content Seeding</h3>
+          <ul>
+            <li>Create original posts answering trending questions — link to in-depth blog posts</li>
+            <li>Publish "This Week's Top Immigration Questions" format posts monthly</li>
+            <li>Partner with mods for AMAs featuring platform attorneys</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: THREE-PILLAR STRATEGY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three Pillars to Dominate Immigration Search</h2>
+    <p class="subtitle">Content volume builds topical authority. AI visibility captures the zero-click future. Reddit seeding drives community trust and referral traffic — all three compound together.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📄</div>
+        <h3>ClusterMagic Content</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill content">Content Engine</span></p>
+        <ul>
+          <li>25–100 SEO-optimized articles/month mapped to immigration keyword clusters</li>
+          <li>Attorney-informed angle baked into every article — differentiates from generic competitors</li>
+          <li>Topical clusters: visa types, GC process, USCIS forms, deportation defense, citizenship</li>
+          <li>Internal linking strategy feeds authority to Q&amp;A platform pages</li>
+          <li>Rapid topical authority build — Google rewards sites that own a subject comprehensively</li>
+          <li>AI-assisted drafts, refined by human editors and attorney review</li>
+        </ul>
+      </div>
+      <div class="channel-card" style="border-color: var(--accent); border-width: 2px;">
+        <div class="channel-icon">🤖</div>
+        <h3>AI Visibility (AEO)</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill ai">Answer Engine Optimization</span></p>
+        <ul>
+          <li>Get ImmigrationQuestion.com cited when ChatGPT, Perplexity, and Gemini answer immigration questions</li>
+          <li>5–12 targeted AEO placements/month in high-traffic AI query responses</li>
+          <li>Attorney-verified Q&amp;A format is exactly what AI models want to cite — trustworthy, structured, specific</li>
+          <li>DA40–50+ backlinks from immigration and legal authority sites</li>
+          <li>Subreddit thread seeding as part of the AEO pipeline</li>
+          <li>Monthly AI visibility benchmarking vs. Boundless, Nolo, VisaJourney</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🟠</div>
+        <h3>Reddit Authority</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill reddit">Community Distribution</span></p>
+        <ul>
+          <li>Subreddit landscape mapping across 6 core immigration communities</li>
+          <li>Weekly thread discovery — surface 50+ unanswered high-upvote questions</li>
+          <li>Authentic comment strategy: value-first answers that naturally reference platform</li>
+          <li>Original seeded posts linking to blog content and Q&amp;A pages</li>
+          <li>Attorney AMA campaigns in r/immigration and r/USCIS</li>
+          <li>Reddit mentions feed AI training data — amplifies AEO results over time</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Why these three together:</strong> Content drives keyword rankings → Reddit drives referral traffic and AI training data → AEO captures the AI answer layer. Each pillar reinforces the other — no single-channel dependency.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: 90-DAY ROADMAP -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days: From Zero to Velocity</h2>
+    <p class="subtitle">Month one is foundation. Month two is execution. Month three is optimization — and by then, compounding has already started.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Research &amp; Infrastructure</h4>
+        <ul>
+          <li>Full keyword cluster audit — map 500+ immigration queries by intent</li>
+          <li>Competitor content gap analysis vs. Boundless, Nolo, VisaJourney</li>
+          <li>Reddit community mapping — identify top threads, engagement patterns</li>
+          <li>AEO baseline — test current AI visibility across 20 priority queries</li>
+          <li>ClusterMagic onboarding — editorial brief templates, attorney-informed style guide</li>
+          <li>First 25–50 articles published (depending on tier)</li>
+          <li>Internal linking architecture built across blog + platform</li>
+        </ul>
+        <div class="phase-cost accent">Audit + Publish + Map</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Execution</span>
+        <h4>Content &amp; Community Launch</h4>
+        <ul>
+          <li>Full content cadence at speed — 25–100 articles/month running</li>
+          <li>First AEO placements go live — target 5–8 high-traffic AI queries</li>
+          <li>Reddit seeding campaign launches across r/immigration, r/USCIS, r/visa</li>
+          <li>First DA40+ backlinks secured to core platform pages</li>
+          <li>Attorney AMA planned and promoted in r/immigration</li>
+          <li>Blog-to-platform internal link audit — fix any orphaned content</li>
+          <li>AI citation monitoring begins — weekly visibility report</li>
+        </ul>
+        <div class="phase-cost accent">Full Velocity Reached</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Optimize</span>
+        <h4>Compound &amp; Expand</h4>
+        <ul>
+          <li>Identify top-performing content clusters — double down on winners</li>
+          <li>First organic ranking improvements visible in GSC data</li>
+          <li>Reddit strategy refined based on engagement data — expand to r/legaladvice</li>
+          <li>Keyword cluster expansion into adjacent topics (employment law, business visa)</li>
+          <li>AI citation volume growing — track against Boundless and Nolo</li>
+          <li>Quarterly performance report + strategy session</li>
+          <li>Q2 roadmap built based on what's compounding fastest</li>
+        </ul>
+        <div class="phase-cost accent">Compounding Begins</div>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>Typical timeline:</strong> Keyword ranking improvements visible at 60–90 days. AI citation lift at 60–120 days. Meaningful organic traffic growth compounding by month 4–6.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: INVESTMENT — AI VISIBILITY -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment — AI Visibility</p>
+    <h2>Choose Your AI Visibility Package</h2>
+    <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility — and Reddit seeding is built into every tier.</p>
+    <div class="pricing-grid" style="margin-top:8px;">
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Visibility Starter</div>
+        <div class="pricing-price">$1,750<span>/mo</span></div>
+        <div class="pricing-sub">Get your brand into AI conversations</div>
+        <ul>
+          <li>5 AEO placements / month</li>
+          <li>10 SEO articles / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Quarterly performance report</li>
+        </ul>
+        <div class="pricing-prepay">
+          Quarterly prepay — 10% off<br>
+          <strong>$4,725</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($1,575/mo effective)</span>
+          <div class="pricing-save">Save $525</div>
+        </div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier">AI Growth Engine</div>
+        <div class="pricing-price">$3,450<span>/mo</span></div>
+        <div class="pricing-sub">Accelerate authority + content velocity</div>
+        <ul>
+          <li>8 AEO placements / month</li>
+          <li>25 SEO articles / month</li>
+          <li>2 DA40+ authority backlinks / month</li>
+          <li>Full thread seeding + new post creation</li>
+          <li>Backlink target prioritization</li>
+          <li>Keyword cluster expansion</li>
+          <li>Quarterly performance reporting</li>
+        </ul>
+        <div class="pricing-prepay">
+          Quarterly prepay — 10% off<br>
+          <strong>$9,315</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($3,105/mo effective)</span>
+          <div class="pricing-save">Save $1,035</div>
+        </div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Authority Accelerator</div>
+        <div class="pricing-price">$5,250<span>/mo</span></div>
+        <div class="pricing-sub">Dominate your category in AI search</div>
+        <ul>
+          <li>12 AEO placements / month</li>
+          <li>40 SEO articles / month</li>
+          <li>2 DA50+ authority backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Quarterly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+        <div class="pricing-prepay">
+          Quarterly prepay — 10% off<br>
+          <strong>$14,175</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($4,725/mo effective)</span>
+          <div class="pricing-save">Save $1,575</div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info" style="margin-top:10px; font-size:13px;">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, Reddit optimization process, and monthly AI visibility benchmarking vs. your top competitors.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT — CLUSTERMAGIC -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment — Content at Scale</p>
+    <h2>ClusterMagic: Topical Authority Through Volume</h2>
+    <p class="subtitle">Immigration has thousands of rankable long-tail queries. ClusterMagic publishes attorney-informed content at scale — filling every gap competitors haven't touched. Billed monthly or at a locked quarterly rate.</p>
+    <div class="pricing-grid" style="grid-template-columns: repeat(4, 1fr); margin-top:8px;">
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">$700<span>/mo</span></div>
+        <div class="pricing-sub">month-to-month</div>
+        <ul>
+          <li>25 SEO articles / month</li>
+          <li>ClusterMagic keyword research</li>
+          <li>AI-assisted + expert edited</li>
+          <li>Monthly delivery</li>
+        </ul>
+        <div class="pricing-prepay">
+          3-Month Prepay<br>
+          <strong>$1,750</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($583/mo effective)</span>
+          <div class="pricing-save">Save $350</div>
+        </div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">Growth</div>
+        <div class="pricing-price">$1,100<span>/mo</span></div>
+        <div class="pricing-sub">month-to-month</div>
+        <ul>
+          <li>40 SEO articles / month</li>
+          <li>ClusterMagic keyword research</li>
+          <li>AI-assisted + expert edited</li>
+          <li>Monthly delivery</li>
+        </ul>
+        <div class="pricing-prepay">
+          3-Month Prepay<br>
+          <strong>$2,700</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($900/mo effective)</span>
+          <div class="pricing-save">Save $600</div>
+        </div>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier">Velocity</div>
+        <div class="pricing-price">$1,350<span>/mo</span></div>
+        <div class="pricing-sub">month-to-month</div>
+        <ul>
+          <li>50 SEO articles / month</li>
+          <li>ClusterMagic keyword research</li>
+          <li>AI-assisted + expert edited</li>
+          <li>Monthly delivery</li>
+        </ul>
+        <div class="pricing-prepay">
+          3-Month Prepay<br>
+          <strong>$3,400</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($1,133/mo effective)</span>
+          <div class="pricing-save">Save $650</div>
+        </div>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">Scale</div>
+        <div class="pricing-price">$2,700<span>/mo</span></div>
+        <div class="pricing-sub">month-to-month</div>
+        <ul>
+          <li>100 SEO articles / month</li>
+          <li>ClusterMagic keyword research</li>
+          <li>AI-assisted + expert edited</li>
+          <li>Monthly delivery</li>
+        </ul>
+        <div class="pricing-prepay">
+          3-Month Prepay<br>
+          <strong>$7,000</strong>
+          <span style="font-size:12px; color:var(--text-light);"> ($2,333/mo effective)</span>
+          <div class="pricing-save">Save $1,100</div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation success" style="margin-top:10px; font-size:13px;">
+      <strong>Recommended combination for ImmigrationQuestion.com:</strong> AI Growth Engine ($3,450/mo) + ClusterMagic Velocity ($1,350/mo) = <strong style="font-size:15px;">$4,800/mo</strong> — 25 AEO-optimized articles + 50 additional content articles + Reddit seeding + 2 DA40+ backlinks/month.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">ImmigrationQuestion.com &mdash; Growth Plan</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Let's Build This</p>
+      <h1 style="font-size:52px; max-width:700px;">Your Attorneys Have the Answers.<br>Let's Make Sure the World Finds Them.</h1>
+      <p class="subtitle" style="text-align:center; color:rgba(255,255,255,0.7); max-width:620px; margin-top:16px;">Immigration search is one of the most underserved content opportunities in legal today. Your platform is uniquely positioned to dominate it — with licensed attorneys, a free-to-access model, and a community that needs exactly what you offer.</p>
+      <div class="stats-row" style="justify-content:center; margin-top:24px;">
+        <div class="stat-card" style="text-align:center; min-width:180px;">
+          <div class="stat-value" style="color:#4ade80; font-size:28px;">Step 1</div>
+          <div class="stat-label">Share GSC access so we can audit your current keyword footprint</div>
+        </div>
+        <div class="stat-card" style="text-align:center; min-width:180px;">
+          <div class="stat-value" style="color:#60a5fa; font-size:28px;">Step 2</div>
+          <div class="stat-label">Choose your AI Visibility package + ClusterMagic tier</div>
+        </div>
+        <div class="stat-card" style="text-align:center; min-width:180px;">
+          <div class="stat-value" style="color:#facc15; font-size:28px;">Step 3</div>
+          <div class="stat-label">Kick off Month 1 — keyword cluster audit, Reddit mapping, first articles</div>
+        </div>
+      </div>
+      <p style="margin-top:32px; font-size:16px; font-weight:600; color:rgba(255,255,255,0.9);">Questions? Ready to move forward?</p>
+      <p style="font-size:15px; color:rgba(255,255,255,0.45); margin-top:6px;">tj@embertribe.com &mdash; embertribe.com</p>
+      <div class="logo-row" style="width:100%; margin-top:auto;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
