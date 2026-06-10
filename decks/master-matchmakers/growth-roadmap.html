@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Master Matchmakers — SEO Growth Roadmap | EmberTribe</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crete+Round:ital@0;1&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --client-dark:#0c1240;
+    --client-mid:#27318B;
+    --client-accent:#535BAB;
+    --client-light:#9aa3d6;
+    --ember-red:#ff333d;
+    --ink:#1d2330;
+    --muted:#5c6478;
+    --line:#e6e8f2;
+    --bg:#f1f3fb;
+    --card:#ffffff;
+    --green:#46AE41;--yellow:#F4B942;--orange:#E8743C;--red:#d63a3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Open Sans',sans-serif;background:var(--client-dark);color:var(--ink);overflow:hidden}
+  .deck{height:100vh;width:100vw;position:relative}
+  .slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .4s ease;
+    display:flex;flex-direction:column;padding:52px 68px 64px;overflow-y:auto}
+  .slide.active{opacity:1;visibility:visible}
+  .slide.light{background:var(--bg);color:var(--ink)}
+  .slide.dark{background:linear-gradient(135deg,var(--client-dark) 0%,var(--client-mid) 55%,var(--client-accent) 120%);color:#fff}
+  .slide.red{background:linear-gradient(135deg,#c4282f 0%,var(--ember-red) 100%);color:#fff;align-items:center;justify-content:center;text-align:center}
+  h1,h2,h3{font-family:'Crete Round',serif;font-weight:400;line-height:1.12}
+  .eyebrow{font-family:'Open Sans';font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:12px;color:var(--client-accent)}
+  .slide.dark .eyebrow{color:var(--client-light)}
+  .slide h2{font-size:40px;margin:6px 0 4px}
+  .lead{font-size:17px;color:var(--muted);max-width:880px;margin-bottom:22px}
+  .slide.dark .lead{color:#cdd3f0}
+  /* cards */
+  .stat-row{display:grid;gap:18px;margin:8px 0 22px}
+  .cols-4{grid-template-columns:repeat(4,1fr)}
+  .cols-3{grid-template-columns:repeat(3,1fr)}
+  .cols-2{grid-template-columns:repeat(2,1fr)}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 20px;box-shadow:0 6px 22px rgba(12,18,64,.05)}
+  .slide.dark .stat{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);box-shadow:none;backdrop-filter:blur(4px)}
+  .stat .num{font-family:'Crete Round',serif;font-size:38px;color:var(--client-mid);line-height:1}
+  .slide.dark .stat .num{color:#fff}
+  .stat .lbl{font-size:12.5px;color:var(--muted);margin-top:8px;font-weight:600}
+  .slide.dark .stat .lbl{color:#c3c9ec}
+  .stat .sub{font-size:11px;color:var(--client-accent);margin-top:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+  /* tables */
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;font-size:13.5px;box-shadow:0 6px 22px rgba(12,18,64,.05)}
+  th{background:var(--client-dark);color:#fff;text-align:left;padding:11px 14px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  td{padding:10px 14px;border-top:1px solid var(--line)}
+  tr:nth-child(even) td{background:#fafbff}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff}
+  .kd{display:inline-block;min-width:30px;text-align:center;padding:2px 8px;border-radius:6px;font-size:11.5px;font-weight:700;color:#fff}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--muted)}
+  .two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;flex:1;min-height:0}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 6px 22px rgba(12,18,64,.05)}
+  .note{background:#eef0fb;border-left:4px solid var(--client-accent);padding:13px 16px;border-radius:0 10px 10px 0;font-size:13.5px;color:#3a4163;margin-top:14px}
+  .note.warn{background:#fff4ec;border-color:var(--orange)}
+  .chartbox{position:relative;height:300px}
+  .chartbox.tall{height:340px}
+  /* progress + nav */
+  .nav{position:fixed;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:8px;z-index:30}
+  .dot{width:9px;height:9px;border-radius:50%;background:rgba(120,128,170,.4);cursor:pointer;transition:.2s}
+  .dot.active{background:var(--client-accent);transform:scale(1.35)}
+  .counter{position:fixed;bottom:18px;right:26px;font-size:12px;color:var(--muted);font-weight:700;z-index:30}
+  .brand{position:fixed;top:20px;right:26px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--client-accent);z-index:30}
+  .slide.dark ~ .brand{color:#fff}
+  .arrow{position:fixed;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+    background:rgba(255,255,255,.85);cursor:pointer;font-size:18px;color:var(--client-mid);z-index:30;display:flex;align-items:center;justify-content:center}
+  #prev{left:16px}#next{right:16px}
+  /* misc */
+  .tabbar{display:flex;gap:8px;margin-bottom:12px}
+  .tab{padding:8px 22px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:700;font-size:13.5px;color:var(--muted)}
+  .tab.active{background:var(--client-mid);color:#fff;border-color:var(--client-mid)}
+  .scrolltable{overflow-y:auto;flex:1;min-height:0;border-radius:12px}
+  .pillarcard{border-radius:14px;padding:18px 20px;background:#fff;border:1px solid var(--line);border-top:5px solid;box-shadow:0 6px 22px rgba(12,18,64,.05)}
+  .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .tstep{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+  .tstep .n{width:28px;height:28px;border-radius:50%;background:var(--client-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin-bottom:8px}
+  .gauge-wrap{display:flex;align-items:center;gap:30px}
+  .bench{display:flex;height:14px;border-radius:8px;overflow:hidden;margin:14px 0 4px;font-size:0}
+  .bench span{flex:1}
+  .benchlabels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:600}
+  ul.clean{list-style:none}
+  ul.clean li{padding:7px 0 7px 26px;position:relative;font-size:14px;border-bottom:1px solid var(--line)}
+  ul.clean li:before{content:"✕";position:absolute;left:0;color:var(--red);font-weight:800}
+  ul.do li:before{content:"✓";color:var(--green)}
+  .big{font-family:'Crete Round',serif;font-size:96px;line-height:1}
+  .footer-disc{font-size:11.5px;color:#c3c9ec;margin-top:14px}
+  .casestudy{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center;flex:1;min-height:0}
+  .casestudy img{width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(12,18,64,.12)}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 1 COVER -->
+  <section class="slide dark active">
+    <div class="eyebrow">SEO Growth Roadmap · Prepared by EmberTribe</div>
+    <h1 style="font-size:62px;margin:14px 0 6px">Master Matchmakers</h1>
+    <p class="lead" style="color:#dfe3f7;max-width:760px">Your localization opportunity: showing up for "matchmaker near me" and "[city] matchmaker" everywhere your future clients are searching — in classic results <em>and</em> in AI answers.</p>
+    <div class="stat-row cols-4" style="margin-top:auto">
+      <div class="stat"><div class="num">2,617</div><div class="lbl">Verified monthly organic visits</div><div class="sub">GA4 · May 2026</div></div>
+      <div class="stat"><div class="num">179.8K</div><div class="lbl">Monthly searches you're not capturing</div><div class="sub">1,166 keywords · SEMrush</div></div>
+      <div class="stat"><div class="num">4,580</div><div class="lbl">12-month organic target</div><div class="sub">Directional projection</div></div>
+      <div class="stat"><div class="num">4+ yrs</div><div class="lbl">EmberTribe / ClusterMagic track record</div><div class="sub">Zero algorithm penalties</div></div>
+    </div>
+  </section>
+
+  <!-- 2 THE BIG OPPORTUNITY -->
+  <section class="slide light">
+    <div class="eyebrow">The opportunity</div>
+    <h2>1,166 keywords your competitors win — and you don't</h2>
+    <p class="lead">Across matchmaking and dating search, your four competitors rank for <strong>1,166 keywords you're invisible on — 179,800 monthly searches</strong>. Luma alone owns 709 of them. Here's a representative slice, blending category demand, demographic niches, and the low-difficulty local terms Luma is quietly winning.</p>
+    <div class="two-col">
+      <table>
+        <thead><tr><th>Keyword</th><th>Monthly searches</th><th>Difficulty</th></tr></thead>
+        <tbody id="oppTable"></tbody>
+      </table>
+      <div>
+        <div class="stat" style="margin-bottom:16px"><div class="num">179,800</div><div class="lbl">Combined monthly searches across the 1,166 keywords you don't rank for</div></div>
+        <div class="stat" style="margin-bottom:16px"><div class="num">709</div><div class="lbl">Of those keywords are already won by lumasearch.com</div></div>
+        <div class="note">The low-difficulty rows (KD 12–28) are local: "date ideas [city]", "[city] matchmaker". These are exactly the pages Luma built to appear everywhere — and they're the fastest wins on the board for you.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 STRIKING DISTANCE -->
+  <section class="slide light">
+    <div class="eyebrow">Striking distance</div>
+    <h2>531 keywords already on page 2 — one push from page 1</h2>
+    <p class="lead">You're already ranking positions 11–30 for <strong>531 non-branded keywords</strong>. These don't need new authority — they need stronger, entity-rich pages and internal links. The top targets:</p>
+    <div class="two-col">
+      <table>
+        <thead><tr><th>Keyword</th><th>Current position</th><th>Monthly searches</th><th>Difficulty</th></tr></thead>
+        <tbody id="sdTable"></tbody>
+      </table>
+      <div>
+        <div class="stat" style="margin-bottom:16px"><div class="num">531</div><div class="lbl">Non-branded keywords ranking positions 11–30 right now</div></div>
+        <div class="note warn"><strong>You connected GA4, not Search Console.</strong> This striking-distance list is the SEMrush view only. Connecting GSC typically reveals 3–5× more striking-distance keywords — the long-tail local terms SEMrush never sees. A 2-minute permission grant unlocks it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 WHERE YOU STAND -->
+  <section class="slide light">
+    <div class="eyebrow">Where you stand</div>
+    <h2>A steady base — verified, and ready to compound</h2>
+    <p class="lead">Your organic traffic is stable and real (we pulled it straight from your GA4). The ceiling isn't demand — it's coverage. Here's the verified baseline next to the site-health signals that cap it today.</p>
+    <div class="two-col">
+      <div class="panel">
+        <div style="font-weight:700;margin-bottom:6px">Organic visits — last 6 months <span class="mono" style="color:var(--client-accent)">verified GA4</span></div>
+        <div class="chartbox"><canvas id="ga4Chart"></canvas></div>
+      </div>
+      <div>
+        <div class="stat-row cols-2" style="margin:0">
+          <div class="stat"><div class="num">1,813</div><div class="lbl">Keywords you rank for</div></div>
+          <div class="stat"><div class="num">531</div><div class="lbl">In striking distance (11–30)</div></div>
+          <div class="stat"><div class="num">100%</div><div class="lbl">Of pages missing schema markup</div></div>
+          <div class="stat"><div class="num">3,485</div><div class="lbl">Referring domains linking rivals, not you</div></div>
+        </div>
+        <div class="note">Demand is proven and your base is verified at <strong>2,617 organic visits/mo</strong>. Every gap above is fixable with content + technical work — none requires a rebuild.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 AI SEARCH PRESENCE -->
+  <section class="slide light">
+    <div class="eyebrow">AI search presence</div>
+    <h2>AI is starting to see you — but you're barely in the answer</h2>
+    <p class="lead"><strong>AI Visibility</strong> is a 0–100 index of how often a brand shows up in AI-generated answers (ChatGPT, Google's AI Overviews & AI Mode, Gemini). Yours is <strong>24</strong> — the top of the "Emerging" band. When someone asks AI "who's the best matchmaker in [city]?", you're rarely the name it gives.</p>
+    <div class="two-col">
+      <div class="panel">
+        <div class="gauge-wrap">
+          <div class="chartbox" style="height:170px;width:200px;flex:none"><canvas id="aiGauge"></canvas></div>
+          <div>
+            <div style="font-family:'Crete Round',serif;font-size:30px;color:var(--client-mid)">Score 24 / 100</div>
+            <div class="bench"><span style="background:#d63a3a"></span><span style="background:#E8743C"></span><span style="background:#F4B942"></span><span style="background:#46AE41"></span></div>
+            <div class="benchlabels"><span>Invisible</span><span>Emerging</span><span>Established</span><span>Dominant</span></div>
+          </div>
+        </div>
+        <div class="stat-row cols-3" style="margin:18px 0 0">
+          <div class="stat"><div class="num">24</div><div class="lbl">AI Visibility score</div></div>
+          <div class="stat"><div class="num">122</div><div class="lbl">Total AI mentions</div></div>
+          <div class="stat"><div class="num">92</div><div class="lbl">Cited pages</div></div>
+        </div>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>AI engine</th><th>Mentions</th><th>Cited pages</th></tr></thead>
+          <tbody>
+            <tr><td><strong>AI Mode</strong> <span class="mono">Google's AI search</span></td><td>40</td><td>55</td></tr>
+            <tr><td><strong>ChatGPT</strong> <span class="mono">OpenAI</span></td><td>35</td><td>50</td></tr>
+            <tr><td><strong>Gemini</strong> <span class="mono">Google</span></td><td>29</td><td>23</td></tr>
+            <tr><td><strong>AI Overview</strong> <span class="mono">Google SERP box</span></td><td>18</td><td>20</td></tr>
+          </tbody>
+        </table>
+        <div class="note">No engine is saturated, so the field is wide open. <strong>AI Overview is your thinnest (18)</strong> — and it's the box that shows above the results for "[city] matchmaker." Entity-rich, well-structured local content is exactly what these engines cite.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 TECH ROADBLOCKS -->
+  <section class="slide light">
+    <div class="eyebrow">Technical roadblocks</div>
+    <h2>Five fixable issues holding the whole site back</h2>
+    <p class="lead">Your crawl and PageSpeed audit surfaced issues that suppress rankings site-wide. None require a rebuild — they're cleanups that compound.</p>
+    <table>
+      <thead><tr><th>Issue</th><th>Priority</th><th>Scale</th><th>What fixing it unlocks</th></tr></thead>
+      <tbody>
+        <tr><td>No schema markup anywhere</td><td><span class="pill" style="background:#d63a3a">P1</span></td><td>100 / 100 pages</td><td>Rich results + the structured data AI engines read to cite you</td></tr>
+        <tr><td>Duplicate URLs (uppercase &amp; lowercase serve the same page)</td><td><span class="pill" style="background:#d63a3a">P1</span></td><td>15 title + 15 meta groups</td><td>Stops splitting ranking signals between /About-Us and /about-us</td></tr>
+        <tr><td>Mobile homepage loads in 15.9s (LCP)</td><td><span class="pill" style="background:#d63a3a">P1</span></td><td>6.9 MB page weight</td><td>Mobile rankings + far lower bounce on the page that matters most</td></tr>
+        <tr><td>Thin internal linking</td><td><span class="pill" style="background:#E8743C">P2</span></td><td>66 pages with 1–2 links</td><td>Spreads authority to your city &amp; state pages</td></tr>
+        <tr><td>Missing H1s / thin templates on key pages</td><td><span class="pill" style="background:#E8743C">P2</span></td><td>template-level</td><td>Clearer relevance signals on landing pages</td></tr>
+      </tbody>
+    </table>
+    <div class="stat-row cols-3" style="margin-top:20px">
+      <div class="stat"><div class="num">59<span style="font-size:18px;color:var(--muted)"> / 100</span></div><div class="lbl">PageSpeed — Mobile</div></div>
+      <div class="stat"><div class="num">81<span style="font-size:18px;color:var(--muted)"> / 100</span></div><div class="lbl">PageSpeed — Desktop</div></div>
+      <div class="stat"><div class="num">15.9s</div><div class="lbl">Mobile LCP (target: under 2.5s)</div></div>
+    </div>
+  </section>
+
+  <!-- 7 COMPETITOR GAP -->
+  <section class="slide light">
+    <div class="eyebrow">The competitor gap</div>
+    <h2>The gap is coverage, not capability</h2>
+    <p class="lead">You convert as well as anyone — but your rivals rank for many times more keywords because they've built far more pages. That's a content-volume gap, and it's the most closable kind.</p>
+    <div class="two-col">
+      <table>
+        <thead><tr><th>Domain</th><th>Monthly organic</th><th>Keywords ranked</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Master Matchmakers</strong></td><td>2,617 <span class="mono">GA4</span></td><td>1,759</td></tr>
+          <tr><td>lumasearch.com</td><td>12,752</td><td>9,189</td></tr>
+          <tr><td>tawkify.com</td><td>14,785</td><td>23,924</td></tr>
+          <tr><td>kelleher-international.com</td><td>5,327</td><td>3,617</td></tr>
+        </tbody>
+      </table>
+      <div class="panel">
+        <div style="font-weight:700;margin-bottom:6px">Keywords ranked — you vs the field</div>
+        <div class="chartbox"><canvas id="compChart"></canvas></div>
+      </div>
+    </div>
+    <div class="note"><strong>3,485 referring domains</strong> link to your competitors but not to you. Your foundation is solid — the unlock is breadth of content, built page by page across every metro you serve.</div>
+  </section>
+
+  <!-- 8 DIVIDER -->
+  <section class="slide red">
+    <div>
+      <div class="eyebrow" style="color:#ffd9db">How we capture it</div>
+      <div class="big" style="margin:10px 0">ClusterMagic.</div>
+      <p style="font-size:19px;max-width:640px;margin:0 auto;color:#fff">An AI-powered content engine that builds entity-rich content architectures for compounding authority.</p>
+    </div>
+  </section>
+
+  <!-- 9 CLUSTERMAGIC ENGINE -->
+  <section class="slide dark">
+    <div class="eyebrow">The engine</div>
+    <h2 style="color:#fff">How ClusterMagic builds durable authority</h2>
+    <p class="lead">Not "more blog posts." A structured architecture of interlinked, entity-rich pages that search engines and AI models both understand and trust.</p>
+    <div class="stat-row cols-3" style="margin-top:18px">
+      <div class="stat"><div style="font-size:30px">🧭</div><div class="num" style="font-size:24px;margin-top:8px">Entity-rich content</div><div class="lbl" style="font-size:13.5px">Pages built around the people, places and concepts Google and AI map to your category — so you're understood as <em>the</em> matchmaker for each city.</div></div>
+      <div class="stat"><div style="font-size:30px">⚙️</div><div class="num" style="font-size:24px;margin-top:8px">AI-powered execution</div><div class="lbl" style="font-size:13.5px">We produce at the velocity your competitors have — 40 publish-ready, internally-linked, schema-marked articles a month, reviewed before they ship.</div></div>
+      <div class="stat"><div style="font-size:30px">📈</div><div class="num" style="font-size:24px;margin-top:8px">Compounds over 4+ years</div><div class="lbl" style="font-size:13.5px">The architecture strengthens with every Google update instead of getting penalized by it — authority that builds on itself.</div></div>
+    </div>
+  </section>
+
+  <!-- 10 CASE STUDY -->
+  <section class="slide light">
+    <div class="eyebrow">Proof</div>
+    <h2>8,500 → 500,000+ monthly organic visits</h2>
+    <div class="casestudy">
+      <img src="../images/casestudy-500k.jpg" alt="SEMrush organic growth chart — ClusterMagic case study">
+      <div>
+        <div class="stat-row cols-2" style="margin:0">
+          <div class="stat"><div class="num">~59×</div><div class="lbl">Organic traffic growth</div></div>
+          <div class="stat"><div class="num">$20M</div><div class="lbl">Series A raised — search was a board narrative</div></div>
+          <div class="stat"><div class="num">~$2M</div><div class="lbl">Annual value from impression share alone</div></div>
+          <div class="stat"><div class="num">0</div><div class="lbl">Algorithm penalties in 4+ years</div></div>
+        </div>
+        <div class="note">The same engine, applied to a different category. Growth that improved with each Google update instead of breaking under it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 CONTENT PLAN OVERVIEW -->
+  <section class="slide light">
+    <div class="eyebrow">The 90-day content plan</div>
+    <h2>120 articles, built to win local + AI search</h2>
+    <p class="lead">A keyword-researched, deduplicated editorial calendar — 40 articles a month for three months, weighted toward the winnable local terms that put you on the map in every metro you serve.</p>
+    <div class="stat-row cols-4">
+      <div class="stat"><div class="num">120</div><div class="lbl">Articles across 90 days</div></div>
+      <div class="stat"><div class="num">94,570</div><div class="lbl">Total monthly searches addressed</div></div>
+      <div class="stat"><div class="num">94</div><div class="lbl">Easy wins at KD &lt; 30</div></div>
+      <div class="stat"><div class="num">21.3</div><div class="lbl">Average keyword difficulty</div></div>
+    </div>
+    <div class="two-col" style="flex:none;height:300px">
+      <div class="panel"><div style="font-weight:700;margin-bottom:6px">Coverage by pillar</div><div class="chartbox" style="height:230px"><canvas id="pillarChart"></canvas></div></div>
+      <div class="panel"><div style="font-weight:700;margin-bottom:6px">Funnel mix</div><div class="chartbox" style="height:230px"><canvas id="funnelChart"></canvas></div></div>
+    </div>
+  </section>
+
+  <!-- 12 THE 120 ARTICLES -->
+  <section class="slide light">
+    <div class="eyebrow">The editorial calendar</div>
+    <h2>Every article, month by month</h2>
+    <div class="tabbar">
+      <div class="tab active" data-m="1">Month 1 · 40</div>
+      <div class="tab" data-m="2">Month 2 · 40</div>
+      <div class="tab" data-m="3">Month 3 · 40</div>
+    </div>
+    <div class="scrolltable">
+      <table>
+        <thead><tr><th style="width:46%">Article</th><th>Primary keyword</th><th>Pillar</th><th>Funnel</th><th>Vol</th><th>KD</th></tr></thead>
+        <tbody id="planTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 13 WHY THIS PLAN -->
+  <section class="slide light">
+    <div class="eyebrow">Why this plan</div>
+    <h2>Built around your localization strategy</h2>
+    <div class="stat-row cols-4" style="margin-top:4px">
+      <div class="pillarcard" style="border-top-color:#535BAB"><strong>City Matchmaker Pages · 30</strong><div class="lbl" style="font-size:12.5px;color:var(--muted);margin-top:6px">Your money pages: "[city] matchmaker" for metros you don't cover yet, plus niche-local (Jewish, gay, elite). The direct answer to Luma.</div></div>
+      <div class="pillarcard" style="border-top-color:#27318B"><strong>Local Dating Guides · 38</strong><div class="lbl" style="font-size:12.5px;color:var(--muted);margin-top:6px">"Date ideas / date night [city]" — low-difficulty content that wins AI overviews and feeds your city pages. The exact terms Luma already ranks for.</div></div>
+      <div class="pillarcard" style="border-top-color:#0c1240"><strong>Matchmaking 101 &amp; Cost · 14</strong><div class="lbl" style="font-size:12.5px;color:var(--muted);margin-top:6px">"How much does a matchmaker cost", "are matchmakers worth it" — the buyer questions AI answers directly. Own the answer, own the lead.</div></div>
+      <div class="pillarcard" style="border-top-color:#9aa3d6"><strong>Dating Coaching · 38</strong><div class="lbl" style="font-size:12.5px;color:var(--muted);margin-top:6px">First-date, life-stage and relationship advice that builds topical authority and catches the app-fatigued searcher before they hire.</div></div>
+    </div>
+    <div class="two-col" style="flex:none;margin-top:18px">
+      <div>
+        <div style="font-weight:700;margin-bottom:8px">What we deliberately excluded</div>
+        <ul class="clean">
+          <li>"Date night ideas" (450K vol) — generic, zero buyer intent</li>
+          <li>Dating-app & free-tool searches — your buyer has left apps behind</li>
+          <li>"Millionaire matchmaker" TV-show traffic — entertainment, not intent</li>
+          <li>Gen-Z dating slang — off-brand for an upscale service</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:8px">What to expect</div>
+        <div class="timeline">
+          <div class="tstep"><div class="n">1</div><strong style="font-size:13px">Approve</strong><div class="lbl" style="font-size:11.5px;color:var(--muted)">You sign off on the 120-article plan</div></div>
+          <div class="tstep"><div class="n">2</div><strong style="font-size:13px">Month 1 ships</strong><div class="lbl" style="font-size:11.5px;color:var(--muted)">First batch begins within 5 business days</div></div>
+          <div class="tstep"><div class="n">3</div><strong style="font-size:13px">Review</strong><div class="lbl" style="font-size:11.5px;color:var(--muted)">Drafts land in your CMS for approval</div></div>
+          <div class="tstep"><div class="n">4</div><strong style="font-size:13px">Compound</strong><div class="lbl" style="font-size:11.5px;color:var(--muted)">Rankings build month over month</div></div>
+        </div>
+        <div class="note" style="margin-top:14px">Each article is entity-rich, internally linked, schema-marked, and 1,200–2,000 words — built to win both local rankings and AI answers for "matchmaker in [city]."</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 TRAJECTORY -->
+  <section class="slide dark">
+    <div class="eyebrow">Your projected trajectory</div>
+    <h2 style="color:#fff">Where this goes over 12 months</h2>
+    <p class="lead">Starting from your verified GA4 baseline, here's the directional path as local coverage and authority compound.</p>
+    <div class="panel" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);flex:1;min-height:0">
+      <div class="chartbox tall"><canvas id="trajChart"></canvas></div>
+    </div>
+    <div class="stat-row cols-4" style="margin-top:18px;margin-bottom:0">
+      <div class="stat"><div class="num">2,617</div><div class="lbl">Today (GA4 verified)</div></div>
+      <div class="stat"><div class="num">2,931</div><div class="lbl">Month 3</div></div>
+      <div class="stat"><div class="num">3,533</div><div class="lbl">Month 6</div></div>
+      <div class="stat"><div class="num">4,580</div><div class="lbl">Month 12</div></div>
+    </div>
+    <div class="footer-disc">These are directional projections, not guarantees. Actual results depend on execution cadence, competitive dynamics, and search-algorithm changes.</div>
+  </section>
+
+</div>
+
+<div class="brand">EmberTribe</div>
+<div id="prev" class="arrow">‹</div>
+<div id="next" class="arrow">›</div>
+<div class="nav" id="dots"></div>
+<div class="counter" id="counter"></div>
+
+<script>
+const OPP=[["online dating service",14800,82],["matchmaking",4400,51],["senior dating services",2400,49],["date ideas chicago",2400,18],["over 50 dating services",1900,56],["jewish matchmaking",1900,54],["date night ideas atlanta",1600,16],["luxury dating",1300,28],["date ideas los angeles",1300,12],["christian matchmaking",390,13]];
+const SD=[["dating services match",16,8100,62],["match maker",12,3600,69],["matchmaker near me",13,2400,24],["service matchmaking",14,1900,65],["dating services",26,1900,55],["professional matchmaker",24,1900,62],["matchmakers",22,1600,68],["matchmakingservice",18,1300,64],["professional dating services",11,1000,46],["matchmakers near me",21,1000,31]];
+const PILLAR_NAMES={LDG:"Local Dating Guides",CMP:"City Matchmaker Pages",M101:"Matchmaking 101 & Cost",DC:"Dating Coaching"};
+const PILLAR_COLORS={LDG:"#27318B",CMP:"#535BAB",M101:"#0c1240",DC:"#9aa3d6"};
+const FUN_NAMES={ToFu:"Top of funnel",MoFu:"Middle of funnel",BoFu:"Bottom of funnel"};
+const PLAN=[["How Much Does a Matchmaker Cost? A 2026 Price Breakdown","how much does a matchmaker cost",320,8,"M101","MoFu",1],["Are Matchmaking Services Worth It? An Honest Look","are matchmaking services worth it",50,10,"M101","MoFu",1],["Do Matchmakers Actually Work? What to Expect","do matchmakers work",70,23,"M101","MoFu",1],["What Is Matchmaking? How Modern Matchmaking Works","what is matchmaking",210,32,"M101","ToFu",1],["How to Find a Matchmaker You Can Trust","hire a matchmaker",70,23,"M101","MoFu",1],["Professional Matchmaker Cost: What You're Really Paying For","professional matchmaker cost",70,10,"M101","MoFu",1],["Matchmaker vs Online Dating: Which Is Right for You?","matchmaker vs online dating",320,28,"M101","MoFu",1],["Are Matchmakers Still a Thing in 2026?","are matchmakers still a thing",70,31,"M101","ToFu",1],["The Best Date Night Ideas in Dallas","date night in dallas ideas",1600,6,"LDG","ToFu",1],["Romantic & Fun Date Ideas in Phoenix","date ideas phoenix",880,9,"LDG","ToFu",1],["Date Night Ideas in Fort Worth","date night ideas fort worth",720,7,"LDG","ToFu",1],["Creative Date Night Ideas in Philadelphia","date night ideas philadelphia",720,9,"LDG","ToFu",1],["Chicago Date Ideas Locals Actually Love","chicago date ideas",720,9,"LDG","ToFu",1],["The Best Date Ideas in Denver","date ideas denver",720,11,"LDG","ToFu",1],["Date Ideas in Los Angeles: A Local's Guide","date ideas los angeles",1300,12,"LDG","ToFu",1],["Date Ideas in Philadelphia: Where to Go","date ideas philadelphia",720,11,"LDG","ToFu",1],["Fun Date Night Ideas in Las Vegas","date night ideas las vegas",720,10,"LDG","ToFu",1],["The Best Date Ideas in Boston","date ideas boston",1300,13,"LDG","ToFu",1],["Date Night Ideas in Phoenix for Every Season","date night ideas phoenix",880,14,"LDG","ToFu",1],["Date Night Ideas in Denver","date night denver",720,14,"LDG","ToFu",1],["The Best Date Ideas in Seattle","date ideas seattle",1000,16,"LDG","ToFu",1],["Romantic Date Ideas in San Antonio","date ideas san antonio",880,19,"LDG","ToFu",1],["Sacramento Matchmaker: Personalized Matchmaking in Sacramento","sacramento matchmaker",70,6,"CMP","BoFu",1],["San Francisco Matchmaker: Bay Area Introductions","san francisco matchmaker",110,6,"CMP","BoFu",1],["New Jersey Matchmaker: Statewide Matchmaking","new jersey matchmaker",70,5,"CMP","BoFu",1],["Pittsburgh Matchmaker: Meet Someone Worth Your Time","pittsburgh matchmaker",110,29,"CMP","BoFu",1],["Professional Matchmaker in NYC: How It Works","professional matchmaker nyc",70,29,"CMP","BoFu",1],["Charlotte Matchmaker: Curated Introductions in NC","matchmaker charlotte nc",110,27,"CMP","BoFu",1],["Elite Matchmaking in NYC for Discerning Singles","elite matchmaking nyc",70,4,"CMP","BoFu",1],["Matchmaker Near Me: How to Find a Local Matchmaker","matchmaker near me",2400,24,"CMP","BoFu",1],["What to Talk About on a First Date: 30 Ideas That Work","what to talk about on a first date",2400,29,"DC","ToFu",1],["First Date Tips From Professional Matchmakers","first date tips",1600,34,"DC","ToFu",1],["How to Date With Intention in Your 30s, 40s and Beyond","how to date",1600,25,"DC","ToFu",1],["Good Questions to Ask on a First Date","good questions to ask on a first date",1300,30,"DC","ToFu",1],["The Ideal First Date: What Matchmakers Recommend","ideal first date",1300,29,"DC","ToFu",1],["Best First Dates: Ideas That Lead to a Second","best first dates",1000,23,"DC","ToFu",1],["First Date Conversation Starters That Aren't Boring","first date conversation starters",1000,27,"DC","ToFu",1],["What to Wear on a First Date: A Style Guide","what should i wear on a first date",260,23,"DC","ToFu",1],["Should You Bring Flowers on a First Date?","should i bring flowers on a first date",170,22,"DC","ToFu",1],["Funny First Date Questions to Break the Ice","funny first date questions",720,22,"DC","ToFu",1],["Date Ideas in NYC: A Matchmaker's Shortlist","date ideas nyc",1600,26,"LDG","ToFu",2],["Date Night Ideas in Atlanta","date night ideas atlanta",1600,16,"LDG","ToFu",2],["Date Night Ideas in Houston","date night ideas houston",1600,22,"LDG","ToFu",2],["Date Night Ideas in Chicago","date night ideas chicago",1600,21,"LDG","ToFu",2],["Date Ideas in Dallas: Beyond Dinner and a Movie","date ideas dallas",1600,23,"LDG","ToFu",2],["Date Night Ideas in Boston","date night ideas boston",1300,17,"LDG","ToFu",2],["Date Ideas in Houston for Couples","date ideas houston",1300,22,"LDG","ToFu",2],["Date Ideas in Atlanta You Haven't Tried","date ideas atlanta",880,26,"LDG","ToFu",2],["Date Night in Orlando: Romantic Spots","date night orlando",1000,18,"LDG","ToFu",2],["Date Night Ideas in Portland","date ideas portland",720,15,"LDG","ToFu",2],["Date Ideas in St. Louis","date ideas st louis",720,22,"LDG","ToFu",2],["Date Night Ideas in Colorado Springs","date night colorado springs",720,18,"LDG","ToFu",2],["Fun Date Ideas in NYC for Every Budget","fun date ideas nyc",1000,22,"LDG","ToFu",2],["Date Night in Houston: Where Locals Go","date night houston",1000,25,"LDG","ToFu",2],["Jewish Matchmaker in NYC: Modern Matchmaking, Timeless Tradition","jewish matchmaker nyc",110,15,"CMP","BoFu",2],["Gay Matchmaker in Los Angeles","gay matchmaker los angeles",110,3,"CMP","BoFu",2],["Gay Matchmaker in NYC","gay matchmaker nyc",90,14,"CMP","BoFu",2],["Matchmaking in New York City: A Complete Guide","matchmaking new york city",390,31,"CMP","BoFu",2],["Elite Matchmaker in New York","elite matchmaker new york",50,12,"CMP","BoFu",2],["Christian Matchmaker Near You","christian matchmaker near me",70,24,"CMP","BoFu",2],["Matchmaker in Pittsburgh, PA","matchmaker pittsburgh pa",90,17,"CMP","BoFu",2],["Matchmaker Cost in NYC: What to Expect","matchmaker nyc cost",50,9,"CMP","MoFu",2],["Tulsa Matchmaker: Introductions in Tulsa","tulsa matchmaker",30,17,"CMP","BoFu",2],["Omaha Matchmaker: Meet Quality Singles in Omaha","omaha matchmaker",30,20,"CMP","BoFu",2],["New Orleans Matchmaker: Curated Introductions","new orleans matchmaker",50,9,"CMP","BoFu",2],["Cincinnati Matchmaker","cincinnati matchmaker",500,14,"CMP","BoFu",2],["Dating in Your 30s: A Practical Guide","dating in your 30s",720,31,"DC","ToFu",2],["First Date Topics to Talk About When Conversation Stalls","first date topics to talk about",1300,41,"DC","ToFu",2],["Great First Date Questions to Really Get to Know Someone","great first date questions",1300,35,"DC","ToFu",2],["Cool First Date Questions That Spark Real Conversation","cool first date questions",1900,38,"DC","ToFu",2],["First Date Advice From Matchmakers Who've Seen It All","first date advice",880,32,"DC","ToFu",2],["What to Ask on a First Date Without an Interrogation","what to ask on a first date",880,32,"DC","ToFu",2],["Dating Coach for Men: What a Coach Actually Changes","dating coach for men",720,39,"DC","MoFu",2],["What Does a Relationship Coach Do?","relationship coach",6600,39,"DC","MoFu",2],["First Date Conversation: Things to Talk About","things to talk on a first date",1000,28,"DC","ToFu",2],["Dating Tips for the First Date","dating tips first date",1000,39,"DC","ToFu",2],["Best Date Night Questions for Couples","date night questions",1300,24,"DC","ToFu",2],["Should You Kiss on the First Date? A Matchmaker Weighs In","first date kiss",880,26,"DC","ToFu",2],["Second Date Ideas That Build Momentum","second date ideas",1000,30,"DC","ToFu",2],["How to Read Body Language on a Date","body language on a date",700,28,"DC","ToFu",2],["Date Ideas in Boston, MA for Every Season","date ideas boston ma",880,21,"LDG","ToFu",3],["Date Ideas in Dallas, TX","date ideas dallas tx",880,18,"LDG","ToFu",3],["Date Night in NYC: A Curated Evening","date night nyc",880,23,"LDG","ToFu",3],["Date Night in Phoenix","date night phoenix",880,18,"LDG","ToFu",3],["Date Night Ideas in Denver for Couples","date night ideas denver",880,19,"LDG","ToFu",3],["Date Ideas in Los Angeles, CA","date ideas in los angeles ca",1000,16,"LDG","ToFu",3],["Date Night in Dallas: A Local Guide","date night in dallas",720,12,"LDG","ToFu",3],["Date Night Ideas in Dallas for Couples","dallas date night ideas",1000,18,"LDG","ToFu",3],["Date Night in Atlanta, Georgia","date night atlanta georgia",1300,20,"LDG","ToFu",3],["Outdoor Date Ideas in Houston With Activities","date ideas n houston with activity",1000,17,"LDG","ToFu",3],["Millionaire Matchmaker in Miami: High-End Introductions","millionaire matchmaker miami",70,13,"CMP","BoFu",3],["Matchmaker in Austin: What It Costs","austin matchmakers cost",50,5,"CMP","MoFu",3],["Jewish Matchmaker Near You","jewish matchmaker near me",50,37,"CMP","BoFu",3],["Cleveland Matchmaker: Introductions in Cleveland","cleveland matchmaker",500,16,"CMP","BoFu",3],["Columbus Matchmaker","columbus matchmaker",500,15,"CMP","BoFu",3],["Detroit Matchmaker: Meet Someone in Metro Detroit","detroit matchmaker",500,17,"CMP","BoFu",3],["Baltimore Matchmaker","baltimore matchmaker",400,16,"CMP","BoFu",3],["Raleigh-Durham Matchmaker","raleigh matchmaker",400,14,"CMP","BoFu",3],["Reno Matchmaker: Introductions in Northern Nevada","reno matchmaker",400,8,"CMP","BoFu",3],["Tucson Matchmaker","tucson matchmaker",400,12,"CMP","BoFu",3],["How Much Do Matchmakers Make? Inside the Profession","how much do matchmakers make",110,14,"M101","ToFu",3],["Matchmaking Services Cost: A Transparent Guide","matchmaking services cost",170,6,"M101","MoFu",3],["Do Matchmaking Services Really Work?","do matchmaking services work",70,28,"M101","MoFu",3],["How Background Checks Make Matchmaking Safer Than Apps","background check dating",600,30,"M101","MoFu",3],["What to Expect From Your First Matchmaking Consultation","matchmaking consultation",400,22,"M101","MoFu",3],["Matchmaker vs Dating App: The Real Difference in Outcomes","dating app vs matchmaker",300,30,"M101","MoFu",3],["Dating After Divorce: A Matchmaker's Roadmap","dating after divorce",1000,40,"DC","ToFu",3],["Dating in Your 40s: What's Different and What Works","dating in your 40s",720,33,"DC","ToFu",3],["Dating in Your 50s and Beyond","dating in your 50s",500,33,"DC","ToFu",3],["Dating for Busy Professionals: How to Make Time","dating for professionals",400,30,"DC","MoFu",3],["Over 50 Dating Services: How Matchmaking Fits","over 50 dating services",2900,46,"DC","MoFu",3],["Senior Dating Services: A Thoughtful Alternative to Apps","senior dating services",2400,49,"DC","MoFu",3],["Luxury Dating: What Discreet, High-End Matchmaking Looks Like","luxury dating",1300,28,"DC","MoFu",3],["Red Flags on a First Date (and Green Flags Too)","first date red flags",700,28,"DC","ToFu",3],["How to Tell If a First Date Went Well","did the first date go well",500,26,"DC","ToFu",3],["How to Move From Online Dating to a Real Relationship","online dating to relationship",400,32,"DC","MoFu",3],["Dating Burnout: How to Reset After App Fatigue","dating burnout",600,27,"DC","ToFu",3],["First Date Flowers: Sweet or Too Much?","first date flowers",1000,6,"DC","ToFu",3],["How to Make a Great First Impression on a Date","first impression on a date",500,29,"DC","ToFu",3],["What Makes a Good Match? The Compatibility Factors That Matter","compatibility factors relationship",500,30,"DC","ToFu",3]];
+
+function kdColor(kd){return kd<=20?"#46AE41":kd<=30?"#8CC53F":kd<=45?"#F4B942":"#d63a3a";}
+function kdCell(kd){return '<span class="kd" style="background:'+kdColor(kd)+'">'+kd+'</span>';}
+
+// --- tables ---
+document.getElementById('oppTable').innerHTML=OPP.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1].toLocaleString()+'</td><td>'+kdCell(r[2])+'</td></tr>').join('');
+document.getElementById('sdTable').innerHTML=SD.map(r=>'<tr><td>'+r[0]+'</td><td><strong>#'+r[1]+'</strong></td><td>'+r[2].toLocaleString()+'</td><td>'+kdCell(r[3])+'</td></tr>').join('');
+
+function renderPlan(month){
+  const rows=PLAN.filter(a=>a[6]===month);
+  document.getElementById('planTable').innerHTML=rows.map(a=>
+    '<tr><td>'+a[0]+'</td><td class="mono">'+a[1]+'</td>'+
+    '<td><span class="pill" style="background:'+PILLAR_COLORS[a[4]]+'">'+PILLAR_NAMES[a[4]]+'</span></td>'+
+    '<td>'+FUN_NAMES[a[5]]+'</td><td>'+a[2].toLocaleString()+'</td><td>'+kdCell(a[3])+'</td></tr>').join('');
+}
+renderPlan(1);
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); renderPlan(+t.dataset.m);
+}));
+
+// --- charts (lazy build on first view) ---
+let built={};
+function buildCharts(){
+  if(built.all) return; built.all=true;
+  const navy='#27318B',peri='#535BAB',light='#9aa3d6',deep='#0c1240';
+  new Chart(ga4Chart,{type:'line',data:{labels:['Dec','Jan','Feb','Mar','Apr','May'],
+    datasets:[{data:[2576,2674,1761,1841,2069,2617],borderColor:navy,backgroundColor:'rgba(39,49,139,.12)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:navy}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}},maintainAspectRatio:false}});
+
+  // gauge (doughnut)
+  new Chart(aiGauge,{type:'doughnut',data:{datasets:[{data:[24,76],backgroundColor:[peri,'#e6e8f2'],borderWidth:0,circumference:180,rotation:270,cutout:'72%'}]},
+    options:{plugins:{legend:{display:false},tooltip:{enabled:false}},maintainAspectRatio:false}});
+
+  new Chart(compChart,{type:'bar',data:{labels:['Master\nMatchmakers','lumasearch','tawkify','kelleher'],
+    datasets:[{data:[1759,9189,23924,3617],backgroundColor:[peri,navy,deep,light]}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()}}},maintainAspectRatio:false}});
+
+  new Chart(pillarChart,{type:'bar',data:{labels:['Local Dating\nGuides','City Matchmaker\nPages','Dating\nCoaching','Matchmaking\n101 & Cost'],
+    datasets:[{data:[38,30,38,14],backgroundColor:[navy,peri,light,deep]}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}},maintainAspectRatio:false}});
+
+  new Chart(funnelChart,{type:'bar',data:{labels:['Top of funnel','Middle of funnel','Bottom of funnel'],
+    datasets:[{data:[72,20,28],backgroundColor:[navy,peri,light]}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}},maintainAspectRatio:false}});
+
+  new Chart(trajChart,{type:'line',data:{labels:['Now','M3','M6','M9','M12'],
+    datasets:[
+      {label:'Confirmed (GA4)',data:[2617,null,null,null,null],borderColor:'#fff',pointRadius:5,pointBackgroundColor:'#fff'},
+      {label:'Projected',data:[2617,2931,3533,4045,4580],borderColor:'#ffd9db',borderDash:[7,5],backgroundColor:'rgba(255,255,255,.08)',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:'#ffd9db'}
+    ]},
+    options:{plugins:{legend:{labels:{color:'#fff'}}},scales:{y:{beginAtZero:true,ticks:{color:'#dfe3f7',callback:v=>v.toLocaleString()},grid:{color:'rgba(255,255,255,.12)'}},x:{ticks:{color:'#dfe3f7'},grid:{color:'rgba(255,255,255,.08)'}}},maintainAspectRatio:false}});
+}
+
+// --- navigation ---
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots');
+const counter=document.getElementById('counter');
+let cur=0;
+slides.forEach((_,i)=>{const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>go(i);dotsEl.appendChild(d);});
+function go(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,j)=>s.classList.toggle('active',j===cur));
+  [...dotsEl.children].forEach((d,j)=>d.classList.toggle('active',j===cur));
+  counter.textContent=(cur+1)+' / '+slides.length;
+  buildCharts();
+}
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')go(cur+1);
+  if(e.key==='ArrowLeft')go(cur-1);
+});
+counter.textContent='1 / '+slides.length;
+buildCharts();
+</script>
+</body>
+</html>
