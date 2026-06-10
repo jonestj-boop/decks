@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Call Playbook: Rich Crane / Inventing Fire with AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181f;--soft:#3d434e;--muted:#6b727f;--line:#e6e8ec;--paper:#fff;--wash:#f7f8fa;
+    --mel:#7b3ff2;--mel-bg:#f3edff;--jer:#0c8f9c;--jer-bg:#e4f6f7;--both:#c2410c;--both-bg:#fdeee3;
+    --green:#15803d;--red:#b91c1c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--wash);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:840px;margin:0 auto;padding:36px 26px 80px;}
+  h1,h2,h3,.sora{font-family:Sora,sans-serif;}
+  .hdr{margin-bottom:8px;}
+  .hdr .ey{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mel);font-weight:700;}
+  h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:6px 0 8px;}
+  .hdr p{color:var(--muted);font-size:15px;}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 26px;}
+  .pill{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;font-family:Sora,sans-serif;}
+  .pill.m{background:var(--mel-bg);color:var(--mel);}
+  .pill.j{background:var(--jer-bg);color:var(--jer);}
+  .pill.b{background:var(--both-bg);color:var(--both);}
+
+  .step{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:14px;position:relative;overflow:hidden;}
+  .step.lead-m{border-left:5px solid var(--mel);}
+  .step.lead-j{border-left:5px solid var(--jer);}
+  .step.lead-b{border-left:5px solid var(--both);}
+  .step .top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap;}
+  .step h3{font-size:17px;font-weight:700;letter-spacing:-.01em;}
+  .step .who{font-size:12px;font-weight:700;font-family:Sora,sans-serif;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .who.m{background:var(--mel-bg);color:var(--mel);}
+  .who.j{background:var(--jer-bg);color:var(--jer);}
+  .who.b{background:var(--both-bg);color:var(--both);}
+  .time{font-size:12px;color:var(--muted);font-weight:600;}
+  ul{list-style:none;padding:0;margin:6px 0 0;}
+  li{position:relative;padding-left:20px;margin-bottom:7px;font-size:14.5px;color:var(--soft);}
+  li::before{content:"";position:absolute;left:3px;top:9px;width:6px;height:6px;border-radius:2px;background:var(--mel);transform:rotate(45deg);}
+  .step.lead-j li::before{background:var(--jer);}
+  .step.lead-b li::before{background:var(--both);}
+  .say{background:var(--wash);border-radius:9px;padding:10px 14px;margin:8px 0;font-size:14.5px;color:var(--ink);font-style:italic;border-left:3px solid var(--line);}
+  .say b{font-style:normal;color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:3px;font-weight:700;}
+  .flag{font-size:13px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:8px;padding:8px 12px;margin-top:10px;}
+
+  details.tp{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px;}
+  details.tp summary{cursor:pointer;list-style:none;font-family:Sora,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:7px;user-select:none;}
+  details.tp summary::-webkit-details-marker{display:none;}
+  details.tp summary::before{content:"▸";font-size:11px;transition:transform .15s ease;color:var(--muted);}
+  details.tp[open] summary::before{transform:rotate(90deg);}
+  details.tp .tp-body{margin-top:10px;}
+  details.tp .tp-body li{font-size:14px;color:var(--ink);margin-bottom:9px;line-height:1.5;}
+  details.tp .tp-body li::before{background:var(--muted);}
+  .step.lead-j details.tp .tp-body li::before{background:var(--jer);}
+  .step.lead-b details.tp .tp-body li::before{background:var(--both);}
+  details.tp .tp-body .q{color:var(--soft);font-style:italic;}
+
+  h2{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:34px 0 14px;}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+  .box h4{font-family:Sora,sans-serif;font-size:14px;font-weight:700;margin-bottom:10px;}
+  .box.good h4{color:var(--green);}
+  .box.bad h4{color:var(--red);}
+  .box li::before{background:var(--green);}
+  .box.bad li::before{background:var(--red);border-radius:50%;transform:none;}
+
+  .qcard{background:var(--jer-bg);border:1px solid #b6e6ea;border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+  .qcard h4{font-family:Sora,sans-serif;color:var(--jer);font-size:14px;margin-bottom:8px;}
+  .qcard li::before{background:var(--jer);}
+
+  .verify{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px 20px;margin-top:8px;}
+  .verify h4{font-family:Sora,sans-serif;color:#92400e;font-size:14px;margin-bottom:8px;}
+  .verify li::before{background:#d97706;}
+
+  @media(max-width:640px){.twocol{grid-template-columns:1fr;}}
+  @media print{body{background:#fff;}.step,.box,.qcard,.verify{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="ey">Internal Call Playbook · Do Not Share</div>
+    <h1>Call 2: Rich Crane / Inventing Fire with AI</h1>
+    <p>Strategy + proposal call · Goal: agree on Done-For-You biweekly and lock a kickoff date · ~25–30 min</p>
+  </div>
+
+  <div class="legend">
+    <span class="pill m">Melissa leads</span>
+    <span class="pill j">Jeremy leads</span>
+    <span class="pill b">Both / tag-team</span>
+  </div>
+
+  <p style="font-size:15px;color:var(--soft);background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:24px;">
+    <b style="font-family:Sora,sans-serif;">The core split:</b> Melissa owns the frame, the business case, pricing, and the close. Jeremy owns the craft and makes the show feel real. Rich is a builder who respects people who know their trade, so Jeremy is the proof Podsicle can actually execute. Jeremy talks less but lands harder.
+  </p>
+
+  <!-- STEP 1 -->
+  <div class="step lead-m">
+    <div class="top"><h3>1. Open &amp; reframe</h3><div><span class="time">~2 min</span> &nbsp;<span class="who m">Melissa</span></div></div>
+    <ul>
+      <li>Warm intro, then introduce Jeremy as the expert, not a second salesperson.</li>
+      <li>Set the tone: today is about showing <em>how the show gets built</em>, not a hard sell.</li>
+    </ul>
+    <div class="say"><b>Say something like</b>"I brought Jeremy, our producer, because today is less about selling you and more about showing you exactly how this show gets built. He runs production on shows like this every week."</div>
+    <details class="tp"><summary>Talking points</summary><div class="tp-body"><ul>
+      <li>"Rich, good to see you again. I brought Jeremy, our producer, because today isn't really a sales pitch. It's me showing you how this show actually gets built, and Jeremy's the guy who'd build it."</li>
+      <li>"He runs production on shows like yours every week, so anything technical you throw at him, he's got you."</li>
+      <li>"My plan: I'll recap what I heard from you, lay out the strategy, then hand it to Jeremy to get into the how. Sound good?"</li>
+      <li>Keep it light and fast. You're setting a collaborative tone, not asking permission to sell.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step lead-m">
+    <div class="top"><h3>2. Recap discovery, confirm you listened</h3><div><span class="time">~3 min</span> &nbsp;<span class="who m">Melissa</span></div></div>
+    <ul>
+      <li>Play back the brief: host + co-host (possibly his brother), man-on-the-street, biweekly, shock-and-awe tone, <em>Scott and Mark Learn To</em> as the model, audience of operators who need to know where AI breaks.</li>
+      <li>Ask one confirming question and let him correct or add.</li>
+    </ul>
+    <div class="say"><b>Confirming question</b>"Did I get that right, and has anything shifted since we last talked?"</div>
+    <div class="flag">This is your natural chance to verify the two open facts: how many episodes he's actually published, and the exact show name he likes (<em>Scott and Mark Learn To...</em>).</div>
+    <details class="tp"><summary>Talking points</summary><div class="tp-body"><ul>
+      <li>"Here's what I took away last time. Tell me where I'm off."</li>
+      <li>"You want a show built around conversation, you plus a co-host, maybe your brother, because you're sharper bouncing off someone than going solo."</li>
+      <li>"A man-on-the-street segment for texture, captured by your videographer. Biweekly cadence. Tone is shock-and-awe, funny, you say the part other people won't."</li>
+      <li>"And the audience is operators, founders, owners, even the plumber, anyone who has to use AI to run their business and needs to know where it actually breaks."</li>
+      <li>"The model you pointed to was Scott and Mark Learn To. Did I get all that right? And has anything changed?"</li>
+      <li class="q">Slip in the fact-checks: "Remind me, how many have you actually gotten out so far?" and confirm the show name.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step lead-m">
+    <div class="top"><h3>3. The strategic narrative</h3><div><span class="time">~5 min</span> &nbsp;<span class="who m">Melissa</span></div></div>
+    <ul>
+      <li>Walk the spine of the report: this is not starting over, it's removing production friction so the brand compounds.</li>
+      <li>The content engine: 2 recordings become 8–12 clips plus show notes, transcripts, artwork.</li>
+      <li>YouTube as the discovery engine for operators who search before they subscribe.</li>
+      <li>Keep it tight. This is the "why it matters," and it's your territory.</li>
+    </ul>
+    <details class="tp"><summary>Talking points</summary><div class="tp-body"><ul>
+      <li>"Here's how I think about it. You've already done the hard part. You have the concept, the credibility, a book, a website, distribution everywhere. What you don't have is a system that keeps it running, and that's the only reason it's been four episodes instead of forty."</li>
+      <li>"This isn't about starting over. It's about taking production off your plate so the thing you already started can actually compound."</li>
+      <li>"The way we think about it, you're not making a podcast, you're building a content engine. Two recordings a month become two episodes plus eight to twelve clips, plus show notes, transcripts, artwork. One conversation, a month of content."</li>
+      <li>"And the discovery piece matters for your audience specifically. A business owner trying to figure out AI doesn't open a podcast app, they search. YouTube is the second biggest search engine on earth. 'Where AI breaks for my business' is exactly what you answer. But that only works if you're publishing consistently, which is the whole problem we solve."</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step lead-j">
+    <div class="top"><h3>4. The show architecture &nbsp;<span style="font-weight:700;color:var(--jer);font-size:13px;">← Jeremy's primary moment</span></h3><div><span class="time">~6–8 min</span> &nbsp;<span class="who j">Jeremy</span></div></div>
+    <p style="font-size:14.5px;color:var(--soft);margin-bottom:6px;">This is where the deal is won. Melissa hands off cleanly, then Jeremy talks craft.</p>
+    <div class="say"><b>Melissa's handoff</b>"Rich, the format you described is more interesting than most AI shows, but weaving a field segment into a two-host conversation is also where production gets hard. Jeremy, walk him through how we'd actually build it."</div>
+    <p style="font-size:13px;font-weight:700;font-family:Sora,sans-serif;color:var(--jer);margin:12px 0 4px;">Jeremy covers:</p>
+    <ul>
+      <li><b>How the format assembles</b> in the edit, the host/co-host dynamic, how the man-on-the-street footage cuts in so it flows and holds attention.</li>
+      <li><b>Man-on-the-street logistics</b> — how he'd work with Rich's existing videographer, what he needs from that footage. This answers Rich's biggest unspoken "will this actually work" concern.</li>
+      <li><b>Where the clips come from</b> — hunting the shock-and-awe, "tells it like it is" moments because those are what travel.</li>
+      <li><b>The Riverside workflow</b> — what recording day looks like for Rich: show up and talk, nothing else.</li>
+      <li>Ask Rich 1–2 craft questions (see the card below) so it feels like production has already started.</li>
+    </ul>
+    <details class="tp"><summary>Talking points (Jeremy)</summary><div class="tp-body"><ul>
+      <li>"First, the good news: the format you want is genuinely strong. Two people who actually know their stuff, riffing, is the Scott and Mark model and it works because the chemistry carries it. My job is to make sure that chemistry survives the edit and that we're pulling the best 40 minutes out of whatever you record."</li>
+      <li>"The man-on-the-street piece is where most people underestimate the work, and honestly it's the part I'd own hardest for you. Your videographer shoots it, then we cut those voices in so they punctuate the conversation instead of interrupting it. Done right, it's the texture that makes the show feel produced, not just two guys talking."</li>
+      <li>"On clips: I'm not just chopping the episode into random 60-second pieces. I'm hunting the moments where you say the thing nobody else will. Those are what get screenshotted and forwarded in a Slack channel. That's your growth, and we build the edit around finding them."</li>
+      <li>"Recording day for you is dead simple. We run it on Riverside, you and your co-host show up and talk, we handle everything downstream. You're not touching software, files, or uploads."</li>
+      <li class="q">Then ask 1–2 craft questions from the card below.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step lead-j">
+    <div class="top"><h3>5. Proof: Sports &amp; Forks case study</h3><div><span class="time">~2 min</span> &nbsp;<span class="who j">Jeremy</span></div></div>
+    <ul>
+      <li>Natural for Jeremy since it's a production win: same remote model, same Riverside, same repurposing, big guests, 75K+ subscribers.</li>
+      <li>Show the deck / drop the link here.</li>
+    </ul>
+    <div class="say"><b>Anchor line</b>"We've run this exact playbook. YouTube doesn't reward podcasts, it rewards content people actually finish, so we engineer for retention from day one."</div>
+    <details class="tp"><summary>Talking points (Jeremy)</summary><div class="tp-body"><ul>
+      <li>"This isn't theory. We did exactly this for a show called Sports &amp; Forks. Came to us wanting YouTube traction and big-name guests, no studio, fully remote, same setup you're describing."</li>
+      <li>"We built the whole engine: Riverside recording, edited for retention, every episode repurposed into Shorts, Reels, TikTok, plus guest booking and distribution."</li>
+      <li>"It's past 75,000 subscribers now, with guests like Troy Aikman, Laird Hamilton, Laila Ali. The principle behind that growth is simple: YouTube doesn't reward podcasts, it rewards content people actually finish. We engineer for retention from episode one. That's exactly what we'd bring to yours."</li>
+      <li class="q">Show the deck or drop the link here.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step lead-m">
+    <div class="top"><h3>6. Recommendation &amp; pricing</h3><div><span class="time">~3 min</span> &nbsp;<span class="who m">Melissa</span></div></div>
+    <ul>
+      <li>State the fit plainly: Done-For-You at the biweekly cadence, <b>$3,500/mo</b>.</li>
+      <li>Walk inclusions briefly. Don't read the whole list, hit the highlights.</li>
+      <li>Mention add-ons (ClusterMagic blog, content promotion) as <em>later, once cadence is proven</em>. Do not stack them now.</li>
+    </ul>
+    <div class="say"><b>Say something like</b>"Based on everything, the fit is Done-For-You at the biweekly cadence, which is $3,500 a month, and that covers the full engine we just walked through."</div>
+    <details class="tp"><summary>Talking points</summary><div class="tp-body"><ul>
+      <li>"So based on everything, here's what I'd recommend. Done-For-You at the biweekly cadence. That's $3,500 a month, and it covers the full engine Jeremy just walked you through."</li>
+      <li>"Strategy, editing, the four to six clips per episode, show notes, transcripts, thumbnails, artwork, publishing, distribution. You record, we run the rest."</li>
+      <li>"There are add-ons, blog content, paid promotion, but I'd honestly leave those for later. Let's prove the cadence first, then expand once the machine's running. No reason to stack cost on day one."</li>
+      <li class="q">Say the number, then stop talking. Let it sit. Don't over-explain the price.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step lead-b">
+    <div class="top"><h3>7. Objection handling</h3><div><span class="time">as needed</span> &nbsp;<span class="who b">Route by type</span></div></div>
+    <ul>
+      <li><b>Production / feasibility / "can you really do the field segment"</b> → Jeremy.</li>
+      <li><b>Budget, timing, contract, scope</b> → Melissa.</li>
+      <li>If Rich asks Jeremy about price, he bounces it: "Melissa's got the structure on that."</li>
+    </ul>
+    <details class="tp"><summary>Talking points by objection</summary><div class="tp-body"><ul>
+      <li><b>Feasibility ("can you really pull off the field segments")</b> → Jeremy: "That's the part I'd worry about least, it's the most common thing we do. Here's how..."</li>
+      <li><b>"Is biweekly enough?"</b> → "It's the sustainable cadence. Consistent biweekly beats sporadic weekly every time, and we can always scale up once you're in rhythm."</li>
+      <li><b>Budget ("that's a lot a month")</b> → Melissa: "Compared to what your time is worth running MILL5, this is the cheap part. The expensive option is the show staying stalled." Don't discount reflexively.</li>
+      <li><b>Timing ("I need to think")</b> → Melissa: "Totally fair. What would you need to see to feel good about a start date?"</li>
+    </ul></div></details>
+  </div>
+
+  <!-- STEP 8 -->
+  <div class="step lead-m">
+    <div class="top"><h3>8. Close to a kickoff date</h3><div><span class="time">~2 min</span> &nbsp;<span class="who m">Melissa</span></div></div>
+    <ul>
+      <li>This is Call 2 with a proposal in hand, so be more direct than "let me send something."</li>
+      <li>Aim for a concrete next action: a kickoff date or a yes to start Foundation.</li>
+    </ul>
+    <div class="say"><b>Close</b>"I'd love to get you a kickoff date. If this looks right, we start the Foundation phase and have your first two episodes out within the first month. What does your calendar look like to begin?"</div>
+    <details class="tp"><summary>Talking points</summary><div class="tp-body"><ul>
+      <li>"Here's what I'd love to do. Get a kickoff date on the calendar. If this feels right, we start the Foundation phase, lock your format and workflow, and have your first two episodes out within the first month."</li>
+      <li>"What does your calendar look like to start?"</li>
+      <li>If he hesitates: "No pressure to decide everything today. What's the one thing standing between you and a yes?"</li>
+      <li class="q">Get a concrete next action before you hang up: a date, a follow-up time, or agreement to send the contract.</li>
+    </ul></div></details>
+  </div>
+
+  <!-- JEREMY QUESTIONS -->
+  <h2>Craft questions Jeremy should have ready</h2>
+  <div class="qcard">
+    <h4>Use 1–2 in Step 4 to show production is already thinking</h4>
+    <ul>
+      <li>"When you and your co-host riff, do you want it tight and punchy, or room to let a tangent breathe?"</li>
+      <li>"For the man-on-the-street segment, are we ambushing strangers, or curating a few sharp voices? Different edit, different energy."</li>
+      <li>"What's the one reaction you want a viewer to have at the end of an episode, laughing, a little uncomfortable, or 'I need to go fix this in my business'?"</li>
+      <li>"Do you want a recurring cold open or signature bit, the thing people associate with the show?"</li>
+      <li>"How long do you want episodes to run? I have an opinion, but I want yours first."</li>
+    </ul>
+  </div>
+
+  <!-- DO / DONT -->
+  <h2>Coaching for Jeremy</h2>
+  <div class="twocol">
+    <div class="box good">
+      <h4>Do</h4>
+      <ul>
+        <li>Talk craft, not features ("here's how I'd cut your field segments" beats "we include editing").</li>
+        <li>Reference Rich's specifics: his videographer, the brother co-host, the AI-breaks angle.</li>
+        <li>Match his energy: blunt, funny, confident. No jargon, no deference.</li>
+        <li>Have one strong opinion. Rich respects conviction over agreeableness.</li>
+      </ul>
+    </div>
+    <div class="box bad">
+      <h4>Don't</h4>
+      <ul>
+        <li>Touch pricing, contract terms, or the close. That's Melissa's, and wading in muddies it.</li>
+        <li>Over-promise turnaround or scope before expectations are set.</li>
+        <li>Be a yes-man. Agreeing with everything reads as having no point of view.</li>
+        <li>Out-talk Melissa. Land hard in Step 4, stay lighter elsewhere.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- VERIFY -->
+  <h2>Before / during the call</h2>
+  <div class="verify">
+    <h4>Confirm these two facts (naturally, in Step 2)</h4>
+    <ul>
+      <li>How many episodes Rich has actually published, and over what window. The deck says "roughly four across nine months." Getting a fact about his own show wrong is the most credibility-damaging error possible.</li>
+      <li>The exact show he referenced as his model: <em>Scott and Mark Learn To...</em> (Hanselman + Russinovich). He'll notice if it's slightly off.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
