@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Gut Life — EmberTribe AI Visibility Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================================
+   THEME — Happy Gut Life (warm sunrise / earthy wellness)
+   ============================================================= */
+:root {
+  --primary-dark: #3d2519;   /* deep espresso */
+  --primary-mid:  #9c4221;   /* terracotta */
+  --primary-light:#e08a3c;   /* amber sunrise */
+  --accent:       #2a9d8f;   /* fresh teal (gut/wellness) */
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c2420;
+  --text-light: #8a7d72;
+  --light-bg: #faf6f1;
+  --card-bg: #ffffff;
+  --border: #ece4da;
+  --green: #2a9d8f;
+  --yellow: #E8A23C;
+  --red: #D9542B;
+  --orange: #E67E22;
+  --teal: #2a9d8f;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 115%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.7); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.75); }
+.slide.dark table td { border-color: rgba(255,255,255,0.1); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.04); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.08; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 19px; font-weight: 400; color: var(--text-light);
+  max-width: 860px; margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: var(--primary-light); }
+
+/* STAT CARDS */
+.stats-row { display: flex; gap: 16px; margin: 14px 0; flex-wrap: wrap; }
+.stat-card {
+  flex: 1; min-width: 150px;
+  background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px;
+}
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+/* ANNOTATIONS */
+.annotation {
+  background: #FFF6E9; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 14px;
+  margin: 12px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-mid); }
+.annotation.info { background: #E6F6F4; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FCEDE7; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E6F6F4; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.5px; color: var(--text-light);
+  text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border);
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+/* BAR CHARTS */
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 175px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px; display: flex; align-items: center;
+  justify-content: flex-end; padding-right: 10px; font-size: 12px;
+  font-weight: 700; color: white;
+}
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48cabb); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.amber  { background: linear-gradient(90deg, var(--primary-mid), var(--primary-light)); }
+.bar-fill.gray   { background: linear-gradient(90deg, #b9a89a, #d8ccbd); }
+
+/* PILLS */
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.pill.win   { background: #E6F6F4; color: #1d6b61; }
+.pill.gap   { background: #FCEDE7; color: var(--red); }
+.pill.mid   { background: #FFF3E0; color: #b9691a; }
+.pill.seo     { background: #E6F6F4; color: #1d6b61; }
+.pill.content { background: #FFF3E0; color: #b9691a; }
+
+/* COLUMNS */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+/* CHANNEL CARDS */
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 14px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+/* TIMELINE */
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 13px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-mid); margin-top: 12px; }
+
+/* PRICING CARDS */
+.price-grid { display: grid; gap: 18px; margin: 8px 0; }
+.price-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.price-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.price-card {
+  position: relative; background: var(--light-bg); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px 20px; display: flex; flex-direction: column;
+}
+.price-card.popular { border: 2px solid var(--primary-light); background: #fffaf3; box-shadow: 0 10px 30px rgba(224,138,60,0.14); }
+.price-badge {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: var(--primary-light); color: #fff; font-size: 10px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+}
+.price-tier { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; }
+.price-amt { font-size: 32px; font-weight: 900; color: var(--text); line-height: 1; }
+.price-amt span { font-size: 15px; font-weight: 600; color: var(--text-light); }
+.price-cadence { font-size: 12px; color: var(--text-light); margin: 2px 0 12px; }
+.price-card ul { list-style: none; padding: 0; margin: 0 0 14px; flex: 1; }
+.price-card ul li { position: relative; padding-left: 18px; margin-bottom: 6px; font-size: 13px; line-height: 1.45; }
+.price-card ul li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--accent); font-weight: 800; }
+.price-prepay { border-top: 1px dashed var(--border); padding-top: 12px; }
+.price-prepay .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 2px; }
+.price-prepay .amt { font-size: 22px; font-weight: 800; color: var(--accent); }
+.price-prepay .eff { font-size: 11px; color: var(--text-light); }
+.price-save { display: inline-block; margin-top: 6px; background: #E6F6F4; color: #1d6b61; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 6px; }
+
+/* UTILITY */
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.red { color: var(--red); } .green { color: var(--green); } .orange { color: var(--orange); }
+.teal { color: var(--teal); } .amber { color: var(--primary-light); } .ember { color: var(--ember-red); }
+
+/* LOGO ROW */
+.logo-row { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.12); }
+.logo-ember { font-size: 14px; font-weight: 800; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.5); }
+
+/* PROGRESS + NAV */
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--primary-light)); z-index: 100; transition: width 0.3s ease; }
+.nav { position: fixed; bottom: 22px; right: 30px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 30px 36px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col, .three-col, .price-grid.cols-3, .price-grid.cols-4 { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .bar-label { width: 110px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AI Visibility Audit · Pre-Discovery Analysis</p>
+      <h1>Happy Gut Life</h1>
+      <p class="subtitle">You have the most credentialed founder in gut health — and you're nearly invisible in the AI answers, expert roundups, and Reddit threads where buyers now decide what to take.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value green">MD-Led</div>
+          <div class="stat-label">Founded by Dr. Vincent Pedre — bestselling author &amp; Gut C.A.R.E.® creator</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">Near-Zero</div>
+          <div class="stat-label">Presence in "best gut supplement" AI answers &amp; roundups</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value amber">8–12 mo</div>
+          <div class="stat-label">To compound durable authority in AI &amp; organic search</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value teal">3 Levers</div>
+          <div class="stat-label">AEO + content authority + backlinks</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for the Happy Gut Life team &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: HOW BUYERS SEARCH NOW -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Shift</p>
+    <h2>How Gut-Health Buyers Decide in 2026</h2>
+    <p class="subtitle">The supplement journey no longer starts on Google's blue links. It starts inside an AI answer, an "expert-ranked" roundup, or a Reddit thread — and ends with whatever brand those surfaces cite.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🤖</div>
+        <h3>AI Answer Engines</h3>
+        <ul>
+          <li>"Best probiotic for bloating?" returns a <em>short list of named brands</em> — not 10 links</li>
+          <li>ChatGPT, Gemini, Perplexity &amp; Google AI Overviews now sit above organic results</li>
+          <li>If you're not cited, you're not considered</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📋</div>
+        <h3>Expert Roundups</h3>
+        <ul>
+          <li>"Dietitian-ranked," "pharmacist-ranked" lists from U.S. News, Innerbody, nutrition blogs</li>
+          <li>These are exactly what AI engines quote as their sources</li>
+          <li>Inclusion is earned through outreach &amp; authority — not ads</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <h3>Reddit &amp; Communities</h3>
+        <ul>
+          <li>r/Microbiome, r/SIBO, r/guthealth threads rank on page one for supplement queries</li>
+          <li>Reddit is one of the most-cited domains in AI Overviews</li>
+          <li>Real-person recommendations carry outsized trust</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Why this matters for Happy Gut:</strong> Your competitors aren't winning because they have better science — they're winning because they show up on the three surfaces above. That's a fixable, mechanical gap.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 3: CURRENT STATE / THE PARADOX -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Current State</p>
+    <h2>The Authority Paradox</h2>
+    <p class="subtitle">Happy Gut Life is sitting on the single most valuable asset in this category — a real, board-certified MD founder with a bestselling book — and almost none of it is being converted into search &amp; AI visibility.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h3 class="green">What's Working — Your Unfair Advantages</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">✅ <strong>Dr. Vincent Pedre, MD</strong> — board-certified, Mount Sinai instructor, 20+ yrs clinical</li>
+          <li class="mb-8">✅ <strong>Bestselling book "Happy Gut®"</strong> — instant E-E-A-T most DTC brands can't buy</li>
+          <li class="mb-8">✅ <strong>Gut C.A.R.E.® framework</strong> — Cleanse · Activate · Restore · Enhance — a trademarked, ownable system</li>
+          <li class="mb-8">✅ <strong>Full product ladder</strong> — supplements, low-acid coffee, programs &amp; quiz</li>
+          <li class="mb-8">✅ <strong>Premium, doctor-formulated positioning</strong> buyers will pay $55–$102 for</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">⚠️ <strong>Invisible in AI answers</strong> for the questions your buyers actually ask</li>
+          <li class="mb-8">⚠️ <strong>Absent from expert roundups</strong> that AI engines cite as sources</li>
+          <li class="mb-8">⚠️ <strong>Little Reddit footprint</strong> in the gut-health communities driving discovery</li>
+          <li class="mb-8">⚠️ <strong>Dr. Pedre's authority isn't structured</strong> for machines to read &amp; attribute</li>
+          <li class="mb-8">⚠️ <strong>Thin authority backlinks</strong> vs. venture-backed competitors</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation danger">
+      <strong>The core finding:</strong> You're being out-marketed, not out-credentialed. Brands with a fraction of your clinical authority own the surfaces where decisions get made.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 4: AI VISIBILITY AUDIT -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">AI Visibility Audit</p>
+    <h2>Where You Show Up — And Where You Don't</h2>
+    <p class="subtitle">A sample of high-intent buyer questions and who currently gets named in AI answers &amp; the roundups feeding them. Happy Gut Life is largely absent from all of them.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Buyer question (AI / search)</th>
+          <th>Who gets cited today</th>
+          <th class="center">Happy Gut Life</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>"Best probiotic for bloating"</td><td>Seed, Ritual, Garden of Life, Culturelle</td><td class="center"><span class="pill gap">Absent</span></td></tr>
+        <tr><td>"Best supplement for leaky gut"</td><td>Innerbody top-5, dietitian blogs, Pendulum</td><td class="center"><span class="pill gap">Absent</span></td></tr>
+        <tr><td>"Best digestive enzymes for gas"</td><td>Just Thrive, NOW, retailer roundups</td><td class="center"><span class="pill gap">Absent</span></td></tr>
+        <tr><td>"Doctor-recommended gut health brand"</td><td>Generic lists — <em>no clear MD-led winner</em></td><td class="center"><span class="pill mid">Wide open</span></td></tr>
+        <tr><td>"28-day gut reset / cleanse program"</td><td>Misc. blogs, Amazon, generic protocols</td><td class="center"><span class="pill mid">Wide open</span></td></tr>
+        <tr><td>"Low-acid coffee for sensitive stomach"</td><td>Lifeboost, Clean Coffee, niche roasters</td><td class="center"><span class="pill gap">Absent</span></td></tr>
+      </tbody>
+    </table>
+    <div class="annotation success">
+      <strong>The opening:</strong> "Doctor-recommended" and "gut reset program" queries have <em>no entrenched winner</em>. With Dr. Pedre's credentials, these are yours to take — fast.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 5: COMPETITOR LANDSCAPE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up Against the Visible Brands</h2>
+    <p class="subtitle">The brands winning AI &amp; search visibility aren't more credentialed than you — they're just more <em>present</em>. You out-rank them on the one thing money can't buy: a real MD founder.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Authority signal</th>
+          <th class="center">Happy Gut Life</th>
+          <th class="center">Seed</th>
+          <th class="center">Ritual</th>
+          <th class="center">Just Thrive</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Real MD / clinical founder</td><td class="center"><span class="pill win">Best-in-class</span></td><td class="center"><span class="pill mid">Advisors</span></td><td class="center"><span class="pill mid">Advisors</span></td><td class="center"><span class="pill mid">Advisors</span></td></tr>
+        <tr><td>Bestselling authored book</td><td class="center"><span class="pill win">Yes</span></td><td class="center"><span class="pill gap">No</span></td><td class="center"><span class="pill gap">No</span></td><td class="center"><span class="pill gap">No</span></td></tr>
+        <tr><td>Cited in AI / expert roundups</td><td class="center"><span class="pill gap">Rare</span></td><td class="center"><span class="pill win">Heavy</span></td><td class="center"><span class="pill win">Heavy</span></td><td class="center"><span class="pill mid">Moderate</span></td></tr>
+        <tr><td>Reddit / community presence</td><td class="center"><span class="pill gap">Low</span></td><td class="center"><span class="pill win">High</span></td><td class="center"><span class="pill mid">Moderate</span></td><td class="center"><span class="pill win">High</span></td></tr>
+        <tr><td>Authority backlink profile</td><td class="center"><span class="pill gap">Thin</span></td><td class="center"><span class="pill win">Strong</span></td><td class="center"><span class="pill win">Strong</span></td><td class="center"><span class="pill mid">Building</span></td></tr>
+        <tr><td>Content publishing velocity</td><td class="center"><span class="pill mid">Low</span></td><td class="center"><span class="pill win">High</span></td><td class="center"><span class="pill win">High</span></td><td class="center"><span class="pill mid">Moderate</span></td></tr>
+      </tbody>
+    </table>
+    <div class="annotation danger">
+      <strong>Gap alert:</strong> Every red cell above is a visibility &amp; distribution gap — not a credibility gap. That's the cheapest kind of gap to close.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 6: KEYWORD / QUESTION OPPORTUNITY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Opportunity</p>
+    <h2>The Questions Worth Owning</h2>
+    <p class="subtitle">High-intent, high-volume questions where Dr. Pedre's authority lets Happy Gut become <em>the</em> cited answer. Relative opportunity scored on intent, winnability &amp; fit.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row"><span class="bar-label">Doctor-recommended gut brand</span><div class="bar-track"><div class="bar-fill teal" style="width:95%;">Highest fit</div></div></div>
+      <div class="bar-row"><span class="bar-label">Gut reset / 28-day program</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">Very high</div></div></div>
+      <div class="bar-row"><span class="bar-label">Best probiotic for bloating</span><div class="bar-track"><div class="bar-fill amber" style="width:80%;">High volume</div></div></div>
+      <div class="bar-row"><span class="bar-label">Leaky gut supplement</span><div class="bar-track"><div class="bar-fill amber" style="width:74%;">High</div></div></div>
+      <div class="bar-row"><span class="bar-label">Digestive enzymes for gas</span><div class="bar-track"><div class="bar-fill amber" style="width:66%;">Strong</div></div></div>
+      <div class="bar-row"><span class="bar-label">Low-acid coffee, sensitive gut</span><div class="bar-track"><div class="bar-fill amber" style="width:58%;">Niche, ownable</div></div></div>
+      <div class="bar-row"><span class="bar-label">Bloating / brain fog / energy</span><div class="bar-track"><div class="bar-fill gray" style="width:50%;">Top-of-funnel</div></div></div>
+    </div>
+    <div class="annotation">
+      <strong>How we'd attack it:</strong> Cluster these into pillar pages + supporting articles, structure Dr. Pedre's authorship for AI attribution, then earn roundup citations &amp; Reddit mentions that point machines back to you. <em>(Exact volumes confirmed against your Search Console after kickoff.)</em>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 7: REDDIT PLAYBOOK -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Community Playbook</p>
+    <h2>The Reddit &amp; Community Layer</h2>
+    <p class="subtitle">Reddit is one of the most-cited sources in AI Overviews and ranks on page one for gut-health queries. We map the right communities and earn authentic presence — never spam.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="amber">Where your buyers already are</h3>
+        <table>
+          <thead><tr><th>Community</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">r/Microbiome</td><td>Science-leaning, recommendation-heavy</td></tr>
+            <tr><td class="mono">r/SIBO</td><td>High-intent, underserved sufferers</td></tr>
+            <tr><td class="mono">r/guthealth</td><td>Broad discovery &amp; "what worked for you"</td></tr>
+            <tr><td class="mono">r/Supplements</td><td>Brand comparison &amp; vetting</td></tr>
+            <tr><td class="mono">r/leakygut</td><td>Direct match to ENHANCE / Advantage</td></tr>
+            <tr><td class="mono">r/Constipation</td><td>Direct match to RESTORE / enzymes</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="teal">How we earn presence (not spam)</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">🔎 <strong>Landscape mapping</strong> — find the threads already ranking &amp; getting cited by AI</li>
+          <li class="mb-8">💡 <strong>Genuinely helpful answers</strong> — Dr. Pedre-backed expertise, disclosed &amp; rule-compliant</li>
+          <li class="mb-8">🌱 <strong>Thread seeding &amp; new posts</strong> — surface the questions where Happy Gut is the best answer</li>
+          <li class="mb-8">🔁 <strong>Citation loop</strong> — Reddit mentions → AI Overviews → branded search → site</li>
+          <li class="mb-8">📊 <strong>Track lift</strong> — monitor which threads start surfacing in AI answers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 8: STRATEGY -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three Levers That Compound</h2>
+    <p class="subtitle">AEO captures demand. Content builds the authority AI engines reward. Backlinks make machines trust you. Run together, they compound into durable AI visibility.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>AEO — Answer Engine Optimization</h3>
+        <ul>
+          <li>Get Happy Gut named in AI answers &amp; expert roundups</li>
+          <li>Structure Dr. Pedre's authorship for machine attribution</li>
+          <li>Win the "doctor-recommended" category outright</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">✍️</div>
+        <h3>Content Authority</h3>
+        <ul>
+          <li>Pillar pages &amp; clusters around the Gut C.A.R.E.® system</li>
+          <li>AI-assisted drafts refined by expert editors</li>
+          <li>Answer the exact questions buyers ask AI</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Authority Backlinks</h3>
+        <ul>
+          <li>DA40–DA50+ placements that signal trust</li>
+          <li>Leverage the book &amp; founder for earned mentions</li>
+          <li>Close the link gap vs. funded competitors</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Plus the community layer:</strong> Reddit optimization wraps around all three — seeding the threads AI cites and turning real recommendations into branded demand.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 9: ROADMAP -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">A fast, sequenced start — baseline first, authority structured early, visibility compounding by quarter's end.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Baseline &amp; Foundation</h4>
+        <ul>
+          <li>GSC + AI visibility benchmark vs. top competitors</li>
+          <li>Keyword &amp; question clustering (ClusterMagic)</li>
+          <li>Structure Dr. Pedre author authority on-site</li>
+          <li>Subreddit landscape mapping</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Seed</h4>
+        <ul>
+          <li>Publish first pillar + cluster content</li>
+          <li>Launch AEO placements &amp; roundup outreach</li>
+          <li>Begin Reddit thread discovery &amp; helpful answers</li>
+          <li>First authority backlinks placed</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Compound &amp; Measure</h4>
+        <ul>
+          <li>Scale content velocity on winning clusters</li>
+          <li>Expand AEO into "doctor-recommended" category</li>
+          <li>Re-benchmark AI visibility vs. baseline</li>
+          <li>Quarterly performance report &amp; strategy session</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Note:</strong> Exact deliverable counts scale with the package selected on the next slide.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 10: INVESTMENT — AI VISIBILITY PACKAGES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Investment</p>
+    <h2>Choose Your AI Visibility Package</h2>
+    <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility.</p>
+    <div class="price-grid cols-3">
+      <div class="price-card">
+        <div class="price-tier">AI Visibility Starter</div>
+        <div class="price-amt">$1,750<span>/mo</span></div>
+        <div class="price-cadence">Get your brand into AI conversations</div>
+        <ul>
+          <li>5 AEO placements / month</li>
+          <li>10 SEO articles / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Quarterly performance report</li>
+        </ul>
+        <div class="price-prepay">
+          <div class="lbl">Quarterly prepay — 10% off</div>
+          <div class="amt">$4,725</div>
+          <div class="eff">$1,575/mo effective</div>
+          <span class="price-save">Save $525</span>
+        </div>
+      </div>
+      <div class="price-card popular">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-tier">AI Growth Engine</div>
+        <div class="price-amt">$3,450<span>/mo</span></div>
+        <div class="price-cadence">Accelerate authority + content velocity</div>
+        <ul>
+          <li>8 AEO placements / month</li>
+          <li>25 SEO articles / month</li>
+          <li>2 DA40+ authority backlinks / month</li>
+          <li>Full thread seeding + new post creation</li>
+          <li>Backlink target prioritization</li>
+          <li>Keyword cluster expansion</li>
+          <li>Quarterly performance reporting</li>
+        </ul>
+        <div class="price-prepay">
+          <div class="lbl">Quarterly prepay — 10% off</div>
+          <div class="amt">$9,315</div>
+          <div class="eff">$3,105/mo effective</div>
+          <span class="price-save">Save $1,035</span>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">AI Authority Accelerator</div>
+        <div class="price-amt">$5,250<span>/mo</span></div>
+        <div class="price-cadence">Dominate your category in AI search</div>
+        <ul>
+          <li>12 AEO placements / month</li>
+          <li>40 SEO articles / month</li>
+          <li>2 DA50+ authority backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Quarterly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+        <div class="price-prepay">
+          <div class="lbl">Quarterly prepay — 10% off</div>
+          <div class="amt">$14,175</div>
+          <div class="eff">$4,725/mo effective</div>
+          <span class="price-save">Save $1,575</span>
+        </div>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, the Reddit optimization process, and monthly AI visibility benchmarking vs. your top competitors.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 11: CLUSTERMAGIC ADD-ON -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Add-On · Separate Pricing</p>
+    <h2>ClusterMagic Content Velocity</h2>
+    <p class="subtitle">Need more publishing horsepower than your package includes? Bolt on ClusterMagic content — billed monthly or at a locked quarterly rate. No setup fees, no long onboarding.</p>
+    <div class="price-grid cols-4">
+      <div class="price-card">
+        <div class="price-tier">Starter — 25 articles/mo</div>
+        <div class="price-amt">$700<span>/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="lbl">3-month prepay</div>
+          <div class="amt">$1,750</div>
+          <div class="eff">$583/mo effective</div>
+          <span class="price-save">Save $350</span>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Growth — 40 articles/mo</div>
+        <div class="price-amt">$1,100<span>/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="lbl">3-month prepay</div>
+          <div class="amt">$2,700</div>
+          <div class="eff">$900/mo effective</div>
+          <span class="price-save">Save $600</span>
+        </div>
+      </div>
+      <div class="price-card popular">
+        <div class="price-badge">Most Popular</div>
+        <div class="price-tier">Velocity — 50 articles/mo</div>
+        <div class="price-amt">$1,350<span>/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="lbl">3-month prepay</div>
+          <div class="amt">$3,400</div>
+          <div class="eff">$1,133/mo effective</div>
+          <span class="price-save">Save $650</span>
+        </div>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Scale — 100 articles/mo</div>
+        <div class="price-amt">$2,700<span>/mo</span></div>
+        <div class="price-cadence">month-to-month</div>
+        <div class="price-prepay">
+          <div class="lbl">3-month prepay</div>
+          <div class="amt">$7,000</div>
+          <div class="eff">$2,333/mo effective</div>
+          <span class="price-save">Save $1,100</span>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>How it fits:</strong> Your AI Visibility package already includes a content allotment. ClusterMagic is an optional add-on for brands that want to flood their topic clusters and out-publish competitors faster — priced separately so you only pay for the velocity you want.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 12: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="12">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Compounding Looks Like</h2>
+    <p class="subtitle">Illustrative trajectory for an MD-led brand executing all three levers. Targets are calibrated against your baseline after kickoff.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🌱</div>
+        <h3>Month 3</h3>
+        <ul>
+          <li>Baseline AI visibility established &amp; tracked</li>
+          <li>First pillar clusters indexed &amp; ranking</li>
+          <li>Initial roundup &amp; Reddit citations live</li>
+          <li>Dr. Pedre author authority structured</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📈</div>
+        <h3>Month 6</h3>
+        <ul>
+          <li>Named in AI answers for priority questions</li>
+          <li>"Doctor-recommended" category traction</li>
+          <li>Authority backlinks compounding</li>
+          <li>Measurable lift in non-brand organic</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🏆</div>
+        <h3>Month 12</h3>
+        <ul>
+          <li>Durable AI visibility across the cluster</li>
+          <li>Recognized MD-led category leader</li>
+          <li>Reddit + roundups feeding branded demand</li>
+          <li>Compounding moat competitors can't buy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Why we're confident:</strong> Most competitors are buying visibility with ad dollars. Happy Gut can <em>earn</em> it with authority it already owns — which is cheaper to sustain and far harder to displace.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Happy Gut Life &mdash; AI Visibility Audit</span></div>
+  </div>
+
+  <!-- SLIDE 13: NEXT STEPS -->
+  <div class="slide dark" data-slide="13">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Turn Authority Into Visibility</h1>
+      <p class="subtitle" style="text-align:center;">You already have what every competitor is trying to fake: a real doctor, a real book, a real system. Let's make the machines — and the buyers asking them — know it.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Discovery call → confirm baseline, pick a package, kick off in week one.</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.6); margin-top:8px;">EmberTribe &nbsp;·&nbsp; decks.embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; June 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 13</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active'); curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active'); nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
