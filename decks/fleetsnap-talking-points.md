@@ -121,3 +121,13 @@ If asked why Direct is so high: "Some of that is your logged-in customers using 
 "All three of these you could run in-house. I've given you the data either way. If you'd rather we run it so you can focus on the product, that's where EmberTribe comes in. No pressure on this call."
 
 "Of those three, which feels most urgent to you?"
+
+---
+
+## Slide 10 · Appendix (only if he asks for specifics)
+
+"I actually audited your live HTML, so I can be specific. Right now every page serves the same title and no meta description, and the pages are built so that Google and AI crawlers see an empty shell until the JavaScript loads."
+
+"The clearest example: your earnings tool, the page Google shows 17,000 times, is titled 'AI Inbox and Claims Assistant' to someone searching for an earnings calculator. We'd change it to 'Free Turo Earnings Statement Generator.'"
+
+"The fixes are straightforward: unique titles and descriptions per page, prerender the marketing pages so there's real content to read, then add proper headings and structured data. And the good news is your robots file already welcomes ChatGPT and GPTBot, so once the pages have content, that AEO work starts paying off."
