@@ -43,3 +43,10 @@ embertribe-decks/
 3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/`, referenced as `../images/...` from inside a client folder)
 4. **`pitch-deck` skill** — if something needs changing, flag it for Josh
 5. **`seo-growth-roadmap` skill** — canonical copy is mirrored in both `embertribe-decks` and `EmberTribe`; supporting scripts (site crawl, PageSpeed, GA4/GSC pulls, xlsx generators) live in `EmberTribe/scripts/`. Keep both copies in sync when editing.
+
+## Internal docs (password-gated)
+
+- `decks/internal/` — internal team docs (setup plans, training guides), NOT for prospects
+- Everything under `decks.embertribe.com/internal/*` is protected by HTTP Basic Auth via `functions/internal/_middleware.js` (Cloudflare Pages Function at repo root)
+- Password check only, any username works. Default password lives in the middleware; override with `INTERNAL_DOCS_PASSWORD` env var in the Pages project settings
+- Organize by project: `decks/internal/{project-slug}/{doc}.html`

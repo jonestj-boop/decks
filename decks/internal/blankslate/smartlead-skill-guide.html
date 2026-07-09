@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smartlead Campaign Skill — Team Training Guide</title>
+<style>
+  :root {
+    --ember: #F05A28;
+    --dark: #1a1d23;
+    --slate: #4a5261;
+    --light: #f6f7f9;
+    --border: #e3e6ea;
+    --green: #1e7d4f;
+    --red: #c0392b;
+    --codebg: #22252b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--dark);
+    line-height: 1.55;
+    background: #fff;
+  }
+  .page { max-width: 860px; margin: 0 auto; padding: 0 32px 80px; }
+  header { background: var(--dark); color: #fff; padding: 40px 32px 36px; margin-bottom: 40px; }
+  header .inner { max-width: 860px; margin: 0 auto; }
+  .eyebrow { color: var(--ember); font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; }
+  h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+  header p.sub { color: #aab2bf; margin-top: 8px; font-size: 15px; }
+  h2 { font-size: 20px; font-weight: 800; margin: 44px 0 14px; padding-bottom: 8px; border-bottom: 3px solid var(--ember); letter-spacing: -0.01em; }
+  h3 { font-size: 16px; font-weight: 700; margin: 26px 0 8px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 0 0 14px 22px; }
+  li { margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 14px; }
+  th { text-align: left; background: var(--light); padding: 9px 12px; border-bottom: 2px solid var(--border); font-weight: 700; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; background: var(--light); padding: 1px 6px; border-radius: 4px; }
+  pre {
+    background: var(--codebg);
+    color: #e8eaed;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: 13px; }
+  pre .c { color: #8a919e; }
+  .callout { background: var(--light); border-left: 4px solid var(--ember); padding: 14px 18px; border-radius: 0 6px 6px 0; margin: 16px 0; font-size: 14.5px; }
+  .warn { border-left-color: var(--red); }
+  .warn strong:first-child { color: var(--red); }
+  .tip strong:first-child { color: var(--green); }
+  .callout strong:first-child { color: var(--ember); }
+  .muted { color: var(--slate); font-size: 13.5px; }
+  .stepnum {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--ember); color: #fff; font-weight: 800; font-size: 14px;
+    margin-right: 10px; flex-shrink: 0;
+  }
+  .steptitle { display: flex; align-items: center; }
+  @media print {
+    header, pre { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    h2 { page-break-after: avoid; }
+    pre, table { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="eyebrow">EmberTribe &middot; Internal Training</div>
+    <h1>Smartlead Campaign Skill — How to Build &amp; Run Campaigns</h1>
+    <p class="sub">Prospeo lead sourcing → sequence generation → Smartlead launch &middot; For Deanna &amp; Alex &middot; July 2026</p>
+  </div>
+</header>
+
+<div class="page">
+
+  <h2>What This System Is</h2>
+  <p>We run cold outreach through <strong>Claude Code skills</strong> in the <strong>Outreach</strong> project. Instead of clicking through Smartlead and Prospeo manually, you describe what you want in plain English and Claude runs the scripts. Three skills work together:</p>
+  <table>
+    <tr><th>Skill</th><th>What it does</th></tr>
+    <tr><td><code>campaign-strategy</code></td><td>Designs messaging: takes a business doc + audience, picks an angle, writes a 3–4 email sequence in Smartlead-ready format</td></tr>
+    <tr><td><code>find-leads</code></td><td>Sources prospects via Prospeo (search → enrich with verified emails → push to Smartlead), with a local database that prevents paying twice for the same lead</td></tr>
+    <tr><td><code>smartlead</code></td><td>Manages Smartlead via API: create campaigns, save sequences, add leads, pull stats</td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>The big idea:</strong> you don't need to memorize the commands below. Open Claude Code in the Outreach project and say things like <em>"create a Smartlead campaign called BlankSlate — Security VP Compliance under the BlankSlate client, generate a sequence from the strategy doc, and source 50 test leads."</em> Claude finds the skills and runs them. The commands are here so you understand what's happening and can verify it.
+  </div>
+
+  <h2>Before You Start — Access Checklist</h2>
+  <ol>
+    <li><strong>Claude Code installed</strong> and working on your machine</li>
+    <li><strong>Outreach project</strong> on your machine: <code>~/Claude Code Projects/Outreach</code> (get a copy from Josh — includes the three skills)</li>
+    <li><strong><code>.env</code> file</strong> in the Outreach project root with two keys (get values from Josh, never commit this file):
+<pre><code>PROSPEO_API_KEY=...
+SMARTLEAD_API_KEY=...</code></pre></li>
+    <li><strong>Smartlead login</strong> — to eyeball campaigns before launch (the API stages everything; a human always reviews in the UI)</li>
+    <li><strong><code>uv</code> installed</strong> — the Python runner the scripts use (<code>curl -LsSf https://astral.sh/uv/install.sh | sh</code>)</li>
+  </ol>
+  <p class="muted">All commands below run from the Outreach project root. Rate limit: Smartlead allows 10 API requests per 2 seconds — the scripts handle this.</p>
+
+  <h2>The Campaign Workflow</h2>
+
+  <h3 class="steptitle"><span class="stepnum">1</span> Create the campaign</h3>
+<pre><code>uv run .claude/skills/smartlead/scripts/campaigns.py create \
+  --name "BlankSlate — Security VP Compliance — Jul 2026" \
+  --client-id &lt;BLANKSLATE_CLIENT_ID&gt;</code></pre>
+  <p>Note the campaign ID it returns — every later step uses it. <code>--client-id</code> assigns the campaign to the BlankSlate client workspace in Smartlead so their data stays separated. List existing campaigns anytime with <code>campaigns.py list</code>.</p>
+  <div class="callout tip">
+    <strong>Naming convention:</strong> <code>{Client} — {Segment/Persona} — {Month Year}</code>. With up to 7 BlankSlate campaigns running at once, names are how we stay sane.
+  </div>
+
+  <h3 class="steptitle"><span class="stepnum">2</span> Generate the email sequence</h3>
+<pre><code>uv run .claude/skills/smartlead/scripts/generate_sequence.py \
+  --audience "VP Compliance at private security firms" \
+  --offer "Knowledge Gap Audit for compliance training" \
+  --output sequence.md</code></pre>
+  <p>Better: ask Claude to use the <code>campaign-strategy</code> skill with BlankSlate's strategy doc as input — it extracts value props, case studies (USAF, Mass General), and pain points, then writes the sequence. The output is a markdown file with a sending schedule and 4–5 emails using merge tags like <code>{{first_name}}</code> and <code>{{company_name}}</code>.</p>
+  <div class="callout warn">
+    <strong>Human review required:</strong> read and edit <code>sequence.md</code> before saving. For BlankSlate, campaign copy also needs Derek's approval before launch. Never push AI copy straight to a live campaign.
+  </div>
+
+  <h3 class="steptitle"><span class="stepnum">3</span> Save the sequence to the campaign</h3>
+<pre><code>uv run .claude/skills/smartlead/scripts/sequences.py save \
+  --campaign &lt;CAMPAIGN_ID&gt; \
+  --file sequence.md</code></pre>
+
+  <h3 class="steptitle"><span class="stepnum">4</span> Source leads (Prospeo → Smartlead)</h3>
+  <p>The full pipeline searches Prospeo, enriches only verified emails, dedupes against our lead database, and pushes to the campaign:</p>
+<pre><code>uv run .claude/skills/find-leads/scripts/pipeline.py \
+  --industry "Security &amp; Investigations" \
+  --job-title "VP Compliance,VP Operations" \
+  --size "51-200" \
+  --location "United States" \
+  --max-per-company 2 \
+  --campaign &lt;CAMPAIGN_ID&gt;</code></pre>
+  <p>Or run it in two steps when you want to check list quality before spending enrichment credits:</p>
+<pre><code><span class="c"># Search first (cheap: 1 credit per 25-result page) and review the output</span>
+uv run .claude/skills/find-leads/scripts/search_prospeo.py \
+  --industry "Security &amp; Investigations" --job-title "VP Compliance" \
+  --size "51-200" --location "United States" --output results.json
+
+<span class="c"># Then enrich (1 credit per verified email) and push</span>
+uv run .claude/skills/find-leads/scripts/enrich_prospeo.py \
+  --input results.json --output enriched.json --verified-only
+uv run .claude/skills/find-leads/scripts/smartlead_push.py \
+  --input enriched.json --campaign &lt;CAMPAIGN_ID&gt;</code></pre>
+  <div class="callout warn">
+    <strong>Prospeo credits are the main cost.</strong> Search costs 1 credit per page (25 results); enrichment costs 1 credit per verified email. Start every new segment with a <em>small</em> search, check the fit of who comes back, then scale. The database at <code>workspace/data/leads.db</code> automatically skips people we've already enriched — never use <code>--no-dedup</code> unless Josh says so.
+  </div>
+
+  <h3 class="steptitle"><span class="stepnum">5</span> Review in Smartlead, then launch</h3>
+  <p>In the Smartlead UI, open the campaign and verify before hitting start:</p>
+  <ul>
+    <li>Sequence steps, delays, and merge tags render correctly (send yourself a test)</li>
+    <li>Leads loaded with correct fields — spot-check 10</li>
+    <li><strong>Correct sender mailboxes attached</strong> (BlankSlate branded alt-domain mailboxes only)</li>
+    <li>Sending schedule respects the current ramp week's daily cap</li>
+    <li>Warmup has run <strong>at least 2–3 weeks</strong> on every attached mailbox and deliverability status is green</li>
+  </ul>
+
+  <h3 class="steptitle"><span class="stepnum">6</span> Monitor &amp; iterate</h3>
+  <p>Weekly, ask Claude in the Outreach project to pull campaign stats (opens, clicks, replies, positive replies by segment) and summarize what's working. This feeds the monthly optimization cycle in the SOW: kill quiet segments/angles fast, iterate copy on whatever gets replies, and generate the monthly report.</p>
+
+  <h2>BlankSlate-Specific Rules</h2>
+  <table>
+    <tr><th>Rule</th><th>Why</th></tr>
+    <tr><td>7,000 sends/mo hard cap, ramped over 10 weeks</td><td>Contractual + protects deliverability on fresh domains</td></tr>
+    <tr><td>Max 7 simultaneous campaigns, 4–5 emails each</td><td>Signed scope</td></tr>
+    <tr><td>Only send from BlankSlate's branded alt-domain mailboxes</td><td>Client requirement; never mix clients' mailboxes across campaigns</td></tr>
+    <tr><td>Derek approves copy before launch</td><td>Agreed process</td></tr>
+    <tr><td>Positive replies route to Lightfield CRM automatically; <strong>client owns replies</strong></td><td>One-time automation (developer build); we don't respond on their behalf</td></tr>
+    <tr><td>Warmup stays ON permanently on all mailboxes</td><td>Maintains sender reputation while cold volume runs</td></tr>
+  </table>
+
+  <h2>Troubleshooting</h2>
+  <table>
+    <tr><th>Symptom</th><th>Likely cause / fix</th></tr>
+    <tr><td>Script errors about missing API key</td><td><code>.env</code> missing or not in the project root you're running from</td></tr>
+    <tr><td>Search returns few/zero leads</td><td>Filters too narrow — loosen one at a time (industry names must match Prospeo's list; ask Claude to check <code>find-leads/enums</code>)</td></tr>
+    <tr><td>Enrichment returns far fewer than searched</td><td>Normal — only verified emails are kept, and known leads are deduped. Check the run summary for "skipped duplicates"</td></tr>
+    <tr><td>Leads pushed but not visible in campaign</td><td>Wrong campaign ID — run <code>campaigns.py list</code> and confirm</td></tr>
+    <tr><td>API calls failing intermittently</td><td>Rate limit (10 req / 2 sec) — rerun; scripts are safe to retry</td></tr>
+    <tr><td>Open/reply rates tanking</td><td>Stop sends, check mailbox warmup health + spam placement in Smartlead before resuming. Flag Josh</td></tr>
+  </table>
+
+  <h2>Where Things Live</h2>
+  <table>
+    <tr><th>Thing</th><th>Location</th></tr>
+    <tr><td>Skills (the automation)</td><td><code>Outreach/.claude/skills/</code> — <code>smartlead</code>, <code>find-leads</code>, <code>campaign-strategy</code></td></tr>
+    <tr><td>Campaign outputs (search results, enriched leads, API responses)</td><td><code>Outreach/workspace/outreach/{date} - {campaign}/</code></td></tr>
+    <tr><td>Lead database (dedup + history)</td><td><code>Outreach/workspace/data/leads.db</code></td></tr>
+    <tr><td>API keys</td><td><code>Outreach/.env</code> (never commit, never paste into chat/Slack)</td></tr>
+    <tr><td>BlankSlate strategy + setup plan</td><td><code>EmberTribe/workspace/docs/blankslate-cold-outreach/</code></td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>Handoff goal:</strong> after the training call, you should be able to run steps 1–6 for a new segment start-to-finish without Josh. We'll do one demo campaign together at small test volume first.
+  </div>
+
+</div>
+</body>
+</html>
