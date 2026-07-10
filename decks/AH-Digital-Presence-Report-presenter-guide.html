@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AH Digital Presence Report: Walkthrough Guide</title>
+<style>
+  :root{
+    --ink:#16202e; --body:#2b3645; --muted:#697587; --line:#e3e8ef;
+    --bg:#f6f8fb; --card:#ffffff; --ember:#ff333d; --navy:#0d2a45; --gold:#c79a3a;
+    --say:#fff5f5; --sayb:#ffd6d8; --data:#eef4ff; --datab:#c9ddff;
+    --act:#eafaf1; --actb:#b6e8cd; --ask:#fff8e8; --askb:#f6e3b0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15.5px;line-height:1.55;}
+  a{color:var(--ember);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  .topbar{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;
+    padding:10px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.18);}
+  .topbar .brand{font-weight:800;letter-spacing:-.3px;margin-right:8px;font-size:14px;white-space:nowrap;}
+  .topbar .brand b{color:var(--ember);}
+  .topbar a{color:rgba(255,255,255,.82);font-size:12.5px;font-weight:600;}
+  .topbar a:hover{color:#fff;text-decoration:none;}
+  .topbar .slidenums a{display:inline-block;padding:1px 7px;text-align:center;
+    background:rgba(255,255,255,.1);border-radius:4px;margin:1px;font-size:11.5px;white-space:nowrap;}
+  .topbar .slidenums a:hover{background:var(--ember);}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 22px 90px;}
+  h1{font-size:30px;letter-spacing:-.6px;color:var(--ink);margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:6px;}
+  .links{font-size:13px;margin-bottom:24px;}
+  .links a{font-weight:700;}
+
+  section{margin-bottom:30px;}
+  h2.sec{font-size:13px;text-transform:uppercase;letter-spacing:1.4px;color:var(--ember);
+    font-weight:800;margin:0 0 12px;padding-bottom:7px;border-bottom:2px solid var(--line);}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 2px rgba(16,32,50,.04);}
+  .card h3{margin:0 0 8px;font-size:17px;color:var(--ink);letter-spacing:-.2px;}
+
+  .pill{display:inline-block;font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.6px;padding:2px 9px;border-radius:20px;vertical-align:middle;}
+  .pill.crit{background:#fdecec;color:#c5343a;border:1px solid #f5c4c6;}
+  .pill.note{background:#eef2f7;color:#5b6b80;border:1px solid #d8e0ea;}
+
+  .box{border-radius:9px;padding:11px 14px;margin:9px 0;border:1px solid;}
+  .box .lab{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    display:block;margin-bottom:4px;}
+  .say{background:var(--say);border-color:var(--sayb);} .say .lab{color:var(--ember);}
+  .say p{margin:0;font-size:15.5px;color:#3a2a2b;font-style:italic;}
+  .data{background:var(--data);border-color:var(--datab);} .data .lab{color:#1d4ed8;}
+  .act{background:var(--act);border-color:var(--actb);} .act .lab{color:#177245;}
+  .ask{background:var(--ask);border-color:var(--askb);} .ask .lab{color:#9a6b00;}
+  .box p{margin:0;}
+  .box .qa{margin:7px 0 0;}
+  .box .qa b{color:var(--ink);}
+
+  .cue{margin:8px 0 2px;padding:9px 14px 10px;background:#fbfcfe;border:1px dashed #cdd6e2;border-radius:9px;}
+  .cue .lab{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
+  .cue ul{margin:0;padding-left:18px;}
+  .cue li{margin-bottom:3px;font-size:14px;line-height:1.42;}
+  .cue li b{color:var(--ink);}
+
+  .snum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;
+    background:var(--navy);color:#fff;border-radius:7px;font-weight:800;font-size:14px;margin-right:10px;}
+
+  ul.tight{margin:6px 0 0;padding-left:20px;} ul.tight li{margin-bottom:5px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+
+  .ref{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;font-size:14px;}
+  @media(max-width:720px){.ref{grid-template-columns:1fr;}}
+  .ref div{padding:6px 0;border-bottom:1px dashed var(--line);}
+  .ref b{color:var(--ink);}
+
+  .callout{background:var(--navy);color:#fff;border-radius:12px;padding:20px 22px;}
+  .callout h3{color:#fff;margin-top:0;}
+  .callout .big{font-size:18px;line-height:1.5;}
+  .callout .big b{color:#ffd9db;}
+
+  .check li{margin-bottom:7px;}
+  .tag{font-size:11px;font-weight:700;color:var(--muted);}
+  .print{font-size:12px;color:var(--muted);}
+  @media print{.topbar{display:none;} body{background:#fff;font-size:11pt;} .card{break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">AH Digital Presence Report · Presenter Guide</span>
+  <a href="#start">Start</a>
+  <a href="#story">Story</a>
+  <a href="#open">Open</a>
+  <span class="slidenums">
+    <a href="#sec1">01</a><a href="#sec2">02</a><a href="#sec3">03</a><a href="#sec4">04</a>
+    <a href="#sec5">05</a><a href="#sec6">06</a><a href="#sec7">07</a>
+  </span>
+  <a href="#objections">Pushback</a>
+  <a href="#faqs">FAQs</a>
+  <a href="#close">Close</a>
+  <a href="#numbers">Numbers</a>
+</div>
+
+<div class="wrap">
+
+  <h1>Adriana Hoyos: US Digital Presence Walkthrough</h1>
+  <div class="sub">Presenter guide for the US Market Digital Presence Assessment (DC showroom). Keep it open on a second screen during the call. Not for the client.</div>
+  <div class="links">
+    Live report: <a href="https://decks.embertribe.com/AH-Digital-Presence-Report.html" target="_blank">decks.embertribe.com/AH-Digital-Presence-Report.html</a>
+    <div class="print" style="margin-top:4px;">Audience: report is addressed to the "Adriana Hoyos US Showroom Team." Likely presented to Shevy (fractional CMO across Ayoub, Caligaris, and Adriana Hoyos) and/or the DC-side team, who may need to carry this case up to Adriana Hoyos HQ leadership (Sean, per prior EmberTribe notes) themselves. This is not the CRO audit, it's a narrower, more diplomatic document: the goal is to win a location page and a faster local content workflow before the DC showroom opens.</div>
+  </div>
+
+  <!-- ============ BEFORE YOU START ============ -->
+  <section id="start">
+    <h2 class="sec">Before you start: mindset</h2>
+    <div class="card">
+      <div class="box ask" style="margin-top:0;"><span class="lab">This is a different kind of document than a CRO/site audit</span>
+        <p class="qa">There's no equivalent recorded walkthrough call for this report the way there was for the Ayoub CRO audit, so this guide is built from the document itself, not from a transcript. Read it once end to end before presenting; the tone here is more diplomatic and less "here's what's broken" than a conversion audit.</p>
+      </div>
+      <p style="margin-top:0;">The report's own closing section names the tension directly: <i>"Nothing in this document is a request to operate outside brand guidelines or reduce headquarters' role... What we are asking for is the infrastructure to be discoverable in the cities where Adriana Hoyos has showrooms."</i> Lead with that framing, not with the technical findings.</p>
+      <ul class="tight check">
+        <li><b>This is a business case for internal advocacy, not a sales pitch to a skeptical prospect.</b> The people in the room may need to take this exact argument to their own HQ. Give them language they can reuse, not just findings they have to translate themselves.</li>
+        <li><b>Never let this read as "HQ is the problem."</b> The report explicitly pre-empts that: <i>"This is not a criticism of headquarters. It is a structural gap that the brand's growth in the US market depends on solving."</i> Repeat that line if the tone in the room turns defensive of HQ.</li>
+        <li><b>Lead with the brand, not the deficiencies.</b> Executive summary line to open on: <i>"The core issue is not brand quality."</i> Adriana Hoyos has the press, the clientele, the name. The gap is purely digital infrastructure for new markets.</li>
+        <li><b>Bo Concept is a proof point, not a threat.</b> It's used throughout as evidence this is solvable (a direct comparable brand already solved it in Georgetown), not to imply AH is losing to a lesser competitor. Keep that framing consistent.</li>
+        <li><b>Money framing lands with this audience.</b> Shevy in particular responds to dollars-and-decisions language over jargon (confirmed pattern from the Ayoub CRO walkthrough). Section 06's paid-ads cost argument (irrelevant landing pages raise Google's Quality Score penalty, which raises cost-per-click) is probably the single most persuasive point in the whole report for him specifically. Don't bury it, it's near the end of section 6.</li>
+      </ul>
+      <div class="box ask"><span class="lab">Pre-call checklist</span>
+        <ul class="tight" style="margin-top:2px;">
+          <li>Report open and full-screen, or this printed/PDF'd for reference alongside the live URL.</li>
+          <li>Know the one non-negotiable fact upfront: <b>Google Ads is already going to run for the DC opening one way or another.</b> Without a DC page, that spend is structurally wasted, this isn't a future risk, it's a current-plan cost.</li>
+          <li>Have effort/cost ballparks ready for at least <b>Option 1</b> (the minimum ask), since that's the one requiring no HQ workflow change and is the easiest yes.</li>
+          <li>Confirm before the call who in the room can actually approve HQ-level changes (site access, content workflow). If it's not that person, your job is arming the US team to make the case upward, not closing HQ directly.</li>
+          <li>Know your one ask: <b>approval to build the Option 1 DC location page before the showroom opens</b>, independent of any decision on Options 2 or 3.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE STORY ============ -->
+  <section id="story">
+    <h2 class="sec">The 90-second story (the spine of the whole report)</h2>
+    <div class="callout">
+      <p class="big" style="margin:0;">Adriana Hoyos has the brand: press in Architectural Digest, Elle Decor, and Robb Report, a loyal clientele, a recognized name. <b>What it doesn't have is a website built to introduce that brand to people who don't already know it.</b> 89% of all US traffic lands on the homepage via someone typing "Adriana Hoyos" directly, and Washington DC returns zero organic search results for the brand today, not one keyword. A direct comparable, Bo Concept, already ranks for 7,800+ keywords AH doesn't touch, including a dedicated Georgetown DC store page capturing 1,000 monthly searches for "contemporary furniture stores near me" alone. Underneath the SEO gap sits a structural one: a 48-hour HQ approval window and no site access mean the US team can't even respond to local opportunity, and it directly taxes paid ads too, a DC ad with nowhere relevant to land gets a lower Quality Score and costs more per click. The ask isn't independence from HQ, it's the minimum digital infrastructure to be findable in the cities where the brand already has showrooms.</p>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <p style="margin:0;"><b>The three beats, in order:</b></p>
+      <ul class="tight">
+        <li><b>1. What the data shows</b> (sections 01–04): traffic only reaches people who already know the name; DC has zero presence; a direct competitor has already solved this exact problem nearby.</li>
+        <li><b>2. Why it's happening</b> (sections 05–06): technical SEO gaps compound with an operational structure (HQ approval, no access) that blocks fixing them, and that same structure directly taxes paid ad spend.</li>
+        <li><b>3. What to do about it</b> (section 07): three scaled options, a minimum first step before the DC opening, and a closing ask framed as partnership, not independence.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ OPENING ============ -->
+  <section id="open">
+    <h2 class="sec">Opening script (first 45 seconds)</h2>
+    <div class="card">
+      <div class="box say"><span class="lab">Say</span>
+        <p>"Thanks for the time. I want to walk you through what we found looking at Adriana Hoyos's digital presence ahead of the DC showroom opening. Up front: this isn't a criticism of the brand or of headquarters, the brand side is genuinely strong, press in Architectural Digest, Elle Decor, Robb Report, a loyal following. What we looked at is narrower: can someone who's never heard of Adriana Hoyos actually find it when they search for what they want to buy, or search for a showroom near them in DC. Right now the answer is no, and I want to show you exactly why, what it's already costing in ad spend, and three ways to fix it that all keep HQ fully in control of the brand."</p>
+      </div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Frame immediately: not a brand criticism, not an HQ criticism</li><li>The question: can a stranger find AH when searching for what they want, not just the name</li><li>Preview the ask early: 3 options, HQ stays in control of all of them</li></ul></div>
+      <p style="margin-bottom:0;" class="tag">Then go to the four headline numbers (executive summary). Don't open with the technical findings, they read as criticism out of context.</p>
+    </div>
+  </section>
+
+  <!-- ============ SECTIONS ============ -->
+  <section>
+    <h2 class="sec">Section-by-section walkthrough</h2>
+
+    <!-- 01 -->
+    <div class="card" id="sec1">
+      <h3><span class="snum">01</span>Executive Summary: four numbers that tell the story</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Four stat cards: <b>89%</b> of all traffic goes to the homepage, <b>0</b> visits from DC-related searches, <b>7,800+</b> keywords a competitor ranks for that AH does not, <b>1</b> visit per month to the locations page (and that visit wasn't even DC-related).</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Four numbers, and I'd read them together. Almost all traffic goes to one page, the homepage, from people who already knew to look for Adriana Hoyos by name. Zero of that traffic comes from anyone searching for a furniture showroom in DC. A direct competitor with a real Georgetown showroom ranks for over 7,800 search terms AH has no visibility on at all. And the page listing every US showroom, the one place DC should show up, gets one visit a month, and it wasn't even someone looking for DC. The core issue isn't brand quality, it's that the site is built to serve people who already know the brand, not to introduce it."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li><b>89%</b> homepage, <b>0</b> DC visits, <b>7,800+</b> keyword gap, <b>1</b> visit/mo to locations page</li><li>Not a brand-quality problem, a discovery problem</li></ul></div>
+      <div class="box ask"><span class="lab">If asked: where does this data come from?</span><p class="qa">"SEMrush organic search analytics for the US database, a manual technical review of adrianahoyos.com, and a direct competitive comparison with Bo Concept, who runs a real showroom in Georgetown, DC. Data plus an actual look at the site, not a single automated score."</p></div>
+    </div>
+
+    <!-- 02 -->
+    <div class="card" id="sec2">
+      <h3><span class="snum">02</span>Traffic Analysis: the site reaches people who already know the brand</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Bar chart: Homepage 89% (1,306 visits), Dining Room/Chairs page 4% (56), all remaining pages combined 5% (~140), Locations page 1% (1). Keyword table: every top keyword is a "navigational" search containing the brand name itself.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"About 1,500 organic visits a month from the US sounds fine on the surface. The problem is what those visits represent. Every single top-performing keyword, 'adriana hoyos,' 'adriana hoyos furniture,' 'adriana hoyos dining chairs,' is someone who already knew the brand name before they searched. None of it is a product search, a style search, or a local search. The website isn't bringing in new customers, it's confirming the brand exists for people who were finding it anyway."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>~1,500 US organic visits/mo, <b>89% to homepage</b></li><li>Every top keyword is navigational (brand name search)</li><li>Site confirms the brand, doesn't acquire new customers</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>This sets up the "why" for section 04's keyword gap and section 07's recommendations: the fix has to be pages built for product/local search, not more brand-name content.</p></div>
+    </div>
+
+    <!-- 03 -->
+    <div class="card" id="sec3">
+      <h3><span class="snum">03</span>Washington DC Presence: zero, and building one takes real changes</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Big stat: <b>0</b> DC-related keywords driving any traffic. Side-by-side: AH's DC listing is a text entry on a shared /locations/ page (1 visit/mo, not DC-related, no schema, zero rankings) vs. Bo Concept's dedicated /stores/boconcept-georgetown/ page (ranks for "contemporary furniture stores near me," 1,000 searches/mo on that term alone).</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"This is the baseline the DC showroom opens from: zero. Not low, zero. No DC keyword rankings, no dedicated page, no local data for Google to read. Compare that to Bo Concept's Georgetown page, which alone captures 1,000 monthly searches for 'contemporary furniture stores near me.' Without building DC-specific pages before the opening, that number stays at zero no matter how much offline marketing runs, a DC designer searching for Adriana Hoyos by location will find nothing."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li><b>0</b> DC keyword rankings, no dedicated URL, no local schema today</li><li>Bo Concept Georgetown page: <b>1,000 searches/mo</b> on one term alone</li><li>Won't change on its own, offline marketing can't fix a search-visibility gap</li></ul></div>
+      <div class="box ask"><span class="lab">If asked: won't the showroom opening itself generate local buzz and searches?</span><p class="qa">"It'll generate some direct/brand searches, sure, people who heard about the opening. But someone who doesn't know the opening happened and just searches 'furniture showroom near me' or 'contemporary furniture stores near me' in DC will land on Bo Concept, not Adriana Hoyos, because that's who Google can currently match to that search. Buzz drives brand search; it doesn't create category or local search visibility, that has to be built into the site."</p></div>
+    </div>
+
+    <!-- 04 -->
+    <div class="card" id="sec4">
+      <h3><span class="snum">04</span>Competitive Gap: 7,800 keywords, and it's not about product fit</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Bo Concept: 7,800+ total keywords. Adriana Hoyos: 62. Sample table of high-volume terms AH doesn't rank for at all: "sofa bed" (22,200/mo), "bedroom ideas" (14,800), "home office" (14,800), "japandi style" (9,900), "corner couch" (5,400), "modern sofas" (3,600), "contemporary sofa" (2,900), "extending dining table" (1,600), "contemporary furniture stores near me" (1,000), "design furniture" (1,300).</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"We ran a keyword gap comparison against Bo Concept. They rank for over 7,800 keywords; Adriana Hoyos ranks for 62 unique terms in the same market. And look at what's on that missed list, sofa bed, corner couch, modern sofas, contemporary dining tables, these are exactly the product categories Adriana Hoyos designs and sells. This isn't a case of the brand not having the right product. It's that when someone searches for what AH already makes, they can't find AH."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Bo Concept <b>7,800+</b> keywords vs. AH's <b>62</b></li><li>Missed terms are categories AH already sells: sofas, dining tables, bedroom, home office</li><li>Gap is discoverability, not product-market fit</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>This is the evidence base for "the brand isn't the problem." Use it to pivot into section 05: here's specifically why Google can't match AH to these searches today.</p></div>
+    </div>
+
+    <!-- 05 -->
+    <div class="card" id="sec5">
+      <h3><span class="snum">05</span>Technical Findings: how the site is built works against it</h3>
+      <div class="box data"><span class="lab">On screen</span><p>6 issues in plain language: 28 H1 tags on the homepage (should be 1), no LocalBusiness/schema markup anywhere, keyword cannibalization (20+ pages competing for "adriana hoyos design studio," 47 URLs for "adriana hoyos dining chairs"), auto-generated/missing meta descriptions sitewide, no individual page per US showroom, backlink authority declining 12 months (Authority Score flat at 27, referring domains down ~900 → 657, ~27% decline, and most press links are nofollow).</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Six structural things are working against the site. The homepage sends Google 28 competing headline signals instead of one, so Google can't tell what the page is really about. There's no structured data anywhere telling Google 'this is a business, here's the address and hours,' so showroom info reads as plain text, not business data Maps can use. Dozens of pages compete against each other for the same searches instead of one strong page winning, one keyword alone has 47 different AH pages competing for it. Search snippets are auto-generated because no one's written custom descriptions. There's no individual page per showroom. And even the strong press, Architectural Digest, Elle Decor, Robb Report, mostly links back as 'nofollow,' so it doesn't pass ranking benefit, and overall linking domains have dropped about 27% in a year."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li><b>28 H1 tags</b> on the homepage (best practice: 1)</li><li>Zero LocalBusiness/schema markup anywhere on the site</li><li>Keyword cannibalization: <b>47 URLs</b> competing for one dining-chairs term</li><li>No custom meta descriptions on any reviewed page</li><li>No individual page for any US showroom</li><li>Authority Score flat at <b>27</b>; referring domains down <b>~27%</b> in 12 months; top press links are nofollow</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Keep this section brief and matter-of-fact, it's the most "audit-sounding" part of the report and risks tipping the tone into criticism. Land it, then move quickly into section 06's structural/operational explanation, that's the more persuasive half.</p></div>
+      <div class="box ask"><span class="lab">If asked: is this a rebuild?</span><p class="qa">"No. Most of this is additive: schema markup, meta descriptions, consolidating competing pages, and new location pages. Nothing here proposes changing the site's design or brand presentation."</p></div>
+    </div>
+
+    <!-- 06 -->
+    <div class="card" id="sec6">
+      <h3><span class="snum">06</span>Content and Access: the structure blocks local marketing, including paid</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Comparison table: 48-hour HQ content approval vs. same/next-day need; no pricing/discounts allowed; no dedicated showroom URL; only approved brand assets; no direct site access for the US team; GBP management unconfirmed for DC. Then 4 findings on how the same constraints directly cost money on paid ads: irrelevant landing pages, higher CPCs from lower Quality Score, no conversion tracking without site access, no ability to run time-sensitive campaigns.</p></div>
+      <div class="box say"><span class="lab">Say (this is the section to slow down on)</span><p>"This is where the SEO gap and an operational one meet. Right now, any US-specific content needs 48-hour HQ approval, there's no dedicated URL for any showroom, and the US team has no direct site access. That alone blocks local marketing. But it also has a direct, current cost on paid ads, which matters even more for a showroom opening. Every DC-targeted ad today points to the generic homepage, because there's no DC page to send it to. Google's Quality Score penalizes an irrelevant landing page, which raises cost-per-click, so you're already paying more for the same clicks than a competitor with a dedicated page would. And without site access, conversion tracking can't even be installed, so there's no way to prove which ad spend is working. None of this is a criticism of headquarters, it's a structural gap the brand's US growth depends on closing, and it's actively taxing whatever paid budget is already planned for the opening."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>48-hr approval, no pricing in content, no dedicated URL, no site access, GBP unconfirmed</li><li><b>Direct ad cost</b>: irrelevant landing page → lower Quality Score → higher CPC</li><li>No site access = <b>no conversion tracking</b> = can't prove what's working</li><li>Time-sensitive campaigns (opening, launches, events) structurally can't be supported</li><li>Explicitly: "not a criticism of headquarters... a structural gap"</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>This is the section most likely to land with a CMO-minded audience, because it's dollars, not rankings. If time is short, this and section 01 are the two you protect.</p></div>
+      <div class="box ask"><span class="lab">If asked: are we already wasting ad spend today, or is this future risk?</span><p class="qa">"Both, but it's not hypothetical. If any DC-targeted paid campaign runs before a dedicated page exists, and most openings run some kind of paid push, it's already paying an avoidable markup on every click and generating no usable performance data. This is a current-plan cost, not a someday risk."</p></div>
+    </div>
+
+    <!-- 07 -->
+    <div class="card" id="sec7">
+      <h3><span class="snum">07</span>Recommendations: three paths, and the ask</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Three scaled options: <b>01 Minimum Ask</b> — dedicated location pages within the existing site (e.g. adrianahoyos.com/locations/washington-dc/), full HQ oversight retained. <b>02 Recommended</b> — a US market subfolder (adrianahoyos.com/us/) with an expedited same/next-day content workflow, HQ still approves brand-level material. <b>03 Highest Potential</b> — a dedicated adrianahoyos.us site. Closing callout: the minimum step before the DC opening. Final section: "The Ask for This Conversation: Partnership, Not Independence."</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Three options, scaled by investment and how much workflow changes at HQ. Option one is the floor: a dedicated page per US showroom inside the existing site, same domain, same HQ approval process, just a page that exists and is built so Google can read it as a real location. Option two is what we'd recommend if there's appetite for it: a US section of the site with a faster, same or next-day publishing path for local content, HQ still approves anything brand-level. Option three is the highest ceiling, a fully separate US domain, the model a lot of international luxury brands use market to market. All three keep HQ in full control of brand identity and visual standards, none of them is a request for independence. The one thing I'd ask you to walk away with today: before the DC showroom opens, get sign-off on at minimum a dedicated DC location page, adrianahoyos.com/locations/washington-dc/. Without it, every dollar of offline marketing sends people to a Google search that returns nothing."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Option 1 (Minimum Ask): location pages in the existing site, zero HQ workflow change</li><li>Option 2 (Recommended): US subfolder + faster local publishing, HQ still approves brand content</li><li>Option 3 (Highest Potential): dedicated adrianahoyos.us domain</li><li>All three: <b>HQ keeps full brand control</b></li><li>The one ask: DC location page live <i>before</i> the showroom opens</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Don't ask the room to pick between all three today. Ask for the Option 1 minimum as a standalone yes, since it doesn't require any HQ policy change and can move independently of the bigger Option 2/3 decision.</p></div>
+      <div class="box ask"><span class="lab">If asked: how much does each option cost / take?</span><p class="qa">Have a ballpark ready for Option 1 specifically, it's the one most likely to get approved on this call. Option 2 and 3 are bigger asks; frame them as "here's the range, we'd scope precisely once there's directional interest" rather than a committed number.</p></div>
+      <div class="box ask"><span class="lab">If asked: can we just do Option 3 and skip the politics?</span><p class="qa">"You could go straight there if HQ is open to it, but Option 1 is designed specifically so it doesn't need that conversation at all, it's a page inside the site you already have, under the approval process you already have. We'd suggest getting that live first regardless of which longer-term path you choose."</p></div>
+    </div>
+  </section>
+
+  <!-- ============ OBJECTIONS ============ -->
+  <section id="objections">
+    <h2 class="sec">If they push back: fast answers</h2>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"This makes it sound like we're blaming HQ."</h3><p style="margin:0;font-size:14px;">"That's explicitly not the framing, the report says it directly: this is not a criticism of headquarters, it's a structural gap the US growth depends on closing. Every option keeps HQ in full control of the brand."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"We get plenty of walk-ins and referrals, why does online search matter?"</h3><p style="margin:0;font-size:14px;">"Referrals are great, but they don't show up in a Google search for 'furniture showroom near me,' which 1,000 people a month search in DC alone. That volume goes entirely to Bo Concept right now. It's incremental, not a replacement for what's already working."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"We can't get HQ to change the approval process."</h3><p style="margin:0;font-size:14px;">"Understood, that's exactly why Option 1 doesn't ask for that. It's a page inside the current site, under the current approval process. The workflow change is only needed for Option 2, and that can be a separate, later conversation."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Is Bo Concept really a fair comparison?"</h3><p style="margin:0;font-size:14px;">"It's the most direct one available, a comparable modern/contemporary furniture brand with an actual showroom in Georgetown, DC, so it's proof this is solvable in this exact market, not a hypothetical benchmark from a different category."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Won't this hurt brand consistency or dilute the main site?"</h3><p style="margin:0;font-size:14px;">"No, all three options are additive infrastructure, not a redesign. HQ retains approval on brand-level material in every version, including the recommended Option 2."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Can this wait until after the showroom opens?"</h3><p style="margin:0;font-size:14px;">"It can, but any paid or offline marketing that runs around the opening is actively taxed without it, wasted ad spend on Day 1, not a future problem. The location page should exist before the marketing push, not after."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How is this different from the CRO audit you did?"</h3><p style="margin:0;font-size:14px;">"The CRO audit is about converting the traffic the main global site already gets. This report is upstream of that, it's about whether the brand is even findable for a new local market and local search in the first place."</p></div>
+    </div>
+  </section>
+
+  <!-- ============ FAQS ============ -->
+  <section id="faqs">
+    <h2 class="sec">FAQs</h2>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"What's the one thing you need us to approve today?"</h3><p style="margin:0;font-size:14px;">"Sign-off on Option 1: a dedicated DC location page, live before the showroom opens. It doesn't require any change to HQ's approval process."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Do we need to pick between the three options now?"</h3><p style="margin:0;font-size:14px;">"No. Option 1 can move independently and immediately. Options 2 and 3 are bigger, longer conversations that can happen on their own timeline."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Who needs to sign off on this beyond this call?"</h3><p style="margin:0;font-size:14px;">"Depends how much site/workflow access is needed. Option 1 likely only needs whoever approves standard site content today. Options 2 and 3 will need HQ leadership sign-off on process and, for Option 3, a new domain."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"What happens to our current paid ad plans if we do nothing?"</h3><p style="margin:0;font-size:14px;">"They still run, but at a real cost penalty, higher cost-per-click from a low landing-page Quality Score, and no way to measure what's working since conversion tracking needs site access."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How long would the minimum option take?"</h3><p style="margin:0;font-size:14px;">"It's a single page within the existing site plus schema markup, the fastest of the three by a wide margin. Exact timeline depends on your standard content approval turnaround once we submit it." (Have a ballpark ready.)</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Will Google results change immediately once the page goes live?"</h3><p style="margin:0;font-size:14px;">"Not instantly, but it's the prerequisite for everything else. Without the page and the schema data, DC rankings can never start building, no matter what else runs. With it, local rankings and Maps visibility can start accruing, and any paid campaign has somewhere relevant to send clicks."</p></div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSE ============ -->
+  <section id="close">
+    <h2 class="sec">Closing + the ask</h2>
+    <div class="card">
+      <div class="box say"><span class="lab">Say</span><p>"To recap: the brand is strong, the gap is purely digital discoverability in new markets. Right now the site reaches almost no one who doesn't already know the name, Washington DC has zero organic presence, a direct competitor already solved this exact problem in Georgetown, and the same structural gaps are already taxing whatever paid spend runs around the opening. Three ways to fix it, all of them keep headquarters in full control of the brand. The one thing I'd like to leave with today is approval to build the DC location page, at minimum, before the showroom opens. What questions can I answer?"</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Recap: strong brand, pure discoverability gap, zero DC presence, real ad-spend cost today</li><li>3 options, HQ retains brand control in every version</li><li>Ask: <b>approve the Option 1 DC location page before opening</b></li><li>End with: "What questions can I answer?"</li></ul></div>
+      <div class="box act"><span class="lab">The ask (get one of these agreed before you hang up)</span>
+        <ul class="tight" style="margin-top:2px;">
+          <li><b>Approval to build the Option 1 DC location page</b>, standalone, before the showroom opens.</li>
+          <li>If Option 2/3 interest exists: a <b>follow-up date</b> to bring the workflow/domain conversation to the right HQ decision-maker (per prior notes, likely Sean on the Adriana Hoyos/Caligaris side).</li>
+          <li>If they want to think it over: commit to sending a written one-pager they can forward internally, this document is dense; a short summary travels better inside their org.</li>
+        </ul>
+      </div>
+      <p class="tag" style="margin-bottom:0;">If the room can't approve HQ-level decisions themselves, treat this call as equipping them to make the case upward, not as the close itself. Offer to join a follow-up call with the actual HQ approver if useful.</p>
+    </div>
+  </section>
+
+  <!-- ============ NUMBERS ============ -->
+  <section id="numbers">
+    <h2 class="sec">Quick numbers: never get caught flat</h2>
+    <div class="card">
+      <div class="ref">
+        <div><b>Homepage traffic share:</b> 89% of all US organic visits (1,306/mo)</div>
+        <div><b>DC-related organic visits:</b> 0</div>
+        <div><b>Locations page traffic:</b> 1 visit/mo (not even DC-related)</div>
+        <div><b>Total US organic traffic:</b> ~1,500/mo</div>
+        <div><b>Keyword gap:</b> Bo Concept 7,800+ keywords vs. AH 62</div>
+        <div><b>Missed high-volume terms:</b> sofa bed (22,200/mo), bedroom ideas (14,800), home office (14,800)</div>
+        <div><b>"Furniture stores near me" (DC):</b> 1,000 searches/mo, Bo Concept ranks, AH doesn't</div>
+        <div><b>Homepage H1 tags:</b> 28 (best practice: 1)</div>
+        <div><b>Keyword cannibalization:</b> 47 URLs competing for "adriana hoyos dining chairs"</div>
+        <div><b>Schema markup:</b> none found (no LocalBusiness/Organization/Product schema)</div>
+        <div><b>Authority Score:</b> 27/100, flat for 12 months</div>
+        <div><b>Referring domains:</b> ~900 → 657 over 12 months (-27%)</div>
+        <div><b>Press:</b> Architectural Digest, Elle Decor, Robb Report — mostly nofollow links</div>
+        <div><b>HQ content approval window:</b> 48-hour minimum</div>
+        <div><b>US showroom pages:</b> 0 dedicated (shared /locations/ page only)</div>
+        <div><b>Comparison brand:</b> Bo Concept (Georgetown, DC showroom)</div>
+        <div><b>3 options:</b> (1) location pages in current site, (2) US subfolder + faster workflow, (3) dedicated adrianahoyos.us</div>
+        <div><b>The one ask:</b> DC location page live before showroom opening</div>
+      </div>
+    </div>
+    <p class="print" style="text-align:center;margin-top:18px;">Presenter prep document · sourced from the May 2026 US Market Digital Presence Assessment (SEMrush + manual technical review + Bo Concept competitive comparison)</p>
+  </section>
+
+</div>
+</body>
+</html>
