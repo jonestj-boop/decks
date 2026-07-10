@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adriana Hoyos CRO Audit: Walkthrough Guide</title>
+<style>
+  :root{
+    --ink:#16202e; --body:#2b3645; --muted:#697587; --line:#e3e8ef;
+    --bg:#f6f8fb; --card:#ffffff; --ember:#ff333d; --navy:#0d2a45; --gold:#c79a3a;
+    --say:#fff5f5; --sayb:#ffd6d8; --data:#eef4ff; --datab:#c9ddff;
+    --act:#eafaf1; --actb:#b6e8cd; --ask:#fff8e8; --askb:#f6e3b0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--body);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15.5px;line-height:1.55;}
+  a{color:var(--ember);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  /* sticky nav */
+  .topbar{position:sticky;top:0;z-index:50;background:var(--navy);color:#fff;
+    padding:10px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.18);}
+  .topbar .brand{font-weight:800;letter-spacing:-.3px;margin-right:8px;font-size:14px;white-space:nowrap;}
+  .topbar .brand b{color:var(--ember);}
+  .topbar a{color:rgba(255,255,255,.82);font-size:12.5px;font-weight:600;}
+  .topbar a:hover{color:#fff;text-decoration:none;}
+  .topbar .slidenums a{display:inline-block;width:22px;text-align:center;
+    background:rgba(255,255,255,.1);border-radius:4px;margin:1px;padding:1px 0;font-size:11.5px;}
+  .topbar .slidenums a:hover{background:var(--ember);}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 22px 90px;}
+  h1{font-size:30px;letter-spacing:-.6px;color:var(--ink);margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:6px;}
+  .links{font-size:13px;margin-bottom:24px;}
+  .links a{font-weight:700;}
+
+  section{margin-bottom:30px;}
+  h2.sec{font-size:13px;text-transform:uppercase;letter-spacing:1.4px;color:var(--ember);
+    font-weight:800;margin:0 0 12px;padding-bottom:7px;border-bottom:2px solid var(--line);}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin-bottom:14px;box-shadow:0 1px 2px rgba(16,32,50,.04);}
+  .card h3{margin:0 0 8px;font-size:17px;color:var(--ink);letter-spacing:-.2px;}
+
+  .pill{display:inline-block;font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.6px;padding:2px 9px;border-radius:20px;vertical-align:middle;}
+  .pill.crit{background:#fdecec;color:#c5343a;border:1px solid #f5c4c6;}
+  .pill.note{background:#eef2f7;color:#5b6b80;border:1px solid #d8e0ea;}
+
+  .box{border-radius:9px;padding:11px 14px;margin:9px 0;border:1px solid;}
+  .box .lab{font-size:10.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    display:block;margin-bottom:4px;}
+  .say{background:var(--say);border-color:var(--sayb);} .say .lab{color:var(--ember);}
+  .say p{margin:0;font-size:15.5px;color:#3a2a2b;font-style:italic;}
+  .data{background:var(--data);border-color:var(--datab);} .data .lab{color:#1d4ed8;}
+  .act{background:var(--act);border-color:var(--actb);} .act .lab{color:#177245;}
+  .ask{background:var(--ask);border-color:var(--askb);} .ask .lab{color:#9a6b00;}
+  .box p{margin:0;}
+  .box .qa{margin:7px 0 0;}
+  .box .qa b{color:var(--ink);}
+
+  .cue{margin:8px 0 2px;padding:9px 14px 10px;background:#fbfcfe;border:1px dashed #cdd6e2;border-radius:9px;}
+  .cue .lab{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
+  .cue ul{margin:0;padding-left:18px;}
+  .cue li{margin-bottom:3px;font-size:14px;line-height:1.42;}
+  .cue li b{color:var(--ink);}
+
+  .snum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;
+    background:var(--navy);color:#fff;border-radius:7px;font-weight:800;font-size:14px;margin-right:10px;}
+
+  ul.tight{margin:6px 0 0;padding-left:20px;} ul.tight li{margin-bottom:5px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:720px){.grid2{grid-template-columns:1fr;}}
+
+  table.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px;}
+  table.cmp th,table.cmp td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  table.cmp th{background:#f0f3f8;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);}
+  table.cmp td.old{color:#9a3a3f;} table.cmp td.new{color:#177245;font-weight:600;}
+
+  .ref{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;font-size:14px;}
+  @media(max-width:720px){.ref{grid-template-columns:1fr;}}
+  .ref div{padding:6px 0;border-bottom:1px dashed var(--line);}
+  .ref b{color:var(--ink);}
+
+  .callout{background:var(--navy);color:#fff;border-radius:12px;padding:20px 22px;}
+  .callout h3{color:#fff;margin-top:0;}
+  .callout .big{font-size:18px;line-height:1.5;}
+  .callout .big b{color:#ffd9db;}
+
+  .check li{margin-bottom:7px;}
+  .tag{font-size:11px;font-weight:700;color:var(--muted);}
+  .print{font-size:12px;color:var(--muted);}
+  @media print{.topbar{display:none;} body{background:#fff;font-size:11pt;} .card{break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">Adriana Hoyos Walkthrough · Presenter Guide</span>
+  <a href="#start">Start</a>
+  <a href="#story">Story</a>
+  <a href="#open">Open</a>
+  <span class="slidenums">
+    <a href="#s1">1</a><a href="#s2">2</a><a href="#s3">3</a><a href="#s4">4</a><a href="#s5">5</a>
+    <a href="#s6">6</a><a href="#s7">7</a><a href="#s8">8</a><a href="#s9">9</a><a href="#s10">10</a>
+    <a href="#s11">11</a><a href="#s12">12</a><a href="#s13">13</a><a href="#s14">14</a><a href="#s15">15</a>
+    <a href="#s16">16</a><a href="#s17">17</a><a href="#s18">18</a>
+  </span>
+  <a href="#objections">Pushback</a>
+  <a href="#faqs">FAQs</a>
+  <a href="#close">Close</a>
+  <a href="#numbers">Numbers</a>
+</div>
+
+<div class="wrap">
+
+  <h1>Adriana Hoyos: CRO Audit Walkthrough</h1>
+  <div class="sub">Presenter guide for the Adriana Hoyos walkthrough. Keep it open on a second screen during the call. Not for the client.</div>
+  <div class="links">
+    Live deck: <a href="https://decks.embertribe.com/reports/adriana-hoyos-cro-audit.html" target="_blank">decks.embertribe.com/reports/adriana-hoyos-cro-audit.html</a>
+    <div class="print" style="margin-top:4px;">Audience: most likely Shevy (fractional CMO across Ayoub, Caligaris, and Adriana Hoyos) and an AHC Grupo site/marketing counterpart. This is the walkthrough of the conversion audit findings, ending with how we help them act on it.</div>
+  </div>
+
+  <!-- ============ BEFORE YOU START ============ -->
+  <section id="start">
+    <h2 class="sec">Before you start: mindset</h2>
+    <div class="card">
+      <div class="box ask" style="margin-top:0;"><span class="lab">The one rule that overrides everything else</span>
+        <p class="qa">On the Ayoub walkthrough, Shevy said directly: <i>"I don't want to give them free IP... anything that resembles spec work, where they feel like they're getting something for free, and then they can take it and run with it."</i> He asked for a version that <b>shows the problems and withholds the fix</b>. This deck was built that way from the start: findings and impact only, no WordPress/Divi/plugin how-to. <b>Do not improvise implementation detail on the call, even if asked directly.</b> That is the paid engagement.</p>
+      </div>
+      <p style="margin-top:0;">This is your walkthrough to present the findings and earn the work to fix them. A few principles:</p>
+      <ul class="tight check">
+        <li><b>Lead the room. Do not open by asking what questions they have.</b> Present your view first; invite questions at natural checkpoints.</li>
+        <li><b>Talk in dollars and trust, not jargon.</b> Shevy and his team care about trade signups, sample requests, and time-to-fix, not LCP seconds. Land every number as "here is what this is costing you."</li>
+        <li><b>Position your team as the people who found this and can fix it.</b> This was a hands-on, page-by-page review plus competitor benchmarking, not just an automated scan. Say so.</li>
+        <li><b>Show the problem and the impact. Hold the detailed how.</b> Findings and priority, not the fix recipe. See the rule above.</li>
+        <li><b>Shevy has likely heard this exact format before</b> (he sat through the Ayoub CRO walkthrough). He explicitly valued that a later presenter's info matched what he'd already been told: <i>"Melissa pretty much said all the same things, so I didn't learn anything new."</i> Consistency reads as competence to him. If you're not the person who briefed him last on Adriana Hoyos, sync messaging first. If he says "we know the format, just go," skip the pillar explainer and jump straight to findings.</li>
+        <li><b>It is fine to say "good question," or "I don't know yet, let me get back to you."</b> On Ayoub, the single best-received moment of the whole call was Deanna admitting she didn't have a ready answer on a tracking/data-source question and committing to follow up, rather than improvising. Olga's reaction: <i>"I think this was excellent... very comprehensive."</i></li>
+      </ul>
+      <div class="box ask"><span class="lab">Pre-call checklist</span>
+        <ul class="tight" style="margin-top:2px;">
+          <li>Findings deck open and full-screen, slide 1 ready. Backup tab on the live URL.</li>
+          <li>This guide open on your second screen or phone.</li>
+          <li><b>Phased hours/cost ballpark ready, broken out by Phase 1 / 2 / 3</b>, not just a single number. On Ayoub, Shevy immediately asked for the comprehensive "you guys do everything" option and wanted it split by phase so he could decide what to keep in-house and what to hand to the client's leadership for budget approval. Expect the same here.</li>
+          <li>Know that GA4 is <b>not connected</b> for this site. This audit is PageSpeed + a full hands-on browse + competitor benchmarking (Caracole, Bernhardt, Artefacto), not a traffic pull. Say this early and confidently, don't let it surface as a gap you get caught on.</li>
+          <li>Know your one ask: <b>a yes to move forward</b>, phased by effort, with Phase 1 startable almost immediately.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE STORY ============ -->
+  <section id="story">
+    <h2 class="sec">The 90-second story (the spine of the whole deck)</h2>
+    <div class="callout">
+      <p class="big" style="margin:0;">The photography and the 3D product experience are genuinely premium, <b>but almost everything between the click and the yes is unfinished.</b> The homepage takes 33 seconds to show its hero image on mobile. The message never states what the brand is, who it serves, or why to choose it. And the single easiest first step for a new prospect, requesting a fabric sample, is a locked login wall with zero explanation. This audit found 28 specific, ranked issues across 6 pillars, 4 of them critical. Most of Phase 1 is copy, content, and settings, not a rebuild. The biggest unlock is the trade funnel: right now it asks for credentials before it ever sells the program.</p>
+    </div>
+    <div class="card" style="margin-top:12px;">
+      <p style="margin:0;"><b>The three beats, in order:</b></p>
+      <ul class="tight">
+        <li><b>1. Where the site stands</b> (slides 1–3): premium visuals, but the technical foundation fails before anyone gets to see them; no GA4 yet, so this audit is grounded in a hands-on review and competitor benchmarking, not traffic data.</li>
+        <li><b>2. What is leaking and why</b> (slides 4–15): six pillars, each with findings and what they're costing. The heart is slide 11: the trade gate.</li>
+        <li><b>3. What to do about it</b> (slides 16–18): every issue ranked by impact, phased execution, then how we help them fix it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ OPENING ============ -->
+  <section id="open">
+    <h2 class="sec">Opening script (first 45 seconds)</h2>
+    <div class="card">
+      <div class="box say"><span class="lab">Say</span>
+        <p>"Thanks for making the time. I'll walk you through the Adriana Hoyos conversion audit end to end: what we looked at, what we found, and what I'd recommend doing about it. Eighteen slides, about 20 minutes, and I'll pause for questions as we go. One methodology note up front: GA4 isn't connected on this site yet, so this isn't a traffic pull, it's a full hands-on walkthrough of the trade funnel plus PageSpeed data and a look at how Caracole, Bernhardt, and Artefacto handle the same moments. The headline: the product and photography are genuinely premium, but the site isn't finishing the job, starting with a homepage that takes 33 seconds to show its hero on mobile, and ending with the easiest first ask, a sample request, sitting behind a locked door."</p>
+      </div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Walk through end to end: what we looked at, what we found, the actions</li><li>18 slides, ~20 min, questions as we go</li><li><b>No GA4</b>: hands-on review + PageSpeed + competitor benchmarking, not traffic data</li><li>Headline: <b>premium product, unfinished funnel</b> — 33s hero load, locked sample request</li></ul></div>
+      <p style="margin-bottom:0;" class="tag">Then go to slide 1. Do not ask "what questions do you have" yet. If they signal they already know the CRO-audit format from Ayoub, say so and move faster through slides 1–3.</p>
+    </div>
+  </section>
+
+  <!-- ============ SLIDES ============ -->
+  <section>
+    <h2 class="sec">Slide-by-slide walkthrough</h2>
+
+    <!-- 1 -->
+    <div class="card" id="s1">
+      <h3><span class="snum">1</span>Cover: the headline numbers</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Title, audit date, and 4 stats: <b>39</b> homepage mobile speed, <b>28</b> issues identified, <b>4</b> critical items, top-priority pillar is <b>Website Performance</b>.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"This is a conversion audit: why visitors who reach the site don't move toward a trade signup or sample request. Homepage mobile speed scores 39 out of 100, we found 28 specific things to fix, and 4 are urgent. The top-priority pillar is performance, because nothing else on this list matters if the hero image hasn't loaded yet."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Conversion audit: why visitors don't move toward a trade signup or sample</li><li><b>39</b> mobile speed, <b>28 issues</b> (4 critical)</li><li>Top pillar: <b>Website Performance</b>, everything else depends on it</li></ul></div>
+      <div class="box ask"><span class="lab">If asked: where do these numbers come from? / where's the conversion rate?</span><p class="qa">"Google PageSpeed Insights across the three most conversion-critical pages, plus a hands-on, page-by-page walkthrough of the full trade funnel, and a side-by-side look at Caracole, Bernhardt, and Artefacto. GA4 isn't connected yet, so there's no traffic or conversion-rate number in this audit, that's actually one of our recommendations: connect it so the next review can show the real funnel, sessions through sample requests through registrations."</p></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card" id="s2">
+      <h3><span class="snum">2</span>What We Audited: scope</h3>
+      <div class="box data"><span class="lab">On screen</span><p>The 6 pillars as a visual grid (Website Performance, UX &amp; Navigation, Visual Messaging, Checkout Friction, Urgency &amp; Scarcity, De-risking &amp; Social Proof), the 8 pages/flows reviewed, and the data sources.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"We graded the site across the six things every high-converting site gets right, from whether the page loads to whether a designer trusts you enough to specify your product for a client. We walked the full trade funnel: homepage, product hub and category, a product detail page with the 3D configurator, Quick Ship, the sample-request and sign-in flow, contact, store locator, About, and search. Three data sources: PageSpeed, the hands-on browse, and competitor research. No GA4 yet, so this is data plus an actual look at the pages, not a dashboard pull."</p></div>
+      <div class="box data"><span class="lab">Why these 6 pillars (worth calling out)</span><p>They're not a random checklist, they map the <b>entire trade-buyer journey</b>. Every reason a ready-to-specify designer fails to act lands in one of six buckets: the page won't load (<b>Performance</b>), they can't find the piece (<b>UX</b>), the message doesn't land (<b>Visual</b>), the trade gate is a wall (<b>Checkout Friction</b>), there's no reason to act this month (<b>Urgency</b>), or they don't trust the brand enough to specify it for a client yet (<b>Social Proof</b>).</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>6 pillars map the full trade-buyer journey, first click to sample request</li><li><b>No GA4</b>: data + hands-on page review + competitor benchmarking</li><li>Caught on the site: search actually works well, mega-menu taxonomy is clear and logical</li></ul></div>
+      <div class="box ask"><span class="lab">If asked: did you actually look at the site?</span><p class="qa">"Yes, every finding pairs PageSpeed data with a hands-on walkthrough of the real flow. A couple of things that shaped the recommendations: on-site search actually returns strong, relevant results, and the mega-menu's room-based taxonomy is clear and logical. Those are strengths we'd protect, not rebuild."</p></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card" id="s3">
+      <h3><span class="snum">3</span>Site Health Snapshot: current state</h3>
+      <div class="box data"><span class="lab">On screen</span><p>PageSpeed table for Homepage (mobile 39, LCP 33.0s), Products hub (mobile 57, LCP 4.2s), Contact Us (mobile 30, LCP 23.2s, CLS 1.001). What we observed live: hero stays blank white on mobile; contact form visibly jumps while loading. A note on what GA4 would unlock.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Here's the current technical state. All three of the most conversion-critical pages fail Core Web Vitals. The homepage is the most severe: 33 seconds before the hero content paints on mobile, and we saw the same live on desktop, the nav renders and the hero area sits blank white for several seconds. The contact page, your primary lead-capture page, is even worse in one respect: a layout-shift score four times Google's 'poor' threshold, so the form visibly jumps while someone is trying to reach out. This snapshot is technical health only, because GA4 isn't connected. With it, we could show the actual funnel: sessions to product views to sample requests to registrations, plus device split and drop-off points. We'd recommend connecting it as a fast follow."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>All 3 critical pages fail Core Web Vitals</li><li>Homepage: <b>33s LCP mobile</b>, blank white hero, same live on desktop</li><li>Contact: <b>CLS 1.001</b> (4x "poor" threshold), form visibly jumps</li><li>Technical health only; GA4 connection unlocks the real funnel view</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>The framing that carries the whole deck starts here: <b>the site can't prove what it's costing you until it's measured, and it can't be measured well until GA4 is connected</b> — but you don't need GA4 to know a 33-second hero load and a 4x-poor layout shift are losing people. Action: performance work starts regardless; GA4 connection is a parallel recommendation, not a blocker.</p></div>
+      <div class="box ask"><span class="lab">If asked: what do LCP and CLS mean?</span><p class="qa"><b>LCP</b> (Largest Contentful Paint): how long until the main thing on the page, here usually the hero photo, actually shows up. Plain version: how fast the page looks loaded. Good is under 2.5 seconds; the homepage is at 33. <b>CLS</b> (Cumulative Layout Shift): how much the page jumps around while it loads, text and buttons shifting as images pop in. It's a stability score, not seconds. Good is under 0.1; the contact page is at 1.001.</p></div>
+      <div class="box ask"><span class="lab">If asked: is this number a Google penalty or just UX?</span><p class="qa">"Both. Core Web Vitals are a confirmed Google ranking signal, so slow pages also surface lower in search, and on top of that, most visitors leave a mobile page that takes more than 3 seconds. At 33 seconds, you're not in 'ranks lower' territory, you're in 'most people never see the hero at all' territory."</p></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card" id="s4">
+      <h3><span class="snum">4</span>Pillar 1 intro: Website Performance <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say (keep it to 15 seconds)</span><p>"Quick context: for a luxury brand, speed is part of the experience itself, a slow hero undermines the same premium impression the photography is built to create. And it's a Google ranking factor. Forty percent of visitors leave if a mobile page takes more than 3 seconds."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Speed is part of the premium experience, not just a technical box</li><li><b>40% leave</b> past 3 seconds on mobile (industry benchmark, not this site's measured number, see note below)</li></ul></div>
+      <div class="box ask"><span class="lab">Careful</span><p class="qa">The 40% figure (and the similar stats on later pillar-intro slides: 2x, 70%, 10–30%, 15–20%) are <b>industry benchmarks used for context</b>, not numbers measured on adrianahoyos.com. GA4 isn't connected, so don't imply these are this site's own conversion figures if asked directly.</p></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="card" id="s5">
+      <h3><span class="snum">5</span>Performance Findings</h3>
+      <div class="box data"><span class="lab">On screen</span><p>5 issues, 2 critical: homepage (39/100, 33s LCP), contact page (CLS 1.001, 23.2s LCP), ~950 KiB unused JS from overlapping analytics plugins, layout shift fails on every page tested, About Us renders blank for 8+ seconds.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Mobile speed is the weak spot sitewide. The homepage takes 33 seconds to fully paint on mobile, that's the single most urgent technical fix, because it's the first thing every visitor hits. The contact page is almost as bad and adds a severe layout-shift problem on top. We also found the site simultaneously running three overlapping analytics and pixel plugins, which is dead weight on every page load. And the About Us page, arguably your strongest storytelling page, renders completely blank for over 8 seconds due to animation timing. The good news: most of this is caching, image work, and plugin cleanup, not a rebuild."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Homepage: <b>33s mobile LCP</b> = most urgent fix, first thing every visitor hits</li><li>Contact page: CLS 1.001 <i>and</i> 23.2s LCP, worst of the three</li><li>3 overlapping analytics/pixel plugins running at once</li><li>About Us: blank for 8+ seconds, your strongest story page is invisible</li><li>Mostly caching, images, plugin cleanup, not a rebuild</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>Homepage, 33-second mobile load:</b> the hero, the most expensive real estate on a visual luxury site, loads last. Page weighs 6.6 MB across 160 requests. Most visitors are gone before they see the brand's photography at all.</li>
+        <li><b>Contact page, slowest and jumpiest:</b> your primary lead-capture page scores 30/100 mobile, takes 23 seconds to paint, and visibly shifts while loading, four times Google's "poor" threshold. Someone trying to reach out gets a page that mis-taps them.</li>
+        <li><b>~950 KiB of unused JavaScript:</b> the site runs three overlapping tracking/pixel plugins at once, duplicating payload on every page view. Dead weight that delays everything else from appearing.</li>
+        <li><b>Layout shift fails everywhere tested:</b> homepage, products, and contact all fail Google's stability threshold on mobile. Images and lazy-loaded sections render without reserved space, so the page jumps as content arrives.</li>
+        <li><b>About Us, blank for 8+ seconds:</b> entrance animations combined with slow media leave your strongest brand-story page looking broken on first load. We saw a white screen twice before content appeared.</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Position this as standard performance work your team scopes and handles. Do not detail the how on the call, this is Phase 2 work. The promise: get mobile speed out of the danger zone, starting with the homepage and contact page.</p></div>
+      <div class="box ask"><span class="lab">If asked: is the site broken?</span><p class="qa">"No, it loads, it's heavy and inefficient on mobile. Overlapping plugins and unoptimized hero images are a common pattern on WordPress sites that have grown feature by feature. Caching and image work fix most of it."</p></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="card" id="s6">
+      <h3><span class="snum">6</span>Pillar 2 intro: UX &amp; Navigation <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say</span><p>"This section is about whether designers and buyers can find the right piece and move toward specifying it. Adriana Hoyos serves interior designers, hospitality buyers, and end clients at once, each needs to narrow a large catalog fast."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Can a designer or buyer find the right piece and move forward?</li><li>Three audiences at once: designers, hospitality buyers, end clients</li></ul></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="card" id="s7">
+      <h3><span class="snum">7</span>UX &amp; Navigation Findings</h3>
+      <div class="box data"><span class="lab">On screen</span><p>No filtering/sorting on a 39-product category grid, footer is a dead end with non-clickable policy text, homepage collections band hijacks scroll, "You May Also Like" renders empty with wrong-category picks, Find Us map loads broken with no store pins.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Five findings here. The Sofa and Loveseats category shows 39 products in one unfiltered grid, no way to narrow by collection, material, or Quick Ship availability, while Artefacto offers exactly that on every listing page. The footer is a dead end: the policy links aren't even clickable, no product categories, no newsletter signup. On the homepage, a horizontal collections band actually hijacks scrolling, we had to jump past it programmatically during the review. A product page's 'You May Also Like' section renders completely empty and, when we dug in, was recommending bedroom furniture on a living-room sofa page. And Find Us, your 99-location store locator, loads a blank grey box for 15-plus seconds and then shows a washed-out map with no pins at all."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>39-product grid, <b>zero filtering or sorting</b> (Artefacto has this)</li><li>Footer: policy text isn't even clickable, no categories, no newsletter</li><li>Collections band <b>hijacks scroll</b> on the homepage</li><li>"You May Also Like" empty, recommends wrong category</li><li>Find Us map: 15+ sec grey box, then no pins across <b>99 locations</b></li><li>What's working: <b>on-site search</b> and the mega-menu taxonomy</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>No filtering on category pages:</b> 39 products, one grid, no way to narrow down. A designer specifying for a client has to scroll everything manually.</li>
+        <li><b>Footer is a dead end:</b> Terms, Privacy, and BASC Policy render as plain text, not links, on every page tested. No categories, no contact, no newsletter capture anywhere.</li>
+        <li><b>Collections band hijacks scrolling:</b> the homepage's "Inspired Collections" section captures mouse-wheel input; visitors who stop scrolling there never reach the materials story or footer.</li>
+        <li><b>"You May Also Like" empty and mis-scoped:</b> on the Galapagos Sofa page it renders blank, and the ~19 hidden items behind it are mostly bedroom and dining pieces, not living-room companions.</li>
+        <li><b>Find Us map broken:</b> a genuine strength, 99 shops worldwide, undercut by a locator that can't show a single pin. Lost foot-traffic referrals on every visit.</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Filtering and the footer rebuild are Phase 2 (plugin/dev work); the scroll-jack fix and map repair are scoped alongside them. Position as work your team handles, not a step-by-step.</p></div>
+      <div class="box ask"><span class="lab">If a technical counterpart pushes back: "we already have X"</span><p class="qa">Expect this pattern (Ayoub's dev lead Olga did this repeatedly). Don't concede the finding, concede the nuance: <i>"It's like having toilet paper, but if it's not on the roll in the bathroom, it's not helping you. [X] exists, it's just not where the decision happens."</i> If they raise a real constraint (e.g., "we can't filter by that field, the data isn't structured that way"), agree the scoping should account for it rather than arguing the point.</p></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="card" id="s8">
+      <h3><span class="snum">8</span>Pillar 3 intro: Visual Messaging <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say</span><p>"Do the first three seconds tell a visitor what Adriana Hoyos is, who it serves, and why to choose it? The photography and 3D product experience are genuinely premium here, the gap is orientation."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Does the hero answer "what is this, who's it for, why choose it" in 3 seconds?</li><li>Photography and 3D experience are already premium, the gap is orientation</li></ul></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="card" id="s9">
+      <h3><span class="snum">9</span>Visual Messaging Findings</h3>
+      <div class="box data"><span class="lab">On screen</span><p>5 issues, 1 critical: hero states no value proposition across 4 rotating slides, raw system text on product cards, 27 H1 tags on the homepage, 3D viewer blocks the primary product photo, white hero text over light imagery.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"The hero is the critical one. Four auto-rotating slides carry taglines like 'Explore our technologies' and 'LIVING IN FASHION,' with a generic 'Discover More' CTA, nothing tells a first-time visitor whether this is retail or trade-only, or what makes it different. Combined with the 33-second load, the most valuable screen on the site says almost nothing in the window that matters. Smaller but real: Quick Ship cards show literal database text like 'Maximum quantity no defined' to customers, the homepage outputs 27 H1 tags where search engines expect one clear topic, and product pages open with a 3D-viewer loading spinner where the product photo should be."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Hero: 4 slides, <b>no value prop, no audience, generic CTA</b> (critical)</li><li>Raw system text leaks to customers: "Maximum quantity no defined"</li><li><b>27 H1 tags</b> on the homepage alone (12 from the hero slider)</li><li>3D viewer loads <i>before</i> the product photo, hides the visual</li><li>White hero text over light imagery on some slides</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>Hero says nothing:</b> fashion-language taglines with no audience signal and no clear CTA. A first-time visitor can't tell if this brand sells to them.</li>
+        <li><b>Raw system text on product cards:</b> "Maximum quantity no defined" reads like a broken site on an otherwise premium page.</li>
+        <li><b>27 H1s on the homepage:</b> 12 from three responsive copies of the four hero slides, 15 more scattered further down. Search engines see 27 competing topics instead of one.</li>
+        <li><b>3D viewer blocks the photo:</b> a real differentiator turned into a liability by being the default hero asset; the product is invisible while it loads.</li>
+        <li><b>White text on light imagery:</b> some hero slide text approaches invisibility over pale interiors.</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>The hero rewrite, system-text fix, and H1 cleanup are Phase 1, copy and settings, fast. The 3D-viewer sequencing is Phase 2. Position as work your team handles, don't draft the new hero copy live on the call.</p></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="card" id="s10">
+      <h3><span class="snum">10</span>Pillar 4 intro: Checkout Friction <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say</span><p>"For a trade brand, 'checkout' is the path from interested designer to approved account. Right now that path is a locked door. Gated trade pricing is a legitimate strategy, Bernhardt gates too, but the best trade sites sell the program before asking for credentials. Adriana Hoyos asks for credentials without ever selling the program."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>"Checkout" here = interested designer → approved trade account</li><li>Gating pricing is fine (Bernhardt does it); <b>gating with zero explanation</b> is the problem</li></ul></div>
+    </div>
+
+    <!-- 11 -->
+    <div class="card" id="s11">
+      <h3><span class="snum">11</span>Checkout Friction Findings <span class="pill crit">the heart of the deck</span></h3>
+      <div class="box data"><span class="lab">On screen</span><p>A 4-way comparison table (Adriana Hoyos vs. Caracole, Bernhardt, Artefacto) on pricing visibility, program explanation, and new-customer offers, then 5 findings: Sample Request gated behind a bare login (critical), pricing blurred with an unexplained gate, an 11-field registration with a certificate upload and no timeline, "How We Work" buried and non-clickable in the footer, and a contact page with no response expectations.</p></div>
+      <div class="box say"><span class="lab">Say (slow down here)</span><p>"This is the most important pillar in the audit. Sample Request, the easiest first action for a new prospect, opens a bare username-and-password modal with zero explanation: who qualifies, what it costs, what happens next. A designer who just wants a fabric swatch is asked to register and upload a resale certificate first. Compare that to Caracole, who shows full prices publicly with a welcome offer, or Bernhardt, who also gates pricing but wraps the gate in program marketing. Adriana Hoyos gates with no story at all. And the one page that actually explains how buying works, 'How We Work,' only lives in the homepage footer, as non-clickable text. This pillar compounds, too: as the brand grows its retail footprint, this same trade-account experience becomes the template for every new regional site."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li><b>Sample Request = bare login wall</b>, zero explanation (most important single finding)</li><li>Pricing blurred, click-through hits the same unexplained modal</li><li>Registration: <b>11 fields + certificate upload</b>, no stated review timeline</li><li>"How We Work" (the only purchase-path explainer) buried, non-clickable, footer only</li><li>Contact page: no response-time promise, no phone/showroom info</li><li>Caracole shows prices + 20% welcome code; Bernhardt gates but sells the program</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>Sample Request behind a bare login:</b> the single most valuable top-of-funnel action on the site is fully gated, with nothing explaining why or what happens after.</li>
+        <li><b>Pricing blurred, no story:</b> "click here to see the price" leads to the same unexplained wall. Competitors either show prices or sell the trade program around the gate.</li>
+        <li><b>11-field registration, unstated timeline:</b> ends in "we will check your information and you will shortly receive a confirmation." No SLA, no benefits copy, high-intent prospects left in limbo.</li>
+        <li><b>"How We Work" buried:</b> the only page explaining trade vs. retail vs. showroom purchase isn't a working link anywhere except the homepage footer, and product-page footers omit it entirely.</li>
+        <li><b>Contact page sets no expectations:</b> generic "Send" button, no stated response time, no phone or showroom address, and it's also the least stable page on mobile (see Pillar 1).</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>The fix to land first: a guest sample-request path (no login required) and explainer copy on the registration modal, both Phase 1 or early Phase 2. Position all of it as scoped work your team handles, this is exactly the kind of implementation detail that stays off this call.</p></div>
+      <div class="box ask"><span class="lab">If asked: gated trade pricing is intentional, why flag it?</span><p class="qa">"Totally fair, and we're not recommending you open the pricing. Bernhardt gates too. The finding is that the gate has no story: no benefits, no qualification criteria, no timeline. Keep the gate, sell the program around it."</p></div>
+      <div class="box ask"><span class="lab">If asked: can't we just fix the login modal ourselves?</span><p class="qa">"You could add a line of copy yourselves, sure. But the actual fix, a guest-request path that doesn't require the login wall at all, touches your account system and is exactly the kind of scoped build our team handles. That's part of the engagement, not a same-day tweak."</p></div>
+    </div>
+
+    <!-- 12 -->
+    <div class="card" id="s12">
+      <h3><span class="snum">12</span>Pillar 5 intro: Urgency &amp; Scarcity <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say</span><p>"Luxury doesn't discount, but it can still give buyers a reason to act now. Adriana Hoyos already has one: Quick Ship, pieces ready in 6 weeks instead of the usual 4-to-6-month custom lead time. It's undersold."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>No discounting needed, honest urgency only</li><li>Quick Ship already exists as a real differentiator, just buried</li></ul></div>
+    </div>
+
+    <!-- 13 -->
+    <div class="card" id="s13">
+      <h3><span class="snum">13</span>Urgency &amp; Scarcity Findings</h3>
+      <div class="box data"><span class="lab">On screen</span><p>3 issues: Quick Ship's 6-week promise is undersold sitewide, real scarcity displayed as raw system data ("Maximum quantity: 1"), no launch moments, event dates, or seasonal hooks anywhere.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Custom furniture usually means long lead times, so 'ready to ship in 6 weeks' is a genuinely differentiating promise, but the program's hero loads late, the promise sits below the fold, and eligible products don't advertise it prominently. Real scarcity data already exists in the store, a piece showing 'Maximum quantity: 1' is genuine, persuasive scarcity, but it's rendered as database output that reads like an error instead of 'last one, ready in 6 weeks.' And there are no launch dates or market-week events anywhere on the site, no reason to act this month versus next."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Quick Ship (6-week promise) is real and undersold</li><li>Scarcity data exists ("Maximum quantity: 1") but shown as raw system text</li><li>Zero launch moments, events, or seasonal hooks sitewide</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>Quick Ship undersold:</b> a real differentiator in an industry with 4-to-6-month lead times, buried below the fold with one rotating homepage slide as its only promotion.</li>
+        <li><b>Scarcity as raw data:</b> "Maximum quantity: 1" is genuine urgency dressed as a bug. Map it to customer language and it becomes a selling point.</li>
+        <li><b>No seasonal or launch urgency:</b> no collection premieres, market-week appearances, or event dates anywhere, nothing says "act this month."</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Content and copy work: badge the Quick Ship promise, translate quantity fields, use the existing News section for launch moments. Phase 1/2, low-effort, scoped.</p></div>
+    </div>
+
+    <!-- 14 -->
+    <div class="card" id="s14">
+      <h3><span class="snum">14</span>Pillar 6 intro: De-risking &amp; Social Proof <span class="pill note">context slide</span></h3>
+      <div class="box say"><span class="lab">Say</span><p>"A designer specifying a five-figure piece for a client needs proof: who else trusts this brand, and what happens if something goes wrong. Adriana Hoyos has the assets, a 40-year design legacy, hospitality installations, 99 points of sale, an award win, a family story, almost none of it is deployed where the decision happens."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Designers need proof before specifying a client's money</li><li>The assets exist (40-yr legacy, hospitality work, award, 99 locations); deployment is the gap</li></ul></div>
+    </div>
+
+    <!-- 15 -->
+    <div class="card" id="s15">
+      <h3><span class="snum">15</span>De-risking &amp; Social Proof Findings</h3>
+      <div class="box data"><span class="lab">On screen</span><p>5 issues: zero testimonials or case studies anywhere, the LUXE RED award lives only in a rotating slide with inconsistent naming, no press or "As seen in" section, no shipping/warranty/returns info before login, Instagram reduced to a small grey footer icon.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Zero designer or hospitality testimonials anywhere on the site, no case studies, no client names, while Artefacto carries testimonials as a top-level nav item. Adriana Hoyos has a hospitality division and decades of installations, exactly the proof a specifier looks for, and none of it is published. The LUXE RED award only shows up in a rotating hero slide, and it's named two different ways depending on which slide you catch, one says 'Red Luxe Award,' another 'LUXE RED Awards.' And there's no shipping, warranty, or returns information available before someone logs in, so a prospect can't answer basic 'what if something goes wrong' questions before committing."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li><b>Zero testimonials or case studies</b>, despite a hospitality division and decades of installations</li><li>LUXE RED award: only in a rotating slide, <b>inconsistently named</b></li><li>No press / "As seen in" section</li><li>No shipping/warranty/returns info before login</li><li>Instagram: small grey footer icon only</li><li>What's working: the About Us story, named regional contacts, 99-location locator</li></ul></div>
+      <div class="cue"><span class="lab">Each finding in plain English (what it is, why it matters)</span><ul>
+        <li><b>Zero social proof:</b> no designer quotes, no hospitality case studies, no client logos anywhere, despite having a hospitality division with real installations to show.</li>
+        <li><b>Award inconsistently placed and named:</b> disappears when the carousel rotates, appears nowhere else, and is named two different ways on the site.</li>
+        <li><b>No press section:</b> a brand of this profile almost certainly has trade-press coverage; nothing borrows that credibility.</li>
+        <li><b>No policies before login:</b> can't answer white-glove delivery, warranty coverage, or damage-in-transit questions without an account.</li>
+        <li><b>Instagram buried:</b> the natural discovery channel for luxury interiors reduced to a low-contrast grey icon.</li>
+      </ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Trust-building work: collect and publish 3–5 testimonials, standardize the award name and add a persistent credential strip, publish shipping/warranty pages. Phase 1 for the quick pieces (naming, policy pages), Phase 3 for testimonial collection since it depends on the client sourcing quotes.</p></div>
+      <div class="box ask"><span class="lab">Careful</span><p class="qa">Don't say "you have no brand story." The About Us page and the family/design-legacy narrative are <b>genuinely strong</b>, confirmed in the audit. The finding is that it's <b>not deployed anywhere else</b>, not that it doesn't exist.</p></div>
+    </div>
+
+    <!-- 16 -->
+    <div class="card" id="s16">
+      <h3><span class="snum">16</span>Priority Roadmap: the ranked summary</h3>
+      <div class="box data"><span class="lab">On screen</span><p>All 28 issues ranked: 4 Critical, 15 High, 7 Medium, 2 Low.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"This is everything we found, ranked by impact on the trade funnel. Four critical, then high, medium, low. You don't need to read every line, this is your master checklist. I'd start with the four critical items: homepage speed, the contact page's layout shift, the hero's missing value proposition, and the Sample Request login wall."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>All <b>28 ranked</b>: 4 critical, 15 high, 7 medium, 2 low</li><li>Don't read every line, point to the 4 criticals and move on</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>Do not read all 28 aloud. Point to the 4 criticals, note the pillar spread, and move into the phased plan. This sets up the close.</p></div>
+    </div>
+
+    <!-- 17 -->
+    <div class="card" id="s17">
+      <h3><span class="snum">17</span>Implementation Phases</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Three columns: Phase 1 (copy/content/settings, 8 items, minimal dev time), Phase 2 (developer or plugin work, high impact), Phase 3 (ongoing content build-out, includes connecting GA4).</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"We grouped the 28 issues into three phases by effort and impact, not just severity. Phase 1 is eight items of copy, content, and settings work, the hero rewrite, explainer copy on the registration modal, fixing the raw system text, standardizing the award name, that alone sharpens the first impression and starts unblocking the trade funnel within days. Phase 2 is the developer and plugin work: the performance sprint, the guest sample-request form, WooCommerce filtering. Phase 3 is ongoing: testimonial collection, press outreach, and connecting GA4 so future audits can show the real funnel."</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Phase 1: <b>8 items</b>, copy/content/settings, days not months</li><li>Phase 2: developer/plugin work, highest impact (performance, sample-request gate, filtering)</li><li>Phase 3: ongoing content + <b>GA4 connection</b> for the next audit</li><li>Grouped by effort and impact, not just severity</li></ul></div>
+      <div class="box act"><span class="lab">Data → action</span><p>This is where the phased-pricing conversation starts. Have hours/cost ballparks ready per phase, Shevy asked for exactly this breakdown on the Ayoub call so he could decide what stays in-house versus what gets scoped to your team, and take it to whoever approves budget on his side.</p></div>
+      <div class="box ask"><span class="lab">If asked: can we do Phase 1 ourselves and hire you for Phase 2/3?</span><p class="qa">"You could take on some of Phase 1. Just know the items that actually move the needle, the sample-request gate, the performance sprint, need the right setup or they get done wrong or measured wrong. We're glad to scope whichever split makes sense for your team's bandwidth." (Let them propose the split; don't volunteer a discount for doing less.)</p></div>
+    </div>
+
+    <!-- 18 -->
+    <div class="card" id="s18">
+      <h3><span class="snum">18</span>Next Steps: the close</h3>
+      <div class="box data"><span class="lab">On screen</span><p>Call to action, the 4 critical fixes, the 8 Phase 1 quick wins, 3 phases to a stronger trade funnel.</p></div>
+      <div class="box say"><span class="lab">Say</span><p>"Here's what I'd recommend. Let's start Phase 1 right away, the copy and settings work that sharpens the first impression fast, while we scope Phase 2, the performance sprint and the sample-request fix, since that's the highest-impact item on the list. If you're happy with the direction, we'll send the full phased plan with hours and cost per phase, so you and your team can decide what's in-house and what's ours. What questions can I answer?"</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Start <b>Phase 1</b> right away</li><li>Scope Phase 2 in parallel (sample-request fix + performance sprint = highest impact)</li><li>Ask: <b>ready to move forward?</b> We send a phased plan with hours + cost per phase</li><li>End with: "What questions can I answer?"</li></ul></div>
+    </div>
+  </section>
+
+  <!-- ============ OBJECTIONS ============ -->
+  <section id="objections">
+    <h2 class="sec">If they push back on the findings: fast answers</h2>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Where's the conversion rate? Why no traffic data?"</h3><p style="margin:0;font-size:14px;">"GA4 isn't connected yet, so this audit is built from PageSpeed data, a full hands-on walkthrough of the trade funnel, and competitor benchmarking. Connecting GA4 is one of our Phase 3 recommendations, it would let the next review show the real funnel."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"We already have that" (award, testimonials, story, etc.)</h3><p style="margin:0;font-size:14px;">"It exists, it's just not where the decision happens, like toilet paper that's in the closet instead of on the roll. The fix is deployment and placement, not creating something from scratch."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Gated trade pricing is intentional, why flag it?"</h3><p style="margin:0;font-size:14px;">"Agreed, keep the gate, Bernhardt gates too. The finding is the gate has no story: no benefits, no timeline, no qualification info. Sell the program around the gate."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"This page/section isn't a priority for us."</h3><p style="margin:0;font-size:14px;">"Fair, and that's your call on sequencing. It's still costing you something every day it sits as-is, so it stays on the ranked list. We'll follow your lead on order."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Just tell us how to fix it, we'll do it ourselves."</h3><p style="margin:0;font-size:14px;">"The simple copy tweaks, sure, you could take those on. The ones that actually move the needle touch your account system, caching layer, or plugin stack, and need the right setup or they get done wrong. That scoped implementation work is the engagement." (Do not describe the specific fix. This is the one hard line.)</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How much will this cost?"</h3><p style="margin:0;font-size:14px;">"It splits into three phases by effort. I'll send hours and a number for each so you can decide what's in-house and what's ours." (Have the phased ballpark ready, not just one total.)</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Did anyone actually look at the site?"</h3><p style="margin:0;font-size:14px;">"Yes, page by page, plus a side-by-side against Caracole, Bernhardt, and Artefacto. That's how we caught that search already works well and the mega-menu taxonomy is solid, those are strengths we're not touching."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Isn't this the same pitch you gave for Ayoub?"</h3><p style="margin:0;font-size:14px;">"Same method, six pillars, hands-on review, ranked by impact, different findings entirely. Ayoub's biggest gap was untracked traffic; here it's a trade funnel that asks for credentials before it ever sells the program. The framework repeats, the site doesn't."</p></div>
+    </div>
+  </section>
+
+  <!-- ============ FAQS ============ -->
+  <section id="faqs">
+    <h2 class="sec">FAQs: the questions that decide the deal</h2>
+    <div class="grid2">
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Can't we just do these ourselves?"</h3><p style="margin:0;font-size:14px;">"You could do some of the simple copy tweaks. The items that actually move the needle, the sample-request gate, the performance sprint, need the right setup or they get done wrong. Our team already knows the site from this audit, so there's no ramp-up."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How do we know it'll actually help without conversion data to prove it?"</h3><p style="margin:0;font-size:14px;">"Two things. First, several of these are measurable the moment we fix them, connecting GA4 is part of the plan specifically so you can see the lift. Second, a 33-second mobile load and a locked sample-request form aren't judgment calls, they're failing against Google's own thresholds and against what your direct competitors already do."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How much does it cost?"</h3><p style="margin:0;font-size:14px;">"Three phases, hours and a number for each. Phase 1 is low-effort and can start almost immediately, so you see movement fast while Phase 2 gets scoped." (Have the phased ballpark ready.)</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"How long until we see results?"</h3><p style="margin:0;font-size:14px;">"Phase 1 items, the hero rewrite, the explainer copy, the system-text cleanup, can go live within the first couple weeks. Phase 2's performance and sample-request work is where the bigger lift comes from, and that's the piece we'd scope right after Phase 1 starts."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Do we need a developer?"</h3><p style="margin:0;font-size:14px;">"Most of Phase 1 is copy, content, and settings, no developer. Phase 2 needs one: the performance sprint and the guest sample-request path both touch code, and that's also where the highest-value fixes live."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Can you send us the full findings without a signed scope?"</h3><p style="margin:0;font-size:14px;">"This deck is the full findings, ranked and explained. What we hold back is the specific implementation, the exact plugin, template, or code change, that's the paid work. Once you're signed on, that's the first thing you get."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"Is our product/photography the problem?"</h3><p style="margin:0;font-size:14px;">"No. The photography and 3D experience are genuinely premium, that's explicit in the audit. The gap is entirely in what happens after someone arrives: speed, orientation, and the trade gate. Fixing those lets the product you already have do its job."</p></div>
+      <div class="card" style="margin-bottom:0;"><h3 style="font-size:15px;">"What about GA4 / tracking, should we do that first?"</h3><p style="margin:0;font-size:14px;">"It's valuable but not a blocker, we didn't need it to find a 33-second load time or a locked sample-request form. We'd connect it in Phase 3 so the next review, and your own reporting, has real funnel data."</p></div>
+    </div>
+  </section>
+
+  <!-- ============ CLOSE ============ -->
+  <section id="close">
+    <h2 class="sec">Closing + the ask</h2>
+    <div class="card">
+      <div class="box say"><span class="lab">Say</span><p>"So to recap: 28 issues, ranked, grouped into three phases by effort and impact. Phase 1 is eight copy-and-settings items that can start almost right away. Phase 2 is where the highest-impact work lives, the performance sprint and fixing the sample-request gate. If you're happy with the direction, we'll send the full phased plan with hours and cost broken out per phase, so you can decide what stays in-house and what's ours, and take it to whoever needs to sign off. What questions can I answer?"</p></div>
+      <div class="cue"><span class="lab">Quick cues</span><ul><li>Recap: 28 ranked issues, 3 phases by effort and impact</li><li>Phase 1 startable almost immediately; Phase 2 is highest-impact</li><li>Ask: <b>ready to move forward?</b> We send a phased plan with hours + cost per phase</li><li>End with: "What questions can I answer?"</li></ul></div>
+      <div class="box act"><span class="lab">The ask (get one of these agreed before you hang up)</span>
+        <ul class="tight" style="margin-top:2px;">
+          <li><b>A yes to move forward</b> on Phase 1 so your team can start the quick wins.</li>
+          <li><b>Approval to scope Phase 2</b> (performance sprint + sample-request fix, the highest-impact item).</li>
+          <li>If they want to think it over: lock a <b>follow-up date</b> and commit to sending the phased hours/cost breakdown in writing.</li>
+        </ul>
+      </div>
+      <p class="tag" style="margin-bottom:0;">Address the ask to Shevy if he's on the call, he's the one who decides what goes to leadership for budget. Do not hand over implementation detail as a goodwill gesture, even at the close, he was explicit on Ayoub that this reads as free consulting, not a relationship-builder.</p>
+    </div>
+  </section>
+
+  <!-- ============ NUMBERS ============ -->
+  <section id="numbers">
+    <h2 class="sec">Quick numbers: never get caught flat</h2>
+    <div class="card">
+      <div class="ref">
+        <div><b>GA4:</b> not connected. No traffic or conversion-rate data in this audit.</div>
+        <div><b>Homepage:</b> mobile 39, desktop 32, LCP 33.0s, CLS 0.283, 6.6&nbsp;MB / 160 requests</div>
+        <div><b>Products hub:</b> mobile 57, desktop 53, LCP 4.2s, CLS 0.256, 3.7&nbsp;MB / 156 requests</div>
+        <div><b>Contact Us:</b> mobile 30, desktop 51, LCP 23.2s, CLS 1.001, 3.7&nbsp;MB / 137 requests</div>
+        <div><b>Issues:</b> 28 total = 4 Critical, 15 High, 7 Medium, 2 Low</div>
+        <div><b>Top pillar:</b> Website Performance</div>
+        <div><b>Heart of the deck:</b> Checkout Friction / trade gate (slide 11)</div>
+        <div><b>Category grid:</b> 39 products, zero filter/sort options</div>
+        <div><b>Store locator:</b> 99 locations worldwide, map renders no pins</div>
+        <div><b>Quick Ship:</b> ready in 6 weeks vs. 4–6 month typical custom lead time</div>
+        <div><b>Award:</b> LUXE RED Awards 2026, named 2 different ways on-site</div>
+        <div><b>Legacy:</b> ~40-year design history (founded c. 1986), family-owned</div>
+        <div><b>Competitors:</b> Caracole (prices shown + 20% welcome code), Bernhardt (gates, sells the program), Artefacto (has filters + testimonials in nav)</div>
+        <div><b>Phase 1:</b> 8 items, copy/content/settings, days not months</div>
+        <div><b>Registration ask:</b> 11 fields + resale certificate upload, no stated SLA</div>
+        <div><b>Related pitch:</b> Ayoub CRO walkthrough (same presenter format, same client contact — Shevy)</div>
+      </div>
+    </div>
+    <p class="print" style="text-align:center;margin-top:18px;">Presenter prep document · sourced from the July 2026 audit (PageSpeed + hands-on review + competitor research) and the Ayoub CRO walkthrough call, 2026-06-29</p>
+  </section>
+
+</div>
+</body>
+</html>
