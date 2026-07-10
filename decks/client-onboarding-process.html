@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Onboarding Process | Podsicle Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --midnight:#151f35;
+    --midnight-2:#242f42;
+    --slate:#3c485f;
+    --slate-grey:#5f6a80;
+    --silver:#b8bcc3;
+    --paper:#fafafa;
+    --white:#ffffff;
+    --purple:#bb7afc;
+    --cyan:#4ed2f8;
+    --pink:#f05ca8;
+    --yellow:#ffdd3a;
+    --coral:#ff8073;
+    --green:#a1f78a;
+    --turquoise:#89e2cd;
+    --grad:linear-gradient(120deg,#bb7afc 0%,#4ed2f8 100%);
+    --grad-warm:linear-gradient(120deg,#f05ca8 0%,#ff8073 60%,#ffdd3a 100%);
+    --line:rgba(255,255,255,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:#e7eaf0;
+    background:var(--midnight);
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 28px;}
+  h1,h2,h3,h4,.sora{font-family:Sora,sans-serif;}
+
+  .grad-text{
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+
+  /* ---- Cover ---- */
+  .cover{
+    position:relative;overflow:hidden;
+    padding:96px 0 72px;
+    background:
+      radial-gradient(900px 420px at 88% -8%, rgba(187,122,252,.30), transparent 60%),
+      radial-gradient(760px 420px at 5% 110%, rgba(78,210,248,.22), transparent 60%),
+      var(--midnight);
+    border-bottom:1px solid var(--line);
+  }
+  .kicker{
+    font-size:12px;letter-spacing:.24em;text-transform:uppercase;
+    font-weight:700;margin-bottom:22px;
+  }
+  .cover h1{
+    font-size:clamp(36px,6.4vw,64px);
+    line-height:1.02;letter-spacing:-.02em;font-weight:800;
+    margin-bottom:22px;color:#fff;
+  }
+  .cover .sub{
+    font-size:19px;color:#c4ccda;max-width:640px;
+  }
+  .cover .meta{
+    margin-top:42px;display:flex;flex-wrap:wrap;gap:14px;
+  }
+  .cover .meta div{
+    background:rgba(255,255,255,.05);border:1px solid var(--line);
+    border-radius:12px;padding:14px 18px;font-size:13px;color:var(--silver);
+  }
+  .cover .meta b{color:#fff;font-weight:600;display:block;font-size:14px;font-family:Sora,sans-serif;}
+
+  /* ---- Sections ---- */
+  section{padding:60px 0;border-bottom:1px solid var(--line);}
+  .sec-num{
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    font-weight:700;margin-bottom:16px;
+  }
+  h2{
+    font-size:clamp(27px,4.2vw,38px);line-height:1.08;
+    letter-spacing:-.02em;font-weight:800;margin-bottom:22px;color:#fff;
+  }
+  h3{
+    font-size:19px;font-weight:700;margin:32px 0 10px;letter-spacing:-.01em;color:#fff;
+  }
+  p{margin-bottom:16px;color:#c4ccda;font-size:16.5px;}
+  p.lead{font-size:20px;color:#eef1f6;}
+  strong{color:#fff;font-weight:650;}
+  em{color:var(--turquoise);font-style:normal;}
+  ul{margin:0 0 18px 0;padding-left:0;list-style:none;}
+  li{
+    position:relative;padding-left:28px;margin-bottom:12px;
+    color:#c4ccda;font-size:16.5px;
+  }
+  li::before{
+    content:"";position:absolute;left:2px;top:9px;
+    width:9px;height:9px;border-radius:3px;
+    background:var(--grad);
+  }
+
+  /* ---- Callout ---- */
+  .pull{
+    position:relative;border-radius:16px;padding:26px 28px;margin:28px 0;
+    background:linear-gradient(120deg,rgba(187,122,252,.14),rgba(78,210,248,.10));
+    border:1px solid rgba(187,122,252,.35);
+  }
+  .pull p{margin:0;color:#fff;font-size:19px;font-weight:500;line-height:1.5;}
+
+  /* ---- Cards ---- */
+  .grid{display:grid;gap:16px;margin:26px 0;}
+  .g2{grid-template-columns:1fr 1fr;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .card{
+    border:1px solid var(--line);border-radius:14px;padding:22px;
+    background:var(--midnight-2);
+  }
+  .card h4{font-size:16px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em;color:#fff;}
+  .card p{font-size:14.5px;margin:0;color:var(--silver);}
+  .card .tag{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:700;display:inline-block;margin-bottom:12px;
+    padding:3px 10px;border-radius:999px;
+    background:rgba(78,210,248,.12);color:var(--cyan);
+  }
+  .card.warm .tag{background:rgba(240,92,168,.14);color:var(--pink);}
+
+  /* ---- Roadmap / Phase ---- */
+  .phase{
+    display:grid;grid-template-columns:128px 1fr;gap:24px;
+    padding:24px 0;border-bottom:1px solid var(--line);
+  }
+  .phase:last-child{border-bottom:none;}
+  .phase .when{
+    font-family:Sora,sans-serif;font-size:14px;font-weight:700;
+    letter-spacing:.02em;padding-top:2px;color:var(--cyan);
+  }
+  .phase h4{font-size:18px;font-weight:700;margin-bottom:6px;color:#fff;}
+  .phase p{font-size:15px;margin:0;}
+
+  /* ---- Steps (numbered) ---- */
+  .steps{counter-reset:s;margin-top:22px;}
+  .step{counter-increment:s;position:relative;padding-left:52px;margin-bottom:26px;}
+  .step::before{
+    content:counter(s);position:absolute;left:0;top:-2px;
+    width:36px;height:36px;border-radius:50%;
+    background:var(--grad);color:var(--midnight);font-family:Sora,sans-serif;font-weight:800;font-size:16px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step h4{font-size:17px;font-weight:700;margin-bottom:5px;color:#fff;}
+  .step p{font-size:15px;margin:0 0 6px;}
+  .step .owner{
+    display:inline-block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+    font-weight:700;color:var(--silver);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:999px;padding:3px 11px;margin-top:4px;
+  }
+  .step .checklist{margin-top:10px;}
+  .step .checklist li{font-size:14.5px;margin-bottom:7px;}
+
+  /* ---- Engine / handoff block ---- */
+  .engine{
+    background:var(--midnight-2);border:1px solid var(--line);
+    border-radius:18px;padding:34px 32px;margin:28px 0;
+  }
+  .engine h3{margin-top:0;}
+  .engine .row{
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .engine .row:last-child{border-bottom:none;}
+  .engine .big{
+    font-family:Sora,sans-serif;font-size:34px;font-weight:800;min-width:70px;
+    background:var(--grad-warm);-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .engine .desc{font-size:15.5px;color:#c4ccda;}
+  .engine .desc b{color:#fff;}
+
+  /* ---- Production schedule graphic ---- */
+  .sched{
+    border-radius:18px;padding:3px;margin:28px 0;background:var(--grad);
+  }
+  .sched-inner{
+    background:var(--midnight-2);border-radius:15px;padding:32px;
+  }
+  .sched-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:26px;}
+  .sched-head h3{margin:0;font-size:21px;}
+  .sched-head .note{font-size:13px;color:var(--silver);max-width:280px;text-align:right;}
+  .lane{
+    border-radius:14px;padding:22px 24px;margin-bottom:16px;
+    border:1px solid var(--line);position:relative;overflow:hidden;
+  }
+  .lane:last-child{margin-bottom:0;}
+  .lane.core{background:rgba(78,210,248,.06);border-color:rgba(78,210,248,.30);}
+  .lane.rapid{background:rgba(240,92,168,.07);border-color:rgba(240,92,168,.32);}
+  .lane-label{
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .lane-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .lane.core .lane-dot{background:var(--cyan);}
+  .lane.rapid .lane-dot{background:var(--pink);}
+  .lane-label .lname{font-family:Sora,sans-serif;font-weight:800;font-size:15px;color:#fff;}
+  .lane-label .ltag{
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+    color:var(--silver);margin-left:auto;
+  }
+  .lane p.ldesc{font-size:14px;color:var(--silver);margin:0 0 16px;max-width:560px;}
+  .track{display:flex;align-items:stretch;gap:6px;}
+  .tstep{
+    flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);
+    border-radius:10px;padding:12px 10px;text-align:center;position:relative;
+  }
+  .lane.core .tstep{background:rgba(78,210,248,.07);}
+  .lane.rapid .tstep{background:rgba(240,92,168,.08);}
+  .tstep .tnum{
+    font-family:Sora,sans-serif;font-weight:800;font-size:11px;color:var(--silver);
+    letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;display:block;
+  }
+  .tstep .tlabel{font-size:12.5px;color:#eef1f6;font-weight:600;line-height:1.3;display:block;}
+  .tstep .tday{
+    margin-top:8px;font-size:10.5px;color:var(--cyan);font-weight:700;letter-spacing:.04em;
+    display:block;
+  }
+  .lane.rapid .tstep .tday{color:var(--pink);}
+  .arrow{display:flex;align-items:center;color:var(--slate-grey);font-size:14px;flex:0 0 auto;padding:0 1px;}
+  .lane-foot{display:flex;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px;}
+  .lane-foot .cad{
+    font-size:12.5px;color:var(--silver);
+  }
+  .lane-foot .cad b{color:#fff;}
+  .trigger-row{
+    display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;
+  }
+  .trigger{
+    font-size:12px;color:#fff;background:rgba(255,255,255,.06);
+    border:1px solid var(--line);border-radius:999px;padding:5px 13px;
+  }
+  @media(max-width:640px){
+    .track{flex-direction:column;}
+    .arrow{justify-content:center;padding:2px 0;transform:rotate(90deg);}
+  }
+
+  footer{padding:54px 0 80px;color:var(--silver);font-size:13px;}
+  footer .fb{
+    font-family:Sora,sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;
+    background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+
+  @media(max-width:640px){
+    .g2,.g3{grid-template-columns:1fr;}
+    .phase{grid-template-columns:1fr;gap:6px;}
+    .cover{padding:64px 0 52px;}
+    .sched-head{flex-direction:column;}
+    .sched-head .note{text-align:left;}
+  }
+  @media print{
+    body{background:#fff;color:#1a2236;}
+    .cover,.engine,.card,.sched-inner{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    section,.cover{page-break-inside:avoid;}
+    .grad-text,.fb,.engine .big{-webkit-text-fill-color:#5b2bd1 !important;color:#5b2bd1 !important;background:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker grad-text">Internal Playbook</div>
+    <h1>Client <span class="grad-text">Onboarding</span> Process</h1>
+    <p class="sub">The step-by-step path from signed contract to a running content engine — for every video and podcast client Podsicle brings on.</p>
+    <div class="meta">
+      <div><b>Applies to</b>All new production clients</div>
+      <div><b>Owner</b>Account &amp; Production teams</div>
+      <div><b>Goal</b>First deliverable shipped inside 30 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 1. OVERVIEW ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">01 / Overview</div>
+    <h2>Five phases. One running machine.</h2>
+    <p class="lead">Every client moves through the same five phases, regardless of whether they're a podcast, a video series, or both. The phases compress for simpler scopes and stretch for multi-format engines — but nobody skips a phase.</p>
+    <div class="grid g3">
+      <div class="card"><span class="tag">Phase 1</span><h4>Contract → Kickoff</h4><p>Contract signed to kickoff call booked. Internal handoff from sales to production.</p></div>
+      <div class="card"><span class="tag">Phase 2</span><h4>Discovery &amp; Setup</h4><p>Brand, voice, tools, and workflow locked. Calendar built.</p></div>
+      <div class="card warm"><span class="tag">Phase 3</span><h4>Foundation Build</h4><p>Branding, templates, and recording environment go live.</p></div>
+      <div class="card warm"><span class="tag">Phase 4</span><h4>First Cycle</h4><p>First episode or video produced end-to-end as the proof point.</p></div>
+      <div class="card"><span class="tag">Phase 5</span><h4>Cadence &amp; Handoff</h4><p>Recurring schedule activates. Client moves to steady-state production.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 2. STEP BY STEP ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">02 / Step by step</div>
+    <h2>From signature to first ship.</h2>
+    <div class="steps">
+
+      <div class="step">
+        <h4>Internal handoff &amp; welcome</h4>
+        <p>Sales hands off the signed contract, scope, and any discovery notes to the account lead within 24 hours. Client receives a welcome email confirming next steps and introducing their point of contact.</p>
+        <span class="owner">Owner: Account Lead</span>
+        <ul class="checklist">
+          <li>Create client folder in project management system &amp; shared drive</li>
+          <li>Log scope, cadence, and add-ons from the signed agreement</li>
+          <li>Send welcome email with kickoff scheduling link</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Kickoff call</h4>
+        <p>A live call to align on goals, voice, format, and logistics before any production work begins. This sets the creative and operational foundation for everything downstream.</p>
+        <span class="owner">Owner: Account Lead + Producer</span>
+        <ul class="checklist">
+          <li>Confirm format, episode/video length, and segment structure</li>
+          <li>Identify hosts, co-hosts, or talent and their availability</li>
+          <li>Walk through brand assets, tone, and any topics to avoid</li>
+          <li>Set expectations on review windows and approval process</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Brand &amp; technical setup</h4>
+        <p>Production builds the infrastructure the client will use for the life of the engagement — recording environment, templates, and naming conventions.</p>
+        <span class="owner">Owner: Producer</span>
+        <ul class="checklist">
+          <li>Set up recording platform (Riverside or equivalent) and test with client</li>
+          <li>Build episode/video templates: intro, lower thirds, outro, thumbnail frame</li>
+          <li>Confirm distribution destinations (YouTube, Spotify, Apple Podcasts, socials)</li>
+          <li>Share client-facing asset request list (logos, photos, music, fonts)</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Content calendar &amp; first dates</h4>
+        <p>Build out the production calendar covering the regular cadence and lock the first two recording dates so the team has a concrete target.</p>
+        <span class="owner">Owner: Producer + Account Lead</span>
+        <ul class="checklist">
+          <li>Map recurring cadence (weekly/biweekly/monthly) against the production schedule below</li>
+          <li>Lock first two recording dates and confirm guest/topic pipeline if applicable</li>
+          <li>Share calendar with client for visibility and input</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>First cycle production</h4>
+        <p>The first episode or video moves through the full pipeline — record, edit, repurpose, review — establishing the rhythm both teams will use going forward.</p>
+        <span class="owner">Owner: Production team</span>
+        <ul class="checklist">
+          <li>Record first session; confirm audio/video quality meets standard</li>
+          <li>Edit full-length asset, then cut short-form clips for distribution</li>
+          <li>Produce show notes, transcript, titles, and thumbnail</li>
+          <li>Route through internal QC before client review</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Client review &amp; feedback loop</h4>
+        <p>Client reviews the first deliverable set. This call calibrates taste and pacing so future rounds need less back-and-forth.</p>
+        <span class="owner">Owner: Account Lead</span>
+        <ul class="checklist">
+          <li>Walk client through deliverables and gather feedback in one consolidated round</li>
+          <li>Document specific preferences (pacing, music, caption style, etc.) in the client profile</li>
+          <li>Confirm sign-off and publish/distribution date</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Publish &amp; go live</h4>
+        <p>First episode or video ships across every confirmed platform, and the client sees the engine work for the first time.</p>
+        <span class="owner">Owner: Producer</span>
+        <ul class="checklist">
+          <li>Schedule and publish across all confirmed channels</li>
+          <li>Confirm links, metadata, and cross-platform formatting are correct</li>
+          <li>Send client a recap with links and initial performance baseline</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h4>Transition to steady-state cadence</h4>
+        <p>Onboarding formally closes. The client moves onto the regular production schedule, with the quick-turnaround track available any time a timely topic calls for it.</p>
+        <span class="owner">Owner: Account Lead + Producer</span>
+        <ul class="checklist">
+          <li>Confirm recurring recording dates for the next 60 days</li>
+          <li>Walk client through how to trigger the quick-turnaround track</li>
+          <li>Schedule first 30-day check-in to review performance and workflow</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. FIRST 30 DAYS ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">03 / Timeline</div>
+    <h2>What this looks like on a calendar.</h2>
+    <div class="phase">
+      <div class="when">Days 1–3</div>
+      <div><h4>Handoff &amp; kickoff</h4><p>Sales-to-production handoff, welcome email sent, kickoff call held and recapped.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Days 4–10</div>
+      <div><h4>Setup &amp; calendar</h4><p>Recording platform configured, templates built, content calendar mapped, first dates locked.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Days 11–21</div>
+      <div><h4>First cycle</h4><p>First episode/video recorded, produced, and routed through internal QC.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Days 22–28</div>
+      <div><h4>Review &amp; publish</h4><p>Client review call, feedback incorporated, first asset published across all channels.</p></div>
+    </div>
+    <div class="phase">
+      <div class="when">Day 30</div>
+      <div><h4>Cadence live</h4><p>Onboarding closes. Client is fully on the recurring production schedule, with quick-turnaround available on demand.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. PRODUCTION SCHEDULE GRAPHIC ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">04 / Production schedule</div>
+    <h2>Two layers, running at once.</h2>
+    <p>Once onboarding closes, every client sits on a layered production schedule: a <strong>core cadence</strong> that runs on a predictable rhythm, and a <strong>quick-turnaround track</strong> that activates whenever a time-sensitive topic needs to move fast. They run in parallel without competing for the same production day.</p>
+
+    <div class="sched">
+      <div class="sched-inner">
+        <div class="sched-head">
+          <h3>Podsicle Layered Production Schedule</h3>
+          <div class="note">Core cadence is the engine. Quick-turnaround is the override valve for timely topics.</div>
+        </div>
+
+        <!-- CORE CADENCE LANE -->
+        <div class="lane core">
+          <div class="lane-label">
+            <span class="lane-dot"></span>
+            <span class="lname">Core Cadence Track</span>
+            <span class="ltag">Regular Rhythm</span>
+          </div>
+          <p class="ldesc">The standing production line. Same steps, same days, every cycle — built for consistency, not speed.</p>
+          <div class="track">
+            <div class="tstep"><span class="tnum">Step 1</span><span class="tlabel">Record</span><span class="tday">Day 1</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 2</span><span class="tlabel">Edit full cut</span><span class="tday">Day 2–4</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 3</span><span class="tlabel">Repurpose clips</span><span class="tday">Day 4–6</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 4</span><span class="tlabel">Client review</span><span class="tday">Day 7</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 5</span><span class="tlabel">Publish &amp; distribute</span><span class="tday">Day 8–10</span></div>
+          </div>
+          <div class="lane-foot">
+            <div class="cad">Cadence: <b>weekly or biweekly</b>, fixed recording day</div>
+            <div class="cad">Output: <b>full episode/video + 4–6 clips + written assets</b></div>
+          </div>
+        </div>
+
+        <!-- QUICK TURNAROUND LANE -->
+        <div class="lane rapid">
+          <div class="lane-label">
+            <span class="lane-dot"></span>
+            <span class="lname">Quick-Turnaround Track</span>
+            <span class="ltag">Time-Limited Topics</span>
+          </div>
+          <p class="ldesc">A compressed, parallel path for news hooks, trending moments, or anything with a closing window. Runs alongside the core cadence without bumping it.</p>
+          <div class="track">
+            <div class="tstep"><span class="tnum">Step 1</span><span class="tlabel">Greenlight</span><span class="tday">Hour 0</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 2</span><span class="tlabel">Record</span><span class="tday">Hour 0–6</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 3</span><span class="tlabel">Rapid edit</span><span class="tday">Hour 6–24</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 4</span><span class="tlabel">Fast review</span><span class="tday">Hour 24–36</span></div>
+            <div class="arrow">→</div>
+            <div class="tstep"><span class="tnum">Step 5</span><span class="tlabel">Publish</span><span class="tday">Hour 36–48</span></div>
+          </div>
+          <div class="lane-foot">
+            <div class="cad">Cadence: <b>on demand</b>, triggered by the topic window</div>
+            <div class="cad">Output: <b>1–2 short-form clips or a single rapid video/episode</b></div>
+          </div>
+          <div class="trigger-row">
+            <span class="trigger">Breaking industry news</span>
+            <span class="trigger">Trending conversation</span>
+            <span class="trigger">Reactive commentary</span>
+            <span class="trigger">Event-driven moment</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pull">
+      <p>The core cadence is the engine that compounds an audience. The quick-turnaround track is what makes the show feel alive in the moment. Together, they're how the schedule never has to choose between consistency and relevance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. ROLES & HANDOFFS ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">05 / Roles &amp; handoffs</div>
+    <h2>Who owns what, and when it changes hands.</h2>
+    <div class="engine">
+      <h3>The handoff chain</h3>
+      <div class="row">
+        <div class="big">01</div>
+        <div class="desc"><b>Sales → Account Lead</b> at contract signature. Scope, pricing, and any client-specific commitments transfer in writing.</div>
+      </div>
+      <div class="row">
+        <div class="big">02</div>
+        <div class="desc"><b>Account Lead → Producer</b> after kickoff. Creative brief, brand assets, and recording logistics transfer into the production calendar.</div>
+      </div>
+      <div class="row">
+        <div class="big">03</div>
+        <div class="desc"><b>Producer → Editorial/Repurposing</b> after each recording. Raw footage and run-of-show notes move into the edit queue.</div>
+      </div>
+      <div class="row">
+        <div class="big">04</div>
+        <div class="desc"><b>Editorial → Account Lead</b> for client review. Finished assets route back for sign-off before anything publishes.</div>
+      </div>
+      <div class="row">
+        <div class="big">05</div>
+        <div class="desc"><b>Account Lead → Client</b> ongoing. Owns the relationship, the 30-day check-ins, and any scope changes for the life of the account.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 6. SUCCESS CRITERIA ===== -->
+<section>
+  <div class="wrap">
+    <div class="sec-num grad-text">06 / Success criteria</div>
+    <h2>How we know onboarding worked.</h2>
+    <div class="grid g2">
+      <div class="card"><h4>Speed</h4><p>First deliverable published within 30 days of signature, with no more than one schedule slip.</p></div>
+      <div class="card"><h4>Clarity</h4><p>Client can describe their own cadence and how to trigger quick-turnaround without asking.</p></div>
+      <div class="card warm"><h4>Calibration</h4><p>Feedback rounds shrink after cycle one — taste preferences are documented, not re-explained.</p></div>
+      <div class="card warm"><h4>Confidence</h4><p>Client has used or asked about the quick-turnaround track at least once by day 60.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">Podsicle Media</div>
+    <p style="margin-top:6px;">Turn Your Marketing Up to 11. Internal onboarding playbook — keep this current as the process evolves.</p>
+  </div>
+</footer>
+
+</body>
+</html>
