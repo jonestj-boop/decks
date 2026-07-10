@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adriana Hoyos — CRO Audit | EmberTribe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --client-dark:   #141210;
+  --client-mid:    #6b5a48;
+  --client-accent: #c9a97a;
+  --client-bronze: #a88d68;
+  --ember-red:     #ff333d;
+  --ember-dark:    #e0202a;
+  --text:          #1a2332;
+  --text-light:    #64748b;
+  --light-bg:      #f8fafc;
+  --card-bg:       #ffffff;
+  --border:        #e2e8f0;
+  --green:         #16a34a;
+  --yellow:        #d97706;
+  --red:           #dc2626;
+  --orange:        #ea580c;
+  --blue:          #2563eb;
+
+  /* Priority colors */
+  --crit-bg: #fef2f2; --crit-border: #fecaca; --crit-text: #dc2626;
+  --high-bg: #fff7ed; --high-border: #fed7aa; --high-text: #ea580c;
+  --med-bg:  #fffbeb; --med-border:  #fde68a; --med-text:  #d97706;
+  --low-bg:  #f9fafb; --low-border:  #e5e7eb; --low-text:  #6b7280;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--client-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── DECK & SLIDES ────────────────────────────────────── */
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--client-dark) 0%, #3a3128 55%, var(--client-mid) 100%);
+  color: #fff;
+}
+.slide.dark .slide-label { color: var(--client-accent); }
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.85); }
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+}
+.slide.dark .stat-value { color: var(--client-accent); }
+
+.slide.pillar {
+  background: linear-gradient(135deg, #0d0b09 0%, var(--client-dark) 50%, #4a3e31 100%);
+  color: #fff;
+}
+.slide.pillar .slide-label { color: var(--client-bronze); }
+.slide.pillar .pillar-stat { color: var(--client-accent); }
+
+/* ── PROGRESS BAR ─────────────────────────────────────── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--client-accent);
+  transition: width 0.3s ease;
+  z-index: 100;
+}
+
+/* ── NAVIGATION ───────────────────────────────────────── */
+.nav {
+  position: fixed;
+  bottom: 28px; right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+}
+.nav-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20,18,16,0.85);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.nav-btn:hover { background: var(--client-mid); }
+.nav-counter {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  min-width: 44px;
+  text-align: center;
+  background: rgba(0,0,0,0.4);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────── */
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 10px; }
+h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+
+.slide-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 6px;
+}
+.subtitle {
+  font-size: 18px; font-weight: 400; color: var(--text-light);
+  max-width: 760px; margin-bottom: 20px;
+}
+
+/* ── STAT CARDS ───────────────────────────────────────── */
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+.stat-card {
+  flex: 1; min-width: 130px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 3px; }
+.stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); }
+.stat-sub { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+/* ── PRIORITY BADGES ──────────────────────────────────── */
+.badge {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge.critical { background: var(--crit-bg); border-color: var(--crit-border); color: var(--crit-text); }
+.badge.high     { background: var(--high-bg); border-color: var(--high-border); color: var(--high-text); }
+.badge.medium   { background: var(--med-bg);  border-color: var(--med-border);  color: var(--med-text); }
+.badge.low      { background: var(--low-bg);  border-color: var(--low-border);  color: var(--low-text); }
+
+/* Pillar tags */
+.ptag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ptag.perf   { background: #ede9fe; color: #6d28d9; }
+.ptag.ux     { background: #dbeafe; color: #1d4ed8; }
+.ptag.visual { background: #fce7f3; color: #be185d; }
+.ptag.checkout { background: #dcfce7; color: #15803d; }
+.ptag.urgency  { background: #fff7ed; color: #c2410c; }
+.ptag.social   { background: #fef9c3; color: #92400e; }
+
+/* ── FINDING ROWS ─────────────────────────────────────── */
+.finding {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.finding:last-child { border-bottom: none; }
+.finding-body { flex: 1; }
+.finding-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.finding-desc { font-size: 13px; color: var(--text-light); line-height: 1.5; }
+.finding-fix { font-size: 12px; color: var(--client-dark); font-weight: 500; margin-top: 4px; }
+.finding-fix strong { color: var(--client-mid); }
+
+/* ── ANNOTATIONS ──────────────────────────────────────── */
+.note {
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  margin: 10px 0;
+  line-height: 1.5;
+  border-left: 3px solid;
+}
+.note.info    { background: #eff6ff; border-color: var(--blue); color: #1e40af; }
+.note.warning { background: #fffbeb; border-color: var(--yellow); color: #92400e; }
+.note.danger  { background: var(--crit-bg); border-color: var(--red); color: var(--red); }
+.note.success { background: #f0fdf4; border-color: var(--green); color: var(--green); }
+
+/* ── TABLES ───────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th {
+  background: var(--light-bg); font-weight: 600;
+  text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px;
+  color: var(--text-light); text-align: left;
+  padding: 9px 12px; border-bottom: 2px solid var(--border);
+}
+td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.015); }
+
+/* ── SPEED SCORE PILL ─────────────────────────────────── */
+.score {
+  display: inline-block;
+  font-size: 20px; font-weight: 800;
+  padding: 6px 14px; border-radius: 8px;
+}
+.score.red    { background: var(--crit-bg); color: var(--crit-text); }
+.score.yellow { background: var(--med-bg);  color: #92400e; }
+.score.green  { background: #f0fdf4;        color: var(--green); }
+
+.vitals { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.vital {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 5px;
+}
+.vital.pass { background: #f0fdf4; color: var(--green); }
+.vital.fail { background: var(--crit-bg); color: var(--crit-text); }
+.vital.warn { background: var(--med-bg);  color: #92400e; }
+
+/* ── PILLAR INTRO COMPONENTS ──────────────────────────── */
+.pillar-icon { font-size: 52px; margin-bottom: 10px; }
+.pillar-stat-block {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 18px 0;
+}
+.pillar-stat { font-size: 40px; font-weight: 900; color: var(--client-accent); }
+.pillar-stat-label { font-size: 14px; color: rgba(255,255,255,0.78); margin-top: 4px; }
+.signals-list { list-style: none; margin-top: 14px; }
+.signals-list li {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 14px; color: rgba(255,255,255,0.82);
+  padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.signals-list li:last-child { border-bottom: none; }
+.signals-list li::before { content: "→"; color: var(--client-accent); font-weight: 700; flex-shrink: 0; }
+
+/* ── LAYOUT UTILITIES ─────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.col { display: flex; flex-direction: column; gap: 10px; }
+.mt8 { margin-top: 8px; }
+.mt16 { margin-top: 16px; }
+.mt24 { margin-top: 24px; }
+
+/* ── PHASE BLOCKS ─────────────────────────────────────── */
+.phase-block {
+  border-radius: 10px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  flex: 1;
+}
+.phase-header {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 10px;
+}
+.phase-items { list-style: none; }
+.phase-items li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--text-light);
+  padding: 5px 0; border-bottom: 1px solid var(--border);
+  line-height: 1.4;
+}
+.phase-items li:last-child { border-bottom: none; }
+.phase-items li::before { content: "•"; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* ── ROADMAP TABLE ────────────────────────────────────── */
+.roadmap-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.roadmap-item:last-child { border-bottom: none; }
+.roadmap-title { flex: 1; font-weight: 500; color: var(--text); }
+
+/* ── COMPETITOR COMPARE ───────────────────────────────── */
+.compare-row {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.compare-row > * { padding: 9px 12px; }
+.compare-row.head > * {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--text-light);
+  background: var(--light-bg);
+  border-bottom: 2px solid var(--border);
+}
+.check { color: var(--green); font-size: 15px; }
+.cross { color: var(--red); font-size: 15px; }
+.partial { color: var(--yellow); font-size: 15px; }
+
+/* ── EMBER LOGO MARK ──────────────────────────────────── */
+.ember-mark {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  position: absolute; bottom: 28px; left: 60px;
+}
+.ember-mark span { color: var(--ember-red); }
+
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 — COVER
+═══════════════════════════════════════════════════════ -->
+<div class="slide dark active" id="s1">
+  <div class="slide-label">CRO Audit · July 2026</div>
+  <h1 style="font-size:54px; margin-top:16px;">Adriana Hoyos</h1>
+  <p class="subtitle">Conversion Rate Optimization Audit<br>adrianahoyos.com · Luxury Furnishings · WordPress + WooCommerce</p>
+
+  <div class="stats-row" style="margin-top:24px;">
+    <div class="stat-card">
+      <div class="stat-value" style="color:#f87171;">39</div>
+      <div class="stat-label">Homepage mobile speed</div>
+      <div class="stat-sub">Google rates under 50 as poor</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--client-accent);">28</div>
+      <div class="stat-label">Issues identified</div>
+      <div class="stat-sub">Across 6 audit pillars</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:#f87171;">4</div>
+      <div class="stat-label">Critical items</div>
+      <div class="stat-sub">Fix immediately for highest ROI</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:var(--client-accent);">#1</div>
+      <div class="stat-label">Top priority pillar</div>
+      <div class="stat-sub">Website Performance</div>
+    </div>
+  </div>
+
+  <div style="margin-top:auto; padding-top:24px; display:flex; align-items:center; gap:16px; border-top:1px solid rgba(255,255,255,0.1);">
+    <div style="font-size:13px; color:rgba(255,255,255,0.75);">Prepared by <strong style="color:#fff;">EmberTribe</strong></div>
+    <div style="font-size:13px; color:rgba(255,255,255,0.75);">Data sources: PageSpeed Insights · Full site browse · Competitor research</div>
+  </div>
+  <div class="ember-mark"><span>Ember</span>Tribe</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 — WHAT WE AUDITED
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s2">
+  <div class="slide-label">Audit Scope</div>
+  <h2>What We Audited</h2>
+  <p class="subtitle">Six pillars. Every step of the trade funnel, from first impression to sample request.</p>
+
+  <div class="two-col mt16">
+    <div>
+      <h4 style="margin-bottom:12px; color:var(--text-light); text-transform:uppercase; font-size:11px; letter-spacing:1px;">The 6 Pillars</h4>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">⚡</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">Website Performance</div>
+            <div style="font-size:12px; color:var(--text-light);">Speed, mobile, Core Web Vitals</div>
+          </div>
+          <span class="ptag perf" style="margin-left:auto;">Pillar 1</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">🗺️</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">UX &amp; Navigation</div>
+            <div style="font-size:12px; color:var(--text-light);">Browsing flow, filtering, wayfinding</div>
+          </div>
+          <span class="ptag ux" style="margin-left:auto;">Pillar 2</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">✍️</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">Visual Messaging</div>
+            <div style="font-size:12px; color:var(--text-light);">Hero, value proposition, CTAs, copy</div>
+          </div>
+          <span class="ptag visual" style="margin-left:auto;">Pillar 3</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">🛒</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">Checkout Friction</div>
+            <div style="font-size:12px; color:var(--text-light);">Trade gate, registration, sample request</div>
+          </div>
+          <span class="ptag checkout" style="margin-left:auto;">Pillar 4</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">⏰</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">Urgency &amp; Scarcity</div>
+            <div style="font-size:12px; color:var(--text-light);">Quick Ship, availability, launch moments</div>
+          </div>
+          <span class="ptag urgency" style="margin-left:auto;">Pillar 5</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--light-bg); border-radius:8px; border:1px solid var(--border);">
+          <span style="font-size:20px;">⭐</span>
+          <div>
+            <div style="font-weight:700; font-size:14px;">De-risking &amp; Social Proof</div>
+            <div style="font-size:12px; color:var(--text-light);">Testimonials, awards, policies, credibility</div>
+          </div>
+          <span class="ptag social" style="margin-left:auto;">Pillar 6</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:12px; color:var(--text-light); text-transform:uppercase; font-size:11px; letter-spacing:1px;">Pages Reviewed</h4>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-light);">
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">🏠 Homepage</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">🛋️ Products hub + Sofa &amp; Loveseats category</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">📐 Product detail (Galapagos Sofa 100) + 3D configurator</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">🚚 Quick Ship program page</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">🔐 Sample Request + Sign In / trade registration flow</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">✉️ Contact Us · 🧭 Find Us store locator</div>
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">🏛️ About Us · 🔍 On-site search</div>
+        <div style="padding:8px 0;">📱 Mobile performance on all 3 tested pages</div>
+      </div>
+      <h4 style="margin-top:20px; margin-bottom:12px; color:var(--text-light); text-transform:uppercase; font-size:11px; letter-spacing:1px;">Data Sources</h4>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-light);">
+        <div style="padding:7px 0; border-bottom:1px solid var(--border);">📊 Google PageSpeed Insights (3 pages, mobile + desktop)</div>
+        <div style="padding:7px 0; border-bottom:1px solid var(--border);">🔍 Full site browse + trade funnel walkthrough</div>
+        <div style="padding:7px 0; border-bottom:1px solid var(--border);">🏁 Competitor analysis: Caracole, Bernhardt, Artefacto</div>
+        <div style="padding:7px 0;">⚠️ GA4 not connected. Traffic, funnel, and device data unavailable for this audit.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 3 — SITE HEALTH SNAPSHOT (no GA4 fallback)
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s3">
+  <div class="slide-label">Current State</div>
+  <h2>Site Health Snapshot</h2>
+  <p class="subtitle">PageSpeed scores across the three most conversion-critical pages. All three fail Core Web Vitals thresholds.</p>
+
+  <table style="margin-top:8px;">
+    <thead>
+      <tr>
+        <th>Page</th>
+        <th>Mobile Score</th>
+        <th>Desktop Score</th>
+        <th>LCP (Mobile)</th>
+        <th>CLS (Mobile)</th>
+        <th>Page Weight</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:#fef2f2;">
+        <td><strong>Homepage</strong> <span style="font-size:11px; color:var(--red); font-weight:700;">← First impression</span></td>
+        <td><span class="score red" style="font-size:14px; padding:3px 10px;">39</span></td>
+        <td><span class="score red" style="font-size:14px; padding:3px 10px;">32</span></td>
+        <td><span style="color:var(--red); font-weight:700;">33.0s</span></td>
+        <td><span style="color:var(--red); font-weight:700;">0.283</span></td>
+        <td>6.6&nbsp;MB · 160 requests</td>
+        <td><span class="badge critical">Critical</span></td>
+      </tr>
+      <tr>
+        <td><strong>Products hub</strong></td>
+        <td><span class="score yellow" style="font-size:14px; padding:3px 10px;">57</span></td>
+        <td><span class="score yellow" style="font-size:14px; padding:3px 10px;">53</span></td>
+        <td><span style="color:var(--red); font-weight:700;">4.2s</span></td>
+        <td><span style="color:var(--red); font-weight:700;">0.256</span></td>
+        <td>3.7&nbsp;MB · 156 requests</td>
+        <td><span class="badge medium">Needs Work</span></td>
+      </tr>
+      <tr style="background:#fef2f2;">
+        <td><strong>Contact Us</strong> <span style="font-size:11px; color:var(--red); font-weight:700;">← Lead capture page</span></td>
+        <td><span class="score red" style="font-size:14px; padding:3px 10px;">30</span></td>
+        <td><span class="score yellow" style="font-size:14px; padding:3px 10px;">51</span></td>
+        <td><span style="color:var(--red); font-weight:700;">23.2s</span></td>
+        <td><span style="color:var(--red); font-weight:700;">1.001</span></td>
+        <td>3.7&nbsp;MB · 137 requests</td>
+        <td><span class="badge critical">Critical</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col mt8">
+    <div>
+      <h4 style="margin-bottom:10px;">What We Observed Live</h4>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div class="note danger" style="margin:0;">
+          <strong>The homepage hero stays blank white for several seconds after the navigation renders.</strong> On mobile connections, Google measures 33 seconds before the main content is painted. Most first-time visitors never see the brand imagery at all.
+        </div>
+        <div class="note warning" style="margin:0;">
+          <strong>Contact page CLS of 1.001 is four times Google's "poor" threshold.</strong> The lead form visibly jumps around while loading on mobile, which makes mis-taps and abandonment likely at the exact moment a prospect tries to reach out.
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px;">Core Web Vitals Benchmarks</h4>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-light);">
+        <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border);">
+          <span>LCP (Largest Contentful Paint)</span>
+          <span>Good: &lt;2.5s | Needs work: 2.5–4s | Poor: &gt;4s</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border);">
+          <span>CLS (Cumulative Layout Shift)</span>
+          <span>Good: &lt;0.1 | Needs work: 0.1–0.25 | Poor: &gt;0.25</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:6px 0;">
+          <span>Mobile performance score</span>
+          <span>Poor: &lt;50 | Needs improvement: 50–89 | Good: 90+</span>
+        </div>
+      </div>
+      <div class="note info" style="margin-top:10px;">
+        <strong>What GA4 would unlock:</strong> this snapshot covers technical health only. With GA4 access we could show the actual funnel (sessions → product views → sample requests → registrations), device split, drop-off points, and which traffic sources convert. We recommend connecting it as a follow-up.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 4 — PILLAR 1 INTRO: WEBSITE PERFORMANCE
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s4">
+  <div class="slide-label">Pillar 1 of 6</div>
+  <div class="pillar-icon">⚡</div>
+  <h2 style="color:#fff; font-size:38px;">Website Performance</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">Speed, mobile experience, and Core Web Vitals. The technical foundation everything else depends on.</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">40%</div>
+    <div class="pillar-stat-label">of visitors will leave if a page takes more than 3 seconds to load on mobile.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">For a luxury brand, speed is part of the experience. A hero that arrives late undermines the same premium impression the photography is designed to create. Google also uses Core Web Vitals as a ranking signal, so slow pages surface lower in search.</p>
+
+  <ul class="signals-list">
+    <li>Mobile performance score on key pages (Google rates under 50 as poor)</li>
+    <li>Largest Contentful Paint, how fast the main content appears</li>
+    <li>Cumulative Layout Shift, visual stability while loading</li>
+    <li>Unused JavaScript and duplicate plugins adding load weight</li>
+    <li>Media weight of image-heavy luxury pages</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 5 — PERFORMANCE FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s5">
+  <div class="slide-label">Pillar 1 — Findings</div>
+  <h2>Website Performance</h2>
+  <p class="subtitle" style="margin-bottom:14px;">5 issues identified, 2 Critical. This is the highest-leverage pillar in the audit.</p>
+
+  <div class="finding">
+    <span class="badge critical">Critical</span>
+    <div class="finding-body">
+      <div class="finding-title">Homepage: mobile 39/100 with a 33-second LCP. The hero is invisible while the brand makes its first impression</div>
+      <div class="finding-desc">The homepage weighs 6.6 MB across 160 requests. On mobile, Google measures 33.0s before the hero content paints; we observed the same live on desktop, where the nav renders and the hero area stays blank white for several seconds. Speed Index is 25.0s mobile. For a brand whose product is visual, the most expensive real estate on the site is loading last.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge critical">Critical</span>
+    <div class="finding-body">
+      <div class="finding-title">Contact page: mobile CLS 1.001 and 23.2s LCP on the primary lead-capture page</div>
+      <div class="finding-desc">A CLS of 1.001 is four times the "poor" threshold. The contact form visibly shifts as the page assembles on mobile, inviting mis-taps and abandonment from prospects who are actively trying to get in touch. Mobile score is 30/100.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">~950 KiB of unused JavaScript, including three overlapping analytics plugins</div>
+      <div class="finding-desc">PageSpeed estimates 4.7s of savings from unused JS on the homepage and contact page. The site loads PixelYourSite, the official Facebook Pixel plugin, and Google Site Kit simultaneously, which duplicates tracking payloads on every page view.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Layout shift fails on every page tested (CLS 0.256 to 1.001 mobile)</div>
+      <div class="finding-desc">Homepage 0.283, products 0.256, contact 1.001 on mobile. Images and lazy-loaded Divi modules render without reserved space, so the page jumps as content arrives.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">About Us renders as a blank page for 8+ seconds</div>
+      <div class="finding-desc">Scroll-triggered fade-in animations combined with slow hero media leave the About Us page looking completely empty on first paint. We loaded it twice and saw a white screen both times until scrolling forced content in. The brand's strongest storytelling page is effectively hidden.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 6 — PILLAR 2 INTRO: UX & NAVIGATION
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s6">
+  <div class="slide-label">Pillar 2 of 6</div>
+  <div class="pillar-icon">🗺️</div>
+  <h2 style="color:#fff; font-size:38px;">UX &amp; Navigation</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">Can designers and buyers find the right piece and move toward specifying it, or are they hitting walls?</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">2×</div>
+    <div class="pillar-stat-label">returning visitors convert at nearly double the rate of new ones. Big-ticket buyers rarely commit on the first visit; smooth navigation is what brings a specifier back to shortlist and order.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">Adriana Hoyos serves interior designers, hospitality buyers, and end clients at once. Each needs to narrow a large catalog quickly: by collection, by room, by material, by what ships now.</p>
+
+  <ul class="signals-list">
+    <li>Category pages: can users filter and sort a 39-product grid?</li>
+    <li>Footer as a navigation safety net</li>
+    <li>Related-product discovery on detail pages</li>
+    <li>Scroll behavior and wayfinding on the homepage</li>
+    <li>Store locator usability</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 7 — UX & NAVIGATION FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s7">
+  <div class="slide-label">Pillar 2 — Findings</div>
+  <h2>UX &amp; Navigation</h2>
+  <p class="subtitle" style="margin-bottom:14px;">5 issues identified. Search, notably, works well.</p>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">No filtering or sorting on category pages</div>
+      <div class="finding-desc">The Sofa &amp; Loveseats category presents 39 products in a single unfiltered grid. There is no way to narrow by collection, material, size, or Quick Ship availability, and no sort control. Competitor Artefacto offers Category, Indoor/Outdoor, and Order controls on every listing page.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Footer is a dead end: policies and social icons only, and the policy items aren't even clickable</div>
+      <div class="finding-desc">The homepage footer contains Terms of Use, Privacy Policy, BASC Policy, How We Work, and four grey social icons. On every page we tested, those policy items render as plain text, not links: they cannot be clicked. The footer is also inconsistent page to page (product pages omit How We Work, add a fifth icon, and even credit a different copyright entity than the homepage). No product categories, no contact details, no newsletter capture anywhere.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">Homepage collections band hijacks vertical scrolling</div>
+      <div class="finding-desc">The horizontal "Inspired Collections" section captures mouse-wheel input. During our review, repeated scroll attempts left the page pinned on that band; we had to jump past it programmatically. Visitors who stop scrolling never reach the materials story or footer.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">"You May Also Like" renders empty and recommends across the wrong categories</div>
+      <div class="finding-desc">On the Galapagos Sofa 100 page, the related-products section renders as a blank band. The underlying modules contain roughly 19 hidden items, mostly bedroom and dining pieces (dressers, nightstands, a bed, buffets, dining chairs) recommended on a living room sofa page, and every hidden card carries the same raw "Maximum quantity no defined" string.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Find Us map loads broken: 15+ seconds of grey, then a washed-out map centered on South Africa with no store pins</div>
+      <div class="finding-desc">The store locator lists 99 shops worldwide, a genuine strength, but the map pane stayed an empty grey rectangle for 15+ seconds and then painted an extremely faint map centered on Gqeberha, South Africa, with no visible location markers. For a brand whose showrooms and retail partners drive revenue, a locator that cannot show a single pin is lost foot traffic on every visit.</div>
+    </div>
+  </div>
+
+  <div class="note success" style="margin-top:8px;">
+    <strong>What's working:</strong> on-site search returns relevant, well-presented product results ("Your Search, Your Results"), and the mega-menu's room-based product taxonomy is clear and logical.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 8 — PILLAR 3 INTRO: VISUAL MESSAGING
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s8">
+  <div class="slide-label">Pillar 3 of 6</div>
+  <div class="pillar-icon">✍️</div>
+  <h2 style="color:#fff; font-size:38px;">Visual Messaging</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">Do the first three seconds tell a visitor what Adriana Hoyos is, who it serves, and why to choose it?</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">3 sec</div>
+    <div class="pillar-stat-label">is roughly how long a new visitor gives a homepage before deciding to stay or leave. The hero has to answer "what is this and why should I care" inside that window.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">The photography and 3D product experience are genuinely premium. The gap is orientation: taglines speak in fashion language while the visitor still doesn't know if this brand sells to them, and polish details like raw system text leak into customer view.</p>
+
+  <ul class="signals-list">
+    <li>Hero value proposition and audience orientation</li>
+    <li>CTA copy: specific and action-oriented, or generic?</li>
+    <li>Copy polish: system strings, heading structure</li>
+    <li>Product visuals: does the star asset load first?</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 9 — VISUAL MESSAGING FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s9">
+  <div class="slide-label">Pillar 3 — Findings</div>
+  <h2>Visual Messaging</h2>
+  <p class="subtitle" style="margin-bottom:14px;">5 issues identified, 1 Critical.</p>
+
+  <div class="finding">
+    <span class="badge critical">Critical</span>
+    <div class="finding-body">
+      <div class="finding-title">The hero never states what the brand is, who it serves, or why to choose it</div>
+      <div class="finding-desc">Four auto-rotating slides carry taglines like "Explore our technologies", "LIVING IN FASHION", and "NOW AVAILABLE: NEW DESIGNS", with a generic "Discover More" CTA (the award slide's button reads "Galapagos Chair 501 Texture"). Nothing orients a first-time visitor: is this retail or trade-only, where is it sold, what makes it different? Combined with the slow hero load, the most valuable screen on the site communicates essentially nothing in the first seconds.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Raw system text leaks onto customer-facing product cards</div>
+      <div class="finding-desc">Quick Ship product cards display "Maximum quantity no defined" and "Maximum quantity: 12" as visible card text. On a luxury site, one unpolished string undercuts an otherwise premium presentation.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">27 H1 tags render on the homepage</div>
+      <div class="finding-desc">The hero slider alone outputs 12 H1s (three responsive copies of each of the four slides), and 15 more render further down the page ("LATEST MAGIC", "INSPIRED COLLECTIONS", "A Legacy of Creative Vision", and others). Search engines see 27 competing page titles instead of one clear topic.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">The 3D viewer blocks the primary product visual while it loads</div>
+      <div class="finding-desc">Product pages open with a spinner and "Notice: Loading 3D viewer, please wait..." where the product photo should be. The 3D configurator is a real differentiator, but making it the default hero asset means the product is invisible during the seconds that matter.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge low">Low</span>
+    <div class="finding-body">
+      <div class="finding-title">White hero text sits on light imagery on some slides</div>
+      <div class="finding-desc">Slide text like "Discover More" approaches invisibility over pale interiors. (Credit where due: an accessibility widget is installed sitewide.)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 10 — PILLAR 4 INTRO: CHECKOUT FRICTION
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s10">
+  <div class="slide-label">Pillar 4 of 6</div>
+  <div class="pillar-icon">🛒</div>
+  <h2 style="color:#fff; font-size:38px;">Checkout Friction</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">For a trade brand, the "checkout" is the path from interested designer to approved account. Right now that path is a locked door.</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">70%</div>
+    <div class="pillar-stat-label">of started online forms are abandoned. Every unexplained gate, every extra field, and every unanswered "what happens next" pushes that number higher.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">Gated trade pricing is a legitimate strategy; Bernhardt gates too. The difference is context. The best trade sites sell the program before asking for credentials. Adriana Hoyos asks for credentials without ever selling the program.</p>
+
+  <ul class="signals-list">
+    <li>What a new prospect hits when they try to act (price, sample, quick ship)</li>
+    <li>Registration length, requirements, and expectation-setting</li>
+    <li>Is the purchase path ever explained?</li>
+    <li>Lead-capture forms: friction and follow-up clarity</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 11 — CHECKOUT FRICTION FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s11">
+  <div class="slide-label">Pillar 4 — Findings</div>
+  <h2>Checkout Friction</h2>
+  <p class="subtitle" style="margin-bottom:14px;">5 issues identified, 1 Critical. How the trade gate compares:</p>
+
+  <div style="border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:12px;">
+    <div class="compare-row head">
+      <div>Trade funnel element</div>
+      <div>Adriana Hoyos</div>
+      <div>Caracole</div>
+      <div>Bernhardt</div>
+      <div>Artefacto</div>
+    </div>
+    <div class="compare-row">
+      <div>Pricing visible without login</div>
+      <div><span class="cross">✗</span> Blurred + login</div>
+      <div><span class="check">✓</span> Full prices shown</div>
+      <div><span class="cross">✗</span> Gated</div>
+      <div><span class="cross">✗</span> Not shown</div>
+    </div>
+    <div class="compare-row">
+      <div>Trade program explained before signup</div>
+      <div><span class="cross">✗</span> Bare login modal</div>
+      <div><span class="check">✓</span> "Discover the Trade Program"</div>
+      <div><span class="check">✓</span> Program pages</div>
+      <div><span class="partial">◐</span> Showroom-led</div>
+    </div>
+    <div class="compare-row">
+      <div>New-customer offer</div>
+      <div><span class="cross">✗</span> None</div>
+      <div><span class="check">✓</span> 20% welcome code</div>
+      <div><span class="cross">✗</span> None</div>
+      <div><span class="cross">✗</span> None</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge critical">Critical</span>
+    <div class="finding-body">
+      <div class="finding-title">Sample Request, the easiest first action for a new prospect, opens a bare login wall</div>
+      <div class="finding-desc">Clicking SAMPLE REQUEST in the header produces a username/password modal with a "Create Account" button and zero explanation: who qualifies, what it costs, what happens after. A designer who just wants a fabric swatch is asked to register and upload a resale certificate first. This is the single most valuable top-of-funnel action on the site and it is fully gated.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Pricing is blurred with "If you want to see the price click here", and the click hits the same bare login</div>
+      <div class="finding-desc">Product pages tease a blurred price next to a click-through that opens the unexplained login modal. Caracole shows a $10,030 sofa price publicly with a 20% welcome code. Bernhardt also gates pricing, but surrounds the gate with trade program marketing. Adriana Hoyos gates with no story at all.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Registration asks for 11 fields plus a resale certificate upload, then a manual review of unstated length</div>
+      <div class="finding-desc">The signup form requires company, resale certificate number, certificate file upload, business type, and full address, and ends with "we will check your information and you will shortly receive a confirmation". No timeline, no statement of benefits, no indication of what "shortly" means. High-intent prospects are left in limbo at the moment of maximum motivation.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">"How We Work", the only explanation of the purchase path, is buried in the footer and isn't clickable</div>
+      <div class="finding-desc">Nothing on product pages tells a prospect how buying actually works: trade vs. retail, showroom purchase, lead times, shipping. "How We Work" appears only in the homepage footer, where it renders as plain text rather than a working link, and product-page footers omit it entirely.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Contact page sets no expectations and offers no phone or showroom details</div>
+      <div class="finding-desc">The 6-field form ends in a generic SEND with no stated response time. The page lists team emails by region (a genuine plus) but no phone number, hours, or showroom address block. It is also the least stable page on mobile (CLS 1.001, see Pillar 1).</div>
+    </div>
+  </div>
+
+  <div class="note info" style="margin-top:8px;">
+    <strong>Why this pillar compounds:</strong> the trade-account system is the heart of the brand's digital funnel, and as the brand grows its retail footprint, this same account experience becomes the template for every new regional site and partner integration. Every fix here pays off more than once.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 12 — PILLAR 5 INTRO: URGENCY & SCARCITY
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s12">
+  <div class="slide-label">Pillar 5 of 6</div>
+  <div class="pillar-icon">⏰</div>
+  <h2 style="color:#fff; font-size:38px;">Urgency &amp; Scarcity</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">Luxury doesn't discount, but it can still give buyers a reason to act now. Adriana Hoyos already has one: Quick Ship.</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">10–30%</div>
+    <div class="pillar-stat-label">conversion lift reported in case studies when authentic urgency signals are present at the point of decision. Authentic is the key word: real inventory, real dates, real programs.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">Custom furniture usually means long lead times, so "pieces ready to ship in 6 weeks" is a genuinely differentiating promise. The data behind it (per-item quantities) already exists in the store. Both are currently undersold.</p>
+
+  <ul class="signals-list">
+    <li>Is the Quick Ship promise visible where decisions happen?</li>
+    <li>Real inventory scarcity, surfaced in customer language</li>
+    <li>Collection launches and events as luxury-appropriate urgency</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 13 — URGENCY & SCARCITY FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s13">
+  <div class="slide-label">Pillar 5 — Findings</div>
+  <h2>Urgency &amp; Scarcity</h2>
+  <p class="subtitle" style="margin-bottom:14px;">3 issues identified. The raw material for authentic urgency already exists.</p>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Quick Ship, the strongest urgency asset, is undersold</div>
+      <div class="finding-desc">"Pieces ready to ship in 6 weeks" is a real differentiator in custom luxury furniture, where lead times often run 4 to 6 months. But the program's hero loads late, the 6-week promise sits below the fold, homepage promotion is limited to one rotating slide, and eligible products don't advertise their quick-ship status prominently.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Real scarcity is displayed as raw system data instead of a selling point</div>
+      <div class="finding-desc">The Galapagos Dining Table 101 shows "Maximum quantity: 1". That is genuine, persuasive scarcity ("the last one, ready in 6 weeks") rendered as database output that reads like an error.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">No launch moments, event dates, or seasonal hooks anywhere</div>
+      <div class="finding-desc">There are no collection launch dates, market-week events, or showroom happenings on the site. Luxury brands create urgency editorially (limited collections, launch windows, event RSVPs) without ever discounting. Caracole, by contrast, runs welcome offers; Adriana Hoyos need not copy that, but currently offers no reason at all to act this month versus next.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 14 — PILLAR 6 INTRO: DE-RISKING & SOCIAL PROOF
+═══════════════════════════════════════════════════════ -->
+<div class="slide pillar" id="s14">
+  <div class="slide-label">Pillar 6 of 6</div>
+  <div class="pillar-icon">⭐</div>
+  <h2 style="color:#fff; font-size:38px;">De-risking &amp; Social Proof</h2>
+  <p style="font-size:17px; color:rgba(255,255,255,0.78); max-width:680px; margin-top:8px;">A designer specifying a five-figure piece for a client needs proof: who else trusts this brand, and what happens if something goes wrong?</p>
+
+  <div class="pillar-stat-block">
+    <div class="pillar-stat">15–20%</div>
+    <div class="pillar-stat-label">conversion lift case studies typically report when real customer proof is visible at the point of decision. For trade brands, that proof is testimonials, project case studies, and named clients.</div>
+  </div>
+
+  <p style="font-size:14px; color:rgba(255,255,255,0.78); margin-bottom:14px;">Adriana Hoyos has the assets: a 40-year design legacy, hospitality installations, 99 points of sale, an award win, and a family story. Almost none of it is deployed where buying decisions happen.</p>
+
+  <ul class="signals-list">
+    <li>Testimonials and case studies from designers and hospitality clients</li>
+    <li>Awards presented consistently and persistently</li>
+    <li>Press and third-party credibility</li>
+    <li>Policies a buyer can check before committing (shipping, warranty)</li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 15 — SOCIAL PROOF FINDINGS
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s15">
+  <div class="slide-label">Pillar 6 — Findings</div>
+  <h2>De-risking &amp; Social Proof</h2>
+  <p class="subtitle" style="margin-bottom:14px;">5 issues identified.</p>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">Zero testimonials, case studies, or client names anywhere on the site</div>
+      <div class="finding-desc">No designer quotes, no hospitality project case studies, no client logos. Competitor Artefacto carries TESTIMONIALS as a top-level navigation item. Adriana Hoyos has a Hospitality division and decades of installations, which is exactly the proof a specifier looks for, and none of it is on the site.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge high">High</span>
+    <div class="finding-body">
+      <div class="finding-title">The LUXE RED award lives only in a rotating hero slide, with inconsistent naming</div>
+      <div class="finding-desc">One slide says "Red Luxe Award winners 2026", another "Winner of LUXE RED Awards 2026". The award vanishes when the carousel rotates and appears nowhere else. Inconsistent naming also weakens searchability and credibility.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">No press or media section</div>
+      <div class="finding-desc">A luxury furnishings brand of this profile has trade-press coverage, but the site offers no "As seen in" strip or press page to borrow that credibility.</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge medium">Medium</span>
+    <div class="finding-body">
+      <div class="finding-title">No shipping, warranty, or returns information available before login</div>
+      <div class="finding-desc">Published policies are Terms of Use, Privacy, and BASC only. A prospect cannot answer basic de-risking questions: how does white-glove delivery work, what does the warranty cover, what if a piece arrives damaged?</div>
+    </div>
+  </div>
+
+  <div class="finding">
+    <span class="badge low">Low</span>
+    <div class="finding-body">
+      <div class="finding-title">Instagram, the discovery channel for luxury interiors, is a small grey footer icon</div>
+      <div class="finding-desc">Social proof by association (installs, designer tags, reels) stays invisible. The four social icons are low-contrast grey marks at the page bottom.</div>
+    </div>
+  </div>
+
+  <div class="note success" style="margin-top:8px;">
+    <strong>What's working:</strong> the About Us story (family-owned, designer-led, vertically integrated) is strong raw material, the contact page lists real named team members by region, and the 99-location Find Us locator signals global scale.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 16 — PRIORITY ROADMAP
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s16">
+  <div class="slide-label">All 28 Issues — Ranked by Priority</div>
+  <h2>Priority Roadmap</h2>
+  <p class="subtitle" style="margin-bottom:16px;">Every finding across all 6 pillars, sorted by conversion impact.</p>
+
+  <div class="two-col">
+    <div>
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--crit-text); margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid var(--crit-border);">Critical — Fix Immediately</div>
+      <div class="roadmap-item"><span class="badge critical">Critical</span><span class="ptag perf" style="flex-shrink:0;">Performance</span><span class="roadmap-title">Homepage mobile 39/100, LCP 33s, 6.6MB page weight</span></div>
+      <div class="roadmap-item"><span class="badge critical">Critical</span><span class="ptag perf" style="flex-shrink:0;">Performance</span><span class="roadmap-title">Contact page mobile CLS 1.001, LCP 23.2s</span></div>
+      <div class="roadmap-item"><span class="badge critical">Critical</span><span class="ptag visual" style="flex-shrink:0;">Visual</span><span class="roadmap-title">Hero states no value proposition or audience; generic CTA</span></div>
+      <div class="roadmap-item" style="border:none;"><span class="badge critical">Critical</span><span class="ptag checkout" style="flex-shrink:0;">Checkout</span><span class="roadmap-title">Sample Request gated behind bare, unexplained login wall</span></div>
+
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--med-text); margin:14px 0 8px; padding-bottom:6px; border-bottom:2px solid var(--med-border);">Medium — Next Sprint</div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag ux" style="flex-shrink:0;">UX</span><span class="roadmap-title">Homepage collections band hijacks vertical scroll</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag ux" style="flex-shrink:0;">UX</span><span class="roadmap-title">"You May Also Like" empty on load + wrong-category picks</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag visual" style="flex-shrink:0;">Visual</span><span class="roadmap-title">27 H1 tags on the homepage</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag visual" style="flex-shrink:0;">Visual</span><span class="roadmap-title">3D viewer blocks primary product visual while loading</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag urgency" style="flex-shrink:0;">Urgency</span><span class="roadmap-title">No launch dates, events, or seasonal hooks</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag social" style="flex-shrink:0;">Social</span><span class="roadmap-title">No press / "As seen in" section</span></div>
+      <div class="roadmap-item"><span class="badge medium">Medium</span><span class="ptag social" style="flex-shrink:0;">Social</span><span class="roadmap-title">No shipping / warranty / returns info before login</span></div>
+
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--low-text); margin:14px 0 8px; padding-bottom:6px; border-bottom:2px solid var(--low-border);">Low — Polish</div>
+      <div class="roadmap-item"><span class="badge low">Low</span><span class="ptag visual" style="flex-shrink:0;">Visual</span><span class="roadmap-title">White hero text over light imagery needs a scrim</span></div>
+      <div class="roadmap-item" style="border:none;"><span class="badge low">Low</span><span class="ptag social" style="flex-shrink:0;">Social</span><span class="roadmap-title">Instagram buried as grey footer icon</span></div>
+    </div>
+
+    <div>
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--high-text); margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid var(--high-border);">High — Address After Critical</div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag perf" style="flex-shrink:0;">Performance</span><span class="roadmap-title">~950 KiB unused JS; three overlapping analytics plugins</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag perf" style="flex-shrink:0;">Performance</span><span class="roadmap-title">Layout shift fails on every page tested (CLS 0.256–1.001)</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag perf" style="flex-shrink:0;">Performance</span><span class="roadmap-title">About Us blank for 8+ seconds (entrance animations)</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag ux" style="flex-shrink:0;">UX</span><span class="roadmap-title">No filtering or sorting on category pages</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag ux" style="flex-shrink:0;">UX</span><span class="roadmap-title">Footer dead end: policies + social icons only</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag ux" style="flex-shrink:0;">UX</span><span class="roadmap-title">Find Us map broken: wrong default center, no store pins</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag visual" style="flex-shrink:0;">Visual</span><span class="roadmap-title">Raw system text on product cards ("Maximum quantity no defined")</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag checkout" style="flex-shrink:0;">Checkout</span><span class="roadmap-title">Blurred price → unexplained login (competitors sell the gate)</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag checkout" style="flex-shrink:0;">Checkout</span><span class="roadmap-title">11-field registration + certificate upload + unstated review time</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag checkout" style="flex-shrink:0;">Checkout</span><span class="roadmap-title">"How We Work" purchase path buried in footer as non-clickable text</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag checkout" style="flex-shrink:0;">Checkout</span><span class="roadmap-title">Contact form: no response expectation, no phone/showroom info</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag urgency" style="flex-shrink:0;">Urgency</span><span class="roadmap-title">Quick Ship 6-week promise undersold sitewide</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag urgency" style="flex-shrink:0;">Urgency</span><span class="roadmap-title">Real scarcity shown as raw data ("Maximum quantity: 1")</span></div>
+      <div class="roadmap-item"><span class="badge high">High</span><span class="ptag social" style="flex-shrink:0;">Social</span><span class="roadmap-title">Zero testimonials, case studies, or client names</span></div>
+      <div class="roadmap-item" style="border:none;"><span class="badge high">High</span><span class="ptag social" style="flex-shrink:0;">Social</span><span class="roadmap-title">LUXE RED award only in a rotating slide, inconsistently named</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 17 — IMPLEMENTATION PHASES
+═══════════════════════════════════════════════════════ -->
+<div class="slide" id="s17">
+  <div class="slide-label">Execution Plan</div>
+  <h2>Implementation Phases</h2>
+  <p class="subtitle" style="margin-bottom:20px;">Priority order based on conversion impact and ease of implementation on WordPress + Divi + WooCommerce.</p>
+
+  <div class="three-col">
+    <div class="phase-block" style="border-top:3px solid var(--crit-text);">
+      <div class="phase-header" style="color:var(--crit-text);">Phase 1<br><span style="font-weight:400; font-size:11px; color:var(--text-light);">Copy, content, and settings. Minimal developer time.</span></div>
+      <ul class="phase-items">
+        <li style="color:var(--text);">Rewrite the hero: one slide, clear value proposition, "Explore Collections" + "Trade Program" CTAs</li>
+        <li style="color:var(--text);">Add explainer copy + approval timeline to the login/registration modal</li>
+        <li style="color:var(--text);">Fix raw system strings on product cards ("Only 1 available" / "12 ready to ship")</li>
+        <li style="color:var(--text);">Standardize the LUXE RED award name; add a persistent credential strip</li>
+        <li style="color:var(--text);">Add response-time promise, phone, and showroom info to the contact page</li>
+        <li style="color:var(--text);">Promote "How We Work" into main navigation</li>
+        <li style="color:var(--text);">Rebuild the footer: categories, contact, trade links, newsletter</li>
+        <li style="color:var(--text);">Fix homepage H1 structure (one H1, slides demoted)</li>
+      </ul>
+    </div>
+
+    <div class="phase-block" style="border-top:3px solid var(--high-text);">
+      <div class="phase-header" style="color:var(--high-text);">Phase 2<br><span style="font-weight:400; font-size:11px; color:var(--text-light);">Developer or plugin work. High impact.</span></div>
+      <ul class="phase-items">
+        <li style="color:var(--text);">Performance sprint: WebP heroes, preload LCP, WP Rocket caching, defer JS (homepage + contact first)</li>
+        <li style="color:var(--text);">Fix contact-page layout shift (reserve space for form and embeds; target CLS &lt; 0.1)</li>
+        <li style="color:var(--text);">Consolidate analytics to one pixel manager; remove duplicate plugins</li>
+        <li style="color:var(--text);">Guest sample-request form (no login required)</li>
+        <li style="color:var(--text);">Registration: defer certificate upload, add SLA + benefits, instant confirmation email</li>
+        <li style="color:var(--text);">WooCommerce filters + sort on category pages</li>
+        <li style="color:var(--text);">Quick Ship badges on eligible product cards and detail pages</li>
+        <li style="color:var(--text);">Static product photo first; 3D viewer on demand</li>
+        <li style="color:var(--text);">Remove above-fold entrance animations (About Us and sitewide)</li>
+        <li style="color:var(--text);">Replace scroll-jacked collections band with arrow carousel</li>
+      </ul>
+    </div>
+
+    <div class="phase-block" style="border-top:3px solid var(--med-text);">
+      <div class="phase-header" style="color:var(--med-text);">Phase 3<br><span style="font-weight:400; font-size:11px; color:var(--text-light);">Ongoing optimization and content build-out.</span></div>
+      <ul class="phase-items">
+        <li style="color:var(--text);">Collect and publish designer + hospitality testimonials and case studies</li>
+        <li style="color:var(--text);">Publish Shipping &amp; Delivery and Warranty &amp; Care pages</li>
+        <li style="color:var(--text);">Press page + "As seen in" strip</li>
+        <li style="color:var(--text);">Fix "You May Also Like" scoping (same collection) and lazy-render</li>
+        <li style="color:var(--text);">Repair Find Us map initialization</li>
+        <li style="color:var(--text);">Launch-moment calendar: collection premieres, market weeks, showroom events</li>
+        <li style="color:var(--text);">Shoppable Instagram gallery on the homepage</li>
+        <li style="color:var(--text);">Connect GA4 and build the trade-funnel dashboard (sessions → product views → sample requests → registrations)</li>
+        <li style="color:var(--text);">Hero text scrim + contrast pass</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note info mt16">
+    <strong>Phase 1 alone</strong> (8 items, mostly copy and settings) sharpens the first impression and unblocks the trade funnel within days, before the heavier development work begins.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 18 — NEXT STEPS
+═══════════════════════════════════════════════════════ -->
+<div class="slide dark" id="s18">
+  <div style="margin-top:auto; margin-bottom:auto; text-align:center;">
+    <div class="slide-label" style="text-align:center; margin-bottom:16px;">What Happens Next</div>
+    <h1 style="font-size:52px; margin-bottom:16px;">Ready to Execute?</h1>
+    <p style="font-size:18px; color:rgba(255,255,255,0.82); max-width:620px; margin:0 auto 36px;">28 issues identified across 6 pillars. Here's how we help you get there.</p>
+
+    <div class="stats-row" style="justify-content:center; max-width:700px; margin:0 auto 36px;">
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value">4</div>
+        <div class="stat-label">Critical fixes — highest ROI</div>
+      </div>
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value">8</div>
+        <div class="stat-label">Phase 1 quick wins — days, not months</div>
+      </div>
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Phases to a stronger trade funnel</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="mailto:sales@embertribe.com" style="background:var(--client-accent); color:var(--client-dark); padding:14px 32px; border-radius:8px; font-weight:800; font-size:15px; text-decoration:none; letter-spacing:-0.3px;">Let's Build the Plan →</a>
+      <a href="https://www.embertribe.com" style="background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:14px 32px; border-radius:8px; font-weight:600; font-size:15px; text-decoration:none;">embertribe.com</a>
+    </div>
+  </div>
+  <div class="ember-mark"><span>Ember</span>Tribe</div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">&#8592;</button>
+  <div class="nav-counter"><span id="cur">1</span> / <span id="tot">18</span></div>
+  <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">&#8594;</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function showSlide(n) {
+  slides[current].classList.remove('active');
+  current = (n + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('cur').textContent = current + 1;
+  document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  slides[current].scrollTop = 0;
+}
+
+function changeSlide(dir) { showSlide(current + dir); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+  if (e.key === 'ArrowLeft') changeSlide(-1);
+});
+
+document.getElementById('tot').textContent = total;
+document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
