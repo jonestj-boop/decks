@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XKGlow — EmberTribe SEO Scope of Work</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================================
+   THEME VARIABLES — XKGlow: black + signal red
+   ============================================================= */
+:root {
+  --primary-dark: #0a0a0a;
+  --primary-mid: #1c1c1c;
+  --primary-light: #2e2e2e;
+  --accent: #ff2626;
+
+  /* EmberTribe constants */
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  /* Universal palette */
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 36px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 860px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value { font-size: 36px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost { font-size: 20px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+/* Pricing tier cards */
+.tier-card {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tier-card.featured { border-color: var(--accent); position: relative; }
+
+.tier-badge {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.tier-price { font-size: 40px; font-weight: 900; letter-spacing: -1px; }
+.tier-price span { font-size: 15px; font-weight: 500; color: var(--text-light); letter-spacing: 0; }
+
+.tier-card ul { list-style: none; padding: 0; margin-top: 14px; }
+
+.tier-card ul li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.tier-card ul li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 800;
+  color: var(--green);
+}
+
+.tier-card ul li.plus::before { content: '+'; color: var(--accent); font-size: 16px; }
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.accent { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-height: 820px) {
+  .slide { padding: 32px 56px; }
+  h2 { font-size: 30px; }
+  .subtitle { font-size: 17px; margin-bottom: 16px; }
+  table { font-size: 13px; }
+  th, td { padding: 8px 10px; }
+  .channel-card, .tier-card { padding: 18px; }
+  .channel-card ul li, .tier-card ul li { font-size: 13px; margin-bottom: 5px; }
+  .tier-price { font-size: 32px; }
+  .stat-card { padding: 14px 18px; }
+  .stat-value { font-size: 30px; }
+  .annotation { padding: 10px 14px; font-size: 13px; margin: 8px 0; }
+  .two-col { gap: 24px; }
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Dark) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">SEO Scope of Work</p>
+      <h1>XKGLOW</h1>
+      <p class="subtitle">A conservative-start, full-stack SEO engagement — technical cleanup, content, page architecture, and authority building — scoped to the priorities from our July 6 call.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value accent">15</div>
+          <div class="stat-label">SEO articles per month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value teal">1,000+</div>
+          <div class="stat-label">Keyword universe already mapped</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">Month 1</div>
+          <div class="stat-label">One-time technical cleanup</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">2 Tiers</div>
+          <div class="stat-label">$1,500 / $2,000 per month</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Kevin &amp; the XKGlow team &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHAT WE HEARD -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">What We Heard</p>
+    <h2>Your Priorities, In Your Words</h2>
+    <p class="subtitle">This scope is built around what you told us on the call — start conservative, protect quality, and fix the foundation before scaling.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green">Guardrails You Set</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>Quality over volume.</strong> Your internal team (3&ndash;4 reviewers, over half the company are product designers) reviews everything before publish — so we start at 15 articles/month, not 40.</li>
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>Start conservative, scale on trust.</strong> Six-month evaluation window based on results and how actively we communicate.</li>
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>Budget-fit division of labor.</strong> What fits the budget, EmberTribe executes; smaller items your team implements in-house.</li>
+          <li style="padding:10px 0;"><strong>Quarterly billing</strong> preferred — 45 articles delivered per quarter, published monthly.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">Gaps You Flagged</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>Legacy URL mess:</strong> the old combined "car-truck" category was split, but internal links across the site still point to the retired category and bounce through redirects.</li>
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>Technical debt:</strong> mobile speed, broken schema markup (rich results preview fails), weak internal linking on 54 pages, duplicate titles/metas.</li>
+          <li style="padding:10px 0; border-bottom:1px solid var(--border);"><strong>One page serving three audiences:</strong> products like rock lights and underglow share a single page across truck, Jeep, and ATV/UTV shoppers.</li>
+          <li style="padding:10px 0;"><strong>No link building for 6&ndash;7 months</strong> since parting with your last agency (DA 42 &rarr; 40).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SCOPE OVERVIEW -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Scope Overview</p>
+    <h2>Five Workstreams, One Plan</h2>
+    <p class="subtitle">Everything discussed on the call, organized into what happens once and what happens every month.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Workstream</th>
+          <th>Cadence</th>
+          <th>What It Covers</th>
+          <th>Who Executes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">1. Technical SEO Cleanup <span class="pill setup">One-Time</span></td>
+          <td>Month 1</td>
+          <td>Mobile speed / JavaScript cleanup, schema repair, legacy car-truck link fixes, internal linking, duplicate titles &amp; metas, full crawl + URL export</td>
+          <td>EmberTribe</td>
+        </tr>
+        <tr>
+          <td class="bold">2. SEO Content <span class="pill content">Monthly</span></td>
+          <td>15 articles / month</td>
+          <td>Written from the 1,000+ keyword workbook, brand-guideline compliant, published by EmberTribe after your team's approval</td>
+          <td>EmberTribe writes &amp; publishes; XKGlow reviews</td>
+        </tr>
+        <tr>
+          <td class="bold">3. Page Architecture <span class="pill seo">Monthly</span></td>
+          <td>Ongoing</td>
+          <td>Vehicle-specific product pages (truck / Jeep / ATV-UTV splits) + new "Shop by Light Type" category pages, prioritized by search volume &amp; difficulty</td>
+          <td>Tier-dependent (see Investment)</td>
+        </tr>
+        <tr>
+          <td class="bold">4. Backlinks <span class="pill blue">Monthly</span></td>
+          <td>2 quality links / month</td>
+          <td>Targeted at priority category pages — quality placements, not links for links' sake. Scales up as results land.</td>
+          <td>EmberTribe</td>
+        </tr>
+        <tr>
+          <td class="bold">5. Reddit Seeding <span class="pill orange">90-Day Test</span></td>
+          <td>Quarterly test</td>
+          <td>Brand mentions in relevant subreddits (no spam links) — you approve every subreddit and every piece of copy. Built for AI/LLM search visibility.</td>
+          <td>EmberTribe proposes; XKGlow approves</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: MONTH 1 TECHNICAL CLEANUP -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Workstream 1 &mdash; One-Time</p>
+    <h2>Month 1: Technical Cleanup</h2>
+    <p class="subtitle">Fix what's already broken before building anything new. All items below are bundled into Month 1 as a one-time effort — included in both tiers.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Fix</th>
+          <th>Issue Today</th>
+          <th>Deliverable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Mobile speed</td>
+          <td>Slow mobile load times flagged in our audit</td>
+          <td>JavaScript-side technical fixes to cut load times</td>
+        </tr>
+        <tr>
+          <td class="bold">Schema markup</td>
+          <td>Structured data present but failing rich-results preview</td>
+          <td>Repaired, validated schema across product &amp; category pages</td>
+        </tr>
+        <tr>
+          <td class="bold">Legacy "car-truck" links</td>
+          <td>Internal links still point to the retired combined category and hit redirects</td>
+          <td>Full-site crawl, every legacy URL found and re-pointed to the correct car or truck category</td>
+        </tr>
+        <tr>
+          <td class="bold">Weak internal linking</td>
+          <td>54 pages flagged with weak internal linking</td>
+          <td>Internal links added to the appropriate category pages</td>
+        </tr>
+        <tr>
+          <td class="bold">Duplicate titles &amp; metas</td>
+          <td>Duplicated page titles and thin meta descriptions</td>
+          <td>Rewritten, deduplicated titles and meta descriptions</td>
+        </tr>
+        <tr>
+          <td class="bold">Full URL export</td>
+          <td>Your team has no crawler (Ahrefs Starter only) and can't see every URL in one place</td>
+          <td>Complete crawl export delivered to your team — every URL, status, and issue in one sheet for your own AI-assisted review</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation info">
+      <strong>Why one-time:</strong> You asked for this as a single cleanup pass, not a recurring line item — Month 1 is weighted toward these fixes, then the budget shifts to content and links in Months 2&ndash;3.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: PAGE ARCHITECTURE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Workstream 3</p>
+    <h2>Page Architecture: Match Pages to Searches</h2>
+    <p class="subtitle">Two structural plays — both driven by search volume, both improving customer experience as much as SEO.</p>
+    <div class="two-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🚚</div>
+        <h3>Vehicle-Specific Product Pages</h3>
+        <ul>
+          <li><strong>Today:</strong> one rock light page serves truck, Jeep, and ATV/UTV shoppers — the breadcrumb changes, the page doesn't.</li>
+          <li><strong>The play:</strong> split popular multi-vehicle products into dedicated pages — e.g. Rock Lights for Trucks, Rock Lights for Jeeps, Rock Lights for ATV/UTV.</li>
+          <li>The existing page (with its accumulated authority) becomes the highest-search-volume variant; new pages cover the rest.</li>
+          <li>Copy, images, and reviews all become vehicle-specific — "rock lights for trucks" searches land on a truck page.</li>
+          <li>Only where volume justifies it: no rock lights page for cars, no underglow page for ATVs.</li>
+          <li>Builds on the Phase 1 / Phase 2 prioritization sheet your team already started (shared via access@embertribe.com).</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💡</div>
+        <h3>"Shop by Light Type" Category Pages</h3>
+        <ul>
+          <li><strong>Today:</strong> the site filters by vehicle only. Competitors rank their light-type category pages for searches like "rock lights" and "underglow lights."</li>
+          <li><strong>The play:</strong> build category pages by light type — light bars, light pods, rock lights, whips, headlights — where XKGlow has 3&ndash;6 products each.</li>
+          <li>EmberTribe delivers a category list ranked by search volume and keyword difficulty for your approval before anything is built.</li>
+          <li>Add a "Shop by Light Type" entry to top navigation; retire low-traffic vehicle entries from the menu without deleting the pages.</li>
+          <li>Captures product-first searchers who don't start from their vehicle.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: CONTENT ENGINE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Workstream 2</p>
+    <h2>Content: 15 Articles a Month, Zero Surprises</h2>
+    <p class="subtitle">Sized to what your review team can actually handle — every article approved by your people before it goes live.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value accent">15</div>
+        <div class="stat-label">Articles per month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value teal">45</div>
+        <div class="stat-label">Articles per quarter</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">1,000+</div>
+        <div class="stat-label">Keywords in the workbook</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">100%</div>
+        <div class="stat-label">Reviewed by XKGlow before publish</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3>The Workflow</h3>
+        <table>
+          <tbody>
+            <tr><td class="bold" style="width:32px;">1</td><td>EmberTribe writes from the pre-approved article titles and keyword workbook — topic selection and keyword targeting already done.</td></tr>
+            <tr><td class="bold">2</td><td>Drafts follow your brand guidelines and standards — send us your criteria and it becomes part of our editorial review.</td></tr>
+            <tr><td class="bold">3</td><td>Your team (3&ndash;4 reviewers) approves each batch — nothing publishes without sign-off.</td></tr>
+            <tr><td class="bold">4</td><td>EmberTribe publishes approved articles directly to your store — you just grant CMS access.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Built to Scale on Your Timeline</h3>
+        <p style="font-size:14px; margin-bottom:12px;">We proposed more volume; you asked to earn it first. Fair. The keyword universe supports far more than 15/month, so when your team's confidence (and review bandwidth) grows, scaling up is a one-line change to the plan — no restructuring.</p>
+        <div class="annotation success">
+          <strong>Quality guardrail:</strong> Four years of publishing at this scale and beyond across our client base with zero Google penalties. 15/month for a catalog this size is well inside safe territory.
+        </div>
+        <div class="annotation info">
+          <strong>Batch delivery:</strong> Articles delivered in weekly batches so your reviewers never face a 15-article pileup.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: AUTHORITY -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Workstreams 4 &amp; 5</p>
+    <h2>Authority: Backlinks + Reddit Seeding</h2>
+    <p class="subtitle">Rebuilding the authority momentum that stalled when link building stopped 6&ndash;7 months ago.</p>
+    <div class="two-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Quality Backlinks — 2/month</h3>
+        <ul>
+          <li>Two high-quality placements per month, pointed at the category pages we're trying to rank — not links for links' sake.</li>
+          <li>Priority: newer products and the new light-type category pages as they launch.</li>
+          <li>Domain authority currently 40 (down from 42) — the goal is recovering trajectory, not chasing a vanity number.</li>
+          <li>You previously ran 4/month with your old agency; we start at 2 and scale when results justify it — your call.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Reddit Seeding — 90-Day Test</h3>
+        <ul>
+          <li>Brand mentions in the subreddits that already surface in search results for your product terms — no forced links, nothing spammy.</li>
+          <li><strong>You approve everything:</strong> we propose the subreddits and the copy; nothing posts without your sign-off.</li>
+          <li>Why it matters: Google and AI assistants (ChatGPT, etc.) license Reddit content — brand mentions there feed both traditional and AI-driven discovery.</li>
+          <li>Structured as a one-quarter test with measured results — if it stops looking organic or doesn't perform, we redirect that budget.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>The First 90 Days</h2>
+    <p class="subtitle">Month 1 fixes the foundation; Months 2&ndash;3 shift the full budget to content, pages, and authority.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Fix the Foundation</h4>
+        <ul>
+          <li>Full technical cleanup (speed, schema, legacy car-truck links, internal linking, titles/metas)</li>
+          <li>Complete crawl + URL export delivered to your team</li>
+          <li>First 15 articles written, reviewed &amp; published</li>
+          <li>Category &amp; vehicle-page keyword research delivered for approval</li>
+          <li>Access setup: CMS, GSC, brand guidelines, phase sheet</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Publish</h4>
+        <ul>
+          <li>15 articles written, reviewed &amp; published</li>
+          <li>2 quality backlinks placed</li>
+          <li>Vehicle-specific product page builds begin (Growth tier)</li>
+          <li>First "Shop by Light Type" category pages live (Growth tier)</li>
+          <li>Reddit seeding test launches with approved subreddits (Growth tier)</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Momentum &amp; Measurement</h4>
+        <ul>
+          <li>15 articles written, reviewed &amp; published (45 total for the quarter)</li>
+          <li>2 quality backlinks placed</li>
+          <li>Page architecture rollout continues</li>
+          <li>Reddit 90-day test results measured (Growth tier)</li>
+          <li>Quarterly review: rankings, traffic, next-quarter plan &amp; scale decision</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Six-month checkpoint:</strong> You told us the engagement gets evaluated at six months on results and communication. We'll report against both from day one — you'll never wonder what we did this month.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Two Ways to Start</h2>
+    <p class="subtitle">Both tiers include the full Month 1 technical cleanup, 15 articles/month, and 2 backlinks/month. The Growth tier adds the page architecture builds and the Reddit test.</p>
+    <div class="two-col flex-grow">
+      <div class="tier-card">
+        <h3>Foundation</h3>
+        <div class="tier-price">$1,500<span> /month &mdash; billed quarterly</span></div>
+        <ul>
+          <li>Month 1 one-time technical cleanup — all six fixes</li>
+          <li>Full crawl + URL export for your team</li>
+          <li>15 SEO articles/month — written, reviewed by your team, published by us</li>
+          <li>2 quality backlinks/month to priority category pages</li>
+          <li>Vehicle-page &amp; light-type category keyword research + prioritized build plan (your team implements the builds)</li>
+          <li>Quarterly reporting &amp; strategy review</li>
+        </ul>
+      </div>
+      <div class="tier-card featured">
+        <div class="tier-badge">Recommended</div>
+        <h3>Growth</h3>
+        <div class="tier-price">$2,000<span> /month &mdash; billed quarterly</span></div>
+        <ul>
+          <li>Everything in Foundation, plus:</li>
+          <li class="plus">Vehicle-specific product page builds — we write the optimized copy, ~3 pages/month</li>
+          <li class="plus">"Shop by Light Type" category pages — ~2 new pages/month, built &amp; optimized</li>
+          <li class="plus">Reddit seeding 90-day test — ~5 approved brand-mention placements/month</li>
+          <li class="plus">Monthly reporting &amp; strategy call (instead of quarterly)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>Why Growth pays for itself:</strong> the $500/month difference funds the two highest-impact plays from your own list — vehicle-specific pages and light-type categories — instead of leaving them in your team's already-full implementation queue.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">XKGlow &mdash; SEO Scope of Work</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Get Month 1 Moving</h1>
+      <p class="subtitle">Pick a tier, and we can start the technical cleanup the same week.</p>
+      <div class="stats-row mt-16">
+        <div class="stat-card">
+          <div class="stat-value accent" style="font-size:22px;">1. Choose a tier</div>
+          <div class="stat-label">Foundation ($1,500) or Growth ($2,000) — quarterly billing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value accent" style="font-size:22px;">2. Grant access</div>
+          <div class="stat-label">Store CMS, Search Console, brand guidelines &amp; the Phase 1/2 sheet &rarr; access@embertribe.com</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value accent" style="font-size:22px;">3. Kickoff</div>
+          <div class="stat-label">Technical cleanup + first article batch begin week one</div>
+        </div>
+      </div>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Questions or adjustments? Reply to TJ directly.</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">TJ Jones &mdash; tj@embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
