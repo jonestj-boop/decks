@@ -155,8 +155,18 @@
   <p>Full step-by-step in <strong>Section 3: Infrastructure Setup Runbook</strong> below.</p>
 
   <div class="callout">
-    <strong>Timeline lever:</strong> aged domains (ones BlankSlate already owns) can go live after 2–3 weeks of warmup; brand-new registrations need ~30 days — Microsoft now weighs domain age + sending consistency heavily. Ask Derek if he already owns candidate domains; it buys back two weeks.
+    <strong>Timeline lever:</strong> aged domains (ones BlankSlate already owns) can go live after 2–3 weeks of warmup; brand-new registrations need ~30 days — Microsoft now weighs domain age + sending consistency heavily.
   </div>
+
+  <h3>Domain diligence (run Jul 9 — DNS, MX, RDAP)</h3>
+  <table>
+    <tr><th>Domain</th><th>Verdict</th><th>Findings</th></tr>
+    <tr><td><code>blankslateapp.com</code></td><td><span class="pill rec">Sender #1</span></td><td>Registered Jan 2022 (aged), no MX, no mail history, nothing live. Clean.</td></tr>
+    <tr><td><code>blankslate.app</code></td><td><span class="pill open">Sender #2 — confirm</span></td><td>Google Workspace MX already present (likely already in their Workspace). Redirects to their app. Confirm nobody actively receives mail there before we send from it.</td></tr>
+    <tr><td><code>blankslatetechnologies.com</code></td><td><span class="pill wait">Do not use</span></td><td>Active Proton Mail MX. <strong>Expires Jul 31, 2026 — client must renew now</strong> regardless of outreach.</td></tr>
+    <tr><td><code>blankslatetech.co</code></td><td><span class="pill wait">Never</span></td><td>Main domain: live site, Google Workspace confirmed, HubSpot in SPF. Cold email never touches it.</td></tr>
+    <tr><td>+2 new variants</td><td><span class="pill open">Client to buy</span></td><td>e.g. <code>blankslatehq.com</code>, <code>tryblankslate.com</code>. Two aged domains ≈ 4,000–4,700/mo capacity; four domains needed for the full 7,000/mo cap. New ones warm 30 days while the aged pair carries the early ramp.</td></tr>
+  </table>
 
   <h3>2.3 Multi-channel (LinkedIn etc.) <span class="pill wait">Phase 2 — not launch-blocking</span></h3>
   <p>Confirmed: Smartlead's LinkedIn steps work through <strong>integration partners (HeyReach or Aimfox)</strong>, not fully native automation. Smartlead does natively support subsequences with conditional logic (e.g., opened-but-no-reply branches). Plan: launch email-only, prove reply rates, then propose LinkedIn layering via HeyReach as an optimization — potentially tied to the Phase 2 Founder Brand add-on already in the deck.</p>
@@ -172,21 +182,21 @@
   <h2>3. Infrastructure Setup Runbook</h2>
   <p>End-to-end process for domains → mailboxes → Smartlead → warmup. Active work is only a few hours total; calendar time is almost all warmup, which is why this starts before anything else.</p>
 
+  <h3>Phase 0 — The client ask <span class="pill open">Sent Jul 9</span></h3>
+  <p>One-shot access request sent to the client as a Google Doc (<strong>ET - Sales &amp; CS → Blank Slate → "BlankSlate Outbound Email — One-Time Setup"</strong>). It bundles everything so we only ask once:</p>
+  <ul>
+    <li><strong>Confirmations:</strong> renew <code>blankslatetechnologies.com</code> (expires Jul 31), confirm <code>blankslate.app</code> mail is dormant, buy 2 domain variants</li>
+    <li><strong>Option A (recommended):</strong> they share DNS access (Iwantmydomain.com) + a temporary Super Admin user on their Workspace + billing heads-up for ~$7/user/mo seats. We do everything, they revoke admin after.</li>
+    <li><strong>Option B:</strong> they do the Google Admin steps themselves (add secondary domains, create users, whitelist the Smartlead client ID) using the doc's click-paths, then send us mailbox logins via password manager; we send them the DNS records.</li>
+  </ul>
+  <p class="muted">Note: the Smartlead white-label client portal does NOT help with setup — client permissions there only cover viewing/managing campaigns, assigned email accounts, and leads. The setup bottleneck is Google Admin + DNS, and mailbox connections live in our Smartlead account where the campaigns run. Portal is a reporting decision for later.</p>
+
   <h3>Phase 1 — Get the domains <span class="pill wait">Client / Melissa</span></h3>
-  <p>In order of preference:</p>
-  <ol>
-    <li><strong>Domains BlankSlate already owns</strong> — aged domains warm faster and are trusted sooner</li>
-    <li><strong>They buy 3–4 new ones</strong> — variants like <code>blankslatehq.com</code>, <code>tryblankslate.com</code>, <code>getblankslate.com</code></li>
-    <li><strong>DNS access</strong> — delegated registrar/DNS access, or a client contact who pastes records same-day. Slow DNS turnaround is the classic bottleneck.</li>
-  </ol>
+  <p>Resolved Jul 9 — see domain diligence table in §2.2. Sending set: <code>blankslateapp.com</code> + <code>blankslate.app</code> (pending mail-use confirmation) + 2 new purchases. DNS lives at Iwantmydomain.com (existing) and wherever the new ones are bought.</p>
 
   <h3>Phase 2 — Mailboxes on Google Workspace <span class="pill open">~1 hour</span></h3>
-  <p>Two ways to structure it — decide with client:</p>
-  <ul>
-    <li><strong>Cleanest:</strong> add the alt domains as <strong>secondary domains in BlankSlate's existing Google Workspace</strong>, create users on them. They pay the seats (~$7/user/mo), they own everything, nothing to unwind at offboarding.</li>
-    <li><strong>Alternative:</strong> a fresh Workspace tenant just for outbound that we admin. More control for us, but someone owns the billing conversation.</li>
-  </ul>
-  <p>Create <strong>2–3 users per domain</strong> using real sender personas (e.g., <code>derek@</code>, <code>d.lastname@</code>) — 9–12 mailboxes total. Set display name, photo, and signature on each so they look human.</p>
+  <p>Confirmed Jul 9: BlankSlate runs Google Workspace on <code>blankslatetech.co</code>. Route: add the sending domains as <strong>secondary domains in their existing Workspace</strong> (Google Admin → Account → Domains → Manage domains → Add a domain → secondary domain, verify via TXT). They pay the seats (~$7/user/mo), they own everything, nothing to unwind at offboarding.</p>
+  <p>Create <strong>2–3 users per domain</strong> as Derek variations (e.g., <code>derek@</code>, <code>d.lastname@</code>, <code>derekw@</code>) — 9–12 mailboxes total across the 4 domains. Set display name, photo, and signature on each so they look human.</p>
 
   <h3>Phase 3 — DNS records per domain <span class="pill open">~30 min</span></h3>
   <table>
@@ -203,10 +213,13 @@
   <h3>Phase 4 — Connect to Smartlead <span class="pill open">~30 min</span></h3>
   <p>Use <strong>Google OAuth</strong>, not app passwords — OAuth survives Google security-policy changes that silently disconnect IMAP/app-password mailboxes mid-campaign.</p>
   <ol>
-    <li>In Smartlead: <strong>Email Accounts → Connect Mailbox → Google OAuth</strong> — it shows Smartlead's Client ID</li>
-    <li>In <strong>Google Admin Console → Security → API Controls → Manage App Access → Configure New App</strong> — paste that Client ID and trust the app. One-time step per Workspace (~10 min to propagate); unlocks one-click OAuth for every mailbox on the tenant</li>
-    <li>Back in Smartlead, connect each of the 9–12 mailboxes via the OAuth pop-up and assign them to the <strong>BlankSlate client workspace</strong></li>
+    <li>In Smartlead: <strong>Email Accounts → Add → Google OAuth</strong> — copy Smartlead's Client ID from the pop-up</li>
+    <li>In <strong>Google Admin Console → Security → API Controls → Manage App Access → Configure New App</strong> — paste the Client ID, select Smartlead, scope <strong>"All users"</strong> (one approval covers every sending mailbox), access level <strong>"Trusted"</strong> → Finish. One-time step per Workspace (~10 min to propagate). Walkthrough video: Josh's Loom "Setting Up Smartlead Gmail Mailbox Integration"</li>
+    <li>Back in Smartlead, connect each of the 9–12 mailboxes via the OAuth pop-up (requires logging in as each mailbox user once — get the logins via password manager) and assign them to the <strong>BlankSlate client</strong></li>
   </ol>
+  <div class="callout warn" style="border-left-color:#c0392b;">
+    <strong style="color:#c0392b;">OAuth gotcha:</strong> changing a connected mailbox's Google password revokes its OAuth tokens and silently disconnects it from Smartlead. Nobody rotates passwords on sending mailboxes without a heads-up so we can reconnect. (This is in the client doc too.)
+  </div>
 
   <h3>Phase 5 — Warmup settings <span class="pill open">5 min per mailbox, then wait</span></h3>
   <p>Enable warmup on every mailbox the day it connects:</p>
@@ -268,12 +281,15 @@
   </div>
 
   <h2>6. Waiting on Client</h2>
+  <p class="muted">Resolved Jul 9: domains identified (they own blankslateapp.com, blankslate.app + others — see §2.2); Google Workspace on main domain confirmed.</p>
   <ul>
-    <li><span class="pill wait">Melissa requesting</span> &nbsp;3 alternate domains (or DNS access to acquire/configure)</li>
+    <li><span class="pill open">Access request sent</span> &nbsp;Response to the setup Google Doc: Option A (DNS + temp admin) or Option B (they do the Google Admin steps)</li>
+    <li><span class="pill open">Urgent</span> &nbsp;Renew <code>blankslatetechnologies.com</code> — expires Jul 31, 2026</li>
+    <li>Confirm <code>blankslate.app</code> mail is dormant (no active recipients)</li>
+    <li>Purchase 2 new domain variants (blankslatehq.com / tryblankslate.com or similar)</li>
     <li><span class="pill wait">Melissa requesting</span> &nbsp;Persona confirmation — who we're going after per vertical</li>
     <li>Proof assets for copy: USAF and Mass General case studies (repackage per 90-day plan)</li>
     <li>Lightfield CRM access for the reply-routing developer build</li>
-    <li>Google Workspace billing decision for the alt-domain mailboxes</li>
   </ul>
 
   <h2>7. Costs to Track</h2>
