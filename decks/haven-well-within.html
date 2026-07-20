@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven Well Within — AI Visibility &amp; Reddit Growth Strategy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --client-dark:   #00402F;
+    --client-deep:   #002A1F;
+    --client-mid:    #1E5E48;
+    --client-light:  #7FA995;
+    --client-accent: #D9A566;
+    --client-sand:   #F5F0E8;
+    --ember-red:     #ff333d;
+    --ember-dark:    #e0202a;
+    --green:  #27AE60;
+    --yellow: #F39C12;
+    --red:    #E74C3C;
+    --light-bg: #f8f9fa;
+    --card-bg:  #ffffff;
+    --text:       #2c3e50;
+    --text-light: #7f8c8d;
+    --border:     #e9ecef;
+    --nav-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--client-deep);
+    color: var(--text);
+  }
+
+  .slide {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: calc(100vh - var(--nav-h));
+    display: none; flex-direction: column;
+    padding: 52px 88px 32px;
+    background: var(--card-bg);
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.dark {
+    background: linear-gradient(135deg, var(--client-deep) 0%, var(--client-dark) 50%, var(--client-mid) 100%);
+    color: #fff;
+  }
+
+  .slide-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--ember-red); margin-bottom: 6px;
+  }
+  .slide.dark .slide-label { color: var(--client-accent); }
+
+  h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 14px; letter-spacing: -1px; }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.5px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .subtitle {
+    font-size: 18px; color: var(--text-light);
+    font-weight: 400; line-height: 1.5; max-width: 760px;
+  }
+  .slide.dark .subtitle { color: rgba(255,255,255,0.6); }
+
+  .stats-row { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--light-bg); border-radius: 10px;
+    padding: 16px 20px; flex: 1; min-width: 160px;
+  }
+  .slide.dark .stat-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); }
+  .stat-value { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.red    { color: var(--red); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.accent { color: var(--client-accent); }
+  .stat-value.light  { color: var(--client-light); }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); margin-top: 4px; }
+  .slide.dark .stat-value { color: #fff; }
+  .slide.dark .stat-value.accent { color: var(--client-accent); }
+  .slide.dark .stat-label { color: rgba(255,255,255,0.5); }
+
+  .annotation {
+    background: #FFF8E1; border-left: 3px solid var(--ember-red);
+    padding: 10px 14px; border-radius: 0 8px 8px 0;
+    font-size: 13px; line-height: 1.5; margin: 10px 0; color: var(--text);
+  }
+  .annotation strong { color: var(--client-dark); }
+  .annotation.info   { background: #EAF3EE; border-color: var(--client-mid); }
+  .annotation.info strong { color: var(--client-dark); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--client-accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th {
+    text-align: left; padding: 8px 12px;
+    background: var(--light-bg); font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-light); border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .th-red    { background: var(--ember-red) !important; color: #fff !important; border-bottom: none !important; }
+  .th-accent { background: var(--client-mid) !important; color: #fff !important; border-bottom: none !important; }
+
+  .mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  .red   { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .accent { color: var(--client-accent); }
+  .bold { font-weight: 700; }
+  .dim  { opacity: 0.45; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col { display: flex; flex-direction: column; }
+
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill.seo     { background: #E8F5E9; color: #1B5E20; }
+  .pill.content { background: #FFF3E0; color: #E65100; }
+  .pill.reddit  { background: #FFF0E6; color: #FF4500; }
+  .pill.ai      { background: #E8EEF8; color: #1C2B4A; }
+  .pill.green   { background: #E8F5E9; color: var(--green); }
+  .pill.orange  { background: #FFF3E0; color: #E65100; }
+
+  .pillar-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 28px; }
+  .pillar-card {
+    background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 28px 24px;
+  }
+  .pillar-card .pillar-tag { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-bottom: 12px; color: var(--client-accent); }
+  .pillar-card h3 { font-size: 22px; color: #fff; margin-bottom: 10px; }
+  .pillar-card p  { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; }
+  .pillar-icon    { font-size: 36px; margin-top: 16px; display: block; }
+
+  /* ── AI Visibility pricing cards ── */
+  .av-pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 16px; }
+  .av-card {
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 26px 22px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .av-card.featured {
+    border-color: var(--client-accent);
+    background: linear-gradient(160deg, #FBF6ED 0%, #ffffff 100%);
+  }
+  .av-card .av-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--client-accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .av-tier  { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .av-price { font-size: 38px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--client-dark); }
+  .av-price span { font-size: 15px; font-weight: 400; color: var(--text-light); }
+  .av-desc  { font-size: 13px; color: var(--text-light); margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
+  .av-features { list-style: none; padding: 0; margin: 0; flex: 1; }
+  .av-features li { position: relative; padding-left: 18px; margin-bottom: 8px; font-size: 13px; line-height: 1.5; }
+  .av-features li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .av-quarterly { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 12px; }
+  .av-quarterly .av-q-label { font-size: 10px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .av-quarterly .av-q-total { font-size: 22px; font-weight: 800; color: var(--client-mid); line-height: 1; }
+  .av-quarterly .av-q-mo { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .av-quarterly .av-q-save { display: inline-block; font-size: 11px; font-weight: 700; color: #27AE60; background: #E8F5E9; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
+  .av-card.featured .av-quarterly { border-top-color: rgba(30,94,72,0.2); }
+  .av-card.featured .av-quarterly .av-q-label { color: var(--client-mid); }
+
+  /* ── Reddit slides ── */
+  .subreddit-tag {
+    display: inline-block; background: #FFF0E6; color: #FF4500;
+    border: 1px solid #FFD0B8; border-radius: 6px;
+    padding: 3px 9px; font-size: 12px; font-weight: 600; margin: 3px 3px 3px 0;
+  }
+
+  #nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(0,42,31,0.98);
+    border-top: 1px solid rgba(217,165,102,0.25);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200; user-select: none;
+  }
+  #nav-bar .nb-brand { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  #nav-bar .nb-controls { display: flex; align-items: center; gap: 20px; }
+  #nav-bar button {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  #nav-bar button:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  #slide-counter { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45); min-width: 56px; text-align: center; }
+  .nb-dots { display: flex; gap: 5px; align-items: center; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.15s; }
+  .dot.active { background: var(--client-accent); }
+</style>
+</head>
+<body>
+
+<!-- ===== SLIDE 1: COVER ===== -->
+<div class="slide dark active">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">AI Visibility &amp; Reddit Growth Strategy &middot; July 2026</div>
+    <h1 style="font-size:60px;margin-bottom:16px;">Haven Well Within</h1>
+    <p class="subtitle" style="max-width:800px;font-size:20px;">Your buyers now ask ChatGPT, Perplexity, and Google AI which loungewear to buy. The brands those engines recommend win the sale &mdash; and right now, Haven isn&rsquo;t in the answer.</p>
+    <div class="stats-row" style="margin-top:36px;">
+      <div class="stat-card">
+        <div class="stat-value accent">~21%</div>
+        <div class="stat-label">Of Google AI Overview citations come from Reddit content</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">&asymp;0</div>
+        <div class="stat-label">Haven Well Within mentions surfaced across AI-cited Reddit threads (July 2026 search)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value light">3&ndash;5 wks</div>
+        <div class="stat-label">Until AI engines begin indexing new Reddit placements</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">4+ yrs</div>
+        <div class="stat-label">EmberTribe content engine, zero algorithm penalties</div>
+      </div>
+    </div>
+    <p style="margin-top:36px;font-size:13px;opacity:0.4;">Prepared by EmberTribe &middot; AI Visibility &amp; Reddit Mention Strategy</p>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2: THE AI SEARCH SHIFT ===== -->
+<div class="slide">
+  <div class="slide-label">The AI Search Shift</div>
+  <h2>Loungewear discovery has moved to AI &amp; Reddit first.</h2>
+  <p class="subtitle" style="margin-bottom:16px;">&ldquo;Best organic cotton pajamas&rdquo; &middot; &ldquo;most comfortable loungewear brands&rdquo; &middot; &ldquo;best pajamas for night sweats&rdquo; &mdash; these questions used to land on Google&rsquo;s ten blue links. Now they&rsquo;re answered directly by AI engines, and those answers are built from Reddit threads and authority content.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">How the AI answer gets built</h3>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:3px;">1. A buyer asks an AI engine</div>
+          <div style="font-size:13px;color:var(--text-light);">&ldquo;What are the best organic cotton pajama brands for women?&rdquo; &mdash; high-intent, ready to buy</div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:3px;">2. The engine retrieves its sources</div>
+          <div style="font-size:13px;color:var(--text-light);">Reddit threads, comparison articles, and authority sites dominate the citation set &mdash; not brand homepages</div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:3px;">3. A shortlist of brands is recommended</div>
+          <div style="font-size:13px;color:var(--text-light);">The 3&ndash;5 brands named in those sources get the sale. Everyone else is invisible</div>
+        </div>
+      </div>
+      <div class="annotation danger" style="margin-top:14px;">
+        <strong>The gap:</strong> a July 2026 search for Haven Well Within mentions on Reddit returns essentially nothing &mdash; while sleepwear competitors are named again and again in the exact threads AI engines cite.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">Who&rsquo;s being recommended instead</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="th-accent">Brand</th>
+            <th class="th-accent">Why AI engines name them</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold">Lake Pajamas</td><td style="font-size:12px;color:var(--text-light);">Heavily discussed in women&rsquo;s fashion and gifting subreddits; strong review content footprint</td></tr>
+          <tr><td class="bold">Eberjey</td><td style="font-size:12px;color:var(--text-light);">Constant presence in &ldquo;softest pajamas&rdquo; threads and roundup articles</td></tr>
+          <tr><td class="bold">Lunya</td><td style="font-size:12px;color:var(--text-light);">Dominates &ldquo;washable silk&rdquo; and premium sleepwear conversations</td></tr>
+          <tr><td class="bold">Printfresh</td><td style="font-size:12px;color:var(--text-light);">Organic cotton positioning + active community mentions</td></tr>
+          <tr><td class="bold">Quince / Pact</td><td style="font-size:12px;color:var(--text-light);">Own the &ldquo;affordable organic cotton&rdquo; angle across r/BuyItForLife-style threads</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>Haven&rsquo;s advantage is real:</strong> Talbots-backed operations, organic cotton / linen / silk materials, and a loyal customer base competitors can&rsquo;t match. What&rsquo;s missing is presence in the conversations AI engines actually read.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 3: THE OPPORTUNITY ===== -->
+<div class="slide">
+  <div class="slide-label">The Opportunity</div>
+  <h2>Haven has the product story AI engines love &mdash; it just isn&rsquo;t being told where they look.</h2>
+  <p class="subtitle" style="margin-bottom:16px;">AI engines reward brands with authentic community mentions, deep informational content, and trusted backlinks. Haven currently has strong brand equity but a thin footprint on all three &mdash; which means the category is still winnable.</p>
+
+  <div class="three-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">What Haven already has</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="annotation success" style="margin:0;"><strong>Differentiated materials story</strong> &mdash; organic cotton, linen, and silk across the line; exactly what &ldquo;best organic pajamas&rdquo; queries want</div>
+        <div class="annotation success" style="margin:0;"><strong>Talbots heritage</strong> &mdash; established operations, quality reputation, and a customer base competitors spend millions to reach</div>
+        <div class="annotation success" style="margin:0;"><strong>Wellness positioning</strong> &mdash; &ldquo;live a better life&rdquo; brand promise maps to self-care, sleep, and comfort conversations</div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">What&rsquo;s missing today</h3>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="annotation danger" style="margin:0;"><strong>No Reddit presence</strong> &mdash; effectively zero brand mentions in the subreddits AI engines index for sleepwear queries</div>
+        <div class="annotation danger" style="margin:0;"><strong>Thin informational content</strong> &mdash; no owned answers for the fabric, fit, and sleep-comfort questions buyers ask AI</div>
+        <div class="annotation danger" style="margin:0;"><strong>Authority gap</strong> &mdash; competitor brands accumulate roundup and review backlinks that reinforce their AI citations</div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">Queries Haven should own</h3>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;">
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">best organic cotton pajamas</div>
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">most comfortable loungewear brands</div>
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">best pajamas for night sweats</div>
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">lake pajamas alternatives</div>
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">is haven well within good quality</div>
+        <div style="background:var(--light-bg);border-radius:8px;padding:10px 12px;" class="mono">best loungewear for women over 50</div>
+      </div>
+      <div class="annotation info" style="margin-top:10px;font-size:12px;">
+        <strong>The branded query matters most:</strong> when a buyer asks AI &ldquo;is Haven Well Within good quality?&rdquo;, the answer today is built from third-party review sites &mdash; not from content you influence.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 4: STRATEGY ===== -->
+<div class="slide dark">
+  <div class="slide-label">Recommended Strategy</div>
+  <h1 style="font-size:40px;">Three engines. One compounding system.</h1>
+  <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility.</p>
+
+  <div class="pillar-grid">
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 01</div>
+      <h3>Reddit AEO Placements</h3>
+      <p>Authentic Haven mentions placed in the exact threads AI engines cite for loungewear, sleepwear, and organic-fabric queries &mdash; plus new seeded threads built to be retrieved. Placements begin surfacing in AI answers within 3&ndash;5 weeks.</p>
+      <span class="pillar-icon">&#128172;</span>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 02</div>
+      <h3>ClusterMagic Content</h3>
+      <p>Keyword-clustered SEO articles answering every fabric, fit, care, and sleep-comfort question in the category &mdash; published to your site so Google and AI engines cite Haven directly instead of third-party review aggregators.</p>
+      <span class="pillar-icon">&#128221;</span>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 03</div>
+      <h3>Authority Backlinks</h3>
+      <p>DA40&ndash;DA50+ links from relevant lifestyle and commerce publications, prioritized against the pages that need them. Authority signals reinforce both classic rankings and AI-answer trust.</p>
+      <span class="pillar-icon">&#128279;</span>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top:24px;">
+    <strong>Why together:</strong> Reddit mentions make AI engines name Haven. Content makes them cite Haven. Backlinks make them trust Haven. Each channel alone moves the needle &mdash; together they compound.
+  </div>
+</div>
+
+<!-- ===== SLIDE 5: REDDIT EXECUTION ===== -->
+<div class="slide">
+  <div class="slide-label">Reddit Execution</div>
+  <h2>Target Subreddits &amp; The Placement Process</h2>
+  <p class="subtitle">Your buyers are already asking the right questions on Reddit &mdash; they just aren&rsquo;t finding Haven Well Within in the answers.</p>
+  <div class="two-col" style="flex:1; margin-top:16px;">
+    <div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Subreddit Landscape Mapping</div>
+            <div style="font-size:13px; color:var(--text-light);">Identify which subreddits AI engines already index for loungewear, sleepwear, and organic-fabric queries</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Discovery &amp; Analysis</div>
+            <div style="font-size:13px; color:var(--text-light);">Find existing threads ranking on Google or cited by AI &mdash; &ldquo;best organic cotton pajamas&rdquo;, &ldquo;softest loungewear&rdquo;, &ldquo;pajamas for night sweats&rdquo;</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">3</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Comment Strategy &amp; Fulfillment</div>
+            <div style="font-size:13px; color:var(--text-light);">Authentic, first-person Haven Well Within mentions using formatting optimized for AI retrieval &mdash; not spam</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">4</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Seeding</div>
+            <div style="font-size:13px; color:var(--text-light);">Create original &ldquo;what are the best organic cotton pajamas?&rdquo; posts; seed with independent account responses recommending Haven Well Within</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px; color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Target Subreddits</h4>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Sleep &amp; Comfort Seekers</div>
+        <span class="subreddit-tag">r/Menopause</span>
+        <span class="subreddit-tag">r/sleep</span>
+        <span class="subreddit-tag">r/AskWomenOver30</span>
+        <span class="subreddit-tag">r/AskWomenOver40</span>
+        <span class="subreddit-tag">r/TheGirlSurvivalGuide</span>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Style, Fit &amp; Wardrobe</div>
+        <span class="subreddit-tag">r/femalefashionadvice</span>
+        <span class="subreddit-tag">r/PetiteFashionAdvice</span>
+        <span class="subreddit-tag">r/PlusSize</span>
+        <span class="subreddit-tag">r/capsulewardrobe</span>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Conscious &amp; Quality Buyers</div>
+        <span class="subreddit-tag">r/BuyItForLife</span>
+        <span class="subreddit-tag">r/sustainablefashion</span>
+        <span class="subreddit-tag">r/ZeroWaste</span>
+        <span class="subreddit-tag">r/Frugal</span>
+      </div>
+      <div style="margin-bottom:10px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Gifting / General High-AI-Indexed</div>
+        <span class="subreddit-tag">r/GiftIdeas</span>
+        <span class="subreddit-tag">r/Gifts</span>
+        <span class="subreddit-tag">r/AskWomen</span>
+        <span class="subreddit-tag">r/AskReddit</span>
+      </div>
+      <div style="margin-top:12px; background:#FFF8E1; border-left:3px solid var(--client-accent); border-radius:0 8px 8px 0; padding:10px 12px; font-size:13px;">
+        <strong style="color:var(--client-dark);">Top AI-targetable queries:</strong> &ldquo;Best organic cotton pajamas&rdquo; &bull; &ldquo;Is Haven Well Within good quality?&rdquo; &bull; &ldquo;Most comfortable loungewear brands&rdquo; &bull; &ldquo;Best pajamas for night sweats&rdquo; &bull; &ldquo;Lake Pajamas alternatives&rdquo;
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 6: REDDIT MENTION PLAYBOOK ===== -->
+<div class="slide">
+  <div class="slide-label">Reddit Mention Strategy</div>
+  <h2>Subreddit Playbook: Where Buyers Are Already Asking</h2>
+  <p class="subtitle">These subreddits are actively indexed by Google and AI engines for loungewear, sleepwear, and comfort queries &mdash; and Haven Well Within is effectively absent from the conversation.</p>
+
+  <table style="margin-top:8px; font-size:13px;">
+    <thead>
+      <tr>
+        <th style="width:20%;">Subreddit</th>
+        <th style="width:10%;">Members</th>
+        <th style="width:14%;">Buyer Type</th>
+        <th style="width:32%;">Best Thread Angles for Haven</th>
+        <th style="width:14%;">AI Index Priority</th>
+        <th style="width:10%;">Placement Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">r/femalefashionadvice</td><td>5M+</td>
+        <td><span class="pill seo">Style</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Elevated loungewear that doesn&rsquo;t look sloppy?&rdquo; / &ldquo;Best matching pajama sets worth the money&rdquo;</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/Menopause</td><td>100K+</td>
+        <td><span class="pill seo">Sleep Comfort</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Breathable pajamas for night sweats?&rdquo; / &ldquo;Natural-fiber sleepwear recommendations&rdquo; &mdash; heavily AI-cited for cooling sleepwear queries</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/BuyItForLife</td><td>2M+</td>
+        <td><span class="pill content">Quality</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Pajamas that actually last?&rdquo; / &ldquo;Organic cotton loungewear that holds up to washing&rdquo;</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/AskWomenOver30</td><td>500K+</td>
+        <td><span class="pill seo">Core Buyer</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Comfortable loungewear that still feels put-together?&rdquo; / &ldquo;What do you actually wear at home?&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/AskWomenOver40</td><td>100K+</td>
+        <td><span class="pill seo">Core Buyer</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Sleepwear upgrade recommendations&rdquo; / &ldquo;Best quality basics for comfort at home&rdquo;</td>
+        <td><span class="pill orange">Medium-High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/sustainablefashion</td><td>150K+</td>
+        <td><span class="pill content">Conscious</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Genuinely sustainable loungewear brands?&rdquo; / &ldquo;Organic cotton sleepwear that isn&rsquo;t greenwashed&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/TheGirlSurvivalGuide</td><td>700K+</td>
+        <td><span class="pill content">Comfort</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Self-care purchases that changed your routine&rdquo; / &ldquo;Cozy loungewear recommendations&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/PetiteFashionAdvice</td><td>250K+</td>
+        <td><span class="pill seo">Fit</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Loungewear that fits petite frames?&rdquo; / &ldquo;Pajama sets that don&rsquo;t swallow me&rdquo;</td>
+        <td><span class="pill orange">Medium-High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/PlusSize</td><td>150K+</td>
+        <td><span class="pill seo">Fit</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Comfortable sleepwear in extended sizes?&rdquo; / &ldquo;Loungewear brands with true size inclusivity&rdquo;</td>
+        <td><span class="pill orange">Medium-High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/capsulewardrobe</td><td>150K+</td>
+        <td><span class="pill content">Style</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Loungewear pieces worth the investment&rdquo; / &ldquo;Building a comfortable at-home capsule&rdquo;</td>
+        <td><span class="pill orange">Medium</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/sleep</td><td>150K+</td>
+        <td><span class="pill content">Sleep Comfort</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Does sleepwear fabric actually affect sleep quality?&rdquo; / &ldquo;Breathable pajama recommendations&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/GiftIdeas</td><td>300K+</td>
+        <td><span class="pill content">Gifting</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Gift for mom who has everything&rdquo; / &ldquo;Luxurious-but-practical gifts for her&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/Gifts</td><td>600K+</td>
+        <td><span class="pill content">Gifting</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Cozy gift ideas for wife / mother-in-law&rdquo; / &ldquo;Best pajama sets to give as gifts&rdquo;</td>
+        <td><span class="pill green">High</span></td><td style="font-size:12px;">Comment + seed</td>
+      </tr>
+      <tr>
+        <td class="bold">r/Frugal</td><td>4M+</td>
+        <td><span class="pill content">Value</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;Quality loungewear worth paying more for&rdquo; / &ldquo;Cost-per-wear favorites&rdquo;</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/AskWomen</td><td>5M+</td>
+        <td><span class="pill ai">Broad</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;What&rsquo;s your favorite loungewear brand?&rdquo; / &ldquo;Best comfort purchase you&rsquo;ve made&rdquo;</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+      <tr>
+        <td class="bold">r/AskReddit</td><td>40M+</td>
+        <td><span class="pill ai">Broad</span></td>
+        <td style="font-size:12px; color:var(--text-light);">&ldquo;What&rsquo;s the most comfortable clothing you own?&rdquo; &mdash; extremely AI-indexed</td>
+        <td><span class="pill green">Very High</span></td><td style="font-size:12px;">Comment</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="stats-row" style="gap:12px; margin-top:12px;">
+    <div class="stat-card" style="text-align:center;">
+      <div class="stat-value red">&asymp;0</div>
+      <div class="stat-label">Haven mentions surfaced across these subreddits (July 2026 search)</div>
+    </div>
+    <div class="stat-card" style="text-align:center;">
+      <div class="stat-value green">55M+</div>
+      <div class="stat-label">Combined reach across target subreddits</div>
+    </div>
+    <div class="stat-card" style="text-align:center;">
+      <div class="stat-value accent" style="color:var(--client-accent);">3&ndash;5</div>
+      <div class="stat-label">Weeks until AI engines begin indexing placements</div>
+    </div>
+    <div class="stat-card" style="text-align:center;">
+      <div class="stat-value" style="color:var(--client-light);">~21%</div>
+      <div class="stat-label">Of Google AI Overview citations come from Reddit content</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 7: CLUSTERMAGIC PRICING ===== -->
+<div class="slide">
+  <div class="slide-label">Investment</div>
+  <h2 style="margin-bottom:6px;">Simple, transparent pricing.</h2>
+  <p class="subtitle" style="margin-bottom:20px;">ClusterMagic content is billed monthly or at a locked quarterly rate &mdash; no setup fees, no long onboarding.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;">
+
+    <!-- 25 articles -->
+    <div style="border:1px solid rgba(30,94,72,0.2);border-radius:10px;padding:18px 14px;background:#f9fbfa;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Starter &mdash; 25 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$700<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$1,750</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$583/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $350</div>
+      </div>
+    </div>
+
+    <!-- 40 articles -->
+    <div style="border:1px solid rgba(30,94,72,0.2);border-radius:10px;padding:18px 14px;background:#f9fbfa;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Growth &mdash; 40 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$1,100<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$2,700</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$900/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $600</div>
+      </div>
+    </div>
+
+    <!-- 50 articles — highlighted -->
+    <div style="border:2px solid var(--client-mid);border-radius:10px;padding:18px 14px;background:#EFF7F3;position:relative;">
+      <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--client-mid);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;white-space:nowrap;">MOST POPULAR</div>
+      <div style="font-size:12px;font-weight:700;color:var(--client-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Velocity &mdash; 50 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$1,350<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(30,94,72,0.15);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--client-mid);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$3,400</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$1,133/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#D4EDDA;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $650</div>
+      </div>
+    </div>
+
+    <!-- 100 articles -->
+    <div style="border:1px solid rgba(30,94,72,0.2);border-radius:10px;padding:18px 14px;background:#f9fbfa;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Scale &mdash; 100 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$2,700<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$7,000</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$2,333/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $1,100</div>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="font-size:11px;color:var(--text-light);margin-top:4px;text-align:center;">All tiers include ClusterMagic keyword research, publishing to your CMS, internal linking, and FAQ schema on every article.</p>
+</div>
+
+<!-- ===== SLIDE 8: AI VISIBILITY PACKAGES ===== -->
+<div class="slide">
+  <div class="slide-label">AI Visibility</div>
+  <h2 style="margin-bottom:6px;">Choose Your AI Visibility Package</h2>
+  <p class="subtitle" style="margin-bottom:4px;">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility.</p>
+
+  <div class="av-pricing-grid">
+
+    <div class="av-card">
+      <div class="av-tier">AI Visibility Starter</div>
+      <div class="av-price">$1,750<span>/mo</span></div>
+      <div class="av-desc">Get your brand into AI conversations</div>
+      <ul class="av-features">
+        <li>5 AEO placements / month</li>
+        <li>10 SEO articles / month</li>
+        <li>Subreddit landscape mapping</li>
+        <li>Thread discovery &amp; comment strategy</li>
+        <li>Quarterly performance report</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$4,725</div>
+        <div class="av-q-mo">$1,575/mo effective</div>
+        <div class="av-q-save">Save $525</div>
+      </div>
+    </div>
+
+    <div class="av-card featured">
+      <div class="av-badge">Most Popular</div>
+      <div class="av-tier">AI Growth Engine</div>
+      <div class="av-price">$3,450<span>/mo</span></div>
+      <div class="av-desc">Accelerate authority + content velocity</div>
+      <ul class="av-features">
+        <li>8 AEO placements / month</li>
+        <li>25 SEO articles / month</li>
+        <li>2 DA40+ authority backlinks / month</li>
+        <li>Full thread seeding + new post creation</li>
+        <li>Backlink target prioritization</li>
+        <li>Keyword cluster expansion</li>
+        <li>Quarterly performance reporting</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$9,315</div>
+        <div class="av-q-mo">$3,105/mo effective</div>
+        <div class="av-q-save">Save $1,035</div>
+      </div>
+    </div>
+
+    <div class="av-card">
+      <div class="av-tier">AI Authority Accelerator</div>
+      <div class="av-price">$5,250<span>/mo</span></div>
+      <div class="av-desc">Dominate your category in AI search</div>
+      <ul class="av-features">
+        <li>12 AEO placements / month</li>
+        <li>40 SEO articles / month</li>
+        <li>2 DA50+ authority backlinks / month</li>
+        <li>Full competitive displacement strategy</li>
+        <li>Technical SEO management</li>
+        <li>Quarterly reporting &amp; strategy sessions</li>
+        <li>Priority page &amp; content optimization</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$14,175</div>
+        <div class="av-q-mo">$4,725/mo effective</div>
+        <div class="av-q-save">Save $1,575</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="annotation info" style="margin-top:16px;">
+    <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, Reddit optimization process, and monthly AI visibility benchmarking vs. your top competitors.
+  </div>
+</div>
+
+<!-- ===== SLIDE 9: NEXT STEPS ===== -->
+<div class="slide dark">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">Next Steps</div>
+    <h1>Ready to Be the Brand AI Recommends?</h1>
+    <p class="subtitle" style="margin-bottom:28px;">The loungewear brands winning AI search over the next 12 months are the ones building their Reddit and content footprint now. Every month of delay is another month competitors accumulate the citations AI engines trust.</p>
+
+    <div class="three-col">
+      <div class="stat-card">
+        <div class="stat-value accent">Week 1</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">Kickoff: subreddit landscape mapping, AI visibility benchmark vs. Lake, Eberjey, Lunya &amp; Printfresh, and keyword cluster research</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">Weeks 2&ndash;4</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">First AEO placements live, first content batch published, backlink targets prioritized</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">Weeks 5+</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">Placements begin surfacing in AI answers; monthly benchmarking tracks Haven&rsquo;s share of AI recommendations</div>
+      </div>
+    </div>
+
+    <div class="annotation" style="margin-top:32px;max-width:760px;">
+      <strong>To get started:</strong> pick a package, and we&rsquo;ll schedule kickoff within one week. No setup fees, no long onboarding &mdash; quarterly prepay locks in 10% off.
+    </div>
+    <p style="margin-top:28px;font-size:13px;opacity:0.4;">EmberTribe &middot; tj@embertribe.com &middot; decks.embertribe.com</p>
+  </div>
+</div>
+
+<!-- ===== NAV BAR ===== -->
+<div id="nav-bar">
+  <div class="nb-brand">EmberTribe &mdash; AI Visibility Strategy</div>
+  <div class="nb-controls">
+    <button id="btn-prev" title="Previous">&#8592;</button>
+    <span id="slide-counter">1 / 9</span>
+    <button id="btn-next" title="Next">&#8594;</button>
+  </div>
+  <div class="nb-dots" id="dot-row"></div>
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total  = slides.length;
+  const counter = document.getElementById('slide-counter');
+  const dotRow  = document.getElementById('dot-row');
+  let current = 0;
+
+  slides.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.addEventListener('click',()=>go(i));
+    dotRow.appendChild(d);
+  });
+
+  function go(n){
+    slides[current].classList.remove('active');
+    dotRow.children[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].classList.add('active');
+    dotRow.children[current].classList.add('active');
+    counter.textContent = (current+1) + ' / ' + total;
+  }
+
+  document.getElementById('btn-prev').addEventListener('click',()=>go(current-1));
+  document.getElementById('btn-next').addEventListener('click',()=>go(current+1));
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(current+1);
+    if(e.key==='ArrowLeft') go(current-1);
+  });
+})();
+</script>
+</body>
+</html>
