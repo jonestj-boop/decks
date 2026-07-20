@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hotel Gurus — SEO, Reddit &amp; AI Visibility Strategy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --client-dark:   #0B2A4A;
+    --client-deep:   #071E36;
+    --client-mid:    #046BD2;
+    --client-light:  #4A93E0;
+    --client-accent: #E0A44A;
+    --client-sand:   #FBF2E1;
+    --ember-red:     #ff333d;
+    --ember-dark:    #e0202a;
+    --green:  #27AE60;
+    --yellow: #F39C12;
+    --red:    #E74C3C;
+    --light-bg: #f8f9fa;
+    --card-bg:  #ffffff;
+    --text:       #2c3e50;
+    --text-light: #7f8c8d;
+    --border:     #e9ecef;
+    --nav-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--client-deep);
+    color: var(--text);
+  }
+
+  .slide {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: calc(100vh - var(--nav-h));
+    display: none; flex-direction: column;
+    padding: 50px 84px 30px;
+    background: var(--card-bg);
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.dark {
+    background: linear-gradient(135deg, var(--client-deep) 0%, var(--client-dark) 55%, var(--client-mid) 130%);
+    color: #fff;
+  }
+
+  .slide-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--ember-red); margin-bottom: 6px;
+  }
+  .slide.dark .slide-label { color: var(--client-accent); }
+
+  h1 { font-size: 50px; font-weight: 900; line-height: 1.1; margin-bottom: 14px; letter-spacing: -1px; }
+  h2 { font-size: 30px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.5px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .subtitle {
+    font-size: 17px; color: var(--text-light);
+    font-weight: 400; line-height: 1.5; max-width: 850px;
+  }
+  .slide.dark .subtitle { color: rgba(255,255,255,0.6); }
+
+  .stats-row { display: flex; gap: 18px; margin: 18px 0; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--light-bg); border-radius: 10px;
+    padding: 16px 20px; flex: 1; min-width: 150px;
+  }
+  .slide.dark .stat-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); }
+  .stat-value { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.red    { color: var(--red); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.accent { color: var(--client-accent); }
+  .stat-value.light  { color: var(--client-light); }
+  .stat-value.blue   { color: var(--client-mid); }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); margin-top: 4px; line-height: 1.4; }
+  .slide.dark .stat-value { color: #fff; }
+  .slide.dark .stat-value.accent { color: var(--client-accent); }
+  .slide.dark .stat-label { color: rgba(255,255,255,0.5); }
+
+  .annotation {
+    background: #FFF8E1; border-left: 3px solid var(--ember-red);
+    padding: 10px 14px; border-radius: 0 8px 8px 0;
+    font-size: 13px; line-height: 1.5; margin: 10px 0; color: var(--text);
+  }
+  .annotation strong { color: var(--client-dark); }
+  .annotation.info   { background: #EAF2FB; border-color: var(--client-mid); }
+  .annotation.info strong { color: var(--client-dark); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+  .slide.dark .annotation { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--client-accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th {
+    text-align: left; padding: 8px 12px;
+    background: var(--light-bg); font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-light); border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .th-red    { background: var(--ember-red) !important; color: #fff !important; border-bottom: none !important; }
+  .th-accent { background: var(--client-mid) !important; color: #fff !important; border-bottom: none !important; }
+
+  .mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  .red   { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .accent { color: var(--client-accent); }
+  .blue { color: var(--client-mid); }
+  .bold { font-weight: 700; }
+  .dim  { opacity: 0.45; }
+
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col { display: flex; flex-direction: column; }
+
+  .kd-pill { display: inline-block; min-width: 28px; text-align: center; padding: 2px 7px; border-radius: 10px; color: #fff; font-weight: 700; font-size: 11px; }
+  .kd-vez { background: #46AE41; }
+  .kd-ez  { background: #8CC53F; }
+  .kd-md  { background: #F4B942; color:#5a4200; }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 7px; margin: 12px 0; }
+  .bar-row   { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 155px; font-size: 12px; font-weight: 500; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 5px; overflow: hidden; }
+  .slide.dark .bar-track { background: rgba(255,255,255,0.07); }
+  .bar-fill  { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; color: #fff; min-width: 30px; }
+  .bar-fill.client-fill { background: linear-gradient(90deg, var(--client-light), var(--client-mid)); }
+  .bar-fill.ember-fill  { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+  .bar-fill.grey-fill   { background: linear-gradient(90deg, #9aa8b5, #6f7d8a); }
+  .bar-fill.accent-fill { background: linear-gradient(90deg, var(--client-accent), #cf8f33); color:#3a2600; }
+  .bar-value { width: 78px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+
+  .pillar-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 26px; }
+  .pillar-card {
+    background: rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 26px 22px;
+  }
+  .pillar-card .pillar-tag { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; opacity: 0.55; margin-bottom: 12px; color: var(--client-accent); }
+  .pillar-card h3 { font-size: 21px; color: #fff; margin-bottom: 10px; }
+  .pillar-card p  { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.6; }
+  .pillar-icon    { font-size: 34px; margin-top: 14px; display: block; }
+
+  /* Position distribution mini-bars */
+  .posdist { display:flex; align-items:flex-end; gap:10px; height:150px; margin:14px 0 4px; padding:0 4px; }
+  .posdist .pd-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .posdist .pd-bar { width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--client-light),var(--client-mid)); position:relative; }
+  .posdist .pd-bar.hot { background:linear-gradient(180deg,var(--client-accent),#cf8f33); }
+  .posdist .pd-bar.cold { background:linear-gradient(180deg,#c3ccd6,#9aa8b5); }
+  .posdist .pd-num { font-size:12px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .posdist .pd-lbl { font-size:10.5px; color:var(--text-light); margin-top:6px; text-align:center; font-weight:600; }
+
+  /* ── AI Visibility pricing cards ── */
+  .av-pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-top: 14px; }
+  .av-card {
+    border: 2px solid var(--border); border-radius: 14px;
+    padding: 24px 22px; display: flex; flex-direction: column; position: relative;
+  }
+  .av-card.featured {
+    border-color: var(--client-accent);
+    background: linear-gradient(160deg, #FDF7EC 0%, #ffffff 100%);
+  }
+  .av-card .av-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--client-accent); color: #fff; font-size: 10px; font-weight: 800;
+    letter-spacing: 1px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; white-space: nowrap;
+  }
+  .av-tier  { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .av-price { font-size: 36px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--client-dark); }
+  .av-price span { font-size: 15px; font-weight: 400; color: var(--text-light); }
+  .av-desc  { font-size: 13px; color: var(--text-light); margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  .av-features { list-style: none; padding: 0; margin: 0; flex: 1; }
+  .av-features li { position: relative; padding-left: 18px; margin-bottom: 7px; font-size: 12.5px; line-height: 1.45; }
+  .av-features li::before { content: '\2713'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .av-quarterly { border-top: 1px solid var(--border); margin-top: 12px; padding-top: 11px; }
+  .av-quarterly .av-q-label { font-size: 10px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .av-quarterly .av-q-total { font-size: 21px; font-weight: 800; color: var(--client-mid); line-height: 1; }
+  .av-quarterly .av-q-mo { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .av-quarterly .av-q-save { display: inline-block; font-size: 11px; font-weight: 700; color: #27AE60; background: #E8F5E9; padding: 2px 8px; border-radius: 10px; margin-top: 5px; }
+  .av-card.featured .av-quarterly { border-top-color: rgba(224,165,74,0.3); }
+  .av-card.featured .av-quarterly .av-q-label { color: var(--client-mid); }
+
+  /* ── Reddit slides ── */
+  .subreddit-tag {
+    display: inline-block; background: #FFF0E6; color: #FF4500;
+    border: 1px solid #FFD0B8; border-radius: 6px;
+    padding: 3px 9px; font-size: 12px; font-weight: 600; margin: 3px 3px 3px 0;
+  }
+
+  #nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; height: var(--nav-h);
+    background: rgba(7,30,54,0.98);
+    border-top: 1px solid rgba(224,165,74,0.28);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200; user-select: none;
+  }
+  #nav-bar .nb-brand { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+  #nav-bar .nb-controls { display: flex; align-items: center; gap: 20px; }
+  #nav-bar button {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  #nav-bar button:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  #slide-counter { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.45); min-width: 56px; text-align: center; }
+  .nb-dots { display: flex; gap: 5px; align-items: center; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.15s; }
+  .dot.active { background: var(--client-accent); }
+
+  @media (max-width: 1100px) {
+    .slide { padding: 36px 44px 28px; }
+    h1 { font-size: 38px; } h2 { font-size: 25px; }
+    .two-col, .three-col, .pillar-grid, .av-pricing-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SLIDE 1: COVER ===== -->
+<div class="slide dark active">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">SEO, Reddit &amp; AI Visibility Strategy &middot; July 2026</div>
+    <h1 style="font-size:58px;margin-bottom:16px;">The Hotel Gurus</h1>
+    <p class="subtitle" style="max-width:860px;font-size:20px;">You get <strong style="color:#fff;">60 organic visits a month &mdash; and 96.67% of them are people already typing &ldquo;hotel gurus.&rdquo;</strong> The planners searching &ldquo;hotel room block for a wedding,&rdquo; &ldquo;sports team hotel booking,&rdquo; and &ldquo;how to negotiate hotel rates&rdquo; almost never find you. That category is wide open &mdash; and the demand behind it is worth millions in paid clicks to your competitors.</p>
+    <div class="stats-row" style="margin-top:34px;">
+      <div class="stat-card">
+        <div class="stat-value light">60</div>
+        <div class="stat-label">US organic visits / month (SEMrush, Jul 2026)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">96.67%</div>
+        <div class="stat-label">Of that traffic is branded &mdash; only ~2 non-branded visits/mo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">50</div>
+        <div class="stat-label">Keywords in striking distance right now (positions 11&ndash;30)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value light">557</div>
+        <div class="stat-label">Ranking keywords &mdash; but 344 are stuck on page 6+ (pos 51&ndash;100)</div>
+      </div>
+    </div>
+    <p style="margin-top:34px;font-size:13px;opacity:0.4;">Prepared by EmberTribe &middot; SEMrush data pulled July 20, 2026 &middot; US database</p>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2: WHERE YOU STAND ===== -->
+<div class="slide">
+  <div class="slide-label">Where You Stand</div>
+  <h2>Your organic traffic is loyalty, not discovery.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Verified SEMrush data, US, July 2026. The Hotel Gurus ranks #1 for its own name &mdash; and almost nowhere for the category terms that bring in new planners.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">The branded / non-branded split</h3>
+      <div class="stats-row" style="flex-direction:column;gap:10px;margin:0 0 12px;">
+        <div class="stat-card">
+          <div class="stat-value">96.67%</div>
+          <div class="stat-label">Branded organic traffic &mdash; searches like &ldquo;hotel gurus&rdquo; from people who already know you</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">3.33% <span style="font-size:15px;font-weight:700;">(~2 visits/mo)</span></div>
+          <div class="stat-label">Non-branded traffic &mdash; the entire discovery engine for new customers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">48 &rarr; 0</div>
+          <div class="stat-label">Commercial-intent keywords ranking &mdash; and driving zero traffic (all stuck below page 1)</div>
+        </div>
+      </div>
+      <div class="annotation danger">
+        <strong>The core problem:</strong> Google treats The Hotel Gurus as a <em>brand</em>, not a category authority. You rank for 557 keywords, but <strong>344 sit at positions 51&ndash;100</strong> &mdash; indexed, but invisible. There is no content engine turning category demand into leads.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">Top organic keywords &mdash; nearly every visit is your own name</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="th-accent">Keyword</th>
+            <th class="th-accent">Pos</th>
+            <th class="th-accent">Volume</th>
+            <th class="th-accent">% of Traffic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">hotel gurus</td><td class="bold">1</td><td>70</td><td class="bold">93.3%</td></tr>
+          <tr><td class="mono">loyalty perks frequent group travel bookings</td><td class="bold">3</td><td>40</td><td>1.7%</td></tr>
+          <tr><td class="mono">how does a room block at a hotel work</td><td class="bold red">54</td><td>40</td><td>0.0%</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>Keyword intent tells the story:</strong> 88.7% of your keywords are informational and 8.2% commercial &mdash; exactly the questions buyers ask before booking a room block. You are <em>indexed</em> for demand; you are not <em>ranked</em> for it.
+      </div>
+      <div class="annotation success" style="margin-top:8px;">
+        <strong>Why this is fixable, fast:</strong> the rankings already exist. Google trusts these pages enough to index them &mdash; they just need dedicated, optimized content to climb from page 2&ndash;6 onto page 1.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 3: CATEGORY IS OPEN + DEMAND REAL ===== -->
+<div class="slide">
+  <div class="slide-label">The Opportunity</div>
+  <h2>The category is wide open &mdash; and the demand behind it is proven and expensive.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Your closest peer earns just 8 visits a month. But the players one tier up prove that group-hotel demand is enormous and converts &mdash; they pay real money to capture it. Verified SEMrush, US, July 2026.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">Monthly US organic traffic &mdash; the reachable field</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label bold">groups360.com</div>
+          <div class="bar-track"><div class="bar-fill grey-fill" style="width:100%;">1,600</div></div>
+          <div class="bar-value">1,600</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label bold" style="color:var(--client-mid);">The Hotel Gurus</div>
+          <div class="bar-track"><div class="bar-fill client-fill" style="width:3.8%;"></div></div>
+          <div class="bar-value bold" style="color:var(--client-mid);">60</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">theroomblocksource</div>
+          <div class="bar-track"><div class="bar-fill grey-fill" style="width:0.5%;min-width:6px;"></div></div>
+          <div class="bar-value">8</div>
+        </div>
+      </div>
+      <div class="annotation" style="margin-top:6px;">
+        <strong>The ceiling is far higher.</strong> HotelPlanner pulls <strong>534,300 organic visits/mo</strong> (85% non-branded) selling the exact same thing &mdash; its ad copy reads <em>&ldquo;group hotel rates for Sports Teams, Weddings, Meetings or Any Event.&rdquo;</em> That&rsquo;s The Hotel Gurus&rsquo; business, at scale.
+      </div>
+      <div class="stats-row" style="gap:12px;margin-top:10px;">
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value blue" style="font-size:24px;">534.3K</div>
+          <div class="stat-label">HotelPlanner organic / mo &mdash; the ceiling</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="font-size:24px;">62%</div>
+          <div class="stat-label">groups360 traffic that is non-branded discovery</div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">The demand is real &mdash; and competitors pay to own it</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="th-red">Category term</th>
+            <th class="th-red">Volume</th>
+            <th class="th-red">CPC</th>
+            <th class="th-red">Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono bold">hotel conference room rental</td><td>1,900</td><td>$2.29</td><td class="dim">groups360 runs paid ads on it</td></tr>
+          <tr><td class="mono bold">hotel groups</td><td>880</td><td>$2.20</td><td class="dim">groups360 paid</td></tr>
+          <tr><td class="mono bold">hotel room block</td><td>720</td><td>&mdash;</td><td class="dim">peer&rsquo;s top term, ranks poorly</td></tr>
+          <tr><td class="mono bold">hilton room blocks</td><td>50</td><td class="bold orange">$23.62</td><td class="dim">groups360 pays premium CPC</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>HotelPlanner spends $38,400/month on Google Ads</strong> for these group-hotel terms; groups360 pays up to <strong>$23.62 a click</strong>. When rivals pay that to <em>rent</em> this traffic, it proves the intent converts &mdash; and every ranking you <em>own</em> is traffic you never have to pay for again.
+      </div>
+      <div class="annotation success" style="margin-top:8px;">
+        <strong>The white space:</strong> between the 8-visit peer and the generic giants sits an unclaimed content layer &mdash; specific, high-intent, low-competition terms. Nobody in the free-room-block niche has built it. First mover wins.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 4: STRIKING DISTANCE ===== -->
+<div class="slide">
+  <div class="slide-label">The Fastest Path to Traffic</div>
+  <h2>50 keywords are already in striking distance &mdash; at very low difficulty and high commercial value.</h2>
+  <p class="subtitle" style="margin-bottom:10px;">The Hotel Gurus ranks positions 11&ndash;30 for 50 keywords that produce almost nothing today. Most have a difficulty score under 30 &mdash; and several carry $17&ndash;$94 CPCs. Google already trusts these pages; dedicated content pushes them onto page 1, where the clicks are.</p>
+
+  <div class="posdist">
+    <div class="pd-col"><div class="pd-num">2</div><div class="pd-bar cold" style="height:3%;"></div><div class="pd-lbl">1&ndash;3</div></div>
+    <div class="pd-col"><div class="pd-num">5</div><div class="pd-bar cold" style="height:6%;"></div><div class="pd-lbl">4&ndash;10</div></div>
+    <div class="pd-col"><div class="pd-num">24</div><div class="pd-bar hot" style="height:28%;"></div><div class="pd-lbl">11&ndash;20</div></div>
+    <div class="pd-col"><div class="pd-num">26</div><div class="pd-bar hot" style="height:30%;"></div><div class="pd-lbl">21&ndash;30</div></div>
+    <div class="pd-col"><div class="pd-num">83</div><div class="pd-bar" style="height:97%;"></div><div class="pd-lbl">31&ndash;40</div></div>
+    <div class="pd-col"><div class="pd-num">70</div><div class="pd-bar" style="height:81%;"></div><div class="pd-lbl">41&ndash;50</div></div>
+    <div class="pd-col"><div class="pd-num">344</div><div class="pd-bar cold" style="height:100%;"></div><div class="pd-lbl">51&ndash;100</div></div>
+  </div>
+  <p style="font-size:11px;color:var(--text-light);margin:0 0 10px;text-align:center;">Organic keyword position distribution (SEMrush) &mdash; <span class="accent bold">gold = the 50 striking-distance keywords</span> one content push from page 1.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="th-accent">Keyword</th>
+        <th class="th-accent">Pos</th>
+        <th class="th-accent">Volume</th>
+        <th class="th-accent">Difficulty</th>
+        <th class="th-accent">CPC</th>
+        <th class="th-accent">Vertical / Gap</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono bold">hotel block wedding</td><td class="bold orange">16</td><td class="bold">140</td><td><span class="kd-pill kd-md">27</span></td><td>$7.99</td><td class="dim">Weddings &mdash; no dedicated guide</td></tr>
+      <tr><td class="mono bold">sports team hotel booking</td><td class="bold orange">15</td><td class="bold">110</td><td><span class="kd-pill kd-md">29</span></td><td>$5.72</td><td class="dim">Collegiate / team travel</td></tr>
+      <tr><td class="mono bold">hotels for sports teams</td><td class="bold orange">18</td><td class="bold">90</td><td><span class="kd-pill kd-ez">16</span></td><td>$3.69</td><td class="dim">Team travel &mdash; low difficulty</td></tr>
+      <tr><td class="mono bold">block hotel rooms</td><td class="bold orange">15</td><td class="bold">70</td><td><span class="kd-pill kd-ez">16</span></td><td class="bold orange">$22.00</td><td class="dim">Core service &mdash; high CPC</td></tr>
+      <tr><td class="mono bold">hotel booking for sports events</td><td class="bold orange">20</td><td class="bold">70</td><td><span class="kd-pill kd-md">21</span></td><td>&mdash;</td><td class="dim">Team / event travel</td></tr>
+      <tr><td class="mono bold">attrition hotel block</td><td class="bold orange">15</td><td class="bold">50</td><td><span class="kd-pill kd-vez">3</span></td><td class="bold orange">$17.79</td><td class="dim">Very low KD &mdash; quick win</td></tr>
+      <tr><td class="mono bold">how to negotiate hotel rates</td><td class="bold" style="color:var(--yellow);">12</td><td class="bold">50</td><td><span class="kd-pill kd-vez">3</span></td><td>$1.50</td><td class="dim">Edge of page 1 &mdash; one push</td></tr>
+      <tr><td class="mono bold">hotel sourcing for groups</td><td class="bold" style="color:var(--yellow);">12</td><td class="bold">40</td><td><span class="kd-pill kd-vez">&mdash;</span></td><td>&mdash;</td><td class="dim">Your exact service term</td></tr>
+      <tr><td class="mono bold">how does booking hotel blocks work</td><td class="bold orange">15</td><td class="bold">40</td><td><span class="kd-pill kd-vez">1</span></td><td class="bold orange">$94.00</td><td class="dim">KD 1, $94 CPC &mdash; premium intent</td></tr>
+      <tr><td class="mono bold">how to reserve a hotel block for a wedding</td><td class="bold orange">18</td><td class="bold">30</td><td><span class="kd-pill kd-ez">12</span></td><td class="bold orange">$22.78</td><td class="dim">Weddings &mdash; high CPC</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:11px;color:var(--text-light);margin-top:6px;">Showing 10 of 50 striking-distance keywords (positions 11&ndash;30). Full list in the companion keyword workbook. Difficulty (KD): <span class="kd-pill kd-vez" style="min-width:18px;">0&ndash;9</span> very easy &nbsp;<span class="kd-pill kd-ez" style="min-width:18px;">10&ndash;19</span> easy &nbsp;<span class="kd-pill kd-md" style="min-width:18px;">20&ndash;29</span> moderate.</p>
+</div>
+
+<!-- ===== SLIDE 5: BACKLINK LIABILITY ===== -->
+<div class="slide">
+  <div class="slide-label">Risk &amp; Authority</div>
+  <h2>Your backlink profile is a liability &mdash; not an asset.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">On paper, 7.3K backlinks looks strong. Under the hood, it&rsquo;s dominated by spam and PBN-style links that add risk, not authority &mdash; and it explains why 557 keywords aren&rsquo;t ranking.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">What&rsquo;s actually pointing at the domain</h3>
+      <table>
+        <thead>
+          <tr><th class="th-red">Referring source / anchor</th><th class="th-red">Backlinks</th><th class="th-red">Read</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="mono">bing-directory.com</td><td class="bold">3,179</td><td class="red">Spam directory</td></tr>
+          <tr><td class="mono">protospielsouth.com</td><td class="bold">1,356</td><td class="red">Irrelevant / low-trust</td></tr>
+          <tr><td class="mono">&ldquo;event hotel room blocks&rdquo; (single anchor)</td><td class="bold">3,181</td><td class="red">44% from 2 domains</td></tr>
+          <tr><td class="mono">SeoFlox.com &ldquo;rank-website&rdquo; pages</td><td class="bold">multiple</td><td class="red">Link-scheme spam</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation danger" style="margin-top:12px;">
+        <strong>Why this matters:</strong> a single exact-match anchor at 44% concentration from just 2 domains is a textbook over-optimization pattern Google penalizes. This profile is a <em>risk flag</em> sitting on the domain &mdash; and it&rsquo;s doing nothing to help you rank.
+      </div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">The fix &mdash; and the opening it creates</h3>
+      <div class="stats-row" style="flex-direction:column;gap:10px;margin:0 0 12px;">
+        <div class="stat-card">
+          <div class="stat-value red" style="font-size:24px;">7.3K</div>
+          <div class="stat-label">Backlinks &mdash; but from only 336 referring domains, heavily spam-weighted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green" style="font-size:24px;">Clean &rarr; Build</div>
+          <div class="stat-label">Audit &amp; disavow the toxic links, then earn real DA40&ndash;50+ placements</div>
+        </div>
+      </div>
+      <div class="annotation info">
+        <strong>The whole niche has this problem.</strong> Even theroomblocksource carries PBN-style anchors (&ldquo;premium pbn network&hellip; buy backlinks cheap&rdquo;). Nobody in this category has built genuine authority &mdash; so clean, editorial links become a durable moat, not a catch-up expense.
+      </div>
+      <div class="annotation success" style="margin-top:8px;">
+        <strong>Step one is protective, not just growth:</strong> we remediate the risk first, then every real link and every piece of content compounds on a foundation that won&rsquo;t get you penalized.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 6: STRATEGY ===== -->
+<div class="slide dark">
+  <div class="slide-label">Recommended Strategy</div>
+  <h1 style="font-size:38px;">Three engines, one goal: own the category before anyone else does.</h1>
+  <p class="subtitle">The demand is proven and the field is empty. Content captures it. Clean, authoritative backlinks make it rank. Reddit &amp; AI visibility win the recommendation layer where planners now ask &ldquo;how do room blocks work&rdquo; and &ldquo;who should I use.&rdquo; Each engine feeds the next.</p>
+
+  <div class="pillar-grid">
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 01 &middot; Capture</div>
+      <h3>ClusterMagic Content</h3>
+      <p>Keyword-clustered articles built around what SEMrush already shows working: push the 50 striking-distance keywords (KD 1&ndash;29) to page 1, then expand into full clusters for weddings, sports &amp; collegiate, corporate &amp; incentive, and association room blocks &mdash; the exact verticals The Hotel Gurus already serves.</p>
+      <span class="pillar-icon">&#128221;</span>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 02 &middot; Authority</div>
+      <h3>Backlink Cleanup &amp; PR</h3>
+      <p>First, audit and disavow the toxic spam/PBN links dragging on the domain. Then earn real DA40&ndash;50+ editorial links from travel, events, and wedding publications, pointed at the money pages. Genuine authority is the one thing no competitor in this niche has &mdash; so it becomes a lasting moat.</p>
+      <span class="pillar-icon">&#128279;</span>
+    </div>
+    <div class="pillar-card">
+      <div class="pillar-tag">Engine 03 &middot; Recommend</div>
+      <h3>Reddit &amp; AI Visibility</h3>
+      <p>Planners ask Reddit and AI engines &ldquo;how do hotel room blocks work,&rdquo; &ldquo;is a room block worth it,&rdquo; and &ldquo;best way to book group hotel rooms.&rdquo; Today those answers name nobody &mdash; or the giants. Authentic placements make The Hotel Gurus the recommended name, feeding a referral and brand-search channel that compounds the SEO work.</p>
+      <span class="pillar-icon">&#128172;</span>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top:22px;">
+    <strong>Why this order:</strong> striking-distance content pays back fastest (60&ndash;90 days on KD-under-30 terms), the disavow protects the domain immediately, real backlinks accelerate every ranking, and Reddit/AEO captures the growing share of planners who never scroll a traditional results page.
+  </div>
+</div>
+
+<!-- ===== SLIDE 7: REDDIT EXECUTION ===== -->
+<div class="slide">
+  <div class="slide-label">Engine 03 &middot; Reddit Execution</div>
+  <h2>Target Subreddits &amp; The Placement Process</h2>
+  <p class="subtitle">Your buyers &mdash; wedding couples, event planners, team managers, association organizers &mdash; are already asking the right questions on Reddit. They just aren&rsquo;t finding The Hotel Gurus in the answers.</p>
+  <div class="two-col" style="flex:1; margin-top:14px;">
+    <div>
+      <div style="display:flex; flex-direction:column; gap:9px;">
+        <div style="border:1px solid var(--border); border-radius:10px; padding:13px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Subreddit Landscape Mapping</div>
+            <div style="font-size:13px; color:var(--text-light);">Identify which subreddits AI engines already index for room-block, group-travel, and event-lodging queries</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:13px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Discovery &amp; Analysis</div>
+            <div style="font-size:13px; color:var(--text-light);">Find threads ranking on Google or cited by AI &mdash; &ldquo;how do hotel room blocks work&rdquo;, &ldquo;room block for a wedding&rdquo;, &ldquo;booking hotels for a sports team&rdquo;</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:13px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">3</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Comment Strategy &amp; Fulfillment</div>
+            <div style="font-size:13px; color:var(--text-light);">Authentic, first-person The Hotel Gurus mentions formatted for AI retrieval &mdash; the free, zero-hassle sourcing angle &mdash; not spam</div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:10px; padding:13px 16px; display:flex; gap:14px; align-items:flex-start;">
+          <div style="background:var(--client-sand); color:var(--client-mid); font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">4</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Seeding</div>
+            <div style="font-size:13px; color:var(--text-light);">Create original &ldquo;how did you handle the hotel block for your wedding/tournament?&rdquo; posts; seed with independent responses recommending The Hotel Gurus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:10px; color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Target Subreddits</h4>
+      <div style="margin-bottom:9px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Weddings &amp; Social Events</div>
+        <span class="subreddit-tag">r/weddingplanning</span>
+        <span class="subreddit-tag">r/DestinationWeddings</span>
+        <span class="subreddit-tag">r/Weddingsunder10000</span>
+        <span class="subreddit-tag">r/wedding</span>
+      </div>
+      <div style="margin-bottom:9px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Corporate, Meeting &amp; Association Planners</div>
+        <span class="subreddit-tag">r/eventplanning</span>
+        <span class="subreddit-tag">r/ExecutiveAssistants</span>
+        <span class="subreddit-tag">r/humanresources</span>
+        <span class="subreddit-tag">r/nonprofit</span>
+      </div>
+      <div style="margin-bottom:9px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Team, Collegiate &amp; Youth Sports Travel</div>
+        <span class="subreddit-tag">r/youthsports</span>
+        <span class="subreddit-tag">r/CoachingYouthSports</span>
+        <span class="subreddit-tag">r/Coaching</span>
+      </div>
+      <div style="margin-bottom:9px;">
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">General / High-AI-Indexed</div>
+        <span class="subreddit-tag">r/AskReddit</span>
+        <span class="subreddit-tag">r/travel</span>
+        <span class="subreddit-tag">r/Frugal</span>
+        <span class="subreddit-tag">r/hotels</span>
+      </div>
+      <div style="margin-top:10px; background:#FFF8E1; border-left:3px solid var(--client-accent); border-radius:0 8px 8px 0; padding:10px 12px; font-size:13px;">
+        <strong style="color:var(--client-dark);">Top AI-targetable queries:</strong> &ldquo;How do hotel room blocks work&rdquo; &bull; &ldquo;Is a hotel room block worth it&rdquo; &bull; &ldquo;How to get group hotel rates for a wedding&rdquo; &bull; &ldquo;Best way to book hotel rooms for a sports team&rdquo; &bull; &ldquo;Do hotel room blocks cost money&rdquo;
+      </div>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>These map to real rankings you already hold:</strong> &ldquo;how does booking hotel blocks work&rdquo; (pos 15), &ldquo;attrition hotel block&rdquo; (pos 15), &ldquo;how to reserve a hotel block for a wedding&rdquo; (pos 18) &mdash; the Reddit &amp; AEO layer reinforces the exact terms the content engine is climbing.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 8: CLUSTERMAGIC PRICING ===== -->
+<div class="slide">
+  <div class="slide-label">Investment &middot; Content Engine</div>
+  <h2 style="margin-bottom:6px;">ClusterMagic standalone article pricing.</h2>
+  <p class="subtitle" style="margin-bottom:18px;">If you want the content engine on its own, ClusterMagic is billed monthly or at a locked quarterly rate &mdash; no setup fees, no long onboarding.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+
+    <div style="border:1px solid rgba(4,107,210,0.2);border-radius:10px;padding:18px 14px;background:#f9fafc;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Starter &mdash; 25 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$700<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$1,750</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$583/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $350</div>
+      </div>
+    </div>
+
+    <div style="border:1px solid rgba(4,107,210,0.2);border-radius:10px;padding:18px 14px;background:#f9fafc;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Growth &mdash; 40 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$1,100<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$2,700</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$900/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $600</div>
+      </div>
+    </div>
+
+    <div style="border:2px solid var(--client-mid);border-radius:10px;padding:18px 14px;background:#EFF6FF;position:relative;">
+      <div style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--client-mid);color:#fff;font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:0.5px;white-space:nowrap;">MOST POPULAR</div>
+      <div style="font-size:12px;font-weight:700;color:var(--client-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Velocity &mdash; 50 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$1,350<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(4,107,210,0.15);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--client-mid);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$3,400</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$1,133/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#D4EDDA;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $650</div>
+      </div>
+    </div>
+
+    <div style="border:1px solid rgba(4,107,210,0.2);border-radius:10px;padding:18px 14px;background:#f9fafc;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Scale &mdash; 100 articles/mo</div>
+      <div style="font-size:30px;font-weight:800;color:var(--text);line-height:1;">$2,700<span style="font-size:13px;font-weight:500;color:var(--text-light);">/mo</span></div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:3px;margin-bottom:14px;">month-to-month</div>
+      <div style="border-top:1px solid rgba(0,0,0,0.06);padding-top:12px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">3-month prepay</div>
+        <div style="font-size:22px;font-weight:800;color:var(--client-mid);line-height:1;">$7,000</div>
+        <div style="font-size:11px;color:var(--text-light);margin-top:2px;">$2,333/mo effective</div>
+        <div style="display:inline-block;font-size:11px;font-weight:700;color:#27AE60;background:#E8F5E9;padding:2px 8px;border-radius:10px;margin-top:5px;">Save $1,100</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:linear-gradient(135deg,#0B2A4A 0%,#046BD2 130%);border-radius:12px;padding:18px 24px;display:flex;align-items:flex-start;gap:20px;">
+    <div style="flex-shrink:0;width:44px;height:44px;background:var(--ember-red);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7M12 7H7.5A2.5 2.5 0 0 1 7.5 2C10 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C14 2 12 7 12 7z"/></svg>
+    </div>
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:700;color:var(--client-accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">6-Month Agreement &mdash; Included Bonus</div>
+      <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:6px;">Sign a 6-month agreement and we include two content pillar pages + a full toxic-backlink audit &amp; disavow at no additional cost.</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6;">
+        <strong style="color:rgba(255,255,255,0.9);">2 pillar pages:</strong> 2,000+ word authority hubs anchoring your two highest-value verticals (weddings &amp; team/collegiate) that funnel internal link equity to every supporting article.
+        &nbsp;&nbsp;<strong style="color:rgba(255,255,255,0.9);">Backlink cleanup:</strong> audit and disavow the spam/PBN links flagged in this report &mdash; removing the penalty risk before it costs you rankings.
+      </div>
+    </div>
+    <div style="flex-shrink:0;text-align:center;padding:10px 16px;background:rgba(255,255,255,0.06);border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
+      <div style="font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;">Bonus value</div>
+      <div style="font-size:22px;font-weight:800;color:#fff;">~$2,400</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.45);">included free</div>
+    </div>
+  </div>
+
+  <p style="font-size:11px;color:var(--text-light);margin-top:10px;text-align:center;">All tiers include publishing to your CMS, internal linking, and FAQ schema on every article.</p>
+</div>
+
+<!-- ===== SLIDE 9: AI VISIBILITY PACKAGES ===== -->
+<div class="slide">
+  <div class="slide-label">Investment &middot; Full AI Visibility</div>
+  <h2 style="margin-bottom:6px;">Choose Your AI Visibility Package</h2>
+  <p class="subtitle" style="margin-bottom:2px;">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility &mdash; the complete engine for owning this category.</p>
+
+  <div class="av-pricing-grid">
+
+    <div class="av-card">
+      <div class="av-tier">AI Visibility Starter</div>
+      <div class="av-price">$1,750<span>/mo</span></div>
+      <div class="av-desc">Get your brand into AI conversations</div>
+      <ul class="av-features">
+        <li>5 AEO placements / month</li>
+        <li>10 SEO articles / month</li>
+        <li>Subreddit landscape mapping</li>
+        <li>Thread discovery &amp; comment strategy</li>
+        <li>Quarterly performance report</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$4,725</div>
+        <div class="av-q-mo">$1,575/mo effective</div>
+        <div class="av-q-save">Save $525</div>
+      </div>
+    </div>
+
+    <div class="av-card featured">
+      <div class="av-badge">Most Popular</div>
+      <div class="av-tier">AI Growth Engine</div>
+      <div class="av-price">$3,450<span>/mo</span></div>
+      <div class="av-desc">Accelerate authority + content velocity</div>
+      <ul class="av-features">
+        <li>8 AEO placements / month</li>
+        <li>25 SEO articles / month</li>
+        <li>2 DA40+ authority backlinks / month</li>
+        <li>Full thread seeding + new post creation</li>
+        <li>Backlink target prioritization</li>
+        <li>Keyword cluster expansion</li>
+        <li>Quarterly performance reporting</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$9,315</div>
+        <div class="av-q-mo">$3,105/mo effective</div>
+        <div class="av-q-save">Save $1,035</div>
+      </div>
+    </div>
+
+    <div class="av-card">
+      <div class="av-tier">AI Authority Accelerator</div>
+      <div class="av-price">$5,250<span>/mo</span></div>
+      <div class="av-desc">Dominate your category in AI search</div>
+      <ul class="av-features">
+        <li>12 AEO placements / month</li>
+        <li>40 SEO articles / month</li>
+        <li>2 DA50+ authority backlinks / month</li>
+        <li>Full competitive displacement strategy</li>
+        <li>Technical SEO management</li>
+        <li>Quarterly reporting &amp; strategy sessions</li>
+        <li>Priority page &amp; content optimization</li>
+      </ul>
+      <div class="av-quarterly">
+        <div class="av-q-label">Quarterly prepay &mdash; 10% off</div>
+        <div class="av-q-total">$14,175</div>
+        <div class="av-q-mo">$4,725/mo effective</div>
+        <div class="av-q-save">Save $1,575</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="annotation info" style="margin-top:14px;">
+    <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, the Reddit optimization process, and monthly AI visibility benchmarking vs. groups360, theroomblocksource &amp; HotelPlanner.
+  </div>
+</div>
+
+<!-- ===== SLIDE 10: PROJECTED OUTCOMES ===== -->
+<div class="slide dark">
+  <div class="slide-label">Projected Outcomes</div>
+  <h1 style="font-size:36px;">What the curve looks like when the engines turn on.</h1>
+  <p class="subtitle" style="margin-bottom:8px;">Anchored to your verified SEMrush baseline: 60 total organic / ~2 non-branded visits per month. The model assumes striking-distance keywords move first, then new vertical clusters compound.</p>
+
+  <div class="three-col" style="margin-top:20px;">
+    <div class="stat-card">
+      <div class="stat-value accent">Months 1&ndash;3</div>
+      <div class="stat-label" style="font-size:13px;margin-top:8px;line-height:1.55;">Toxic-backlink disavow submitted. Dedicated content live for the lowest-difficulty striking-distance terms (&ldquo;attrition hotel block&rdquo; KD 3, &ldquo;how does booking hotel blocks work&rdquo; KD 1, &ldquo;how to negotiate hotel rates&rdquo; KD 3). First Reddit placements indexed by AI engines.</div>
+      <div style="font-size:19px;font-weight:800;color:#fff;margin-top:12px;">~150&ndash;400 visits/mo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value accent">Months 4&ndash;6</div>
+      <div class="stat-label" style="font-size:13px;margin-top:8px;line-height:1.55;">Vertical clusters publishing &mdash; weddings, sports &amp; collegiate, corporate/incentive. Top striking-distance terms reaching page 1. First real DA40+ links reinforcing the money pages. Non-branded discovery becomes the majority of traffic.</div>
+      <div style="font-size:19px;font-weight:800;color:#fff;margin-top:12px;">~800&ndash;1,500 total/mo</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value accent">Months 7&ndash;12</div>
+      <div class="stat-label" style="font-size:13px;margin-top:8px;line-height:1.55;">Clusters compounding across all four verticals; long-tail room-block, group-rate, and negotiation terms ranking. Trajectory overtakes theroomblocksource and closes on groups360&rsquo;s footprint.</div>
+      <div style="font-size:19px;font-weight:800;color:#fff;margin-top:12px;">~2,000&ndash;4,000 total/mo</div>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top:20px;">
+    <strong>The ceiling is proven, not theoretical:</strong> groups360 earns 1,600 visits/mo (62% non-branded) and HotelPlanner 534,300 selling the same room-block service. Simply reaching groups360&rsquo;s footprint is a <strong>25&ndash;30x increase</strong> on today&rsquo;s 60 &mdash; and it&rsquo;s built on demand that already exists.
+  </div>
+  <p style="font-size:11px;color:rgba(255,255,255,0.35);margin-top:10px;">Projections are directional models based on SEMrush position, difficulty and CTR data &mdash; not guarantees. Actual results depend on implementation timing, competition, and Google algorithm changes. EmberTribe does not guarantee specific traffic outcomes.</p>
+</div>
+
+<!-- ===== SLIDE 11: NEXT STEPS ===== -->
+<div class="slide dark">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div class="slide-label">Next Steps</div>
+    <h1>Own the category before anyone builds the moat.</h1>
+    <p class="subtitle" style="margin-bottom:26px;">The demand is proven, the field is empty, and the fastest wins are 50 keywords you already rank for. The first move is protective and fast: clean the backlink risk, then publish against the striking-distance terms while competitors are still paying $20+ a click to rent this traffic.</p>
+
+    <div class="three-col">
+      <div class="stat-card">
+        <div class="stat-value accent">This Week</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">Grant access to Google Search Console &amp; Google Analytics so we can layer verified click and conversion data onto the SEMrush baseline in this deck</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">Kickoff Call</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">Confirm priority verticals (weddings, sports/collegiate, corporate, associations) and lock the first content cluster + the disavow scope</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value accent">Then</div>
+        <div class="stat-label" style="font-size:13px;margin-top:8px;">Full custom roadmap: striking-distance content, backlink cleanup &amp; PR, and Reddit / AI visibility &mdash; sized to budget and built to scale as results land</div>
+      </div>
+    </div>
+
+    <div class="annotation" style="margin-top:28px;max-width:800px;">
+      <strong>One team, whole lifecycle:</strong> content, backlinks &amp; PR, and Reddit / AI visibility under one roof &mdash; start with the content engine or the full AI Visibility package, and ramp as the numbers prove out.
+    </div>
+    <p style="margin-top:26px;font-size:13px;opacity:0.45;">EmberTribe &middot; diana.mortiz@embertribe.com &middot; decks.embertribe.com</p>
+  </div>
+</div>
+
+<!-- ===== NAV BAR ===== -->
+<div id="nav-bar">
+  <div class="nb-brand">EmberTribe &mdash; The Hotel Gurus Growth Strategy</div>
+  <div class="nb-controls">
+    <button id="btn-prev" title="Previous">&#8592;</button>
+    <span id="slide-counter">1 / 11</span>
+    <button id="btn-next" title="Next">&#8594;</button>
+  </div>
+  <div class="nb-dots" id="dot-row"></div>
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total  = slides.length;
+  const counter = document.getElementById('slide-counter');
+  const dotRow  = document.getElementById('dot-row');
+  let current = 0;
+
+  slides.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.addEventListener('click',()=>go(i));
+    dotRow.appendChild(d);
+  });
+
+  function go(n){
+    slides[current].classList.remove('active');
+    dotRow.children[current].classList.remove('active');
+    current = (n + total) % total;
+    slides[current].classList.add('active');
+    dotRow.children[current].classList.add('active');
+    counter.textContent = (current+1) + ' / ' + total;
+    slides[current].scrollTop = 0;
+  }
+
+  document.getElementById('btn-prev').addEventListener('click',()=>go(current-1));
+  document.getElementById('btn-next').addEventListener('click',()=>go(current+1));
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); go(current+1); }
+    if(e.key==='ArrowLeft') { e.preventDefault(); go(current-1); }
+  });
+})();
+</script>
+</body>
+</html>
