@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DogiZone — CPQL Analysis Runbook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --primary-dark: #003D5C;
+  --primary-mid: #005578;
+  --primary-light: #007A9A;
+  --accent: #00B4D0;
+  --ember-red: #ff333d;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --orange: #E67E22;
+  --red: #E74C3C;
+  --teal: #00B4D8;
+  --code-bg: #0f2733;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #eef1f4; color: var(--text);
+  line-height: 1.65; padding: 32px 20px;
+}
+
+.page {
+  max-width: 900px; margin: 0 auto; background: #fff;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.09);
+  border-radius: 4px; overflow: hidden;
+}
+
+header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #fff; padding: 38px 50px 32px;
+}
+.eyebrow {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2.5px; color: var(--accent); margin-bottom: 10px;
+}
+header h1 { font-size: 32px; font-weight: 900; letter-spacing: -0.8px; line-height: 1.15; margin-bottom: 14px; }
+.header-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 20px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.15); }
+.header-meta div { font-size: 12.5px; color: rgba(255,255,255,0.65); }
+.header-meta strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.42); font-weight: 700; margin-bottom: 2px; }
+
+main { padding: 36px 50px 46px; }
+section { margin-bottom: 34px; }
+section:last-child { margin-bottom: 0; }
+
+h2 {
+  font-size: 21px; font-weight: 800; letter-spacing: -0.3px;
+  color: var(--primary-dark); margin-bottom: 12px; line-height: 1.3;
+  padding-bottom: 9px; border-bottom: 2px solid var(--border);
+}
+h3 { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin: 20px 0 8px; }
+h3:first-child { margin-top: 0; }
+p { font-size: 14.8px; margin-bottom: 12px; }
+p:last-child { margin-bottom: 0; }
+
+ul, ol { margin: 0 0 12px 0; padding-left: 0; list-style: none; }
+li { position: relative; padding-left: 18px; margin-bottom: 7px; font-size: 14.6px; line-height: 1.55; }
+li::before { content: ''; position: absolute; left: 0; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+ol { counter-reset: n; }
+ol li { padding-left: 26px; }
+ol li::before {
+  content: counter(n); counter-increment: n;
+  width: auto; height: auto; border-radius: 0; background: none; top: 0;
+  font-size: 12.5px; font-weight: 800; color: var(--primary-light);
+}
+
+code {
+  font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  font-size: 12.6px; background: #EAF1F4; color: var(--primary-dark);
+  padding: 1.5px 6px; border-radius: 4px; white-space: nowrap;
+}
+pre {
+  background: var(--code-bg); color: #d6e9f2;
+  border-radius: 10px; padding: 18px 22px; margin: 14px 0;
+  overflow-x: auto; font-size: 13px; line-height: 1.6;
+}
+pre code {
+  background: none; color: inherit; padding: 0;
+  font-size: 13px; white-space: pre;
+}
+pre .k { color: #7fd7f0; font-weight: 500; }
+pre .s { color: #b5e8a9; }
+pre .c { color: #7c98a6; font-style: italic; }
+
+.callout {
+  background: #E3F2FD; border-left: 4px solid var(--teal);
+  border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0;
+  font-size: 14.5px; line-height: 1.55;
+}
+.callout strong { color: #0277BD; }
+.callout.warn { background: #FFF8E1; border-left-color: var(--orange); }
+.callout.warn strong { color: #B9770E; }
+.callout.stop { background: #FFEBEE; border-left-color: var(--red); }
+.callout.stop strong { color: var(--red); }
+.callout.ok { background: #E8F5E9; border-left-color: var(--green); }
+.callout.ok strong { color: #1B5E20; }
+
+.tbl-wrap { overflow-x: auto; margin: 14px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13.6px; min-width: 480px; }
+th {
+  background: var(--light-bg); font-weight: 600; text-transform: uppercase;
+  font-size: 10.5px; letter-spacing: 0.6px; color: var(--text-light);
+  text-align: left; padding: 11px 13px; border-bottom: 2px solid var(--border);
+}
+td { padding: 11px 13px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: rgba(0,0,0,0.016); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.dim { color: var(--text-light); }
+
+.def {
+  display: flex; gap: 14px; align-items: flex-start;
+  border: 1px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: 8px; padding: 14px 18px; margin-bottom: 10px;
+}
+.def .lbl {
+  flex-shrink: 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 700; color: #fff;
+  background: var(--primary-light); border-radius: 5px;
+  padding: 3px 9px;
+}
+.def .body { font-size: 14.4px; }
+.def .body em { color: var(--text-light); font-style: normal; font-size: 13.4px; }
+
+footer {
+  background: var(--light-bg); border-top: 1px solid var(--border);
+  padding: 20px 50px; display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 10px;
+  font-size: 12.5px; color: var(--text-light);
+}
+footer .brand { font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+
+@media (max-width: 720px) {
+  body { padding: 0; }
+  header, main, footer { padding-left: 22px; padding-right: 22px; }
+  header h1 { font-size: 25px; }
+  h2 { font-size: 19px; }
+  .def { flex-direction: column; gap: 8px; }
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .page { box-shadow: none; max-width: 100%; }
+  section, .def, pre, table { page-break-inside: avoid; }
+  pre { background: #f4f4f4; color: #222; border: 1px solid #ccc; }
+  pre .k, pre .s, pre .c { color: #222; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Internal Runbook</p>
+    <h1>DogiZone: Cost Per Qualified Lead (CPQL) Analysis</h1>
+    <div class="header-meta">
+      <div><strong>Owner</strong> Paid Ads team</div>
+      <div><strong>Requested by</strong> Melissa</div>
+      <div><strong>Account</strong> DogiZone &middot; 5861051555</div>
+      <div><strong>Date range</strong> Apr 21 &ndash; Jul 19, 2026</div>
+    </div>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Why this matters</h2>
+      <p>Andrew (DogiZone owner) is finalizing his Franchise Disclosure Document. He intends to write a <strong>pre-opening lead requirement</strong> into it: a new franchisee must generate a set number of qualified leads before being approved to open. His current draft says <strong>750 leads</strong> against a <strong>$20,000</strong> pre-opening marketing budget.</p>
+      <p>Our preliminary read from the Ads API says that gate is not achievable at that budget. But the estimate depends on a lead-to-account conversion rate we inferred from figures quoted on a call, which is too soft to put in a legal document. <strong>This analysis replaces the inference with measured data.</strong></p>
+      <div class="callout warn">
+        <strong>Accuracy matters more than speed here.</strong> Once this is in an FDD it is very hard to change, and every franchisee who misses the gate becomes a dispute.
+      </div>
+    </section>
+
+    <section>
+      <h2>The core problem: "qualified lead" has three meanings</h2>
+      <p>These differ by roughly <strong>3x in cost</strong>, so the definition has to be settled before the number means anything. Produce a CPQL for all three.</p>
+      <div class="def">
+        <span class="lbl">L1</span>
+        <span class="body"><strong>Ad-reported conversion</strong> (phone call or form submission)<br><em>Measured in Google Ads</em></span>
+      </div>
+      <div class="def">
+        <span class="lbl">L2</span>
+        <span class="body"><strong>Account created in Gingr</strong><br><em>Measured in Gingr</em></span>
+      </div>
+      <div class="def">
+        <span class="lbl">L3</span>
+        <span class="body"><strong>First reservation booked</strong> (an actual paying customer)<br><em>Measured in Gingr</em></span>
+      </div>
+      <div class="callout">
+        <strong>Working hypothesis to validate, not assume:</strong> L2 is probably the right gate metric. L1 is too easy to game and includes spam. L3 is the truest measure of a viable location but is too slow to gate an opening on.
+      </div>
+    </section>
+
+    <section>
+      <h2>Part A &mdash; Google Ads pull</h2>
+      <p>Account: <strong>DogiZone</strong>, customer ID <code>5861051555</code>. Config is at <code>~/google-ads.yaml</code> and loads via <code>GoogleAdsClient.load_from_storage()</code>.</p>
+
+      <h3>Which campaigns to include</h3>
+      <p>We want <strong>cold acquisition only</strong>. A brand-new franchise location has no brand recognition, no review history and no remarketing audience, so campaigns that harvest existing demand tell us nothing about what a new location will pay.</p>
+      <ul>
+        <li><strong>Include:</strong> all campaigns with <code>TOFU</code> in the name (6 campaigns)</li>
+        <li><strong>Exclude</strong> <code>ET | Search | BOFU | Branded | ...</code> &mdash; branded search, 786 conversions at $1 each. A new location has zero branded search volume.</li>
+        <li><strong>Exclude</strong> <code>ET | PMax | MOFU_Engaged | Training | ...</code> &mdash; engaged-audience retargeting. A new location has no audience to retarget.</li>
+      </ul>
+      <div class="callout stop">
+        <strong>Getting these exclusions right is the single most important step.</strong> Including them drops blended CPL from about $33 to about $14, which makes the gate look affordable when it is not.
+      </div>
+
+      <h3>GAQL</h3>
+      <pre><code><span class="k">SELECT</span>
+  campaign.name,
+  segments.conversion_action_name,
+  metrics.cost_micros,
+  metrics.clicks,
+  metrics.conversions,
+  metrics.all_conversions
+<span class="k">FROM</span> campaign
+<span class="k">WHERE</span> segments.date <span class="k">BETWEEN</span> <span class="s">"2026-04-21"</span> <span class="k">AND</span> <span class="s">"2026-07-19"</span>
+  <span class="k">AND</span> campaign.name <span class="k">LIKE</span> <span class="s">"%TOFU%"</span></code></pre>
+
+      <div class="callout warn">
+        <strong>Gotcha 1:</strong> <code>LAST_90_DAYS</code> is not a valid GAQL date literal (only 7, 14 and 30 exist). Use explicit <code>BETWEEN</code> dates or the query fails with <code>INVALID_VALUE_WITH_DURING_OPERATOR</code>.<br><br>
+        <strong>Gotcha 2:</strong> always date-scope and <code>LIMIT</code> exploratory queries. An unbounded query will appear to hang. That is a bad query, not an access problem.
+      </div>
+
+      <h3>Baseline to check your work against</h3>
+      <p>If your pull is correct you should land close to these. If you are materially off, check the campaign filter first.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th class="num">Expected</th></tr></thead>
+        <tbody>
+          <tr><td>Cold (TOFU) spend</td><td class="num">~$22,010</td></tr>
+          <tr><td>Counted conversions</td><td class="num">~672</td></tr>
+          <tr><td>Blended cold CPL (L1)</td><td class="num">~$32.75</td></tr>
+          <tr><td>Phone calls</td><td class="num">480 (71%)</td></tr>
+          <tr><td>Form submissions</td><td class="num">192 (29%)</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Critical: split calls from forms</h3>
+      <p>Report these separately. <strong>A pre-opening franchise has no phone line and no staff to answer it</strong>, so the 71% of leads that arrive as phone calls are unavailable at launch. A pre-opening campaign runs on forms and waitlist signups only.</p>
+      <p>We need a <strong>form-only CPL</strong>, which will be higher than blended because it loses the cheaper call conversions. That is the number that actually applies to a franchise launch.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Group</th><th>Conversion actions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Calls</strong></td><td><code>Calls from ads</code>, <code>Website Calls</code></td></tr>
+          <tr><td><strong>Forms</strong></td><td><code>Reservation Form Completion</code>, <code>Reservation Link Email Submit</code>, <code>Dog Training Evaluation</code>, <code>Contact Form Submit</code>, <code>Dog Training Class Form</code></td></tr>
+          <tr><td><strong>Ignore</strong></td><td class="dim"><code>Local actions - *</code>, <code>Store visits</code>, <code>GA4 Phone Click</code> &mdash; these record volume but count zero, so they do not affect CPL. Do not include them.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Part B &mdash; Gingr pull</h2>
+      <div class="callout stop">
+        <strong>Check this first, before pulling anything else:</strong> does Gingr capture a source, referrer, UTM, or "how did you hear about us" value on the account record?<br><br>
+        <strong>If yes</strong> &mdash; we can attribute properly and this analysis becomes rigorous. Pull that field and flag it to Melissa immediately, it changes the whole approach.<br>
+        <strong>If no</strong> &mdash; we are limited to date-cohort correlation. Still useful, but note the limitation in the output.
+      </div>
+
+      <h3>Report 1: accounts created</h3>
+      <p>One row per account, accounts created April 21 to July 19, 2026.</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Why we need it</th></tr></thead>
+        <tbody>
+          <tr><td>Account created date</td><td>Cohort matching against ad spend</td></tr>
+          <tr><td>Source / referral / how-heard</td><td>Attribution, if it exists</td></tr>
+          <tr><td>New vs existing customer flag</td><td>Isolating genuine new acquisition</td></tr>
+          <tr><td>First reservation date</td><td>L3 measurement and lag analysis</td></tr>
+          <tr><td>First reservation service type</td><td>Which service actually converts</td></tr>
+          <tr><td>First reservation value</td><td>Revenue per acquired account</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Report 2: first reservations by date</h3>
+      <p>Same window. The June call referenced 193 accounts created against 108 first reservations in May, which would be roughly 56%. Confirm or correct that.</p>
+    </section>
+
+    <section>
+      <h2>Part C &mdash; The calculations</h2>
+
+      <h3>1. The leak rates</h3>
+      <pre><code>Rate A (ad → account)      = Gingr accounts created ÷ cold ad conversions
+Rate B (account → booking) = first reservations ÷ accounts created</code></pre>
+      <p>Our working assumption is <strong>Rate A ≈ 34%</strong>, inferred from call figures (roughly 400 calls + 167 forms against 193 accounts). <strong>Confirm or replace it.</strong> This single number drives everything downstream. Do this weekly, not just as a total, so we can see whether the rate is stable or noisy.</p>
+
+      <h3>2. The three CPQLs</h3>
+      <pre><code>CPQL (L1) = cold spend ÷ cold ad conversions
+CPQL (L2) = cold spend ÷ Gingr accounts created
+CPQL (L3) = cold spend ÷ first reservations</code></pre>
+      <p>Produce each on both a <strong>blended</strong> and a <strong>form-only</strong> basis. Form-only L2 is the number that goes to Andrew.</p>
+
+      <h3>3. Lead-to-revenue lag &mdash; the one nobody has computed</h3>
+      <p>From the account-level export, calculate days from <strong>account created</strong> to <strong>first reservation</strong>: median, 25th and 75th percentile.</p>
+      <div class="callout ok">
+        <strong>This is arguably the most valuable output of the whole exercise.</strong> If the median lag is five weeks, a franchisee's pre-opening campaign has to start over a month before opening day to have paying customers on day one. That changes the FDD timeline, not just the budget, and it is a genuine planning input Andrew currently does not have.
+      </div>
+
+      <h3>4. Diagnose the leak</h3>
+      <p>Compare form submissions to accounts created, weekly. We are trying to separate three causes that were raised on the June call but never resolved:</p>
+      <ul>
+        <li>Spam submissions</li>
+        <li>Existing customers coming through new-customer funnels</li>
+        <li>Genuine drop-off on the long reservation form</li>
+      </ul>
+      <p>If Gingr has a source field, this gets much easier.</p>
+    </section>
+
+    <section>
+      <h2>Deliverables</h2>
+      <ol>
+        <li><strong>CPQL table</strong> &mdash; L1, L2, L3, each blended and form-only</li>
+        <li><strong>Rate A and Rate B</strong>, with the weekly series behind them</li>
+        <li><strong>Lag distribution</strong> &mdash; median, P25, P75, days from account to first reservation</li>
+        <li><strong>Budget model</strong> &mdash; at the measured form-only L2 CPQL, what does 400, 500, 600 and 750 leads actually cost in media?</li>
+        <li><strong>A recommendation</strong> on which of L1/L2/L3 should be the FDD gate metric, and why</li>
+        <li><strong>Confidence note</strong> &mdash; how much of this is measured versus inferred, and what would firm it up</li>
+      </ol>
+      <p>Send the raw exports along with the summary so the analysis can be re-run.</p>
+    </section>
+
+    <section>
+      <h2>Known caveats to state in the output</h2>
+      <ul>
+        <li><strong>No shared identifier</strong> between Google Ads and Gingr, so unless a source field exists this is cohort correlation, not true per-lead attribution. Present it as a reliable ratio, not a per-lead trace.</li>
+        <li><strong>Calls are the weak spot.</strong> 71% of cold conversions are phone calls and they are the hardest to trace into Gingr. Nimbata call tracking is mid-install and will improve this materially once live. Note where call attribution is assumption rather than measurement.</li>
+        <li><strong>Corporate is a best case.</strong> These figures come from a mature location with years of reviews, established Google history and brand recognition in its metro. A new franchise in an unproven market should be modeled <em>worse</em>, not equal. Recommend a premium and say what it is based on.</li>
+        <li><strong>Attribution windows differ</strong> between Google Ads and Gingr, so weekly cohorts will be imperfect at the boundaries. Monthly rollups are more stable.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Also worth checking while you are in the account</h2>
+      <div class="callout warn">
+        <strong><code>Reservation Form Completion</code> recorded 160 conversions but only 48 counted</strong> over the 90-day window. That is the main reservation form, and roughly 70% of its volume is not feeding the bidding algorithm.
+      </div>
+      <p>Check whether it is set to "one per click" while comparable actions are set to "every." If Google is optimizing against an undercounted version of the most important form on the site, that is a live performance issue on the account today, independent of anything franchise-related. Flag what you find.</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="brand">EMBERTRIBE</span>
+    <span>Internal runbook &middot; DogiZone CPQL analysis &middot; July 2026</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
