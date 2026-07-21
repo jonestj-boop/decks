@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SocialPosterr — EmberTribe AI Visibility Go-To-Market Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* SocialPosterr brand — indigo → cyan gradient on white */
+  --primary-dark: #10143a;
+  --primary-mid: #2c4fd6;
+  --primary-light: #1f86d8;
+  --accent: #22c1e8;
+
+  /* EmberTribe constants */
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 11px;
+  border-bottom: 2px solid var(--border);
+}
+
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.purple  { background: #F3E5F5; color: #6A1B9A; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+}
+.channel-card.primary { border: 2px solid var(--accent); background: #fff; box-shadow: 0 8px 30px rgba(34,193,232,0.12); }
+.channel-card .lead-badge {
+  position: absolute; top: -11px; left: 20px;
+  background: var(--accent); color: #fff; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.6px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+}
+.channel-card .channel-icon { font-size: 28px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 14px; line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+}
+
+/* Numbered process steps */
+.steps { display: flex; flex-direction: column; gap: 10px; }
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 12px; padding: 13px 18px;
+}
+.step-num {
+  flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px;
+  background: #FFF3E0; color: var(--orange);
+  font-weight: 800; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+}
+.step h4 { margin-bottom: 2px; }
+.step p { font-size: 13px; color: var(--text-light); line-height: 1.4; }
+
+/* subreddit tag groups */
+.sub-group { margin-bottom: 12px; }
+.sub-group .gl {
+  font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px;
+}
+.sub-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+.sub-tag {
+  background: #FFF3E0; color: #E65100;
+  font-size: 12.5px; font-weight: 600;
+  padding: 4px 11px; border-radius: 7px;
+}
+
+/* pricing cards */
+.price-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.price-grid.three { grid-template-columns: repeat(3, 1fr); }
+.price-card {
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px 20px 22px;
+  display: flex; flex-direction: column; position: relative;
+}
+.price-card.pop { border: 2px solid var(--accent); box-shadow: 0 8px 30px rgba(34,193,232,0.14); }
+.price-card.pop-orange { border: 2px solid var(--orange); box-shadow: 0 8px 30px rgba(230,126,34,0.14); }
+.pop-badge {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff; font-size: 10px; font-weight: 800;
+  letter-spacing: 0.6px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; white-space: nowrap;
+}
+.pop-badge.orange { background: var(--orange); }
+.tier-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-light); margin-bottom: 8px; }
+.tier-price { font-size: 30px; font-weight: 800; color: var(--primary-dark); line-height: 1; }
+.tier-price span { font-size: 14px; font-weight: 500; color: var(--text-light); }
+.tier-sub { font-size: 12px; color: var(--text-light); margin-top: 3px; }
+.tier-divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.prepay-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary-mid); margin-bottom: 3px; }
+.prepay-price { font-size: 21px; font-weight: 800; color: var(--primary-mid); line-height: 1; }
+.prepay-eff { font-size: 11.5px; color: var(--text-light); margin-top: 3px; }
+.save-chip { display: inline-block; margin-top: 8px; background: #E8F5E9; color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 6px; }
+.feat-list { list-style: none; padding: 0; margin: 4px 0 0; }
+.feat-list li { position: relative; padding-left: 20px; margin-bottom: 7px; font-size: 13px; line-height: 1.4; }
+.feat-list li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 800; }
+
+.bonus-band {
+  margin-top: 16px; border-radius: 14px; padding: 18px 22px;
+  background: linear-gradient(135deg, #1a1206 0%, #3a2410 100%);
+  color: #fff; display: flex; gap: 20px; align-items: center;
+}
+.bonus-icon { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--ember-red); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.bonus-band .bl { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ember-red); margin-bottom: 4px; }
+.bonus-band h4 { color: #fff; margin-bottom: 6px; font-size: 16px; }
+.bonus-band p { font-size: 12.5px; color: rgba(255,255,255,0.72); line-height: 1.5; }
+.bonus-value { flex-shrink: 0; text-align: center; border-left: 1px solid rgba(255,255,255,0.15); padding-left: 20px; }
+.bonus-value .bv-label { font-size: 9.5px; letter-spacing: 0.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.bonus-value .bv-num { font-size: 24px; font-weight: 800; color: #fff; }
+
+.include-band {
+  margin-top: 14px; background: #E3F2FD; border-left: 3px solid var(--primary-mid);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13px; line-height: 1.5;
+}
+.include-band strong { color: var(--primary-dark); }
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.timeline-phase.hot { background: #FFFBF5; border-color: var(--orange); }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase.hot .phase-label { color: var(--orange); }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 5px; font-size: 13px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 15px; font-weight: 800; color: var(--primary-dark); margin-top: 12px; }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+.red { color: var(--red); } .green { color: var(--green); } .orange { color: var(--orange); }
+.teal { color: var(--teal); } .blue { color: var(--blue); } .accent { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100; transition: width 0.3s ease;
+}
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button {
+  width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4); color: white; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 36px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .price-grid, .price-grid.three { grid-template-columns: 1fr 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Content-Led AI Visibility — Go-To-Market Plan</p>
+      <h1>SocialPosterr</h1>
+      <p class="subtitle">A 90-day plan to start ranking for the exact terms your buyers search — "ManyChat alternatives," "how to automate Instagram DMs," "all-in-one social + DM tool" — and to get SocialPosterr named as the answer in Google and AI engines alike.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">14</div>
+          <div class="stat-label">Priority keywords targeted in the first 90 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent)">Wave&nbsp;1</div>
+          <div class="stat-label">Quick-win rankings live by week 6</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">2-in-1</div>
+          <div class="stat-label">Scheduling + AI DM sales — a category of one</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">9,200+</div>
+          <div class="stat-label">Agencies &amp; brands as ready-made proof</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for the SocialPosterr team &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE OPPORTUNITY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Opportunity</p>
+    <h2>You Own a Category — But You Don't Own the Search Results</h2>
+    <p class="subtitle">SocialPosterr is the only tool that merges post scheduling with an AI agent that qualifies leads and closes sales in the DMs. But when buyers search for it, competitors' comparison pages fill the results and AI engines cite them — not you.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h3 class="green">What's Working For You</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">A real product wedge — "posting + AI DM sales, finally in one place" — that Buffer, Hootsuite, Later, and ManyChat each only half-solve.</li>
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">Hard proof to anchor content: 9,200+ agencies &amp; brands, $5M+ closed by the AI, 100k+ AI conversations.</li>
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">An ICP that researches publicly — agencies and operators who read comparison posts before they buy.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">Competitors publish "Buffer alternatives" and "ManyChat alternatives" roundups — and you're not in them, or not ranking your own.</li>
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">No content moat on the high-intent comparison and how-to terms buyers type right before choosing a tool.</li>
+          <li style="position:relative; padding-left:18px; margin-bottom:10px; font-size:14.5px;">AI engines summarize whatever ranks and gets discussed — so today they recommend the incumbents by default.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info"><strong>The GTM thesis:</strong> Build a content engine that ranks for the terms buyers actually search, then use authentic Reddit mentions to accelerate those rankings and get SocialPosterr cited in AI answers. Content is the asset; Reddit is the amplifier.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 3: HOW WE WIN -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Approach</p>
+    <h2>Content-Led, Reddit-Amplified</h2>
+    <p class="subtitle">One engine, three reinforcing parts. Content does the ranking and compounds into an owned asset; Reddit mentions and authority backlinks make that content rank faster and get cited by AI engines sooner.</p>
+    <div class="three-col flex-grow mt-16">
+      <div class="channel-card primary">
+        <div class="lead-badge">The Engine</div>
+        <div class="channel-icon">📝</div>
+        <h3>Content that ranks</h3>
+        <ul>
+          <li>Keyword-clustered articles on comparison, how-to &amp; category terms</li>
+          <li>Pillar pages that anchor topical authority</li>
+          <li>Published to your CMS with internal linking &amp; FAQ schema</li>
+          <li>An owned asset that compounds every month</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <h3>Reddit that amplifies</h3>
+        <ul>
+          <li>Authentic mentions in threads buyers already read</li>
+          <li>Accelerates rankings and feeds AI-engine citations</li>
+          <li>Trust signal from real operators, not ad copy</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🔗</div>
+        <h3>Backlinks that certify</h3>
+        <ul>
+          <li>DA40–50+ authority links to your pillar content</li>
+          <li>The trust layer Google &amp; AI models weigh most</li>
+          <li>Turns fast wins into durable rankings</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success"><strong>Why content leads:</strong> A Reddit comment fades down a thread; a ranking article keeps pulling buyers and feeding AI engines for years. We lead with the asset that compounds, and use Reddit to make it work faster.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 4: 90-DAY KEYWORD TARGETS -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">The 90-Day Keyword Story</p>
+    <h2>The Keywords We'd Start Winning First</h2>
+    <p class="subtitle">We don't fight for the 20k-volume head terms on day one. We stack the winnable long-tail and comparison terms your buyers convert on — then let that authority carry us into the big category terms.</p>
+    <table>
+      <thead>
+        <tr><th>Target Keyword</th><th>Cluster</th><th>Est. Monthly Searches</th><th>Difficulty</th><th>Buyer Intent</th><th>Wave</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="bold">how to automate Instagram DMs</td><td>DM automation</td><td>~1,900</td><td><span class="pill green">Low</span></td><td>How-to</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">how to close sales in Instagram DMs</td><td>DM sales</td><td>~400</td><td><span class="pill green">Low</span></td><td>How-to</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">respond to Instagram DMs automatically</td><td>DM automation</td><td>~600</td><td><span class="pill green">Low</span></td><td>How-to</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">social media scheduler with unified inbox</td><td>Feature</td><td>~300</td><td><span class="pill green">Low</span></td><td>Feature</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">AI DM sales agent</td><td>Category (emerging)</td><td>~250</td><td><span class="pill green">Low</span></td><td>Category</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">best RSS auto-posting tool</td><td>Feature</td><td>~500</td><td><span class="pill green">Low</span></td><td>Feature</td><td><span class="pill blue">Wave 1</span></td></tr>
+        <tr><td class="bold">ManyChat alternatives</td><td>Comparison</td><td>~2,400</td><td><span class="pill orange">Medium</span></td><td>Comparison</td><td><span class="pill purple">Wave 2</span></td></tr>
+        <tr><td class="bold">Buffer alternatives</td><td>Comparison</td><td>~3,600</td><td><span class="pill orange">Medium</span></td><td>Comparison</td><td><span class="pill purple">Wave 2</span></td></tr>
+        <tr><td class="bold">Hootsuite alternatives</td><td>Comparison</td><td>~5,400</td><td><span class="pill orange">Medium</span></td><td>Comparison</td><td><span class="pill purple">Wave 2</span></td></tr>
+        <tr><td class="bold">all-in-one social media tool</td><td>Category</td><td>~1,600</td><td><span class="pill orange">Medium</span></td><td>Category</td><td><span class="pill purple">Wave 2</span></td></tr>
+        <tr><td class="bold">cheaper social media scheduler</td><td>Comparison</td><td>~800</td><td><span class="pill orange">Medium</span></td><td>Comparison</td><td><span class="pill purple">Wave 2</span></td></tr>
+        <tr><td class="bold">Instagram DM automation</td><td>Category</td><td>~4,400</td><td><span class="pill red">High</span></td><td>Category</td><td><span class="pill orange">Wave 3</span></td></tr>
+        <tr><td class="bold">social media scheduling tool</td><td>Category (head)</td><td>~14,000</td><td><span class="pill red">High</span></td><td>Category</td><td><span class="pill orange">Wave 3</span></td></tr>
+        <tr><td class="bold">AI social media tool</td><td>Category (head)</td><td>~6,600</td><td><span class="pill red">High</span></td><td>Category</td><td><span class="pill orange">Wave 3</span></td></tr>
+      </tbody>
+    </table>
+    <div class="annotation"><strong>Directional estimates</strong> — volumes and difficulty shown are illustrative and validated against a live SEMrush pull at kickoff, when we lock the final cluster map. The <em>strategy</em> — win the long-tail first, then comparison, then head terms — holds regardless of the exact numbers.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 5: 90-DAY RANKING ROADMAP -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">The 90-Day Keyword Story</p>
+    <h2>How Rankings Come Online — Wave by Wave</h2>
+    <p class="subtitle">Each wave earns the authority that makes the next one winnable. Quick wins prove the engine, comparison terms convert buyers away from incumbents, and by day 90 we're competitive on the category head terms.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase hot">
+        <span class="phase-label">Weeks 1–6 · Wave 1</span>
+        <h4>Quick Wins</h4>
+        <ul>
+          <li>Long-tail how-to &amp; feature terms — low difficulty, fast to rank</li>
+          <li>"how to automate Instagram DMs," "AI DM sales agent," "scheduler with unified inbox"</li>
+          <li>First page-1 rankings prove the engine and start capturing intent</li>
+        </ul>
+        <div class="phase-cost accent">Goal: 4–6 keywords on page 1</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Weeks 5–10 · Wave 2</span>
+        <h4>Comparison &amp; Conversion</h4>
+        <ul>
+          <li>"ManyChat / Buffer / Hootsuite alternatives" — where buyers pick a tool</li>
+          <li>"all-in-one social media tool," "cheaper social media scheduler"</li>
+          <li>Reddit mentions + backlinks accelerate these into the top 10</li>
+        </ul>
+        <div class="phase-cost">Goal: top-10 on 3–5 comparison terms</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Weeks 9–13 · Wave 3</span>
+        <h4>Category Momentum</h4>
+        <ul>
+          <li>Head terms: "Instagram DM automation," "social media scheduling tool"</li>
+          <li>Pillar pages + accumulated authority make these competitive</li>
+          <li>SocialPosterr surfacing in AI answers for category queries</li>
+        </ul>
+        <div class="phase-cost">Goal: ranking momentum + AI citations</div>
+      </div>
+    </div>
+    <div class="annotation info"><strong>The story to tell buyers:</strong> "In 90 days we don't just publish content — we get you onto page 1 for the terms your customers search right before they choose a tool, and we set up the category head terms to fall in Q2."</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 6: CONTENT ENGINE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Content Engine</p>
+    <h2>ClusterMagic: The Ranking Machine</h2>
+    <p class="subtitle">Every keyword on the previous slides maps to an article. ClusterMagic produces keyword-clustered, AI-assisted content — refined by human editors — that ranks on Google and feeds AI engines the facts they repeat about SocialPosterr.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Maps to the keyword plan</h3>
+        <ul>
+          <li>Comparison pages: "SocialPosterr vs Buffer / Hootsuite / ManyChat"</li>
+          <li>How-to guides: "How to automate &amp; close in Instagram DMs"</li>
+          <li>Category pages: "Best all-in-one social + DM tools"</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🧩</div>
+        <h3>Builds cluster authority</h3>
+        <ul>
+          <li>Pillar pages on social scheduling &amp; AI DM sales</li>
+          <li>Supporting articles internally linked beneath them</li>
+          <li>FAQ schema on every article for AI retrieval</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">⚙️</div>
+        <h3>Published for you</h3>
+        <ul>
+          <li>AI-assisted drafts refined by expert editors</li>
+          <li>Published straight to your CMS with internal linking</li>
+          <li>No setup fees, no long onboarding</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success"><strong>Why it compounds:</strong> Every article keeps ranking and keeps getting cited — so cost per lead falls month over month, while each new piece strengthens the cluster around it.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 7: REDDIT AMPLIFICATION -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Amplification Layer</p>
+    <h2>Reddit Mentions: The Ranking Accelerant</h2>
+    <p class="subtitle">Reddit isn't the strategy — it's what makes the content strategy work faster. Authentic mentions in high-intent threads earn referral traffic, send ranking signals, and get SocialPosterr cited in the AI answers that increasingly quote Reddit.</p>
+    <div class="two-col flex-grow">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div><h4>Map the landscape</h4><p>Identify the subreddits AI engines already index for scheduling, DM automation &amp; lead-gen queries.</p></div></div>
+        <div class="step"><div class="step-num">2</div><div><h4>Discover live threads</h4><p>Find threads ranking on Google or cited by AI — "best social scheduler," "ManyChat alternative," "close sales in DMs."</p></div></div>
+        <div class="step"><div class="step-num">3</div><div><h4>Place authentic mentions</h4><p>Helpful, first-person SocialPosterr answers formatted for AI retrieval — pointing back to the ranking content, never spam.</p></div></div>
+        <div class="step"><div class="step-num">4</div><div><h4>Seed &amp; sustain</h4><p>Create original "which tool does both?" posts and keep threads warm so mentions keep compounding.</p></div></div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:700; letter-spacing:0.6px; text-transform:uppercase; color:var(--text-light); margin-bottom:10px;">Priority Subreddits</div>
+        <div class="sub-group">
+          <div class="gl">Agencies &amp; Social Media Managers</div>
+          <div class="sub-tags"><span class="sub-tag">r/socialmedia</span><span class="sub-tag">r/SocialMediaMarketing</span><span class="sub-tag">r/agency</span><span class="sub-tag">r/marketing</span></div>
+        </div>
+        <div class="sub-group">
+          <div class="gl">DM Sales &amp; Lead-Gen Seekers</div>
+          <div class="sub-tags"><span class="sub-tag">r/Entrepreneur</span><span class="sub-tag">r/smallbusiness</span><span class="sub-tag">r/InstagramMarketing</span><span class="sub-tag">r/AiAutomation</span></div>
+        </div>
+        <div class="sub-group">
+          <div class="gl">DTC Brands &amp; Founders</div>
+          <div class="sub-tags"><span class="sub-tag">r/ecommerce</span><span class="sub-tag">r/dropship</span><span class="sub-tag">r/SaaS</span><span class="sub-tag">r/EntrepreneurRideAlong</span></div>
+        </div>
+        <div class="annotation" style="margin-top:8px;"><strong>Each mention does double duty:</strong> it helps a real buyer today <em>and</em> becomes a citation AI engines quote tomorrow — pointing back to your ranking content.</div>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 8: CLUSTERMAGIC PRICING -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment — Content</p>
+    <h2>ClusterMagic Article Pricing</h2>
+    <p class="subtitle">Billed monthly or at a locked quarterly rate — no setup fees, no long onboarding.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="tier-name">Starter — 25 articles/mo</div>
+        <div class="tier-price">$700<span>/mo</span></div>
+        <div class="tier-sub">month-to-month</div>
+        <hr class="tier-divider">
+        <div class="prepay-label">3-month prepay</div>
+        <div class="prepay-price">$1,750</div>
+        <div class="prepay-eff">$583/mo effective</div>
+        <span class="save-chip">Save $350</span>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">Growth — 40 articles/mo</div>
+        <div class="tier-price">$1,100<span>/mo</span></div>
+        <div class="tier-sub">month-to-month</div>
+        <hr class="tier-divider">
+        <div class="prepay-label">3-month prepay</div>
+        <div class="prepay-price">$2,700</div>
+        <div class="prepay-eff">$900/mo effective</div>
+        <span class="save-chip">Save $600</span>
+      </div>
+      <div class="price-card pop">
+        <div class="pop-badge">Most Popular</div>
+        <div class="tier-name" style="color:var(--primary-mid)">Velocity — 50 articles/mo</div>
+        <div class="tier-price">$1,350<span>/mo</span></div>
+        <div class="tier-sub">month-to-month</div>
+        <hr class="tier-divider">
+        <div class="prepay-label">3-month prepay</div>
+        <div class="prepay-price">$3,400</div>
+        <div class="prepay-eff">$1,133/mo effective</div>
+        <span class="save-chip">Save $650</span>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">Scale — 100 articles/mo</div>
+        <div class="tier-price">$2,700<span>/mo</span></div>
+        <div class="tier-sub">month-to-month</div>
+        <hr class="tier-divider">
+        <div class="prepay-label">3-month prepay</div>
+        <div class="prepay-price">$7,000</div>
+        <div class="prepay-eff">$2,333/mo effective</div>
+        <span class="save-chip">Save $1,100</span>
+      </div>
+    </div>
+    <div class="bonus-band">
+      <div class="bonus-icon">🎁</div>
+      <div style="flex:1;">
+        <div class="bl">6-Month Agreement — Included Bonus</div>
+        <h4>Sign a 6-month agreement and we include two content pillar pages + P1 technical SEO fixes at no additional cost.</h4>
+        <p><strong>2 pillar pages:</strong> comprehensive 2,000+ word authority pages anchoring your two highest-volume clusters — built to rank and funnel internal link equity to every article beneath them. &nbsp;<strong>Technical fixes:</strong> scoped and prioritized at kickoff.</p>
+      </div>
+      <div class="bonus-value"><div class="bv-label">Bonus value</div><div class="bv-num">~$2,400</div><div class="bv-label" style="margin-top:2px;">included free</div></div>
+    </div>
+    <div class="include-band">All tiers include publishing to your CMS, internal linking, and FAQ schema on every article.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 9: AI VISIBILITY PACKAGES -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment — AI Visibility</p>
+    <h2>Choose Your AI Visibility Package</h2>
+    <p class="subtitle">Content builds authority. AEO drives demand capture. Backlinks strengthen trust. All three create compounding AI visibility.</p>
+    <div class="price-grid three flex-grow">
+      <div class="price-card">
+        <div class="tier-name">AI Visibility Starter</div>
+        <div class="tier-price">$1,750<span>/mo</span></div>
+        <div class="tier-sub">Get your brand into AI conversations</div>
+        <hr class="tier-divider">
+        <ul class="feat-list">
+          <li>10 SEO articles / month</li>
+          <li>5 AEO placements / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Quarterly performance report</li>
+        </ul>
+        <hr class="tier-divider">
+        <div class="prepay-label">Quarterly prepay — 10% off</div>
+        <div class="prepay-price">$4,725</div>
+        <div class="prepay-eff">$1,575/mo effective</div>
+        <span class="save-chip">Save $525</span>
+      </div>
+      <div class="price-card pop-orange">
+        <div class="pop-badge orange">Most Popular</div>
+        <div class="tier-name" style="color:var(--orange)">AI Growth Engine</div>
+        <div class="tier-price">$3,450<span>/mo</span></div>
+        <div class="tier-sub">Accelerate authority + content velocity</div>
+        <hr class="tier-divider">
+        <ul class="feat-list">
+          <li>25 SEO articles / month</li>
+          <li>8 AEO placements / month</li>
+          <li>2 DA40+ authority backlinks / month</li>
+          <li>Full thread seeding + new post creation</li>
+          <li>Backlink target prioritization</li>
+          <li>Keyword cluster expansion</li>
+          <li>Quarterly performance reporting</li>
+        </ul>
+        <hr class="tier-divider">
+        <div class="prepay-label">Quarterly prepay — 10% off</div>
+        <div class="prepay-price">$9,315</div>
+        <div class="prepay-eff">$3,105/mo effective</div>
+        <span class="save-chip">Save $1,035</span>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">AI Authority Accelerator</div>
+        <div class="tier-price">$5,250<span>/mo</span></div>
+        <div class="tier-sub">Dominate your category in AI search</div>
+        <hr class="tier-divider">
+        <ul class="feat-list">
+          <li>40 SEO articles / month</li>
+          <li>12 AEO placements / month</li>
+          <li>2 DA50+ authority backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Quarterly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+        <hr class="tier-divider">
+        <div class="prepay-label">Quarterly prepay — 10% off</div>
+        <div class="prepay-price">$14,175</div>
+        <div class="prepay-eff">$4,725/mo effective</div>
+        <span class="save-chip">Save $1,575</span>
+      </div>
+    </div>
+    <div class="include-band"><strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, the Reddit optimization process, and monthly AI visibility benchmarking vs. your top competitors.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 10: OUTCOMES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Compounding Content Visibility Looks Like</h2>
+    <p class="subtitle">Directional targets for the AI Growth Engine tier. Actuals depend on category competitiveness and are tracked in your monthly benchmark.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <h3 class="accent">Month 3</h3>
+        <ul>
+          <li>Page-1 rankings on Wave 1 long-tail terms</li>
+          <li>Top-10 traction on comparison "alternative" terms</li>
+          <li>SocialPosterr beginning to surface in AI answers</li>
+          <li>Baseline AI visibility benchmark established</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <h3 class="blue">Month 6</h3>
+        <ul>
+          <li>Ranking on category head terms like "Instagram DM automation"</li>
+          <li>Cluster authority built around both pillar pages</li>
+          <li>Named in AI answers for "all-in-one social + DM" queries</li>
+          <li>Falling cost per qualified signup</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <h3 class="green">Month 12</h3>
+        <ul>
+          <li>Default recommendation in your category's AI answers</li>
+          <li>Durable content moat on high-intent comparison terms</li>
+          <li>Competitive displacement vs. incumbents underway</li>
+          <li>Self-reinforcing loop: content ranks, Reddit cites, AI repeats</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation"><strong>The compounding effect:</strong> Articles and Reddit mentions don't expire — every asset keeps working, so results build on themselves rather than resetting each month like paid ads.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">SocialPosterr &mdash; AI Visibility GTM</span></div>
+  </div>
+
+  <!-- SLIDE 11: NEXT STEPS -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Own the Answer</h1>
+      <p class="subtitle" style="text-align:center;">SocialPosterr already built the category-defining product. Let's make sure that when a buyer searches "ManyChat alternative that also schedules" — on Google or in an AI engine — the answer is you.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Pick a starting tier and we deliver your validated keyword map within week one.</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">EmberTribe — AI Visibility &bull; tj@embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
