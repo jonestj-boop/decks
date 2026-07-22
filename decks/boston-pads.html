@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boston Pads — EmberTribe Rent-to-Own Growth Plan</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #062E5C;
+  --primary-mid: #073E7A;
+  --primary-light: #0D5BA8;
+  --accent: #FF9E5E;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #263238;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+/* Density pass — keeps dense slides inside a 720p viewport */
+.slide.tight { padding: 30px 48px; }
+.slide.tight h2 { font-size: 29px; margin-bottom: 4px; }
+.slide.tight .subtitle { font-size: 16px; margin-bottom: 12px; }
+.slide.tight table { font-size: 12.5px; margin: 7px 0; }
+.slide.tight td { padding: 6.5px 10px; }
+.slide.tight th { padding: 7px 10px; }
+.slide.tight .annotation { padding: 9px 13px; font-size: 13px; margin: 8px 0; }
+.slide.tight .stat-card { padding: 13px 18px; }
+.slide.tight .stat-value { font-size: 29px; }
+.slide.tight .stats-row { margin: 10px 0; }
+.slide.tight .timeline-phase { padding: 14px; }
+.slide.tight .timeline-phase ul li { font-size: 12px; margin-bottom: 3px; }
+.slide.tight .channel-card { padding: 18px; }
+.slide.tight .bullets li { font-size: 13.5px; margin-bottom: 7px; }
+.slide.tight h3 { font-size: 19px; }
+.slide.tight .price-box { padding: 14px 18px; }
+.slide.tight .price-box .tier-price { font-size: 26px; margin: 2px 0 1px; }
+.slide.tight .logo-row { padding-top: 10px; }
+.slide.tight .two-col { gap: 24px; }
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+.slide.dark .channel-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+}
+.slide.dark h3 { color: #fff; }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.55;
+}
+
+.annotation strong { color: var(--primary-mid); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+.slide.dark .annotation { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); border-left-color: var(--accent); }
+.slide.dark .annotation strong { color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 11px;
+  border-bottom: 2px solid var(--border);
+}
+
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12.5px; }
+.dim { opacity: 0.55; }
+.sm { font-size: 12.5px; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+
+.bar-label {
+  width: 210px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  min-width: 42px;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, #e0762f, var(--accent)); }
+.bar-fill.navy   { background: linear-gradient(90deg, var(--primary-mid), var(--primary-light)); }
+
+.bar-value { width: 74px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: #1B5E20; }
+.pill.blue    { background: #E3F2FD; color: #0D47A1; }
+.pill.orange  { background: #FFF3E0; color: #E65100; }
+.pill.grey    { background: #ECEFF1; color: #546E7A; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary-light);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 9px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost { font-size: 19px; font-weight: 800; color: var(--primary-mid); margin-top: 10px; }
+
+.bullets { list-style: none; padding: 0; }
+.bullets li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 9px;
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 8px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.bullets.good li::before { background: var(--green); }
+.bullets.bad li::before { background: var(--red); }
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.navy { color: var(--primary-mid); }
+.accent-c { color: var(--accent); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.12); }
+
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11.5px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 20px; right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.45);
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+
+.counter {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  background: rgba(0,0,0,0.35);
+  padding: 6px 13px;
+  border-radius: 6px;
+}
+
+.price-box {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  background: var(--card-bg);
+}
+.price-box.feature { border-color: var(--accent); background: #FFF8F2; }
+.price-box .tier-name { font-size: 15px; font-weight: 800; color: var(--primary-mid); text-transform: uppercase; letter-spacing: 0.5px; }
+.price-box .tier-price { font-size: 30px; font-weight: 900; color: var(--primary-dark); margin: 4px 0 2px; }
+.price-box .tier-price span { font-size: 14px; font-weight: 600; color: var(--text-light); }
+
+.footnote { font-size: 11.5px; color: var(--text-light); font-style: italic; margin-top: 10px; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .two-col, .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0 !important; }
+  .slide { padding: 28px 22px; }
+  h1 { font-size: 32px; } h2 { font-size: 25px; }
+  .bar-label { width: 110px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+<!-- ══════════════ SLIDE 1: TITLE ══════════════ -->
+<div class="slide dark active tight" data-slide="1">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <p class="slide-label">Local SEO &amp; Paid Search Strategy</p>
+    <h1>Boston Pads</h1>
+    <p class="subtitle" style="font-size:21px; max-width:820px;">
+      You've built the largest renter-facing content footprint in Greater Boston. Your revenue comes from
+      landlords and advertisers &mdash; and that side of the site is <strong style="color:var(--accent);">seven pages deep</strong>.
+      Here's how we rent the traffic first, then own it.
+    </p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value accent-c">3,651</div>
+        <div class="stat-label">Indexable URLs across your sitemaps</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value teal">105</div>
+        <div class="stat-label">City &amp; neighborhood rental hubs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">7</div>
+        <div class="stat-label">Pages targeting landlords &amp; advertisers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">65%</div>
+        <div class="stat-label">Of Boston leases start on September 1</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Prepared for the Boston Pads team &mdash; July 22, 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 2: METHODOLOGY ══════════════ -->
+<div class="slide tight" data-slide="2">
+  <p class="slide-label">Before We Start</p>
+  <h2>What This Is Built On &mdash; And What It Isn't</h2>
+  <p class="subtitle">We ran this analysis from the outside, before ever talking to you. Everything on the following slides is verifiable from your own public infrastructure. We've flagged exactly where we're still guessing.</p>
+
+  <div class="two-col flex-grow">
+    <div>
+      <h3 class="green">Verified from your site</h3>
+      <table>
+        <tr><td class="bold">XML sitemaps</td><td class="sm">Full URL inventory pulled from <span class="mono">sitemap_index.xml</span> &mdash; page, post, luxury building, location &amp; glossary sitemaps</td></tr>
+        <tr><td class="bold">URL architecture</td><td class="sm">Every location hub, modifier subpage and university cluster, parsed and counted</td></tr>
+        <tr><td class="bold">robots.txt / llms.txt</td><td class="sm">Your AI crawler policy, read line by line</td></tr>
+        <tr><td class="bold">Live inventory</td><td class="sm">4,849 verified Boston listings as of July 20, 2026</td></tr>
+        <tr><td class="bold">Tech stack</td><td class="sm">WordPress + WPBakery, Yoast SEO, GTM</td></tr>
+        <tr><td class="bold">Market context</td><td class="sm">Published Boston lease-cycle data; competitor listing counts</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 class="orange">What we need from you to finish the picture</h3>
+      <ul class="bullets">
+        <li><strong>SEMrush / Ahrefs export</strong> &mdash; so we can attach real search volume, difficulty and CPC to every opportunity in this deck</li>
+        <li><strong>Google Search Console</strong> &mdash; which of your 3,651 URLs actually earn impressions, and where you sit in striking distance</li>
+        <li><strong>GA4 + conversion data</strong> &mdash; what a landlord signup is worth vs. a renter lead</li>
+        <li><strong>Existing paid search history</strong> &mdash; if you've run Google Ads before, that data shortcuts the first 30 days of testing</li>
+      </ul>
+      <div class="annotation info">
+        <strong>Why we're telling you this:</strong> the strategy in this deck does not depend on us guessing your keyword volumes.
+        It's specifically designed so that <em>paid search generates the missing data</em> &mdash; with real dollars and real conversions
+        attached &mdash; instead of us building a content plan on top of a third-party estimate.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 3: CURRENT STATE ══════════════ -->
+<div class="slide tight" data-slide="3">
+  <p class="slide-label">Current State</p>
+  <h2>You're Not Starting From Zero &mdash; That's The Point</h2>
+  <p class="subtitle">Most local SEO pitches start with "your site is broken." Yours isn't. You have infrastructure most regional portals never build. The gap is what you've pointed it at.</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-value navy">1,554</div><div class="stat-label">Static pages</div></div>
+    <div class="stat-card"><div class="stat-value navy">669</div><div class="stat-label">Blog posts</div></div>
+    <div class="stat-card"><div class="stat-value navy">768</div><div class="stat-label">Luxury building pages</div></div>
+    <div class="stat-card"><div class="stat-value navy">500</div><div class="stat-label">Glossary entries</div></div>
+    <div class="stat-card"><div class="stat-value navy">160</div><div class="stat-label">Luxury location pages</div></div>
+  </div>
+
+  <div class="two-col flex-grow mt-8">
+    <div>
+      <h3 class="green">What's working</h3>
+      <ul class="bullets good">
+        <li><strong>Programmatic depth done right.</strong> 990 modifier subpages &mdash; pet-friendly, no-fee, parking, laundry, furnished, 1&ndash;5 bedroom, price caps &mdash; built on a repeatable template</li>
+        <li><strong>Real-time inventory is a genuine moat.</strong> 4,849 verified live listings, updated by agents who work the neighborhoods</li>
+        <li><strong>The blog is alive.</strong> Neighborhood rental market reports published as recently as July 21, 2026 &mdash; original data the aggregators can't replicate</li>
+        <li><strong>AI crawler policy is already correct.</strong> You explicitly allow GPTBot, ClaudeBot, PerplexityBot and OAI-SearchBot while blocking scrapers, and you publish an <span class="mono">llms.txt</span>. Almost nobody has done this</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="red">What's holding you back</h3>
+      <ul class="bullets bad">
+        <li><strong>The revenue side is invisible.</strong> ~1,500 renter pages. 7 landlord pages. Zero city-level landlord pages</li>
+        <li><strong>Half your markets are shallow.</strong> 54 of 105 location hubs have no modifier subpages at all</li>
+        <li><strong>Two competing university URL patterns</strong> split 19 schools across incompatible structures &mdash; with no data behind which one wins</li>
+        <li><strong>No profitability signal.</strong> Nothing in the current footprint tells you which of these thousands of pages actually produces revenue &mdash; so every new page is a guess</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 4: THE BOSTON CALENDAR ══════════════ -->
+<div class="slide tight" data-slide="4">
+  <p class="slide-label">The Constraint Nobody Else Has</p>
+  <h2>Boston's Rental Year Is One Funnel That Ends September 1</h2>
+  <p class="subtitle">More than 65% of leases in Boston and Brookline begin on the same day. That single fact should dictate the entire content and paid calendar &mdash; and it's the reason SEO alone can't be the whole plan.</p>
+
+  <div class="timeline">
+    <div class="timeline-phase">
+      <p class="phase-label">Dec &ndash; Jan</p>
+      <h4>Search begins</h4>
+      <ul>
+        <li>Domestic students start hunting for Sept 1</li>
+        <li>Highest-intent research window</li>
+        <li>Rankings won here compound all year</li>
+      </ul>
+      <div style="margin-top:10px;"><span class="pill seo">Own it</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Feb &ndash; Mar</p>
+      <h4>Shortlisting</h4>
+      <ul>
+        <li>Neighborhood + budget comparison</li>
+        <li>"No fee", "under $2,500", roommate queries</li>
+        <li>Landlords begin planning lease-ups</li>
+      </ul>
+      <div style="margin-top:10px;"><span class="pill content">Content</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Apr &ndash; Aug</p>
+      <h4>Peak transaction</h4>
+      <ul>
+        <li>Busiest hunting window of the year</li>
+        <li>Best units gone within hours</li>
+        <li>Most expensive clicks &mdash; and the most valuable</li>
+      </ul>
+      <div style="margin-top:10px;"><span class="pill paid">Paid</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Sep &ndash; Nov</p>
+      <h4>The quiet window</h4>
+      <ul>
+        <li>Market slows sharply after Sept 1</li>
+        <li>Cheapest clicks of the year</li>
+        <li>Landlords sitting on vacancies</li>
+      </ul>
+      <div style="margin-top:10px;"><span class="pill orange">Test here</span></div>
+    </div>
+  </div>
+
+  <div class="annotation danger">
+    <strong>The timing problem:</strong> it's late July. The Sept 1, 2026 cycle is effectively over. New content takes roughly
+    4&ndash;6 months to rank. If we started a content-only engagement today, the first meaningful organic returns would land
+    <em>after</em> the December search wave has already begun.
+  </div>
+
+  <div class="annotation success">
+    <strong>The timing opportunity:</strong> September through November is the cheapest, quietest window in the Boston rental year.
+    That's the ideal time to run paid keyword tests &mdash; low competition, low CPCs, clean data &mdash; and to build the content
+    that has to be ranking <em>before</em> December. The calendar is telling us exactly what to do and when.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 5: THE ASYMMETRY ══════════════ -->
+<div class="slide tight" data-slide="5">
+  <p class="slide-label">Headline Finding</p>
+  <h2>Your Content Serves Renters. Your Business Bills Landlords.</h2>
+  <p class="subtitle">Renters are your audience. Property owners, advertisers and lease-up clients are your customers. Here's how your indexable pages are actually allocated.</p>
+
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">Renter-facing pages</span>
+      <div class="bar-track"><div class="bar-fill navy" style="width: 100%;">~1,500</div></div>
+      <span class="bar-value">41%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Luxury buildings</span>
+      <div class="bar-track"><div class="bar-fill teal" style="width: 51%;">768</div></div>
+      <span class="bar-value">21%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Blog / market reports</span>
+      <div class="bar-track"><div class="bar-fill blue" style="width: 45%;">669</div></div>
+      <span class="bar-value">18%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Glossary</span>
+      <div class="bar-track"><div class="bar-fill accent" style="width: 33%;">500</div></div>
+      <span class="bar-value">14%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Luxury locations</span>
+      <div class="bar-track"><div class="bar-fill yellow" style="width: 11%;">160</div></div>
+      <span class="bar-value">4%</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label" style="color:var(--red); font-weight:700;">Landlord &amp; advertiser</span>
+      <div class="bar-track"><div class="bar-fill red" style="width: 2.5%;">7</div></div>
+      <span class="bar-value red bold">0.2%</span>
+    </div>
+  </div>
+
+  <p class="sm dim mt-8">The complete landlord-side footprint: <span class="mono">/property-management/</span> &middot; <span class="mono">/large-property-owners/</span> &middot; <span class="mono">/advertiser-portal/</span> &middot; <span class="mono">/advertiser-help-page/</span> &middot; <span class="mono">/luxury-lease-up/</span> &middot; <span class="mono">/property-owner-portal-signup/</span> &middot; <span class="mono">/list-your-apartment-for-rent/</span></p>
+
+  <div class="annotation">
+    <strong>What this means in practice:</strong> you have 105 city pages helping renters find apartments, and <strong>zero</strong> city pages
+    helping a landlord in Somerville, Cambridge or Brookline find you. A property owner searching "how to rent out my apartment in Cambridge"
+    or "Boston property management company" is meeting your competitors, not you &mdash; on the exact query that produces your revenue.
+  </div>
+
+  <div class="annotation info">
+    <strong>Why we won't just tell you to build 105 landlord pages:</strong> we don't yet know which landlord queries convert, what a signup
+    is worth, or whether the money is in property management, lease-up or advertiser acquisition. That's precisely what the paid test answers first.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 6: LOCAL COVERAGE GAP ══════════════ -->
+<div class="slide tight" data-slide="6">
+  <p class="slide-label">Local SEO Gap</p>
+  <h2>Half Your Markets Are One Page Deep</h2>
+  <p class="subtitle">You've built 105 city and neighborhood hubs. Only 51 of them have the modifier subpages that actually capture long-tail local intent.</p>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-value navy">105</div><div class="stat-label">Location hubs live</div></div>
+    <div class="stat-card"><div class="stat-value green">51</div><div class="stat-label">With modifier subpages</div></div>
+    <div class="stat-card"><div class="stat-value red">54</div><div class="stat-label">With <em>zero</em> modifier subpages</div></div>
+    <div class="stat-card"><div class="stat-value orange">~756</div><div class="stat-label">Pages of addressable gap</div></div>
+  </div>
+
+  <div class="two-col flex-grow mt-8">
+    <div>
+      <h3>The 14 modifiers already proven on your template</h3>
+      <p class="sm dim mb-8">Deployed across 51 markets. The template works &mdash; it just hasn't been rolled out.</p>
+      <div>
+        <span class="pill green">no-fee</span> <span class="pill green">pet-friendly</span> <span class="pill green">parking-included</span>
+        <span class="pill green">laundry-included</span> <span class="pill green">furnished</span> <span class="pill green">studios</span>
+        <span class="pill blue">1-bedroom</span> <span class="pill blue">2-bedroom</span> <span class="pill blue">3-bedroom</span>
+        <span class="pill blue">4-bedroom</span> <span class="pill blue">5-bedroom</span>
+        <span class="pill orange">under $2,000</span> <span class="pill orange">under $2,500</span> <span class="pill orange">under $3,000</span>
+      </div>
+
+      <div class="annotation success mt-16">
+        <strong>This is the cheapest win on the board.</strong> The template, the data feed and the internal linking pattern
+        already exist and are proven on 51 markets. Extending them is execution, not invention.
+      </div>
+    </div>
+    <div>
+      <h3>Markets running on a single thin page</h3>
+      <p class="sm dim mb-8">A representative sample of the 54 &mdash; several are large, high-rent Greater Boston municipalities.</p>
+      <table>
+        <tr>
+          <td>Braintree</td><td>Andover</td><td>Beverly</td><td>Burlington</td>
+        </tr>
+        <tr>
+          <td>Billerica</td><td>Brockton</td><td>Danvers</td><td>Abington</td>
+        </tr>
+        <tr>
+          <td>Bay Village</td><td>Barnstable</td><td>Bridgewater</td><td>Clinton</td>
+        </tr>
+        <tr>
+          <td>Dartmouth</td><td>Fitchburg</td><td colspan="2" class="dim">&hellip;and 40 more</td>
+        </tr>
+      </table>
+      <div class="annotation">
+        <strong>Note the pattern:</strong> the gap correlates with distance from the core, not with market value.
+        Suburban and commuter-rail markets are where renters priced out of Boston proper are searching &mdash; and where
+        landlords have the hardest time filling units. Both sides of your business are underserved there.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 7: UNIVERSITY CLUSTERS ══════════════ -->
+<div class="slide tight" data-slide="7">
+  <p class="slide-label">Structural Finding</p>
+  <h2>19 Universities, Two Different URL Strategies, No Data Behind Either</h2>
+  <p class="subtitle">Boston is the most student-dense rental market in America. You've built for it &mdash; twice, in two incompatible ways.</p>
+
+  <div class="two-col">
+    <div>
+      <h3 class="mono" style="font-size:16px;">/{school}-off-campus-housing/</h3>
+      <p class="sm dim mb-8">9 schools &middot; 126 URLs &middot; 13 modifier subpages each</p>
+      <table>
+        <tr><td>Boston University</td><td>Northeastern</td></tr>
+        <tr><td>Boston College</td><td>Tufts</td></tr>
+        <tr><td>Emerson College</td><td>Suffolk University</td></tr>
+        <tr><td>MassArt</td><td>MCPHS</td></tr>
+        <tr><td colspan="2">Wentworth Institute of Technology</td></tr>
+      </table>
+      <p class="sm mt-8">Targets the query pattern <span class="mono">"[school] off campus housing"</span></p>
+    </div>
+    <div>
+      <h3 class="mono" style="font-size:16px;">/apartments-near-{school}/</h3>
+      <p class="sm dim mb-8">10 schools &middot; 140 URLs &middot; 13 modifier subpages each</p>
+      <table>
+        <tr><td>Harvard University</td><td>MIT</td></tr>
+        <tr><td>Berklee College of Music</td><td>UMass Boston</td></tr>
+        <tr><td>Brandeis University</td><td>Bentley University</td></tr>
+        <tr><td>Simmons University</td><td>Babson College</td></tr>
+        <tr><td>Emmanuel College</td><td>Hult International</td></tr>
+      </table>
+      <p class="sm mt-8">Targets the query pattern <span class="mono">"apartments near [school]"</span></p>
+    </div>
+  </div>
+
+  <div class="annotation danger mt-8">
+    <strong>These are two different search intents, assigned arbitrarily.</strong> Harvard and MIT &mdash; two of the largest
+    off-campus renter populations in the region &mdash; sit in one structure, while BU and Northeastern sit in the other.
+    There's no evidence the split was driven by search data. It fragments your internal linking, doubles template maintenance,
+    and means half your university traffic is chasing the weaker phrasing.
+  </div>
+
+  <div class="annotation info">
+    <strong>This is a perfect paid-test candidate.</strong> Run both phrasings against each other in Google Ads for 30 days.
+    Impressions, CTR and cost-per-lead will settle the question definitively &mdash; and then we consolidate all 19 schools
+    onto the winning structure instead of arguing about it.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 8: THE RENT-TO-OWN MODEL ══════════════ -->
+<div class="slide dark tight" data-slide="8">
+  <p class="slide-label">The Strategy</p>
+  <h2>Rent The Traffic. Then Own It.</h2>
+  <p class="subtitle" style="max-width:940px;">Nobody knows which keywords are profitable for Boston Pads &mdash; not us, not a keyword tool, not your competitors.
+  So we stop guessing. We buy the answer with a small, disciplined paid budget, then spend content dollars only on the queries that already proved they convert.</p>
+
+  <div class="three-col flex-grow mt-8">
+    <div class="channel-card">
+      <div class="channel-icon">🔑</div>
+      <h3>1. Rent</h3>
+      <p class="sm" style="opacity:.75; margin-bottom:10px;">Months 1&ndash;2 &mdash; Google Ads</p>
+      <ul>
+        <li>Structured keyword tests across defined intent cells</li>
+        <li>Exact-match, tightly themed, conversion-tracked</li>
+        <li>Runs in the cheap Sept&ndash;Nov window</li>
+        <li>Every click buys a data point you can't get from a tool</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">📊</div>
+      <h3>2. Read</h3>
+      <p class="sm" style="opacity:.75; margin-bottom:10px;">Month 2&ndash;3 &mdash; The verdict</p>
+      <ul>
+        <li>Cost per landlord signup vs. cost per renter lead</li>
+        <li>Which modifier converts: no-fee? under $2,500? pet-friendly?</li>
+        <li>Which university phrasing wins</li>
+        <li>Which suburbs return more than they cost</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">🏛️</div>
+      <h3>3. Own</h3>
+      <p class="sm" style="opacity:.75; margin-bottom:10px;">Months 3&ndash;6 &mdash; Content &amp; local SEO</p>
+      <ul>
+        <li>Content clusters built only around proven winners</li>
+        <li>Ranking before the December search wave</li>
+        <li>Paid budget shifts off keywords you now rank for</li>
+        <li>Organic keeps earning after the ad spend stops</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Why this fits Boston Pads specifically:</strong> you already have the page templates, the listing feed and the
+    domain authority. What you're missing is the profitability signal that tells you where to point them. Paid search is
+    the fastest, cheapest way to buy that signal &mdash; and in your business, we can run the test in the off-season when
+    clicks are at their cheapest and be ranking by the time demand returns.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 9: THE TEST DESIGN ══════════════ -->
+<div class="slide tight" data-slide="9">
+  <p class="slide-label">Phase 1 &mdash; Rent</p>
+  <h2>The Keyword Test, Designed</h2>
+  <p class="subtitle">Five intent cells, each with a clear hypothesis and a single success metric. We're not trying to make the ad account profitable in month one &mdash; we're buying decision-grade data as cheaply as possible.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:17%;">Test cell</th>
+        <th style="width:26%;">Example query shapes</th>
+        <th style="width:31%;">Hypothesis being tested</th>
+        <th style="width:16%;">Success metric</th>
+        <th style="width:10%;">Priority</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="bold">Landlord acquisition</td>
+        <td class="mono sm">rent out my apartment boston &middot; boston property management &middot; list my apartment {city}</td>
+        <td>The revenue side is under-served and cheap. If cost-per-landlord-signup lands well below customer value, this becomes the priority content build.</td>
+        <td>Cost per owner signup</td>
+        <td><span class="pill red">Highest</span></td>
+      </tr>
+      <tr>
+        <td class="bold">High-intent modifiers</td>
+        <td class="mono sm">no fee apartments boston &middot; apartments under 2500 boston &middot; pet friendly {neighborhood}</td>
+        <td>Modifier pages already exist for 51 markets. Which modifier actually drives leads &mdash; and is it worth rolling to the other 54?</td>
+        <td>Cost per renter lead, by modifier</td>
+        <td><span class="pill orange">High</span></td>
+      </tr>
+      <tr>
+        <td class="bold">University phrasing</td>
+        <td class="mono sm">bu off campus housing <em>vs.</em> apartments near boston university</td>
+        <td>Head-to-head A/B on the two URL patterns already live on your site. Settles the 19-school structural question with data.</td>
+        <td>CTR + CPL by phrasing</td>
+        <td><span class="pill orange">High</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Suburb expansion</td>
+        <td class="mono sm">braintree ma apartments &middot; beverly apartments for rent &middot; burlington ma rentals</td>
+        <td>Are the 54 thin markets worth deepening? Cheap clicks here tell us which suburbs justify the full 14-modifier build.</td>
+        <td>Lead volume &amp; CPL by city</td>
+        <td><span class="pill blue">Medium</span></td>
+      </tr>
+      <tr>
+        <td class="bold">Luxury / lease-up</td>
+        <td class="mono sm">luxury apartments seaport &middot; back bay luxury rentals &middot; {building name} apartments</td>
+        <td>You have 768 luxury building pages. Do they attract renters, or is the real value in winning lease-up contracts from developers?</td>
+        <td>Lead quality &amp; rent tier</td>
+        <td><span class="pill blue">Medium</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="two-col mt-8" style="gap:20px;">
+    <div class="annotation info">
+      <strong>What makes this a real test:</strong> conversion tracking split by lead type (renter vs. owner) before a dollar is
+      spent, exact-match isolation so one query can't hide inside another, and a fixed 30-day read with a pre-agreed kill
+      threshold per cell.
+    </div>
+    <div class="annotation">
+      <strong>Volume &amp; CPC data:</strong> query shapes above come from your URL structure and the Boston market. Attaching
+      verified volume, difficulty and CPC requires a SEMrush pull against your domain &mdash; step one of onboarding, and it
+      sharpens these cells before launch.
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 10: WINNERS TO CLUSTERS ══════════════ -->
+<div class="slide tight" data-slide="10">
+  <p class="slide-label">Phase 2 &mdash; Own</p>
+  <h2>How A Winning Keyword Becomes A Content Cluster</h2>
+  <p class="subtitle">A proven keyword doesn't get one blog post. It gets a cluster &mdash; a hub page, supporting articles, internal links and schema &mdash; engineered to own the whole intent neighborhood around it.</p>
+
+  <div class="two-col">
+    <div>
+      <h3>Worked example</h3>
+      <p class="sm dim mb-8">Assume the landlord cell returns the strongest economics in the test.</p>
+      <table>
+        <tr>
+          <td><span class="pill paid">Paid signal</span></td>
+          <td class="sm"><span class="mono">rent out my apartment cambridge</span> produces owner signups at a cost well under their value</td>
+        </tr>
+        <tr>
+          <td><span class="pill setup">Hub page</span></td>
+          <td class="sm"><span class="mono">/cambridge-ma-landlords/</span> &mdash; how to list, what Cambridge rents actually are, your lease-up process</td>
+        </tr>
+        <tr>
+          <td><span class="pill content">Cluster</span></td>
+          <td class="sm">8&ndash;12 supporting articles: Cambridge rent trends, screening tenants in MA, Sept 1 turnover playbook, broker fee law, vacancy cost math</td>
+        </tr>
+        <tr>
+          <td><span class="pill seo">Local SEO</span></td>
+          <td class="sm">LocalBusiness + FAQ schema, GBP posts targeting owners, internal links from the 105 renter hubs</td>
+        </tr>
+        <tr>
+          <td><span class="pill green">Scale</span></td>
+          <td class="sm">Template proven in Cambridge, then rolled to Somerville, Brookline, Medford, Malden &mdash; the markets the test ranked highest</td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3>Why clusters, not one-off posts</h3>
+      <ul class="bullets">
+        <li><strong>You already know this works.</strong> Your 990 modifier subpages are a cluster strategy &mdash; we're applying the same logic to the revenue side of the business</li>
+        <li><strong>Topical authority compounds.</strong> A single landlord page competes alone; 12 interlinked pages on Cambridge landlording signal genuine subject depth</li>
+        <li><strong>It feeds AI answers.</strong> Entity-rich, well-structured clusters are what answer engines actually retrieve and cite</li>
+        <li><strong>The paid budget retires.</strong> As clusters rank, spend shifts off those keywords and onto the next test cell &mdash; the engine keeps funding its own expansion</li>
+      </ul>
+      <div class="annotation success">
+        <strong>The compounding effect:</strong> every month the test runs, the content plan gets sharper and the paid budget
+        gets more efficient. You stop paying for traffic you've learned to earn.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 11: AI VISIBILITY ══════════════ -->
+<div class="slide tight" data-slide="11">
+  <p class="slide-label">The Adjacent Opportunity</p>
+  <h2>You Opened The Door To AI. You're Just Not In The Answers Yet.</h2>
+  <p class="subtitle">This is genuinely unusual: your technical AI readiness is ahead of almost every local business we audit. The infrastructure is done. The citations are missing.</p>
+
+  <div class="two-col">
+    <div>
+      <h3 class="green">Already in place</h3>
+      <table>
+        <tr><td class="mono sm">robots.txt</td><td class="sm">Explicitly <strong>allows</strong> GPTBot, ClaudeBot, PerplexityBot, OAI-SearchBot, Google-Extended, Gemini-Deep-Research, meta-externalagent and more</td></tr>
+        <tr><td class="mono sm">robots.txt</td><td class="sm">Explicitly <strong>blocks</strong> scrapers and low-value crawlers &mdash; Bytespider, Diffbot, Scrapy, QuillBot and ~40 others</td></tr>
+        <tr><td class="mono sm">llms.txt</td><td class="sm">Published, structured, with a clean description and full sitemap index for AI crawlers</td></tr>
+        <tr><td class="mono sm">bot-access-policy.json</td><td class="sm">Machine-readable bot policy &mdash; we almost never see this</td></tr>
+      </table>
+      <div class="annotation success">
+        <strong>Somebody on your side did this deliberately.</strong> That's a real head start &mdash; you've made yourself
+        maximally retrievable to exactly the engines that matter, and closed the door on the ones that just resell your data.
+      </div>
+    </div>
+    <div>
+      <h3 class="orange">What's missing</h3>
+      <ul class="bullets">
+        <li><strong>Crawlability isn't citation.</strong> Being allowed to be read is necessary, not sufficient. AI answers cite sources that are <em>discussed</em>, not just indexed</li>
+        <li><strong>Renters ask communities, not portals.</strong> "Is Allston worth it?", "best neighborhood for a BU grad student", "is a broker fee normal in Boston" &mdash; these get asked on Reddit, and that's disproportionately what answer engines retrieve</li>
+        <li><strong>Your best asset is unsyndicated.</strong> You publish original Boston rental market data monthly. That's exactly the kind of citable, first-party statistic AI answers reach for &mdash; and it currently lives only on your blog</li>
+        <li><strong>No presence in the discussion layer.</strong> r/boston, r/bostonhousing and the university subreddits are where the Sept 1 scramble plays out every year</li>
+      </ul>
+      <div class="annotation info">
+        <strong>The fit:</strong> AEO placements put your market data into the conversations renters and landlords are already
+        having, in the venues answer engines cite most. It runs independently of the SEO engagement &mdash; pricing on the next slide.
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 12: ROADMAP ══════════════ -->
+<div class="slide tight" data-slide="12">
+  <p class="slide-label">Roadmap</p>
+  <h2>Built Backwards From The December Search Wave</h2>
+  <p class="subtitle">The deadline isn't arbitrary. Content needs to be ranking before domestic students begin their Sept 1, 2027 search in December and January. Working back from there gives us the schedule.</p>
+
+  <div class="timeline">
+    <div class="timeline-phase">
+      <p class="phase-label">Month 1 &mdash; August</p>
+      <h4>Foundation &amp; launch</h4>
+      <ul>
+        <li>SEMrush + GSC + GA4 audit</li>
+        <li>Conversion tracking split by lead type</li>
+        <li>GBP optimization, schema, technical fixes</li>
+        <li>Google Ads test build &mdash; 5 cells live</li>
+      </ul>
+      <div style="margin-top:8px;"><span class="pill setup">Setup</span> <span class="pill paid">Paid</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Month 2 &mdash; September</p>
+      <h4>Rent &amp; measure</h4>
+      <ul>
+        <li>Full 30-day test read across all cells</li>
+        <li>Kill losers, scale winners</li>
+        <li>University phrasing A/B resolved</li>
+        <li>First localized content published</li>
+      </ul>
+      <div style="margin-top:8px;"><span class="pill paid">Paid</span> <span class="pill seo">Local SEO</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Month 3 &mdash; October</p>
+      <h4>Cluster build begins</h4>
+      <ul>
+        <li>Content clusters around proven winners</li>
+        <li>First landlord-side city pages ship</li>
+        <li>ClusterMagic engine switched on</li>
+        <li>Backlink acquisition starts</li>
+      </ul>
+      <div style="margin-top:8px;"><span class="pill content">Content</span> <span class="pill seo">Local SEO</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Months 4&ndash;5 &mdash; Nov/Dec</p>
+      <h4>Scale &amp; index</h4>
+      <ul>
+        <li>Modifier rollout to winning suburbs</li>
+        <li>Clusters indexed and maturing</li>
+        <li>Paid shifts off newly-ranking terms</li>
+        <li>AEO placements if in scope</li>
+      </ul>
+      <div style="margin-top:8px;"><span class="pill content">Content</span> <span class="pill orange">AEO</span></div>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Month 6+ &mdash; Jan on</p>
+      <h4>Own the wave</h4>
+      <ul>
+        <li>Ranking as peak search season opens</li>
+        <li>Organic carries volume paid was buying</li>
+        <li>Budget redeployed to next test cells</li>
+        <li>Compounding into Sept 1, 2027</li>
+      </ul>
+      <div style="margin-top:8px;"><span class="pill green">Own</span></div>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Note the shape:</strong> paid spend is heaviest in months 1&ndash;3 when it's buying information, then tapers as
+    organic takes over the proven terms. That's the whole point of rent-to-own &mdash; the paid budget is an investment in
+    knowing where to build, not a permanent line item.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 13: INVESTMENT ══════════════ -->
+<div class="slide tight" data-slide="13">
+  <p class="slide-label">Investment</p>
+  <h2>The Rent-to-Own Engagement</h2>
+  <p class="subtitle">Phased so you're not paying for content production before the test tells us what to produce. Ad spend is always billed separately at cost &mdash; never bundled into agency fees.</p>
+
+  <div class="timeline">
+    <div class="timeline-phase">
+      <p class="phase-label">Phase 1 &mdash; Months 1&ndash;2</p>
+      <h4>Foundation + Test</h4>
+      <ul>
+        <li>Local SEO Package 2 &mdash; full Month 1 foundation build</li>
+        <li>10 technical SEO implementations/mo</li>
+        <li>5 localized content pieces/mo</li>
+        <li>5 backlinks (DR 30+)/mo</li>
+        <li>GBP management</li>
+        <li>Google Ads management &mdash; 5-cell keyword test</li>
+      </ul>
+      <div class="phase-cost">$2,900<span style="font-size:14px; font-weight:600; color:var(--text-light);">/mo</span></div>
+      <p class="sm dim">+ ad spend at cost</p>
+    </div>
+    <div class="timeline-phase">
+      <p class="phase-label">Phase 2 &mdash; Months 3&ndash;6</p>
+      <h4>Build The Winners</h4>
+      <ul>
+        <li>Everything in Phase 1, continued</li>
+        <li><strong>+ ClusterMagic engine</strong> &mdash; 40 articles/mo</li>
+        <li>Content clusters on proven keywords only</li>
+        <li>Landlord-side city page rollout</li>
+        <li>Modifier rollout to winning suburbs</li>
+      </ul>
+      <div class="phase-cost">$4,400<span style="font-size:14px; font-weight:600; color:var(--text-light);">/mo</span></div>
+      <p class="sm dim">+ ad spend at cost (tapering)</p>
+    </div>
+    <div class="timeline-phase" style="border-color:var(--accent); background:#FFF8F2;">
+      <p class="phase-label">Recommended ad spend</p>
+      <h4>Test Budget</h4>
+      <ul>
+        <li>Billed at cost, directly to your account</li>
+        <li>Sized to reach statistical significance across 5 cells in 30 days</li>
+        <li>Sept&ndash;Nov is the cheapest click window of the year</li>
+        <li>Tapers from month 4 as organic takes over</li>
+      </ul>
+      <div class="phase-cost">$3,000&ndash;$5,000<span style="font-size:14px; font-weight:600; color:var(--text-light);">/mo</span></div>
+      <p class="sm dim">Paid to Google, not to us</p>
+    </div>
+  </div>
+
+  <div class="two-col mt-8" style="gap:20px;">
+    <div>
+      <table>
+        <thead><tr><th>Line item</th><th class="right">Phase 1</th><th class="right">Phase 2</th></tr></thead>
+        <tbody>
+          <tr><td>Local SEO Package 2 (1 location)</td><td class="right">$1,400</td><td class="right">$1,400</td></tr>
+          <tr><td>Paid media management (Google Ads)</td><td class="right">$1,500</td><td class="right">$1,500</td></tr>
+          <tr><td>ClusterMagic &mdash; 40 articles/mo <span class="pill green">bundled rate</span></td><td class="right dim">&mdash;</td><td class="right">$1,500</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td class="bold">Total agency fees</td><td class="right bold navy">$2,900/mo</td><td class="right bold navy">$4,400/mo</td></tr>
+          <tr><td class="dim">Ad spend (at cost, billed separately)</td><td class="right dim">$3&ndash;5k</td><td class="right dim">tapering</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="annotation info">
+        <strong>Engagement structure:</strong> 3-month minimum, which is standard. We earn the next 90 days by delivering in
+        the first 90. Quarterly prepay options available.
+      </div>
+      <div class="annotation success">
+        <strong>Why ClusterMagic is $1,500, not $1,900:</strong> the bundled rate applies alongside two or more other services.
+        In Phase 2 it sits with Local SEO and paid media.
+      </div>
+      <p class="footnote">Guaranteed Maps Ranking packages (top 3 in the maps pack within 90 days, 5- or 10-mile radius) are available as an upgrade &mdash; we'd scope that against your Newbury Street location on the call.</p>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 14: STANDALONE PRICING ══════════════ -->
+<div class="slide tight" data-slide="14">
+  <p class="slide-label">Standalone Options</p>
+  <h2>ClusterMagic &amp; AI Visibility &mdash; Priced On Their Own</h2>
+  <p class="subtitle" style="margin-bottom:8px;">Both run independently of the rent-to-own engagement &mdash; if you'd rather start smaller, or start with AI visibility instead of search.</p>
+  <style>
+    .slide[data-slide="14"] .price-box { padding: 11px 16px; margin-bottom: 7px !important; }
+    .slide[data-slide="14"] .price-box .tier-price { font-size: 24px; }
+    .slide[data-slide="14"] .price-box .tier-name { font-size: 13.5px; }
+    .slide[data-slide="14"] h3 { font-size: 18px; margin-bottom: 4px; }
+    .slide[data-slide="14"] .annotation { margin: 7px 0; }
+    .slide[data-slide="14"] .footnote { margin-top: 7px; }
+  </style>
+
+  <div class="two-col">
+    <div>
+      <h3>ClusterMagic Content &mdash; Standalone</h3>
+      <p class="sm dim mb-8">SEO-optimized, entity-rich articles (1,200&ndash;2,000 words), internally linked and published straight into your WordPress install.</p>
+      <table>
+        <thead>
+          <tr><th>Articles / mo</th><th class="right">Monthly</th><th class="right">3-month total</th><th class="right">Effective / mo</th><th class="right">You save</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold">25</td><td class="right">$700</td><td class="right">$1,750</td><td class="right bold green">$583</td><td class="right green">&minus;$350</td></tr>
+          <tr><td class="bold">40</td><td class="right">$1,100</td><td class="right">$2,700</td><td class="right bold green">$900</td><td class="right green">&minus;$600</td></tr>
+          <tr><td class="bold">50</td><td class="right">$1,350</td><td class="right">$3,400</td><td class="right bold green">$1,133</td><td class="right green">&minus;$650</td></tr>
+          <tr><td class="bold">100</td><td class="right">$2,700</td><td class="right">$7,000</td><td class="right bold green">$2,333</td><td class="right green">&minus;$1,100</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation">
+        <strong>For Boston Pads specifically:</strong> at 40&ndash;50 articles/month, the 54 thin location markets and the
+        landlord-side content gap could both be closed inside two quarters.
+      </div>
+      <p class="footnote">3-month commitment pricing is pre-approved. At 40/mo the bundled rate of $1,500 applies alongside two or more other services (Phase 2). Volumes between tiers interpolated; final quote confirmed at proposal.</p>
+    </div>
+
+    <div>
+      <h3>AI Visibility Packages &mdash; Standalone</h3>
+      <p class="sm dim mb-8">Answer Engine Optimization: Reddit placements in the threads AI engines actually cite, plus content and authority links. Fixed pricing, no discounting.</p>
+
+      <div class="price-box mb-8">
+        <div class="tier-name">AI Visibility Starter</div>
+        <div class="tier-price">$1,750<span>/mo</span></div>
+        <p class="sm">5 AEO placements &middot; 10 ClusterMagic articles</p>
+      </div>
+
+      <div class="price-box feature mb-8">
+        <div class="tier-name">AI Growth Engine <span class="pill orange">Best fit</span></div>
+        <div class="tier-price">$3,450<span>/mo</span></div>
+        <p class="sm">8 AEO placements &middot; 25 ClusterMagic articles &middot; 2 backlinks (DA 40+)</p>
+      </div>
+
+      <div class="price-box">
+        <div class="tier-name">AI Authority Accelerator</div>
+        <div class="tier-price">$5,250<span>/mo</span></div>
+        <p class="sm">12 AEO placements &middot; 40 ClusterMagic articles &middot; 2 backlinks (DA 50+)</p>
+      </div>
+
+      <div class="annotation info mt-8">
+        <strong>Why Growth Engine fits you:</strong> 8 placements/mo covers r/boston, r/bostonhousing and the major university
+        subreddits through a full lease cycle &mdash; and 25 articles is enough to syndicate your monthly market reports into
+        citable, entity-rich formats.
+      </div>
+      <p class="footnote">An AEO placement is one Reddit thread interaction &mdash; a comment on an existing thread, or a seeded thread with coordinated responses &mdash; in subreddits with high AI citation rates.</p>
+    </div>
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; Rent-to-Own Growth Plan</span>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 15: NEXT STEPS ══════════════ -->
+<div class="slide dark tight" data-slide="15">
+  <p class="slide-label">Next Steps</p>
+  <h2>What We'd Need To Get Started</h2>
+  <p class="subtitle" style="max-width:900px;">Everything in this deck came from the outside. Thirty minutes of access turns it from a well-informed hypothesis into a costed plan.</p>
+
+  <div class="three-col flex-grow mt-8">
+    <div class="channel-card">
+      <div class="channel-icon">🔍</div>
+      <h3>1. Data access</h3>
+      <ul>
+        <li>Google Search Console (read-only)</li>
+        <li>GA4 property access</li>
+        <li>Google Ads account, if one exists</li>
+        <li>We run the SEMrush pull on our side</li>
+      </ul>
+      <p class="sm mt-16" style="opacity:.75;">Turnaround: 3&ndash;5 business days to a keyword-level test plan with verified volumes and CPCs.</p>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">💬</div>
+      <h3>2. Two questions we need answered</h3>
+      <ul>
+        <li>What is a landlord signup actually worth to you?</li>
+        <li>Where does revenue concentrate &mdash; advertising, lease-up, property management, or agent commissions?</li>
+      </ul>
+      <p class="sm mt-16" style="opacity:.75;">These two answers decide which test cell gets the biggest share of budget.</p>
+    </div>
+    <div class="channel-card">
+      <div class="channel-icon">🚀</div>
+      <h3>3. Start before the window closes</h3>
+      <ul>
+        <li>Sept&ndash;Nov = cheapest clicks of the year</li>
+        <li>Content needs to rank by December</li>
+        <li>3-month commitment, phased</li>
+        <li>From $2,900/mo + ad spend at cost</li>
+      </ul>
+      <p class="sm mt-16" style="opacity:.75;">Every week we wait is a week of test data we don't have when demand returns.</p>
+    </div>
+  </div>
+
+  <div class="annotation">
+    <strong>Directional projections, not guarantees.</strong> Nothing in this deck promises a specific ranking, traffic figure
+    or revenue outcome. What we will commit to is a disciplined test with pre-agreed success metrics, and a content plan that
+    only spends against keywords that have already proven they convert.
+  </div>
+
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Boston Pads &mdash; July 22, 2026</span>
+  </div>
+</div>
+
+</div>
+
+<div class="nav">
+  <button onclick="go(-1)" aria-label="Previous slide">&#8249;</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button onclick="go(1)" aria-label="Next slide">&#8250;</button>
+</div>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('counter').textContent = `1 / ${total}`;
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
