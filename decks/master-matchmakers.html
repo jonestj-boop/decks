@@ -119,6 +119,9 @@ h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
 .slide.tight .bullets li { font-size: 13.5px; margin-bottom: 6px; }
 .slide.tight .channel-card { padding: 18px; }
 .slide.tight .channel-card ul li { font-size: 13.5px; }
+.slide.tight .price-box { padding: 18px 22px; }
+.slide.tight .price-amount { font-size: 34px; }
+.slide.tight .logo-row { padding-top: 12px; }
 
 .stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
 
@@ -513,7 +516,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
       </div>
     </div>
     <div class="annotation success">
-      <strong>Fix first:</strong> Smart Bidding has been optimizing against a fraction of real demand for the entire flight. This gets corrected before architecture or bidding strategy &mdash; every downstream decision in this audit depends on it.
+      <strong>Fix first:</strong> Smart Bidding has been optimizing against a fraction of real demand for the entire flight. This gets corrected before architecture or bidding strategy &mdash; the next slide is exactly how.
     </div>
     <div class="logo-row">
       <span class="logo-ember">EMBERTRIBE</span>
@@ -521,8 +524,75 @@ tr:hover td { background: rgba(0,0,0,0.02); }
     </div>
   </div>
 
-  <!-- SLIDE 4: CAMPAIGN ARCHITECTURE -->
-  <div class="slide" data-slide="4">
+  <!-- SLIDE 4: HOW WE FIX THE TRACKING -->
+  <div class="slide tight" data-slide="4">
+    <p class="slide-label">Fix #1 &middot; Month 1 Priority</p>
+    <h2>How we fix the tracking &mdash; week one, before anything else moves.</h2>
+    <p class="subtitle">Four defined fixes, in dependency order &mdash; no site rebuild required, all inside the first 30 days.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:38px;">#</th>
+          <th>The fix</th>
+          <th>What actually changes</th>
+          <th style="width:100px;">When</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">1</td>
+          <td class="bold">Rebuild the primary conversion action</td>
+          <td>Replace the GA4-imported goal with a native Google Ads conversion that fires on <strong>form-submission success</strong>, not page load. Demote the GA4 imports to Secondary so they still report but stop driving bids.</td>
+          <td><span class="pill red">Week 1</span></td>
+        </tr>
+        <tr>
+          <td class="bold">2</td>
+          <td class="bold">Repair cross-domain tracking</td>
+          <td>Configure the linker between the marketing site and the client portal so the session survives the handoff instead of dropping the click that earned the lead.</td>
+          <td><span class="pill orange">Week 1&ndash;2</span></td>
+        </tr>
+        <tr>
+          <td class="bold">3</td>
+          <td class="bold">Add Enhanced Conversions for Leads</td>
+          <td>Pass hashed email and phone on submit to recover conversions lost to cookie expiry and cross-device journeys.</td>
+          <td><span class="pill orange">Week 2</span></td>
+        </tr>
+        <tr>
+          <td class="bold">4</td>
+          <td class="bold">Clean up the goal set, then validate</td>
+          <td>Retire "Lead form &ndash; Submit" (0.00 recorded), de-duplicate the two GA4 imports reporting the same 1.28, then confirm end to end with a live test submission.</td>
+          <td><span class="pill orange">Week 2</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="two-col" style="gap:28px; flex:none;">
+      <div>
+        <h3>How we'll know it worked</h3>
+        <ul class="bullets good">
+          <li>Conversions report as whole numbers, not decimals.</li>
+          <li>Volume lands near the 37 the native tag recorded, not 1.28.</li>
+          <li>A live test click traces cleanly through to a recorded conversion.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Then, and only then</h3>
+        <ul class="bullets">
+          <li>Two weeks of clean data before any bidding strategy is changed.</li>
+          <li>Consolidation and the PMax relaunch get judged against real numbers &mdash; not a sixth of them.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation danger">
+      <strong>Why this is first:</strong> Every other recommendation here &mdash; what to consolidate, what to pause, where to scale &mdash; is a decision made off the conversion data. Fixing structure on top of a broken number just gets you to the wrong answer faster.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Master Matchmakers &mdash; Google Ads Account Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CAMPAIGN ARCHITECTURE -->
+  <div class="slide" data-slide="5">
     <p class="slide-label">Campaign Architecture</p>
     <h2>68 campaigns were built for a business that needed roughly a dozen.</h2>
     <p class="subtitle">One geo campaign per city fragments both budget and signal so thin that most of the account never had a chance to learn.</p>
@@ -554,7 +624,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 5: BIDDING STRATEGY -->
-  <div class="slide tight" data-slide="5">
+  <div class="slide tight" data-slide="6">
     <p class="slide-label">Bidding Strategy</p>
     <h2>Four bidding strategies in five weeks meant the algorithm never finished learning.</h2>
     <p class="subtitle">Every Smart Bidding strategy needs time and volume to calibrate. This account never gave one enough of either.</p>
@@ -605,7 +675,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 6: SPEND, CONVERSIONS & WASTE -->
-  <div class="slide tight" data-slide="6">
+  <div class="slide tight" data-slide="7">
     <p class="slide-label">Spend, Conversions &amp; Waste</p>
     <h2>Nearly a third of all spend sits in campaigns that never converted once.</h2>
     <p class="subtitle">Spend concentrated in a handful of major metros, with results that didn't follow.</p>
@@ -646,7 +716,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 7: ACCOUNT MANAGEMENT TIMELINE -->
-  <div class="slide" data-slide="7">
+  <div class="slide" data-slide="8">
     <p class="slide-label">Account Management Timeline</p>
     <h2>Every campaign in the account was paused, reactivated, and paused again within one 33-hour window before handoff.</h2>
     <p class="subtitle">The change history shows sweeping, account-wide actions rather than considered, incremental optimization.</p>
@@ -689,7 +759,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 8: CREATIVE & LANDING PAGES -->
-  <div class="slide" data-slide="8">
+  <div class="slide" data-slide="9">
     <p class="slide-label">Creative &amp; Landing Pages</p>
     <h2>The landing pages are strong. The ads pointing to them are not.</h2>
     <p class="subtitle">Your own site gives paid media more to work with than the ads currently use.</p>
@@ -722,7 +792,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 9: THE OPPORTUNITY -->
-  <div class="slide" data-slide="9">
+  <div class="slide" data-slide="10">
     <p class="slide-label">The Opportunity</p>
     <h2>The one channel built around conversions outperformed the rest of the account by 20 times, in four days.</h2>
     <p class="subtitle">Performance Max ran for less than a week before being paused, and still posted the account's only efficient cost per acquisition.</p>
@@ -747,19 +817,18 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 10: RECOMMENDED PATH FORWARD -->
-  <div class="slide" data-slide="10">
+  <div class="slide" data-slide="11">
     <p class="slide-label">Recommended Path Forward</p>
     <h2>Fixing measurement and consolidating architecture come before any new budget moves.</h2>
     <p class="subtitle">A 90-day sequence, in dependency order &mdash; each phase is only reliable once the one before it is done.</p>
     <div class="timeline flex-grow">
       <div class="timeline-phase">
         <span class="phase-label">Days 1&ndash;30</span>
-        <h4>Fix the foundation</h4>
+        <h4>Fix the foundation <span class="pill red">Priority 1</span></h4>
         <ul>
-          <li>Correct the conversion goal and attribution model</li>
-          <li>Verify cross-domain tracking to the client portal</li>
-          <li>Add Enhanced Conversions</li>
-          <li>Build sitelinks and callout extensions from existing brand content</li>
+          <li><strong>Weeks 1&ndash;2: the full tracking rebuild &mdash; all four fixes detailed on slide 4</strong></li>
+          <li>Weeks 3&ndash;4: collect clean conversion data before touching bids</li>
+          <li>In parallel: build sitelinks and callout extensions from existing brand content</li>
         </ul>
       </div>
       <div class="timeline-phase">
@@ -791,7 +860,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 11: INVESTMENT -->
-  <div class="slide tight" data-slide="11">
+  <div class="slide tight" data-slide="12">
     <p class="slide-label">Investment</p>
     <h2>Paid Media Management &mdash; Google Ads &mdash; 90 Day Plan</h2>
     <p class="subtitle">One channel, managed end to end, with the tracking correction as week-one work.</p>
@@ -811,6 +880,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
       <div class="channel-card">
         <h3 style="font-size:18px;">Month 1 includes</h3>
         <ul>
+          <li><strong>Conversion tracking rebuild &mdash; all four fixes from slide 4</strong></li>
           <li>Intake + brand discovery call</li>
           <li>Strategy + research (CRO roadmap; market research)</li>
           <li>Build new ads &mdash; launch plan + kickoff call</li>
@@ -844,7 +914,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
   </div>
 
   <!-- SLIDE 12: NEXT STEPS -->
-  <div class="slide dark" data-slide="12">
+  <div class="slide dark" data-slide="13">
     <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
       <p class="slide-label">Next Steps</p>
       <h1>Let's fix the tracking first.</h1>
@@ -864,7 +934,7 @@ tr:hover td { background: rgba(0,0,0,0.02); }
 
 <nav class="nav">
   <button onclick="go(-1)">&#8592;</button>
-  <span class="counter" id="counter">1 / 12</span>
+  <span class="counter" id="counter">1 / 13</span>
   <button onclick="go(1)">&#8594;</button>
 </nav>
 
