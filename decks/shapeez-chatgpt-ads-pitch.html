@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shapeez — Advertise in ChatGPT | EmberTribe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #3D1640;
+  --primary-mid: #5C2361;
+  --primary-light: #8A5A93;
+  --accent: #B8336A;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.68); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.04); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.12; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 18px; font-weight: 400; color: var(--text-light); max-width: 800px; margin-bottom: 20px; }
+
+.slide-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: #E8B3C8; }
+
+.stats-row { display: flex; gap: 16px; margin: 14px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FBEFF4; border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13.5px;
+  margin: 10px 0; line-height: 1.55;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.warn { background: #FFF8E1; border-left-color: var(--yellow); }
+.annotation.warn strong { color: #B8860B; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 9px 11px; border-bottom: 2px solid var(--border); }
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12.5px; }
+.dim { opacity: 0.55; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 5px; font-size: 12.5px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.pill.paid { background: #F3E1EC; color: #7A1B54; }
+.pill.new { background: #E3F2FD; color: #0D47A1; }
+.pill.green { background: #E8F5E9; color: var(--green); }
+.pill.orange { background: #FFF3E0; color: var(--orange); }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.red { color: var(--red); } .green { color: var(--green); } .orange { color: var(--orange); }
+.teal { color: var(--teal); } .blue { color: var(--blue); } .accent-text { color: var(--accent); }
+
+.logo-row { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.15); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11.5px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.45); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.45); color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.35); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">New Channel Opportunity</p>
+      <h1>Advertise in ChatGPT:<br>A First-Mover Test for Shapeez</h1>
+      <p class="subtitle">On July 22, 2026, OpenAI opened self-serve "Advertise in ChatGPT" to any U.S. business — no minimum spend. Shapeez already has the one asset this format runs on: a proven, optimized product feed. Here's the case for a low-risk pilot.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">Jul 22</div>
+          <div class="stat-label">Self-serve Ads Manager opened, 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">$100M</div>
+          <div class="stat-label">OpenAI ad revenue, first 6 weeks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">$3–$5</div>
+          <div class="stat-label">Recommended starting CPC bid</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$0</div>
+          <div class="stat-label">Minimum spend to test</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Shapeez — July 23, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHAT CHANGED -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">What Changed</p>
+    <h2>ChatGPT Just Became a Paid Channel</h2>
+    <p class="subtitle">Ads had been quietly live in ChatGPT since February 2026. On July 22, OpenAI opened the self-serve Ads Manager broadly — turning it from a closed pilot into a channel any advertiser can test today.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's New</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Self-serve Ads Manager: build campaigns, set budgets, and launch without a rep or IO</li>
+          <li class="mb-8">→ Targeting is <strong>conversational, not keyword</strong> — OpenAI matches advertiser "context hints" to real-time conversation intent via a second-price auction</li>
+          <li class="mb-8">→ Two objectives: <strong>Reach</strong> (CPM, ~$60 default max bid) and <strong>Clicks</strong> (CPC, $3–$5 recommended starting bid)</li>
+          <li class="mb-8">→ Criteo is OpenAI's first confirmed ad-tech partner (managed + self-serve "Criteo GO") — a second on-ramp alongside direct self-serve</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What to Know Before Testing</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Ads shown only to <strong>ChatGPT free-tier users</strong> — Plus, Team, and Enterprise stay ad-free</li>
+          <li class="mb-8">→ Ads appear as a clearly labeled, tinted sponsored card below the AI's response — they don't alter the answer itself</li>
+          <li class="mb-8">→ Platform is genuinely new — no multi-year benchmark history like Google or Meta</li>
+          <li class="mb-8">→ $100M in 6 weeks signals real advertiser demand, but also rising competition for placements over time</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: HOW PRODUCT FEED ADS WORK -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">How It Works</p>
+    <h2>Product Feed Ads — Built for Brands Like Shapeez</h2>
+    <p class="subtitle">The format OpenAI is pushing hardest is product feed ads: connect a catalog, and ChatGPT auto-generates sponsored placements inside relevant conversations. It's the same underlying asset Shapeez already maintains for Google Shopping and Performance Max.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📦</div>
+        <h3>1. Connect the Feed</h3>
+        <ul>
+          <li>Same product catalog structure used for Google Shopping / PMax</li>
+          <li>Handles up to 1M SKUs — far beyond Shapeez's catalog size</li>
+          <li>Set eligibility filters for which items are served</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>2. Context-Matched Serving</h3>
+        <ul>
+          <li>Advertiser supplies "context hints" — topics, scenarios, product types</li>
+          <li>OpenAI matches those to live conversation intent (e.g. "what to wear under a fitted dress")</li>
+          <li>Served via second-price auction, not keyword bidding</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🏷️</div>
+        <h3>3. Labeled Sponsored Card</h3>
+        <ul>
+          <li>Product name, image, and catalog attributes shown as a clearly marked "Sponsored" card</li>
+          <li>Appears below the AI's response — never inside it</li>
+          <li>CPC or CPM billing, no minimum spend</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Why this matters for Shapeez:</strong> there's no new creative system to build. The Google Shopping feed Shapeez already runs is the input this format needs — the lift is almost entirely in connecting it and setting a test budget.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: CURRENT STATE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Current State</p>
+    <h2>Your Paid Media Program Today</h2>
+    <p class="subtitle">Trailing 30 days, active Google Ads campaigns. This is the program a ChatGPT pilot would sit alongside — not replace.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--accent);">$3,785.65</div>
+        <div class="stat-label">Total spend, last 30 days</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">5.6x</div>
+        <div class="stat-label">Blended ROAS across active campaigns</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value teal">$25.81</div>
+        <div class="stat-label">Blended CPA (146.7 conversions)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">64.8x</div>
+        <div class="stat-label">Branded Search ROAS — proof the feed & offer convert</div>
+      </div>
+    </div>
+    <table class="mt-16">
+      <thead>
+        <tr><th>Campaign</th><th>Type</th><th class="right">Spend</th><th class="right">Clicks</th><th class="right">Conv.</th><th class="right">Conv. Value</th><th class="right">ROAS</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PMax — New + Returning, Top Products (Target ROAS)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$2,491.48</td><td class="right mono">2,328</td><td class="right mono">64.8</td><td class="right mono">$8,796.95</td><td class="right bold green">3.5x</td></tr>
+        <tr><td>PMax — New Customers Only (Max Conversions)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$586.22</td><td class="right mono">909</td><td class="right mono">6.8</td><td class="right mono">$757.68</td><td class="right bold orange">1.3x</td></tr>
+        <tr><td>PMax — Retargeting (Max Conv. Value)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$192.48</td><td class="right mono">281</td><td class="right mono">13.3</td><td class="right mono">$1,933.84</td><td class="right bold green">10.0x</td></tr>
+        <tr><td>Search — Branded (Max Conv. Value)</td><td><span class="pill new">Search</span></td><td class="right mono">$147.21</td><td class="right mono">607</td><td class="right mono">60.8</td><td class="right mono">$9,545.46</td><td class="right bold green">64.8x</td></tr>
+        <tr><td>Search — Competitor (Manual CPC)</td><td><span class="pill new">Search</span></td><td class="right mono">$368.26</td><td class="right mono">211</td><td class="right mono">1.0</td><td class="right mono">$164.15</td><td class="right bold red">0.4x</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation mt-8">
+      <strong>Read on this:</strong> Shapeez's paid program is lean (~$3.8K/30 days) and efficient where it's dialed in — branded search and PMax retargeting massively outperform. A ChatGPT pilot should be sized as a small, isolated test against this same $25.81 blended CPA benchmark, not a wholesale reallocation.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: WHY THIS FITS NOW -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Why Now</p>
+    <h2>Why This Moment Fits Shapeez</h2>
+    <p class="subtitle">Three reasons this is worth testing early rather than waiting.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">✅</div>
+        <h3>Feed Is Already Built</h3>
+        <ul>
+          <li>Shapeez runs an optimized Shopping/PMax feed today</li>
+          <li>Same catalog structure powers ChatGPT product feed ads</li>
+          <li>No new creative production required to launch a pilot</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💜</div>
+        <h3>Category Fit</h3>
+        <ul>
+          <li>Early partner data flags <strong>lifestyle &amp; wellbeing</strong> as an outperforming category alongside electronics and home/garden</li>
+          <li>Shapewear sits adjacent to that bucket — conversational queries like "what to wear under X" fit ChatGPT's use pattern well</li>
+          <li class="dim">(Category framing is an inference from early data, not a confirmed OpenAI list — worth validating in pilot)</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🏁</div>
+        <h3>First-Mover Window</h3>
+        <ul>
+          <li>No public evidence yet that SKIMS, Honeylove, Shapermint, Shapellx, or Spanx are running ChatGPT ads</li>
+          <li>Self-serve just opened — the competitive floor for CPCs is likely lowest right now</li>
+          <li>Testing early builds a data advantage before the category gets crowded</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: PILOT PLAN -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Approach</p>
+    <h2>A 90-Day Pilot, Not a Channel Switch</h2>
+    <p class="subtitle">Small, isolated test budget. Reuse the existing feed. Judge it against real benchmarks before scaling.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Set Up</span>
+        <h4>Connect &amp; Launch</h4>
+        <ul>
+          <li>Connect existing product feed to OpenAI Ads Manager (direct self-serve or Criteo GO)</li>
+          <li>Set eligibility filters — start with best-sellers &amp; highest-margin SKUs</li>
+          <li>Launch CPC campaign, $3–$5 starting bid, US targeting</li>
+        </ul>
+        <div class="phase-cost">Test budget only</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Read &amp; Adjust</span>
+        <h4>Measure Against Benchmark</h4>
+        <ul>
+          <li>Track CPA against the $25.81 blended Google CPA and a looser ≤$40 pilot ceiling</li>
+          <li>Watch incremental reach — free-tier ChatGPT users not already hit by Google/Meta</li>
+          <li>Refine context hints and eligible SKUs based on early data</li>
+        </ul>
+        <div class="phase-cost">Hold or flex budget</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Decide</span>
+        <h4>Scale, Hold, or Pause</h4>
+        <ul>
+          <li>If CPA is competitive: scale budget in step with PMax/Search increases</li>
+          <li>If reach is incremental but CPA is high: hold flat, keep as brand-awareness test</li>
+          <li>If neither: pause and revisit as the platform matures</li>
+        </ul>
+        <div class="phase-cost">Go / no-go call</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: TEST BUDGET OPTIONS -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Pilot Budget Options</h2>
+    <p class="subtitle">Sized relative to current spend — a fraction of the ~$3,077/30-days already running through PMax, not incremental agency fees. Channel setup and monitoring fits within Shapeez's existing EmberTribe paid media scope; flag to your account team if dedicated build hours warrant a small scope add-on.</p>
+    <table>
+      <thead>
+        <tr><th>Option</th><th>Monthly Ad Spend</th><th>Bid Strategy</th><th>What It Tells Us</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Conservative Test</td>
+          <td class="mono">$250 – $400</td>
+          <td>CPC, $3 starting bid</td>
+          <td>Directional signal on CTR &amp; CPA with minimal risk</td>
+        </tr>
+        <tr>
+          <td class="bold">Moderate Test</td>
+          <td class="mono">$400 – $700</td>
+          <td>CPC, $3–$5 bid range</td>
+          <td>Enough volume for a real CPA read within 30–45 days</td>
+        </tr>
+        <tr>
+          <td class="bold">Reach Add-On (optional)</td>
+          <td class="mono">+$150 – $250</td>
+          <td>CPM, ~$60 max bid</td>
+          <td>Tests awareness value beyond direct-response clicks</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>Recommendation:</strong> start at the Moderate Test tier (~$500/mo) on CPC only. It's roughly 15% of current PMax spend — enough to get a real read in one pilot cycle without disturbing what's already working.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: RISKS & GUARDRAILS -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Risks &amp; Guardrails</p>
+    <h2>What Could Go Wrong — and How We'd Catch It</h2>
+    <p class="subtitle">Treating this honestly as an early-platform test, not a sure thing.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="red">Real Risks</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Reach is capped to free-tier users only — a real but bounded audience ceiling</li>
+          <li class="mb-8">→ No multi-year benchmark data exists yet for CPA/ROAS expectations by category</li>
+          <li class="mb-8">→ Early advertiser demand ($100M in 6 weeks) could push CPCs up faster than expected</li>
+          <li class="mb-8">→ Attribution/measurement tooling is newer than Google's — expect a learning curve on reporting</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="green">Guardrails Built Into This Plan</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Test budget is capped and isolated — it doesn't touch the existing $3,785.65/mo program</li>
+          <li class="mb-8">→ CPC-first (not CPM) keeps spend tied to clicks, not just impressions</li>
+          <li class="mb-8">→ Fixed 30–45 day checkpoint before any budget increase</li>
+          <li class="mb-8">→ Ads are clearly labeled "Sponsored" and never alter ChatGPT's actual response — no brand-safety exposure inside the answer itself</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Shapeez — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Get Shapeez In Early</h1>
+      <p class="subtitle" style="text-align:center;">Approve a pilot budget, and EmberTribe connects your existing product feed to OpenAI's Ads Manager this week.</p>
+      <div class="mt-24">
+        <p style="font-size:17px; font-weight:600;">1. Approve pilot budget tier (Conservative or Moderate)</p>
+        <p style="font-size:17px; font-weight:600; margin-top:6px;">2. EmberTribe connects the product feed &amp; sets eligibility filters</p>
+        <p style="font-size:17px; font-weight:600; margin-top:6px;">3. Launch, then review results at the 30–45 day checkpoint</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.55); margin-top:16px;">Prepared by the EmberTribe paid media team</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential — July 23, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
