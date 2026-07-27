@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SeeSparkGo &times; EmberTribe — SEO Partnership</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* =============================================================
+   THEME VARIABLES — SeeSparkGo (charcoal + teal spark)
+   ============================================================= */
+:root {
+  --primary-dark: #14161A;
+  --primary-mid: #123138;
+  --primary-light: #0E555C;
+  --accent: #18D0D0;
+
+  /* EmberTribe constants */
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  /* Universal palette */
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #12B5B5;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.teal    { background: #E0F7F7; color: #0E555C; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+/* Deliverable grid (numbered) */
+.deliv-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 28px;
+  margin-top: 8px;
+}
+
+.deliv {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.deliv-num {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+  background: #E0F7F7;
+  border-radius: 6px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.deliv-body h4 { font-size: 15px; margin-bottom: 2px; }
+.deliv-body p { font-size: 13px; color: var(--text-light); line-height: 1.4; }
+
+/* Brand cards */
+.brand-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+}
+
+.brand-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-card .b-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.brand-card .b-url {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+
+.brand-card .b-situation {
+  font-size: 12.5px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+  line-height: 1.45;
+}
+
+.brand-card .b-angle {
+  font-size: 13px;
+  line-height: 1.45;
+  margin-top: auto;
+}
+
+.brand-card .b-angle strong { color: var(--primary-dark); }
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .deliv-grid { grid-template-columns: 1fr; }
+  .brand-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Dark) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Partnership Proposal</p>
+      <h1>SeeSparkGo &times; EmberTribe</h1>
+      <p class="subtitle">Story is the strategy that compounds &mdash; SEO is how it gets found. A done-for-you search engine that we run across your six brands, so every story you tell keeps earning traffic long after it ships.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">6</div>
+          <div class="stat-label">Brands, one playbook</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#fff;">2-part</div>
+          <div class="stat-label">Foundation + Growth Roadmap</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">14 days</div>
+          <div class="stat-label">To a full search baseline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$547</div>
+          <div class="stat-label">Per brand, all-in</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for SeeSparkGo &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE OPPORTUNITY (Light) -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Opportunity</p>
+    <h2>You Own the Story. We Own the Search Layer.</h2>
+    <p class="subtitle">SeeSparkGo already produces the best asset in SEO &mdash; original, well-told brand narrative. What most agencies never build is the technical and structural layer that makes that story rank, get cited by AI, and compound month over month. That's the piece we plug in.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What SeeSparkGo brings</h3>
+        <div class="channel-card" style="background:#E8F5E9; border-color:#c8e6c9;">
+          <ul>
+            <li>PR, influence, and earned attention that builds authority</li>
+            <li>A content &amp; creative engine already producing story at volume</li>
+            <li>Performance marketing that turns strategy into revenue</li>
+            <li>Deep client relationships and brand trust</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <h3 class="ember">What EmberTribe adds</h3>
+        <div class="channel-card" style="background:#FFF3F3; border-color:#ffd6d8;">
+          <ul>
+            <li>The technical foundation that makes content indexable and rankable</li>
+            <li>Keyword &amp; topic maps so every story targets real demand</li>
+            <li>AI-search readiness &mdash; get cited in ChatGPT, Gemini &amp; AI Overviews</li>
+            <li>A measurable baseline and roadmap for each brand</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The fit:</strong> No new headcount, no learning curve, no channel you have to staff. We operate as your white-label SEO team &mdash; you keep the client relationship, we deliver the search results.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE TWO-PART SYSTEM (Light) -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">How It Works</p>
+    <h2>A Two-Part System, Per Brand</h2>
+    <p class="subtitle">Every brand runs the same proven sequence: map the terrain first, then hand you the exact plan to win it. Nothing gets published, fixed, or pitched to Google without a full technical read behind it.</p>
+    <div class="two-col flex-grow mt-8">
+      <div class="channel-card" style="border-top:4px solid var(--accent);">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <h3>1 &middot; SEO Foundation</h3>
+          <span class="pill teal">14 days</span>
+        </div>
+        <p style="font-size:14px; color:var(--text-light); margin:6px 0 12px;">The diagnostic. 10 deliverables that map the site, competitors, and opportunity <em>before</em> a single word is published.</p>
+        <ul>
+          <li>Full technical + site-speed audit</li>
+          <li>Competitor &amp; backlink gap analysis</li>
+          <li>Keyword research &amp; topic mapping</li>
+          <li>Flagship page blueprint + AI-search readiness</li>
+          <li>Baseline performance report (GA4 + Search Console)</li>
+        </ul>
+        <div class="phase-cost">$500 <span style="font-size:13px; font-weight:500; color:var(--text-light);">/ brand</span></div>
+      </div>
+      <div class="channel-card" style="border-top:4px solid var(--ember-red);">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <h3>2 &middot; SEO Growth Roadmap</h3>
+          <span class="pill red">48 hours</span>
+        </div>
+        <p style="font-size:14px; color:var(--text-light); margin:6px 0 12px;">The plan. The complete strategy behind scaling organic traffic &mdash; what to fix, what to publish, and the growth to expect.</p>
+        <ul>
+          <li>13-slide strategic deck with 3/6/12-month projections</li>
+          <li>3-month content plan &mdash; 120 articles, mapped by theme</li>
+          <li>Keyword research workbook &mdash; 300-500 opportunities</li>
+          <li>30-min 1:1 consultation with a senior strategist</li>
+        </ul>
+        <div class="phase-cost">$47 <span style="font-size:13px; font-weight:500; color:var(--text-light);">/ brand</span></div>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>Foundation &rarr; Roadmap &rarr; Execution:</strong> Foundation tells us what's true about the site. The Roadmap turns that into a publishing plan your content team can run &mdash; or that we execute together.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: SEO FOUNDATION DELIVERABLES (Light) -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Deliverable 1 &middot; SEO Foundation</p>
+    <h2>10 Deliverables in 14 Days</h2>
+    <p class="subtitle">The complete pre-flight read on each brand &mdash; delivered before any content or fixes go live. <span class="bold teal">$500 per brand.</span></p>
+    <div class="deliv-grid flex-grow">
+      <div class="deliv"><span class="deliv-num">01</span><div class="deliv-body"><h4>Full Technical SEO Audit</h4><p>Site crawl surfacing broken links, thin content, missing metadata, schema gaps &mdash; a prioritized fix list with URLs.</p></div></div>
+      <div class="deliv"><span class="deliv-num">02</span><div class="deliv-body"><h4>Site Speed &amp; Performance</h4><p>PageSpeed + Core Web Vitals across desktop and mobile, separating real bottlenecks from healthy metrics.</p></div></div>
+      <div class="deliv"><span class="deliv-num">03</span><div class="deliv-body"><h4>Backlink Gap Analysis</h4><p>Domain authority benchmarked against real competitors &mdash; how big the gap is and what it takes to close it.</p></div></div>
+      <div class="deliv"><span class="deliv-num">04</span><div class="deliv-body"><h4>Competitor Analysis</h4><p>Side-by-side on the top 3 rivals: authority, traffic, keywords, backlinks &mdash; live data, not estimates.</p></div></div>
+      <div class="deliv"><span class="deliv-num">05</span><div class="deliv-body"><h4>Keyword Research &amp; Topic Mapping</h4><p>Every core service, product, or credential mapped to real search demand and current rankings.</p></div></div>
+      <div class="deliv"><span class="deliv-num">06</span><div class="deliv-body"><h4>Market / Segment Priority Matrix</h4><p>For multi-market brands, ranks build order by traction, opportunity size, and competitive difficulty.</p></div></div>
+      <div class="deliv"><span class="deliv-num">07</span><div class="deliv-body"><h4>Flagship Page Blueprint</h4><p>Full architecture for the primary new page &mdash; the reusable template every future page follows.</p></div></div>
+      <div class="deliv"><span class="deliv-num">08</span><div class="deliv-body"><h4>Authority &amp; Trust Signal Plan</h4><p>Maps credentials and certifications to on-site placement where Google and AI reward E-E-A-T.</p></div></div>
+      <div class="deliv"><span class="deliv-num">09</span><div class="deliv-body"><h4>AI Search Readiness Plan</h4><p>Preps content for AI answers &mdash; llms.txt, FAQPage &amp; HowTo JSON-LD schema markup.</p></div></div>
+      <div class="deliv"><span class="deliv-num">10</span><div class="deliv-body"><h4>Baseline Performance Report</h4><p>Pre-engagement snapshot of traffic, rankings, and visibility &mdash; the benchmark we measure against.</p></div></div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: SEO GROWTH ROADMAP DELIVERABLES (Light) -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Deliverable 2 &middot; SEO Growth Roadmap</p>
+    <h2>The Complete Growth Plan</h2>
+    <p class="subtitle">The strategy behind scaling organic traffic &mdash; delivered within 48 business hours of the Foundation. <span class="bold ember">$47 per brand.</span></p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">&#128202;</div>
+        <h3>Strategic Deck</h3>
+        <ul>
+          <li>Top 10 missed searches, sized by traffic and dollar value</li>
+          <li>Keywords ranking #11-30 &mdash; the fastest wins to page 1</li>
+          <li>Technical issues ranked by priority impact</li>
+          <li>3-competitor comparison</li>
+          <li>Conservative projections at 3, 6 &amp; 12 months</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#128221;</div>
+        <h3>3-Month Content Plan</h3>
+        <ul>
+          <li>120 articles &mdash; 40 per month</li>
+          <li>Organized into 4 themes matching products/services</li>
+          <li>Tagged by topic and buyer-journey stage</li>
+          <li>Traffic potential + difficulty ratings included</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#128203;</div>
+        <h3>Keyword Workbook + Consult</h3>
+        <ul>
+          <li>300-500 keyword opportunities, fully researched</li>
+          <li>Tabs for selected, excluded &amp; methodology</li>
+          <li>30-min 1:1 with a senior strategist</li>
+          <li>Live walkthrough + Q&amp;A on the plan</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Purpose-built for a content team:</strong> Seed Company and your other story-first brands get a ready-to-execute editorial calendar &mdash; 120 briefs their writers can pick up on day one.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: THE SIX BRANDS (Light) -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Your Portfolio</p>
+    <h2>Six Brands, Six Distinct Plays</h2>
+    <p class="subtitle">Same system, tailored to each client's reality. Here's where we see the opening for every brand.</p>
+    <div class="brand-grid">
+      <div class="brand-card">
+        <div class="b-name">SeeSparkGo</div>
+        <div class="b-url">seesparkgo.com</div>
+        <div class="b-situation">Your own agency site &mdash; the brand most open to experimenting on.</div>
+        <div class="b-angle"><strong>The proving ground.</strong> Run the full playbook on your own domain first. Every win becomes a case study you can sell to the next client.</div>
+      </div>
+      <div class="brand-card">
+        <div class="b-name">Seed Company</div>
+        <div class="b-url">seedcompany.com</div>
+        <div class="b-situation">Non-profit with a content team dedicated to story.</div>
+        <div class="b-angle"><strong>Amplify the engine.</strong> You already produce the content &mdash; we structure it for search and AI so every story compounds into organic reach and donor discovery.</div>
+      </div>
+      <div class="brand-card">
+        <div class="b-name">Chester's Chicken</div>
+        <div class="b-url">chesterschicken.com</div>
+        <div class="b-situation">Southeast chicken brand, most traffic from Yext listings. Wants to grow franchising.</div>
+        <div class="b-angle"><strong>Beyond the map pin.</strong> Yext wins store-finders; it can't recruit franchisees. Build a franchise-development content layer to capture "chicken franchise cost / how to open" searches.</div>
+      </div>
+      <div class="brand-card">
+        <div class="b-name">Healthy Minds NYC</div>
+        <div class="b-url">healthymindsnyc.com</div>
+        <div class="b-situation">Manhattan therapy group. Savvy on digital.</div>
+        <div class="b-angle"><strong>Win high-intent local.</strong> Condition + location SEO in a fierce market, with the E-E-A-T trust signals YMYL health demands and AI-answer readiness for "therapist near me."</div>
+      </div>
+      <div class="brand-card">
+        <div class="b-name">SEC Automation</div>
+        <div class="b-url">secautomation.com</div>
+        <div class="b-situation">First SEO client, welding automation. Growth has been very tough.</div>
+        <div class="b-angle"><strong>Reset with data.</strong> A fresh technical + competitor read diagnoses why growth stalled, and keyword mapping finds the long-tail engineering queries real buyers actually search.</div>
+      </div>
+      <div class="brand-card">
+        <div class="b-name">Teach Every Nation</div>
+        <div class="b-url">teacheverynation.org</div>
+        <div class="b-situation">New client. New WordPress site being built with Vimeo OTT + Shopify.</div>
+        <div class="b-angle"><strong>Build it search-ready.</strong> Perfect timing &mdash; run Foundation during the build so it launches on the right architecture, schema, and crawlability. Cheaper than retrofitting later.</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: ROLLOUT TIMELINE (Light) -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Rollout</p>
+    <h2>From Kickoff to Roadmap in Under Three Weeks</h2>
+    <p class="subtitle">Per brand, the path from signed to a full plan in hand. Run brands in parallel or stagger them &mdash; your call.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Days 1-2</span>
+        <h4>Kickoff &amp; Access</h4>
+        <ul>
+          <li>Grant GA4 + Search Console access</li>
+          <li>Share brand goals &amp; priority markets</li>
+          <li>Confirm the flagship page target</li>
+        </ul>
+        <div class="phase-cost">Setup</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Days 3-14</span>
+        <h4>SEO Foundation</h4>
+        <ul>
+          <li>All 10 deliverables produced</li>
+          <li>Technical, competitor &amp; keyword read</li>
+          <li>Baseline report locked as benchmark</li>
+        </ul>
+        <div class="phase-cost">$500</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">+48 hours</span>
+        <h4>Growth Roadmap</h4>
+        <ul>
+          <li>Strategic deck + 3/6/12-mo projections</li>
+          <li>120-article content plan delivered</li>
+          <li>Keyword workbook handed off</li>
+        </ul>
+        <div class="phase-cost">$47</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Day 17+</span>
+        <h4>Execute</h4>
+        <ul>
+          <li>1:1 strategy consultation</li>
+          <li>Your team publishes &mdash; or we do</li>
+          <li>Measure against baseline</li>
+        </ul>
+        <div class="phase-cost">Go</div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Recommended start:</strong> Kick off with SeeSparkGo's own site plus one or two clients (Teach Every Nation is timed perfectly with its rebuild). Prove the system, then roll to the rest.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: INVESTMENT (Light) -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing Across All Six Brands</h2>
+    <p class="subtitle">One-time per brand, no subscription. Foundation and Growth Roadmap can be bought together or in sequence.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th class="right">SEO Foundation</th>
+          <th class="right">Growth Roadmap</th>
+          <th class="right">Per Brand</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="bold">SeeSparkGo</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+        <tr><td class="bold">Seed Company</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+        <tr><td class="bold">Chester's Chicken</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+        <tr><td class="bold">Healthy Minds NYC</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+        <tr><td class="bold">SEC Automation</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+        <tr><td class="bold">Teach Every Nation</td><td class="right">$500</td><td class="right">$47</td><td class="right bold">$547</td></tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:800; border-top:2px solid var(--border);">
+          <td>All 6 Brands</td>
+          <td class="right">$3,000</td>
+          <td class="right">$282</td>
+          <td class="right ember" style="font-size:16px;">$3,282</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="two-col mt-16" style="flex:none;">
+      <div class="annotation success" style="margin:0;">
+        <strong>Full portfolio:</strong> All six brands, Foundation + Roadmap &mdash; <span class="bold">$3,282</span> total. Complete search baseline and growth plan across the book of business.
+      </div>
+      <div class="annotation info" style="margin:0;">
+        <strong>Pilot option:</strong> Start with SeeSparkGo + one client &mdash; <span class="bold">$1,094</span>. Prove the system on two brands before committing the rest.
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">SeeSparkGo &mdash; SEO Partnership</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS (Dark) -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's Light the Spark</h1>
+      <p class="subtitle" style="text-align:center;">Pick the brands to start with, grant analytics access, and we'll have the first Foundation in your hands inside two weeks. Story is what you do best &mdash; let's make sure the world can find it.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">1. Choose your starting brands &nbsp;&middot;&nbsp; 2. Share GA4 + Search Console access &nbsp;&middot;&nbsp; 3. Kickoff call</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.55); margin-top:12px;">EmberTribe &mdash; tj@embertribe.com &nbsp;|&nbsp; decks.embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
