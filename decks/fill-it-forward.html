@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill it Forward — EmberTribe Strategy &amp; Investment</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #001F38;
+  --primary-mid: #004680;
+  --primary-light: #3E7CB1;
+  --accent: #6FA8DC;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+  --fif-coral: #FF595A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.12; margin-bottom: 12px; }
+h2 { font-size: 33px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.22; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 18px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 20px; }
+
+.slide-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px; }
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+.stat-value { font-size: 30px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); }
+.stat-sub { font-size: 11px; color: var(--text-light); margin-top: 4px; line-height: 1.4; }
+.slide.dark .stat-sub { color: rgba(255,255,255,0.5); }
+
+.annotation { background: #FFF8E1; border-left: 3px solid var(--ember-red); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13.5px; margin: 12px 0; line-height: 1.55; }
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 12px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.55; font-size: 12px; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+.pill.seo { background: #E8F5E9; color: #1B5E20; }
+.pill.paid { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup { background: #F3E5F5; color: #6A1B9A; }
+.pill.red { background: #FFEBEE; color: var(--red); }
+.pill.green { background: #E8F5E9; color: var(--green); }
+.pill.blue { background: #E3F2FD; color: var(--blue); }
+.pill.orange { background: #FFF3E0; color: var(--orange); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card .phase-tag { display: inline-block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--primary-mid); background: #E3F2FD; padding: 2px 9px; border-radius: 20px; margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 7px; font-size: 13.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 5px; font-size: 12.5px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 12.5px; font-weight: 700; color: var(--primary-mid); margin-top: 12px; background: #E3F2FD; padding: 6px 10px; border-radius: 6px; display: inline-block; }
+
+.sample-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
+
+.logo-strip { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; margin: 14px 0 6px; }
+.logo-strip span { font-weight: 800; font-size: 15px; color: var(--primary-mid); opacity: .82; letter-spacing: .2px; }
+
+.mt-8{margin-top:8px;} .mt-16{margin-top:16px;} .mt-24{margin-top:24px;}
+.mb-8{margin-bottom:8px;} .mb-16{margin-bottom:16px;} .mb-24{margin-bottom:24px;}
+.flex-grow{flex:1;} .text-center{text-align:center;}
+.red{color:var(--red);} .green{color:var(--green);} .orange{color:var(--orange);} .teal{color:var(--teal);} .blue{color:var(--blue);} .ember{color:var(--ember-red);}
+
+.logo-row { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4); color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; } .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; } .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; } .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Strategy &amp; Investment</p>
+      <h1>Fill it Forward</h1>
+      <p class="subtitle" style="font-size:19px; color:rgba(255,255,255,0.86); max-width:840px;">A LinkedIn-led B2B content engine, a thought-leadership program built around Matt's time constraints, and a paid-social layer that turns on only once organic proves itself — phased around the events-first, corporate-second funnel you described.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">50&ndash;60</div>
+          <div class="stat-label">Day avg. sales cycle</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--fif-coral);">Events</div>
+          <div class="stat-label">Priority vertical #1</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#F7C948;">$2K&ndash;$10K+</div>
+          <div class="stat-label">Per digital-sourced deal</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--green);">CAD $50&ndash;60K</div>
+          <div class="stat-label">All-in, 6-month budget</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Brittany Reis, Marketing Manager &mdash; July 27, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Social is active enough to look present &mdash; not enough to generate pipeline.</h2>
+    <p class="subtitle">Here's what we heard directly from you on the discovery call.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value" style="font-size:22px;">Maintenance mode</div><div class="stat-label">Current social posting status</div></div>
+      <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">In-house paid media specialists</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size:22px;">In-house</div><div class="stat-label">Case study &amp; white paper production</div></div>
+      <div class="stat-card"><div class="stat-value">2027</div><div class="stat-label">Target year for DTC + influencer push</div></div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul style="padding-left:18px; font-size:14px; line-height:1.7;">
+          <li>Strong organic instinct, and the content team already produces case studies and white papers in-house</li>
+          <li>Enterprise relationships already exist &mdash; Marriott-tier accounts reorder annually at $20K&ndash;$100K per property</li>
+          <li>Matt is a credible, experienced conference speaker &mdash; audiences respond to the "reuse is simple, reuse at scale" message</li>
+          <li>Reuse 365 generates a constant stream of real, ownable impact data (waste diverted, donations unlocked) to publish</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="padding-left:18px; font-size:14px; line-height:1.7;">
+          <li>Social is posting to "look active" &mdash; no strategic content plan or distribution system behind it</li>
+          <li>Zero in-house paid media experience; past paid attempts underperformed without that expertise</li>
+          <li>No system to get Matt's thought leadership out of his head and onto LinkedIn &mdash; he's time-constrained and allergic to "salesy"</li>
+          <li>Conference-level credibility isn't translating into always-on digital content between events</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: ICP + ECONOMICS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Who We're Targeting</p>
+    <h2>Events first, corporate second &mdash; everything else is upside.</h2>
+    <p class="subtitle">Your own priority order, mapped to buyer titles and deal economics.</p>
+    <table>
+      <thead>
+        <tr><th>Priority</th><th>Segment</th><th>Buyer Titles</th><th>What Moves Them</th><th>Deal Economics</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="pill red">#1</span></td>
+          <td class="bold">Events</td>
+          <td>Event &amp; conference planners</td>
+          <td>Customizable, rebrandable products + on-site activation experiences (booth swag with a measurable sustainability story)</td>
+          <td>Fastest cycle &mdash; as short as ~3 weeks</td>
+        </tr>
+        <tr>
+          <td><span class="pill orange">#2</span></td>
+          <td class="bold">Corporate</td>
+          <td>Sustainability / ESG / CSR leads</td>
+          <td>Reuse 365 impact data feeding directly into ESG/CSR reporting</td>
+          <td>50&ndash;60 day avg. cycle, $2K&ndash;$10K+ per deal</td>
+        </tr>
+        <tr>
+          <td><span class="pill blue">#3</span></td>
+          <td class="bold">Higher Ed</td>
+          <td>Sustainability &amp; Dining Directors</td>
+          <td>"Boro" reusable container program for dining halls</td>
+          <td>Longest cycle &mdash; up to ~1 year (multiple approval hurdles)</td>
+        </tr>
+        <tr>
+          <td><span class="pill blue">&mdash;</span></td>
+          <td class="bold">Lodging</td>
+          <td>GMs, event planners, sales managers</td>
+          <td>Guest amenity or destination-fee inclusion; retail add-on</td>
+          <td>$20K&ndash;$100K/property/year, high-LTV annual reorders once landed</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation info mt-16"><strong>Why organic-first, LinkedIn-led:</strong> your ICP &mdash; sustainability leads, event planners, hotel GMs &mdash; is a LinkedIn audience, not an Instagram one. That's the channel bet underneath everything in this deck.</div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>Three workstreams, phased so paid never runs ahead of proof.</h2>
+    <p class="subtitle">Organic leads, paid follows once there's something worth retargeting &mdash; matching what you told us about your team's strengths and gaps.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F4C8;</div>
+        <span class="phase-tag">Months 1&ndash;6</span>
+        <h3>LinkedIn Content Engine</h3>
+        <ul>
+          <li>Three content pillars: Reuse 365 impact data, event activation case studies, CEO thought leadership</li>
+          <li>Editorial calendar + LinkedIn-native publishing cadence, built for sustainability leads, event planners, and hotel GMs</li>
+          <li>Replaces "maintenance mode" posting with a real distribution plan, not just more posts</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F399;&#xFE0F;</div>
+        <span class="phase-tag">Months 1&ndash;6</span>
+        <h3>CEO Thought-Leadership Program</h3>
+        <ul>
+          <li>Batch remote-recording sessions &mdash; no travel to Guelph required</li>
+          <li>We script talking points in advance so Matt shows up and talks; removes the "no time" blocker you flagged</li>
+          <li>One session repurposed into LinkedIn posts, short-form video, and ghostwritten articles</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#x1F3AF;</div>
+        <span class="phase-tag">Months 5&ndash;6</span>
+        <h3>Paid Social &mdash; Proof-Gated</h3>
+        <ul>
+          <li>LinkedIn lead-gen + retargeting, layered in once organic is producing warm traffic worth retargeting</li>
+          <li>Free-sample-request tested as a lead magnet &mdash; your own email data shows samples convert</li>
+          <li>Ad spend billed separately at cost, never bundled into management fees</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CEO PROGRAM DETAIL -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">CEO Thought-Leadership Program</p>
+    <h2>Matt's constraint isn't confidence &mdash; it's time. We design around that.</h2>
+    <p class="subtitle">A batch-production workflow that turns one recording session into a quarter's worth of content, without asking Matt to be "always on."</p>
+    <div class="two-col">
+      <div>
+        <h3>How a session works</h3>
+        <ul style="padding-left:18px; font-size:14px; line-height:1.8;">
+          <li><strong>Pre-work (us):</strong> we build a scripted talking-point outline from Matt's conference material and Reuse 365 data &mdash; no blank-page problem, no "be salesy" pressure</li>
+          <li><strong>Recording (Matt, remote):</strong> one focused session, webinar-style &mdash; consistent with how he already presents</li>
+          <li><strong>Post-production (us):</strong> clipped into LinkedIn video, quote graphics, and ghostwritten long-form articles</li>
+          <li><strong>Publishing (us):</strong> scheduled into the LinkedIn content calendar alongside the impact-data and event-case-study pillars</li>
+        </ul>
+      </div>
+      <div>
+        <div class="annotation success"><strong>Why this solves your stated blocker:</strong> you told us finding time to film is the real obstacle, not Matt's ability on camera. A single scripted, remote, batch session removes the scheduling friction entirely.</div>
+        <div class="annotation info mt-16"><strong>Tone match:</strong> Matt's own words &mdash; "reuse is simple, reuse at scale" &mdash; become the throughline, not a generic thought-leadership template. Value-first, not promotional.</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ROADMAP -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Roadmap</p>
+    <h2>Six Months, Three Phases</h2>
+    <p class="subtitle">Paid social only turns on once the organic engine is producing traffic worth retargeting.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Months 1&ndash;2</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Content pillars + editorial calendar built</li>
+          <li>First CEO batch-recording session scripted &amp; filmed (remote)</li>
+          <li>Impact-data &amp; event-case-study content templates built from Reuse 365 data</li>
+          <li>Baseline reporting set up: leads sourced, MQL&rarr;SQL tracking</li>
+        </ul>
+        <span class="phase-cost">Core engine live</span>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Months 3&ndash;4</span>
+        <h4>Scale &amp; Activate</h4>
+        <ul>
+          <li>Full publishing cadence live across all three pillars</li>
+          <li>Ghostwritten CEO articles + repurposed video rolling out on schedule</li>
+          <li>Free-sample-request lead magnet built for retargeting audiences</li>
+          <li>First read on which content pillar is driving MQLs</li>
+        </ul>
+        <span class="phase-cost">Same investment, compounding output</span>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Months 5&ndash;6</span>
+        <h4>Layer In Paid</h4>
+        <ul>
+          <li>LinkedIn lead-gen + retargeting turns on against warmed organic traffic</li>
+          <li>Spend optimized toward events-first, corporate-second targeting</li>
+          <li>Full-funnel reporting: MQL&rarr;SQL&rarr;closed attribution</li>
+          <li>2027 DTC / influencer roadmap scoped for next phase</li>
+        </ul>
+        <span class="phase-cost">Paid layer begins</span>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: WHY EMBERTRIBE -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Why EmberTribe</p>
+    <h2>One team running content, CEO enablement, and paid &mdash; instead of three vendors.</h2>
+    <p class="subtitle">Founded 2015, remote-first by design, and built to move across channels as the landscape shifts &mdash; from Facebook to Google to TikTok to LinkedIn.</p>
+    <div class="two-col">
+      <div>
+        <h3>Brands who've worked with us</h3>
+        <div class="logo-strip">
+          <span>Jobcase</span><span>Techstars</span><span>Y Combinator</span><span>Harvard</span><span>Staples</span><span>Unilever</span><span>Cloudflare</span>
+        </div>
+        <p class="dim mt-8">A cross-section of our client roster &mdash; B2B, enterprise, and venture-backed brands.</p>
+      </div>
+      <div>
+        <div class="annotation"><strong>On case studies:</strong> we'll follow this call with verified, sourced examples of B2B lead-conversion work and founder/CEO thought-leadership programs &mdash; matched to what's most relevant for Fill it Forward, so the numbers you bring to Matt and the leadership team are ones we can stand behind.</div>
+        <div class="annotation info mt-16"><strong>Our differentiator:</strong> execution speed, a dedicated account team (not a rotating cast), and channel flexibility &mdash; we shift with where your ICP actually spends time, rather than selling you a fixed package.</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: INVESTMENT -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Investment</p>
+    <h2>CAD $49,300&ndash;$52,700 all-in over 6 months</h2>
+    <p class="subtitle">Within your CAD $50K&ndash;$60K budget, with room to flex ad spend up in Month 5&ndash;6 if early paid results warrant it.</p>
+    <table>
+      <thead>
+        <tr><th>Workstream</th><th>When</th><th>Monthly (CAD)</th><th>Monthly (USD*)</th><th>Includes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">LinkedIn Content Engine</td>
+          <td>Months 1&ndash;6</td>
+          <td>$3,750</td>
+          <td>$2,750</td>
+          <td>3 content pillars, editorial calendar, LinkedIn-native publishing, monthly reporting</td>
+        </tr>
+        <tr>
+          <td class="bold">CEO Thought-Leadership Program</td>
+          <td>Months 1&ndash;6</td>
+          <td>$2,400</td>
+          <td>$1,750</td>
+          <td>Remote batch-recording sessions, scripted talking points, video clipping, ghostwritten articles</td>
+        </tr>
+        <tr>
+          <td class="bold">Paid Social Management</td>
+          <td>Months 5&ndash;6 only</td>
+          <td>$2,050</td>
+          <td>$1,500</td>
+          <td>LinkedIn lead-gen + retargeting build, audience targeting, weekly reporting</td>
+        </tr>
+        <tr>
+          <td class="bold">Ad Spend</td>
+          <td>Months 5&ndash;6 only</td>
+          <td>$4,100&ndash;$5,500</td>
+          <td>$3,000&ndash;$4,000</td>
+          <td>Billed at cost, passed through separately &mdash; never bundled into fees</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16"><strong>What you get:</strong> one team running content strategy, CEO enablement, and (from Month 5) paid social, with ad spend always itemized separately. Figures above are proposal-stage estimates in both currencies &mdash; final scope and terms confirmed in contracting, and we're glad to invoice in whichever currency is easiest for your finance team.</div>
+    <div class="dim mt-8">*USD approximate at a ~0.73 CAD&rarr;USD conversion; final rate confirmed at contracting.</div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: LOOKING AHEAD -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Looking Ahead</p>
+    <h2>Built to carry into your 2027 DTC push &mdash; not a six-month dead end.</h2>
+    <p class="subtitle">The B2B foundation we build in this engagement is the same content system and creative bench your DTC pivot will need.</p>
+    <div class="two-col">
+      <div class="channel-card">
+        <h3>What this phase builds toward</h3>
+        <ul>
+          <li>A proven LinkedIn content system that extends naturally to Instagram/DTC channels when you're ready</li>
+          <li>A library of CEO video and article content that doubles as founder-story brand content for consumer audiences</li>
+          <li>Influencer and activation-style content (e.g., event swag as an "Instagrammable" moment) &mdash; the idea you connected to your 2027 roadmap on our call</li>
+        </ul>
+      </div>
+      <div class="annotation info"><strong>Not scoped in this engagement, but ready to plan for:</strong> DTC-focused paid social, influencer partnerships, and consumer-facing content. We'd revisit this together as you approach 2027, once the B2B engine here has a track record to build from.</div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Fill it Forward &mdash; Strategy &amp; Investment</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready for Matt &amp; the leadership team</h1>
+      <p class="subtitle" style="text-align:center; max-width:640px;">This deck is built to travel &mdash; take it to Matt when he's back from vacation August 3rd, alongside the case-study package we'll send following this call.</p>
+      <div class="mt-24">
+        <p style="font-size:17px; font-weight:600;">Confirm scope &amp; currency preference &rarr; we finalize the agreement &rarr; kickoff within 1 week of signature</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.55); margin-top:10px;">Melissa Cedeno &middot; Director of Accounts, EmberTribe &middot; mcedeno24@gmail.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; July 27, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
