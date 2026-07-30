@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decals.com — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #1C0A0A;
+  --primary-mid: #7A1010;
+  --primary-light: #C41E1E;
+  --accent: #E52D2D;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 24px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: rgba(255,255,255,0.5); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 200px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, #0096c7, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.orange { background: linear-gradient(90deg, #c0392b, var(--orange)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--primary-mid), var(--primary-light)); }
+.bar-track .bar-fill { color: #ffffff; }
+
+.bar-value {
+  width: 70px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary-light);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary-light);
+}
+
+.phase-cost {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+/* Spotlight box for the residue post callout */
+.spotlight {
+  background: #FFEBEE;
+  border: 2px solid var(--red);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 12px 0;
+}
+
+.spotlight-metric {
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+}
+
+.spotlight-label {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* Pricing cards */
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; margin-top: 16px; }
+
+.pricing-card {
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--accent);
+  background: linear-gradient(160deg, #FFF5F0 0%, #ffffff 100%);
+}
+
+.pricing-card .badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.pricing-tier { font-size: 13px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.pricing-price { font-size: 38px; font-weight: 900; line-height: 1; margin-bottom: 4px; color: var(--primary-dark); }
+.pricing-price span { font-size: 16px; font-weight: 400; color: var(--text-light); }
+.pricing-desc { font-size: 13px; color: var(--text-light); margin-bottom: 16px; }
+
+.pricing-features { list-style: none; padding: 0; margin: 0; flex: 1; }
+.pricing-features li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.pricing-features li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit &mdash; Refreshed July 2026</p>
+      <h1>Decals.com</h1>
+      <p class="subtitle" style="font-size:22px;">We ran your numbers again. Since spring, your search visibility has been falling off a cliff — impressions are down 39% from the February peak.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value red">&minus;1.2M</div>
+          <div class="stat-label">Monthly Impressions Lost vs. Feb Peak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#E52D2D;">&minus;39%</div>
+          <div class="stat-label">Impressions Since February Peak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">3 straight</div>
+          <div class="stat-label">Months of Declining Clicks (Apr&rarr;Jun)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value teal">21.3M</div>
+          <div class="stat-label">Impressions Still on the Table (9 mo)</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Decals.com &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Traffic Trends &mdash; What Changed Since We Last Talked</p>
+    <h2>You Were Steady. Now You&rsquo;re Sliding.</h2>
+    <p class="subtitle">When we reviewed Decals.com in the spring, impressions were near their peak. We just re-pulled the data &mdash; and the last four months have been a steady slide down.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h4 style="margin-bottom:4px;">Monthly Organic Clicks &mdash; Google Search Console</h4>
+        <p style="font-size:12px; color:var(--text-light); margin-bottom:16px;">Nov 2025 &ndash; Jul 2026 &nbsp;|&nbsp; down every month since March</p>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Nov 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:100%;">21,469</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Dec 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">18,924</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jan 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">18,831</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Feb 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:80%;">17,248</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px; color:var(--ember-red); font-weight:700;">Mar 2026 &#9733;</span><div class="bar-track"><div class="bar-fill ember" style="width:98%;">21,031</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Apr 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:92%;">19,782</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">May 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:87%;">18,780</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jun 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:85%;">18,343</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jul (MTD)</span><div class="bar-track"><div class="bar-fill red" style="width:77%;">16,545</div></div></div>
+        </div>
+        <p style="font-size:11px; color:var(--text-light); margin-top:6px;">&#9733; Spring review pulled here &nbsp;&middot;&nbsp; Jul = partial month through Jul 27</p>
+      </div>
+      <div>
+        <h4 style="margin-bottom:4px;">Monthly Impressions &mdash; The Steeper Drop</h4>
+        <p style="font-size:12px; color:var(--text-light); margin-bottom:16px;">Nov 2025 &ndash; Jul 2026 &nbsp;|&nbsp; &minus;39% from February peak</p>
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Nov 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:81%;">2.53M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Dec 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:85%;">2.64M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jan 2026</span><div class="bar-track"><div class="bar-fill blue" style="width:85%;">2.66M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px; color:var(--blue); font-weight:700;">Feb 2026 &#9733;</span><div class="bar-track"><div class="bar-fill blue" style="width:100%;">3.12M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Mar 2026</span><div class="bar-track"><div class="bar-fill blue" style="width:77%;">2.41M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Apr 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:70%;">2.19M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">May 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:71%;">2.20M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jun 2026</span><div class="bar-track"><div class="bar-fill orange" style="width:61%;">1.90M</div></div></div>
+          <div class="bar-row"><span class="bar-label" style="width:110px;">Jul (MTD)</span><div class="bar-track"><div class="bar-fill red" style="width:51%;">1.60M</div></div></div>
+        </div>
+        <div class="annotation danger mt-16">
+          <strong>1.2M fewer impressions per month than February &mdash; and falling.</strong> Impressions lead clicks by a quarter. This is the traffic you haven&rsquo;t lost yet, sliding toward the exit. The pages are all still there; nothing is being maintained.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Source: Google Search Console, Nov 2025 &ndash; Jul 2026</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE CTR CRISIS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Opportunity Hiding in the Decline</p>
+    <h2>One Page. 1.1M Impressions. 706 Clicks.</h2>
+    <p class="subtitle">The falling traffic isn&rsquo;t a demand problem — it&rsquo;s a conversion problem. A single blog post exposes the systemic CTR issue dragging the whole site down.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <div class="spotlight">
+          <div style="font-size:13px; font-weight:600; color:var(--text-light); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Blog: "How to Remove Sticker Residue From Any Surface"</div>
+          <div style="display:flex; gap:24px; flex-wrap:wrap;">
+            <div>
+              <div class="spotlight-metric">1.12M</div>
+              <div class="spotlight-label">Impressions (9 months)</div>
+            </div>
+            <div>
+              <div class="spotlight-metric">706</div>
+              <div class="spotlight-label">Total clicks received</div>
+            </div>
+            <div>
+              <div class="spotlight-metric">0.06%</div>
+              <div class="spotlight-label">Click-through rate</div>
+            </div>
+            <div>
+              <div class="spotlight-metric">#6.6</div>
+              <div class="spotlight-label">Avg. position</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation danger mt-16">
+          <strong>The query "how to remove sticker residue"</strong> alone shows you 575,842 times at position 7.7 — and delivers 10 clicks. A page ranked that high should pull thousands of visits per month. The title tag and meta description are uncompetitive in the SERP.
+        </div>
+        <div class="annotation mt-16">
+          <strong>This isn't isolated.</strong> The same pattern repeats across your highest-impression product pages — and as impressions decline, these leaks cost more every month. The custom decals category page has 1.96M impressions and a 0.5% CTR at position 15.6.
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:16px;">If This Page Hit 3% CTR</h3>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label" style="width:140px;">Current clicks</span>
+            <div class="bar-track"><div class="bar-fill red" style="width:2%;">706</div></div>
+            <span class="bar-value">706</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label" style="width:140px;">At 3% CTR</span>
+            <div class="bar-track"><div class="bar-fill green" style="width:100%;">33,600+</div></div>
+            <span class="bar-value">33,600</span>
+          </div>
+        </div>
+        <div class="annotation success" style="margin-top:16px;">
+          <strong>Tens of thousands of monthly clicks</strong> sit in striking-distance queries (positions 5–15) across the site. Most require zero new content — just smarter titles, metas, and on-page signals.
+        </div>
+
+        <h3 style="margin-top:24px; margin-bottom:12px;">Top CTR Offenders by Page <span style="font-weight:400; color:var(--text-light); font-size:13px;">(9-mo)</span></h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Page</th>
+              <th class="right">Impressions</th>
+              <th class="right">CTR</th>
+              <th class="right">Position</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="mono">/decals/custom-decals</td>
+              <td class="right bold red">1,963,574</td>
+              <td class="right bold red">0.5%</td>
+              <td class="right">15.6</td>
+            </tr>
+            <tr>
+              <td class="mono">/decals/custom-wall-decals</td>
+              <td class="right bold red">894,758</td>
+              <td class="right bold red">0.4%</td>
+              <td class="right">15.3</td>
+            </tr>
+            <tr>
+              <td class="mono">/decals/vinyl-window-graphics</td>
+              <td class="right bold red">673,350</td>
+              <td class="right bold red">0.3%</td>
+              <td class="right">16.8</td>
+            </tr>
+            <tr>
+              <td class="mono">/decals/window-clings</td>
+              <td class="right bold red">438,176</td>
+              <td class="right bold red">0.3%</td>
+              <td class="right">16.8</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Decals.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: KEYWORD OPPORTUNITIES -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Keyword Opportunities</p>
+    <h2>Striking Distance — Ready to Move</h2>
+    <p class="subtitle">Queries ranking positions 5–15 with high impression volume. Recapturing lost ground starts here — a push to page 1, top 5 unlocks thousands of clicks, no new content required. Figures are 9-month totals.</p>
+    <table style="margin-top:8px;">
+      <thead>
+        <tr>
+          <th>Query</th>
+          <th>Page</th>
+          <th class="right">Avg Position</th>
+          <th class="right">Impressions</th>
+          <th class="right">Current Clicks</th>
+          <th class="right">Potential at Top-5</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">how to remove sticker residue</td>
+          <td class="mono dim">/blog/…sticker-residue…</td>
+          <td class="right">7.7</td>
+          <td class="right bold">575,842</td>
+          <td class="right red">10</td>
+          <td class="right green bold">17,000+</td>
+        </tr>
+        <tr>
+          <td class="bold">decal</td>
+          <td class="mono dim">Homepage</td>
+          <td class="right">6.7</td>
+          <td class="right bold">179,671</td>
+          <td class="right">963</td>
+          <td class="right green bold">14,000</td>
+        </tr>
+        <tr>
+          <td class="bold">car decals</td>
+          <td class="mono dim">/decals/custom-car-decals</td>
+          <td class="right">12.5</td>
+          <td class="right bold">115,757</td>
+          <td class="right">787</td>
+          <td class="right green bold">9,000</td>
+        </tr>
+        <tr>
+          <td class="bold">vinyl stickers</td>
+          <td class="mono dim">Homepage</td>
+          <td class="right">15.0</td>
+          <td class="right bold">108,340</td>
+          <td class="right">362</td>
+          <td class="right green bold">8,500</td>
+        </tr>
+        <tr>
+          <td class="bold">window decals</td>
+          <td class="mono dim">/decals/window-decals</td>
+          <td class="right">13.8</td>
+          <td class="right bold">85,982</td>
+          <td class="right">352</td>
+          <td class="right green bold">6,800</td>
+        </tr>
+        <tr>
+          <td class="bold">custom magnets</td>
+          <td class="mono dim">/magnets</td>
+          <td class="right">9.8</td>
+          <td class="right bold">80,265</td>
+          <td class="right">638</td>
+          <td class="right green bold">6,400</td>
+        </tr>
+        <tr>
+          <td class="bold">custom car decals</td>
+          <td class="mono dim">/decals/custom-car-decals</td>
+          <td class="right">10.3</td>
+          <td class="right bold">77,912</td>
+          <td class="right">1,632</td>
+          <td class="right green bold">7,800</td>
+        </tr>
+        <tr>
+          <td class="bold">car stickers</td>
+          <td class="mono dim">/stickers/custom-car-stickers</td>
+          <td class="right">12.9</td>
+          <td class="right bold">77,529</td>
+          <td class="right">233</td>
+          <td class="right green bold">6,200</td>
+        </tr>
+        <tr>
+          <td class="bold">wall decals</td>
+          <td class="mono dim">/decals/custom-wall-decals</td>
+          <td class="right">15.3</td>
+          <td class="right bold">51,436</td>
+          <td class="right">223</td>
+          <td class="right green bold">4,100</td>
+        </tr>
+        <tr>
+          <td class="bold">laptop stickers</td>
+          <td class="mono dim">/stickers/custom-laptop-stickers</td>
+          <td class="right">15.6</td>
+          <td class="right bold">48,183</td>
+          <td class="right">106</td>
+          <td class="right green bold">3,800</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>Total potential:</strong> Moving these 10 queries from their current positions to top-5 represents an estimated <strong>9,000+ additional clicks per month</strong> — from rankings you already hold, zero new content required. That alone would more than reverse the decline.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Decals.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: STRATEGY -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Grow Decals.com</h2>
+    <p class="subtitle">Three tracks, one goal: stop the slide and turn your millions of monthly impressions into real traffic and revenue.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>CTR & On-Page Optimization</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill seo">SEO</span></p>
+        <ul>
+          <li>Rewrite title tags and meta descriptions for all 351 pages — starting with highest-impression / lowest-CTR pages</li>
+          <li>Fix the sticker residue blog post (position 7, near-zero clicks) — title, meta, schema</li>
+          <li>Add structured data (FAQ, Product, HowTo) to boost SERP real estate on key pages</li>
+          <li>A/B test SERP snippets monthly, track CTR movement in GSC</li>
+          <li>Optimize for featured snippets on informational queries ("how to" cluster)</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📈</div>
+        <h3>Striking Distance Pushes</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill seo">SEO</span> <span class="pill content">Content</span></p>
+        <ul>
+          <li>Target top 10 striking-distance queries with dedicated content and link reinforcement</li>
+          <li>Internal linking audit — funnel authority from high-traffic pages to ranking opportunities</li>
+          <li>Refresh custom-decals, wall-decals, window-clings pages with optimized copy and intent-matched CTAs</li>
+          <li>Build topical depth around car decals, truck decals, and vinyl stickers clusters</li>
+          <li>Monthly keyword velocity reporting to prioritize highest-ROI pushes</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">✍️</div>
+        <h3>Content Strategy</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;"><span class="pill content">Content</span></p>
+        <ul>
+          <li>Build a hub-and-spoke content model around your highest-volume categories (car, truck, window, wall)</li>
+          <li>Turn informational traffic (how-to queries) into qualified leads with conversion-optimized content</li>
+          <li>Identify and fill category gaps where competitors rank but you don't appear</li>
+          <li>Develop DTF decals, transfer decals, and specialty material content to own emerging query clusters</li>
+          <li>Monthly editorial calendar tied directly to GSC data — no guesswork</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Decals.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ROADMAP -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">We move fast on the quick wins first — CTR improvements compound immediately once deployed.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Audit & Fix</h4>
+        <ul>
+          <li>Full GSC & on-page audit (all 351 pages)</li>
+          <li>Prioritize CTR offenders by impression volume</li>
+          <li>Rewrite titles + metas for top 50 pages</li>
+          <li>Fix sticker residue blog post immediately</li>
+          <li>Technical audit — crawl, indexation, schema gaps</li>
+          <li>Internal linking map for striking distance targets</li>
+        </ul>
+        <div class="phase-cost" style="color:var(--primary-light);">Weeks 1–4</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Push & Build</h4>
+        <ul>
+          <li>Deploy all title/meta rewrites, monitor CTR in GSC</li>
+          <li>Launch striking-distance content pushes (car, wall, laptop)</li>
+          <li>Add FAQ schema to top-10 product pages</li>
+          <li>Refresh custom-decals and wall-decals category pages</li>
+          <li>Begin content hub build-out (car decals pillar)</li>
+          <li>First monthly ranking velocity report</li>
+        </ul>
+        <div class="phase-cost" style="color:var(--primary-light);">Weeks 5–8</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Scale & Optimize</h4>
+        <ul>
+          <li>Review CTR movement, iterate title/meta on underperformers</li>
+          <li>Expand striking-distance pushes to next tier (DTF, transfer)</li>
+          <li>Launch truck decals + window clings content hubs</li>
+          <li>Begin link reinforcement for priority category pages</li>
+          <li>Full 90-day performance report with ROI analysis</li>
+          <li>Q2 strategy refinement based on GSC data</li>
+        </ul>
+        <div class="phase-cost" style="color:var(--primary-light);">Weeks 9–12</div>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Expected signal:</strong> CTR improvements typically show up in GSC within 2–4 weeks of deployment. Ranking movements from content and link work begin materializing in months 2–3.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Decals.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: INVESTMENT -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Choose Your AI Visibility Package</h2>
+    <p class="subtitle">AEO drives demand capture. Content builds authority. Backlinks strengthen trust. All three create compounding AI visibility &mdash; and reverse the slide.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Visibility Starter</div>
+        <div class="pricing-price">$1,750<span>/mo</span></div>
+        <div class="pricing-desc">Get your brand into AI conversations</div>
+        <ul class="pricing-features">
+          <li>5 AEO Placements / month</li>
+          <li>10 SEO Articles / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Monthly performance report</li>
+        </ul>
+      </div>
+      <div class="pricing-card featured">
+        <div class="badge">Most Popular</div>
+        <div class="pricing-tier">AI Growth Engine</div>
+        <div class="pricing-price">$3,450<span>/mo</span></div>
+        <div class="pricing-desc">Accelerate authority + content velocity</div>
+        <ul class="pricing-features">
+          <li>8 AEO Placements / month</li>
+          <li>25 SEO Articles / month</li>
+          <li>2 DA40+ Authority Backlinks / month</li>
+          <li>Full thread seeding + new post creation</li>
+          <li>Backlink target prioritization</li>
+          <li>Bi-weekly strategy calls</li>
+          <li>Keyword cluster expansion</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">AI Authority Accelerator</div>
+        <div class="pricing-price">$5,250<span>/mo</span></div>
+        <div class="pricing-desc">Dominate your category in AI search</div>
+        <ul class="pricing-features">
+          <li>12 AEO Placements / month</li>
+          <li>40 SEO Articles / month</li>
+          <li>2 DA50+ Authority Backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Weekly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, Reddit optimization process, and monthly AI visibility + CTR benchmarking.
+    </div>
+
+    <div style="margin-top:20px;">
+      <h4 style="margin-bottom:4px;">&#43; Add-On: ClusterMagic Level Up <span style="font-weight:400; font-size:13px; color:var(--text-light);">July &mdash; 10 slots available</span></h4>
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Need more content velocity? Stack ClusterMagic articles on top of any package.</p>
+      <table style="margin:0;">
+        <thead>
+          <tr>
+            <th style="width:120px;"># of Articles</th>
+            <th>One-Time / Monthly</th>
+            <th>3-Month Commitment <span style="font-weight:400; text-transform:none; letter-spacing:0;">(monthly total)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="bold">25</td>
+            <td>$700</td>
+            <td><span class="bold">$1,750</span> <span style="color:var(--green); font-size:13px;">&#8722;$350 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">40</td>
+            <td>$1,100</td>
+            <td><span class="bold">$2,700</span> <span style="color:var(--green); font-size:13px;">&#8722;$600 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">50</td>
+            <td>$1,350</td>
+            <td><span class="bold">$3,400</span> <span style="color:var(--green); font-size:13px;">&#8722;$650 savings</span></td>
+          </tr>
+          <tr>
+            <td class="bold">100</td>
+            <td>$2,700</td>
+            <td><span class="bold">$7,000</span> <span style="color:var(--green); font-size:13px;">&#8722;$1,100 savings</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Decals.com &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: NEXT STEPS -->
+  <div class="slide dark" data-slide="8">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1 style="max-width:760px;">The Slide Won't Stop On Its Own.</h1>
+      <p class="subtitle" style="text-align:center; max-width:620px; margin-top:16px;">Impressions are down 39% since February and clicks are falling with them. The rankings and the pages are still there — but every month without action is traffic you don't get back. Let's reverse it.</p>
+      <div class="stats-row" style="margin-top:32px; justify-content:center;">
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:28px; color:rgba(255,255,255,0.9);">Week 1</div>
+          <div class="stat-label">Full GSC audit delivered</div>
+        </div>
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:28px; color:rgba(255,255,255,0.9);">Week 2</div>
+          <div class="stat-label">Title/meta rewrites deployed</div>
+        </div>
+        <div class="stat-card" style="text-align:left; max-width:220px;">
+          <div class="stat-value" style="font-size:28px; color:rgba(255,255,255,0.9);">Month 1</div>
+          <div class="stat-label">CTR movement visible in GSC</div>
+        </div>
+      </div>
+      <div style="margin-top:40px;">
+        <p style="font-size:20px; font-weight:700; color:rgba(255,255,255,0.95);">Ready to start? Book a kick-off call.</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.45); margin-top:8px;">tj@embertribe.com &mdash; embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; July 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 8</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
