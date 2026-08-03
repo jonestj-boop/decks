@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Golf Gifts 4U — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #10203F;
+  --primary-mid: #1B3A6B;
+  --primary-light: #2C5490;
+  --accent: #2E7D46;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #2E7D46;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: #6FCF97; }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 150px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--blue); }
+.annotation.info strong { color: var(--blue); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 170px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 30px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, #1e5e33, var(--teal)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.channel-card .channel-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 12px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.simple-list {
+  list-style: none;
+  padding: 0;
+}
+.simple-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.simple-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.simple-list.negative li::before { background: var(--red); }
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 5px;
+  font-size: 12.5px;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.phase-cost {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-top: 12px;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-24 { margin-bottom: 24px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 32px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit</p>
+      <h1>Golf Gifts 4U <span style="opacity:.6; font-weight:600;">/ Be The Ball 4U</span></h1>
+      <p class="subtitle">You built a #1 organic ranking once, running $5K&ndash;$10K/mo profitably. The path back is a fixable technical and channel problem &mdash; not a mystery.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">1,100 &rarr; 670</div>
+          <div class="stat-label">Ranking keywords before vs. after the Dec 2024 Google core update</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">3</div>
+          <div class="stat-label">Domains splitting your authority (not properly redirecting)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">$2,400/mo</div>
+          <div class="stat-label">Current Google Ads spend, underperforming</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$10K/mo</div>
+          <div class="stat-label">Spend level you've already proven can be profitable</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Art Barnes &mdash; Call 2, August 3, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Are Today</h2>
+    <p class="subtitle">22 years in business, a real premium niche, and an art + production team with far more capacity than your current lead flow uses.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">2004</div>
+        <div class="stat-label">In business since &mdash; est. $600&ndash;$1,400 AOV</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~50/50</div>
+        <div class="stat-label">B2B (corporate, police, fire, municipal) vs. B2C split</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">Jan 5&ndash;Sep 22</div>
+        <div class="stat-label">Active season &mdash; "the lights turn out" after</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Person handling client-facing work &amp; strategy (Art)</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul class="simple-list">
+          <li>22 years of brand equity and a genuine niche: premium custom golf event gifts. "We don't make cheap."</li>
+          <li>In-house art department and production capacity that could handle far more volume than current lead flow uses.</li>
+          <li>Fast-growing, high-trust vertical in police/fire/municipal challenge coins &mdash; the 250th-anniversary coin program was "wildly successful."</li>
+          <li>Already first-page for "custom golf challenge coins" &mdash; proof the formula works when it's dialed in.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul class="simple-list negative">
+          <li>3 years of inconsistent freelance SEO management missed the Dec 2024 core-update recovery and left Search Console unverified.</li>
+          <li>Three domains (golfgifts4u.com, BeTheBall.golf, BeTheBallForYou.com) that are supposed to redirect to the main site but don't &mdash; splitting authority and muddying measurement.</li>
+          <li>Google Ads spend ($2,000&ndash;$2,400/mo) not converting at the rate it used to when you ran up to $10K/mo profitably.</li>
+          <li>Zero presence on Meta/paid social &mdash; no channel reaching outing organizers before they start actively searching.</li>
+          <li>Demand concentrated Jan&ndash;Sep with no strategy to fill the Sep&ndash;Jan off-season.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE DIAGNOSIS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Diagnosis</p>
+    <h2>What Actually Happened</h2>
+    <p class="subtitle">A Google core update hit an already-fragmented site, and three years of inconsistent management never fully recovered it.</p>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">Before (Nov 2024)</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width: 100%;">~1,100 keywords</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">After the update (today)</span>
+        <div class="bar-track"><div class="bar-fill red" style="width: 61%;">~670 keywords</div></div>
+      </div>
+    </div>
+    <div class="annotation danger mt-16">
+      <strong>Why it never fully recovered:</strong> The December 2024 Google core update cut your ranking keyword footprint by roughly 40%. On top of that, three separate domains (golfgifts4u.com, BeTheBall.golf, BeTheBallForYou.com) that should all funnel authority into one site aren't redirecting correctly, and Google Search Console itself was never verified. Google has a fragmented, hard-to-trust picture of Golf Gifts 4U to rank &mdash; that's a fixable technical problem, not a content or quality problem.
+    </div>
+    <div class="annotation info mt-8">
+      <strong>Also true:</strong> Google Ads has been run by you and your SEO freelancer part-time alongside everything else, with no dedicated conversion tracking cleanup &mdash; which is consistent with spend that isn't converting the way it used to.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: WHERE THE GROWTH IS -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Opportunity</p>
+    <h2>Where the Growth Is</h2>
+    <p class="subtitle">In your own words: "There's plenty of places to grow. I just need the right partner."</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🏅</div>
+        <h3>Challenge Coins, Broadly</h3>
+        <ul>
+          <li>You rank first page for "custom golf challenge coins" but nowhere for "challenge coins" itself.</li>
+          <li>By your own account, that's "a much bigger fish" &mdash; thousands of factory clients in China alone that aren't yet your customers.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🚓</div>
+        <h3>Police / Fire / Municipal</h3>
+        <ul>
+          <li>A fast-growing vertical you've already proven you can win (250th-anniversary coin program).</li>
+          <li>Higher trust, less price sensitivity, and currently underexploited in your content and ads.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🗓️</div>
+        <h3>Off-Season Demand</h3>
+        <ul>
+          <li>Municipal and coin buyers don't follow the Jan&ndash;Sep golf-outing calendar.</li>
+          <li>This is the lever to fill the Sep&ndash;Jan months when "the lights turn out" on golf-outing demand.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Grow Golf Gifts 4U</h2>
+    <p class="subtitle">One partner covering the technical fixes, content, and paid media that have been split across a part-time freelancer and Art alone.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🔧</div>
+        <h3>SEO Foundation Reset <span class="pill seo">SEO</span></h3>
+        <ul>
+          <li>Consolidate golfgifts4u.com, BeTheBall.golf, and BeTheBallForYou.com with proper 301 redirects so authority stops splitting.</li>
+          <li>Verify Google Search Console and finish the technical foundation the current setup left unfinished.</li>
+          <li>Rebuild content and rankings around challenge coins and police/fire/municipal terms, not just golf ball markers.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Google Ads Rebuild <span class="pill paid">Paid</span></h3>
+        <ul>
+          <li>Restructure campaigns around real buyer intent: golf-outing organizers vs. corporate/municipal bulk buyers.</li>
+          <li>Fix conversion tracking so every dollar of spend is measurable.</li>
+          <li>Scale spend back toward the $10K/mo level you've already proven can be profitable, as ROAS is demonstrated.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📣</div>
+        <h3>Meta Ads &amp; Awareness <span class="pill content">Content</span></h3>
+        <ul>
+          <li>Stand up the top-of-funnel channel Golf Gifts 4U has never had.</li>
+          <li>Build lookalike audiences from past purchasers to reach outing organizers before they start searching.</li>
+          <li>Put the idle art department and production capacity in front of new demand, especially off-season.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ROADMAP -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Fix the foundation first, then scale spend as performance proves out &mdash; never the other way around.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Domain consolidation &amp; 301 redirects across all three domains</li>
+          <li>Search Console verification &amp; technical SEO audit fixes</li>
+          <li>Google Ads account restructure + conversion tracking fix</li>
+          <li>Content plan built for challenge coins &amp; municipal terms</li>
+        </ul>
+        <div class="phase-cost">Retainer begins</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Launch</h4>
+        <ul>
+          <li>New SEO content live (challenge coins, police/fire/municipal)</li>
+          <li>Rebuilt Google Ads campaigns live</li>
+          <li>Meta Ads pilot launched with lookalike audiences</li>
+        </ul>
+        <div class="phase-cost">Retainer + ad spend at cost</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Optimize &amp; Scale</h4>
+        <ul>
+          <li>Expand keyword clusters showing traction</li>
+          <li>Scale ad spend toward your proven $10K/mo comfort level as ROAS confirms</li>
+          <li>Build the Sep&ndash;Jan off-season push around coins/municipal demand</li>
+        </ul>
+        <div class="phase-cost">Retainer + scaled spend</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: INVESTMENT -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Starting management fees roughly match your current $4,000/mo total marketing outlay &mdash; with room to grow ad spend toward $10K/mo as ROI proves out.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Monthly</th>
+          <th>Includes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SEO Foundation &amp; Growth Retainer</strong> <span class="pill seo">SEO</span></td>
+          <td>Starting at $2,500/mo</td>
+          <td>Domain consolidation, technical fixes, Search Console verification, ongoing content &amp; optimization</td>
+        </tr>
+        <tr>
+          <td><strong>Google Ads Management</strong> <span class="pill paid">Paid</span></td>
+          <td>Starting at $1,000/mo + ad spend at cost</td>
+          <td>Campaign rebuild, conversion tracking, ongoing optimization. Ad spend starts near your current $2,400/mo, scales with performance.</td>
+        </tr>
+        <tr>
+          <td><strong>Meta Ads Pilot</strong> <span class="pill content">Month 2+</span></td>
+          <td>Starting at $750/mo + ad spend at cost</td>
+          <td>Lookalike audience buildout, creative, always-on top-of-funnel campaigns</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Starting Management Fees</td>
+          <td>~$3,500&ndash;$4,250/mo + ad spend at cost</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>What you get:</strong> a single partner covering the technical fixes, content, and paid media that have been split across a part-time freelancer and Art alone &mdash; with room to grow ad spend toward the $10K/mo level you've already proven is profitable, without adding more vendors.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: PROJECTED OUTCOMES -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Projected Outcomes</p>
+    <h2>What Recovery Looks Like</h2>
+    <p class="subtitle">This is recovery, not speculation &mdash; you've already proven every piece of this works.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📅</div>
+        <h3>3 Months</h3>
+        <ul>
+          <li>Redirects live, Search Console verified &mdash; technical foundation fixed</li>
+          <li>Google Ads converting measurably better with clean tracking</li>
+          <li>Meta pilot generating first top-of-funnel leads</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📈</div>
+        <h3>6 Months</h3>
+        <ul>
+          <li>Ranking recovery visible past pre-Dec-2024 keyword levels in core terms</li>
+          <li>Expanded footprint in challenge coins &amp; municipal keyword clusters</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🚀</div>
+        <h3>12 Months</h3>
+        <ul>
+          <li>Ad spend scaled toward your proven $10K/mo comfort level at positive ROI</li>
+          <li>Off-season demand smoothed via municipal/coin content &amp; campaigns</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Golf Gifts 4U &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Get Your Ranking Back?</h1>
+      <p class="subtitle" style="text-align:center;">Let's lock in the engagement today and start Month 1 foundation work this week &mdash; before the next golf-outing season builds.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Confirm scope &amp; start date on this call</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">Melissa Cedeno &middot; Director of Accounts &middot; EmberTribe</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; August 3, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
