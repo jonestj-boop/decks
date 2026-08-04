@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briggs Chaney Walk-In Clinic — EmberTribe Growth Audit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #072B45;
+  --primary-mid: #0c71c3;
+  --primary-light: #2ea3f2;
+  --accent: #2ea3f2;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 { font-size: 44px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 17px; font-weight: 400; color: var(--text-light); max-width: 900px; margin-bottom: 18px; line-height: 1.5; }
+
+.slide-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px; }
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; }
+.stat-value { font-size: 30px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); }
+
+.annotation { background: #FFF8E1; border-left: 3px solid var(--ember-red); border-radius: 0 8px 8px 0; padding: 11px 15px; font-size: 13.5px; margin: 10px 0; line-height: 1.5; }
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0277BD; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+.dim { opacity: 0.5; }
+.center { text-align: center; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 100px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 24px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; font-size: 11.5px; font-weight: 700; color: white; min-width: 40px; transition: width 0.8s ease; }
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--accent), var(--primary-light)); }
+.bar-value { width: 74px; text-align: right; font-size: 12px; font-weight: 600; }
+.bar-fill.teal, .bar-fill.ember, .bar-fill.green, .bar-fill.yellow, .bar-fill.red, .bar-fill.blue, .bar-fill.accent { color: #ffffff; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; }
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.gray    { background: #ECEFF1; color: #455A64; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+ul.plain { list-style: none; padding: 0; }
+ul.plain li { position: relative; padding-left: 18px; margin-bottom: 7px; font-size: 14px; line-height: 1.5; }
+ul.plain li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+ul.plain.bad li::before { background: var(--red); }
+ul.plain.good li::before { background: var(--green); }
+
+.timeline { display: flex; gap: 0; margin: 12px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 12.5px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; }
+
+.sample-card { border: 1px solid var(--border); border-radius: 10px; padding: 13px 18px; margin-bottom: 9px; }
+.s-url { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11.5px; color: var(--primary-mid); margin-bottom: 4px; }
+.s-grade { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.s-detail { font-size: 12.5px; color: var(--text-light); }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .flex-grow { flex: 1; } .text-center { text-align: center; }
+
+.red { color: var(--red); } .green { color: var(--green); } .orange { color: var(--orange); }
+.teal { color: var(--teal); } .blue { color: var(--blue); } .ember { color: var(--ember-red); }
+
+.logo-row { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11.5px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 22px; right: 30px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 38px; height: 38px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.45); color: white; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+.counter { font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.35); padding: 6px 13px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 30px 34px; }
+  h1 { font-size: 32px; } h2 { font-size: 24px; }
+  .two-col { grid-template-columns: 1fr; } .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 78px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Google Ads · SEO · Local SEO Audit</p>
+      <h1>Briggs Chaney Walk-In Clinic</h1>
+      <p class="subtitle">Ad spend has nearly doubled over the past year, but the lead story doesn't hold up once you separate real patient inquiries from map-direction taps. Meanwhile the two levers that compound for free — on-site SEO and local presence — are almost entirely untouched.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">$7,617</div>
+          <div class="stat-label">Google Ads spend, last 90 days (~$2,540/mo)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">56%</div>
+          <div class="stat-label">Of tracked "conversions" are Directions taps, not leads</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">0 / 10</div>
+          <div class="stat-label">Pages sampled have a meta description</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:rgba(255,255,255,0.9);">16 vs 744</div>
+          <div class="stat-label">GBP reviews: Gaithersburg vs. Silver Spring</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Briggs Chaney Walk-In Clinic &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: EXECUTIVE SUMMARY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Where Things Stand</p>
+    <h2>Three Channels, Three Different Stories</h2>
+    <p class="subtitle">Google Ads has real budget and real activity behind it, but the measurement underneath it is broken. SEO has essentially never been invested in. Local SEO is a tale of two locations &mdash; one with years of trust built up, one starting from zero.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul class="plain good">
+          <li>Silver Spring's Google Business Profile: 4.5&#9733; across 744 reviews &mdash; a genuine trust asset in a competitive urgent-care market</li>
+          <li>Google Ads is live, funded, and generating real phone-call and form leads &mdash; roughly 964 high-intent actions in the last 90 days</li>
+          <li>Core technical hygiene is in place: HTTPS enforced, redirects working, valid robots.txt and XML sitemap</li>
+          <li>Both location pages carry proper MedicalClinic schema markup &mdash; the only pages on the site that do</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Not</h3>
+        <ul class="plain bad">
+          <li>GA4 has recorded <strong>zero sessions</strong> since the property was created in May 2025 &mdash; there is no independent traffic or attribution data for this site</li>
+          <li>56% of Google Ads "conversions" are Directions taps, not appointments or calls &mdash; the real cost per patient lead is likely more than double what the dashboard implies</li>
+          <li>Every page we sampled outside the two location pages has no meta description and no schema markup</li>
+          <li>Gaithersburg's Business Profile has 16 reviews and 6 photos &mdash; a second location with almost no digital trust built yet</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: GOOGLE ADS SPEND & CAMPAIGN OVERVIEW -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Google Ads Audit</p>
+    <h2>Spend Has Nearly Doubled &mdash; Structure Hasn't Kept Up</h2>
+    <p class="subtitle">Monthly cost, trailing 12 months. Spend has climbed from roughly $1,190/mo to $2,600/mo without a corresponding rebuild of campaign structure or tracking.</p>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">Aug 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:45%;">$1,187</div></div></div>
+      <div class="bar-row"><span class="bar-label">Sep 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:46%;">$1,195</div></div></div>
+      <div class="bar-row"><span class="bar-label">Oct 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:46%;">$1,195</div></div></div>
+      <div class="bar-row"><span class="bar-label">Nov 2025</span><div class="bar-track"><div class="bar-fill blue" style="width:45%;">$1,180</div></div></div>
+      <div class="bar-row"><span class="bar-label">Dec 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:78%;">$2,032</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jan 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">$2,298</div></div></div>
+      <div class="bar-row"><span class="bar-label">Feb 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">$2,306</div></div></div>
+      <div class="bar-row"><span class="bar-label">Mar 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:92%;">$2,392</div></div></div>
+      <div class="bar-row"><span class="bar-label">Apr 2026</span><div class="bar-track"><div class="bar-fill accent" style="width:100%;">$2,612</div></div></div>
+      <div class="bar-row"><span class="bar-label">May 2026</span><div class="bar-track"><div class="bar-fill accent" style="width:98%;">$2,561</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jun 2026</span><div class="bar-track"><div class="bar-fill accent" style="width:100%;">$2,612</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jul 2026</span><div class="bar-track"><div class="bar-fill accent" style="width:100%;">$2,611</div></div></div>
+    </div>
+    <table class="mt-8">
+      <thead><tr><th>Campaign</th><th>Type</th><th>Status</th><th class="right">90-Day Spend</th><th class="right">Clicks</th><th class="right">Reported Conv.</th></tr></thead>
+      <tbody>
+        <tr><td>Local store visits and promotions</td><td>Performance Max</td><td><span class="pill green">Enabled</span></td><td class="right">$2,385</td><td class="right">1,967</td><td class="right">962.0</td></tr>
+        <tr><td>Clinic Briggs Chaney</td><td>Smart Campaign</td><td><span class="pill green">Enabled</span></td><td class="right">$2,343</td><td class="right">1,927</td><td class="right">720.7</td></tr>
+        <tr><td>Urgent care</td><td>Search</td><td><span class="pill green">Enabled</span></td><td class="right">$1,798</td><td class="right">3,542</td><td class="right">493.3</td></tr>
+        <tr><td>Evening Hours</td><td>Search</td><td><span class="pill green">Enabled</span></td><td class="right">$1,092</td><td class="right">397</td><td class="right">22.0</td></tr>
+        <tr><td class="dim">Urgent care Search 1/15</td><td class="dim">Search</td><td><span class="pill gray">Paused</span></td><td class="right dim">$0</td><td class="right dim">0</td><td class="right dim">0</td></tr>
+        <tr><td class="dim">Display 1/15</td><td class="dim">Display</td><td><span class="pill gray">Paused</span></td><td class="right dim">$0</td><td class="right dim">0</td><td class="right dim">0</td></tr>
+        <tr><td class="dim">Other Services</td><td class="dim">Search</td><td><span class="pill gray">Paused</span></td><td class="right dim">$0</td><td class="right dim">0</td><td class="right dim">0</td></tr>
+        <tr><td class="dim">Caller Lead Campaign</td><td class="dim">Search</td><td><span class="pill gray">Paused</span></td><td class="right dim">$0</td><td class="right dim">0</td><td class="right dim">0</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Structure note:</strong> two of the four live campaigns (Performance Max and Smart) are Google's fully-automated formats &mdash; there is almost no manual control over search terms, placements, or audiences in either. Four more campaigns sit paused with old ad copy, cluttering the account without adding value.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 4: CONVERSION QUALITY -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Google Ads Audit</p>
+    <h2>Most "Conversions" Aren't Patients</h2>
+    <p class="subtitle">Breaking down the 2,198 conversions this account reported in the last 90 days by conversion action reveals the real story.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">2,198</div><div class="stat-label">Total reported conversions, 90 days</div></div>
+      <div class="stat-card"><div class="stat-value red">964 (44%)</div><div class="stat-label">Actual lead-intent actions (calls + form fills)</div></div>
+      <div class="stat-card"><div class="stat-value">$3.47</div><div class="stat-label">Blended CPA as shown on the dashboard</div></div>
+      <div class="stat-card"><div class="stat-value orange">$7.90</div><div class="stat-label">True CPA counting only real leads</div></div>
+    </div>
+    <div class="bar-chart mt-8">
+      <div class="bar-row"><span class="bar-label">Directions taps</span><div class="bar-track"><div class="bar-fill red" style="width:100%;">1,234 &middot; 56%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Calls from ads</span><div class="bar-track"><div class="bar-fill green" style="width:39%;">480 &middot; 22%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Clicks to call</span><div class="bar-track"><div class="bar-fill green" style="width:15%;">188 &middot; 9%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Smart Camp. calls</span><div class="bar-track"><div class="bar-fill green" style="width:13%;">157 &middot; 7%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Contact Us form</span><div class="bar-track"><div class="bar-fill green" style="width:11%;">139 &middot; 6%</div></div></div>
+    </div>
+    <div class="annotation danger">
+      <strong>Why this matters:</strong> more than half of everything this account calls a "conversion" is a tap on "Get Directions" inside a Google Maps card &mdash; not a phone call, not a form, not a confirmed patient. The Performance Max campaign bids on Maximize Conversions, which treats a Directions tap and a phone call as equally valuable; the Smart Campaign runs its own automated bidding with the same blind spot. Either way, the account has every incentive to chase the cheaper, easier action.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 5: INTERNATIONAL TARGETING LEAK -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Google Ads Audit</p>
+    <h2>Budget Is Leaking Outside the United States</h2>
+    <p class="subtitle">In the last 90 days, this account served ads to and recorded activity from 13 countries outside the U.S. &mdash; for a two-location walk-in clinic in Silver Spring and Gaithersburg, Maryland.</p>
+    <table>
+      <thead><tr><th>Country</th><th class="right">Clicks</th><th class="right">Cost</th><th class="right">Reported "Conv."</th></tr></thead>
+      <tbody>
+        <tr><td>India</td><td class="right">634</td><td class="right">$56.82</td><td class="right">14.0</td></tr>
+        <tr><td>Pakistan</td><td class="right">156</td><td class="right">$54.68</td><td class="right">36.0</td></tr>
+        <tr><td>Bangladesh</td><td class="right">509</td><td class="right">$20.46</td><td class="right">0.0</td></tr>
+        <tr><td>Philippines</td><td class="right">24</td><td class="right">$5.94</td><td class="right">1.0</td></tr>
+        <tr><td>Nigeria</td><td class="right">6</td><td class="right">$3.56</td><td class="right">1.0</td></tr>
+        <tr><td>Indonesia</td><td class="right">49</td><td class="right">$3.38</td><td class="right">0.0</td></tr>
+        <tr><td>Chile</td><td class="right">1</td><td class="right">$3.17</td><td class="right">3.0</td></tr>
+        <tr><td>Uganda</td><td class="right">2</td><td class="right">$2.41</td><td class="right">2.0</td></tr>
+        <tr><td>T&uuml;rkiye</td><td class="right">13</td><td class="right">$1.89</td><td class="right">0.0</td></tr>
+        <tr><td>Kenya</td><td class="right">3</td><td class="right">$1.66</td><td class="right">0.0</td></tr>
+        <tr><td>Serbia</td><td class="right">1</td><td class="right">$1.60</td><td class="right">1.0</td></tr>
+        <tr><td>Algeria</td><td class="right">5</td><td class="right">$1.50</td><td class="right">0.0</td></tr>
+        <tr><td>Qatar</td><td class="right">1</td><td class="right">$1.32</td><td class="right">1.0</td></tr>
+        <tr style="font-weight:700; border-top:2px solid var(--border);"><td>Total, non-U.S.</td><td class="right">1,404</td><td class="right">$158.38</td><td class="right">59.0</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation danger">
+      <strong>Root cause:</strong> every non-U.S. click in this window traces back to the "Urgent care" Search campaign, which is set to <em>Presence or Interest</em> geo-targeting rather than <em>Presence only</em> &mdash; meaning anyone anywhere who shows "interest" in the Silver Spring/Gaithersburg area, not just people physically there, can trigger ads. Five of the account's seven other campaigns carry the same loose setting, so this isn't contained to one campaign &mdash; it's an account-wide default that hasn't been locked down. The dollar amount is small today, but it's a targeting control gap that also inflates the "conversion" count with clicks that can never become patients.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 6: IMPRESSION SHARE + QUALITY SCORE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Google Ads Audit</p>
+    <h2>Impression Share, Quality Score & Ad Format Debt</h2>
+    <p class="subtitle">Your two manually-built Search campaigns are losing the majority of their available impression share &mdash; and not just to budget.</p>
+    <table>
+      <thead><tr><th>Search Campaign</th><th class="right">IS Won</th><th class="right">Lost to Budget</th><th class="right">Lost to Rank</th></tr></thead>
+      <tbody>
+        <tr><td>Urgent care</td><td class="right">14.9%</td><td class="right">25.0%</td><td class="right bold red">60.1%</td></tr>
+        <tr><td>Evening Hours</td><td class="right">10.0%</td><td class="right bold red">90.0%</td><td class="right">4.0%</td></tr>
+      </tbody>
+    </table>
+    <h3 class="mt-16" style="font-size:16px;">Weakest Quality Scores (of the keywords actually spending)</h3>
+    <table>
+      <thead><tr><th>Keyword</th><th>Match</th><th class="right">Quality Score</th><th class="right">90-Day Spend</th><th class="right">Clicks</th></tr></thead>
+      <tbody>
+        <tr><td>urgent care</td><td>Broad</td><td class="right bold orange">5</td><td class="right">$613.98</td><td class="right">217</td></tr>
+        <tr><td>medical clinic</td><td>Broad</td><td class="right bold red">1</td><td class="right">$148.53</td><td class="right">355</td></tr>
+        <tr><td>medical clinics open near me</td><td>Broad</td><td class="right bold red">0</td><td class="right">$103.15</td><td class="right">36</td></tr>
+        <tr><td>near by clinic</td><td>Broad</td><td class="right bold red">0</td><td class="right">$76.23</td><td class="right">30</td></tr>
+        <tr><td>health cares near me</td><td>Broad</td><td class="right bold red">0</td><td class="right">$72.37</td><td class="right">28</td></tr>
+        <tr><td>convenient care clinic</td><td>Phrase</td><td class="right bold red">0</td><td class="right">$17.68</td><td class="right">6</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Also found:</strong> at least one live ad group is still running a legacy Expanded Text Ad &mdash; a format Google stopped allowing edits to in June 2022 &mdash; with no modern Responsive Search Ad in the same ad group to test against. Quality Score 0 generally means Google has almost no confidence in the keyword/ad/landing-page match; several of your highest-volume broad-match terms fall in that bucket, which is the direct driver of the 60% rank-based impression-share loss above.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 7: GA4 DARK DATA -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Measurement Gap</p>
+    <h2>Your Analytics Property Has Recorded Zero Data</h2>
+    <p class="subtitle">GA4 property <span class="mono">www.briggschaneyclinic.com</span> (measurement ID G-TD0JCQQ4LC) was created in May 2025. We queried every reporting window from 2020 through today, plus real-time active users. The result was the same every time.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">May 2025</div><div class="stat-label">GA4 property created &mdash; 15 months ago</div></div>
+      <div class="stat-card"><div class="stat-value red">0</div><div class="stat-label">Sessions recorded, any period queried</div></div>
+      <div class="stat-card"><div class="stat-value red">0</div><div class="stat-label">Real-time active users at time of audit</div></div>
+      <div class="stat-card"><div class="stat-value orange">Hidden</div><div class="stat-label">Status of the GA4-imported "purchase" action inside Google Ads</div></div>
+    </div>
+    <div class="annotation danger mt-16">
+      <strong>What this means:</strong> the site loads through a Google Tag Manager container (GTM-NVKVSP89), but whatever GA4 configuration lives inside it either was never published or isn't firing. Corroborating this, Google Ads has automatically hidden its own GA4-imported "purchase" conversion action &mdash; which only happens when the source has no data flowing. Every dollar of SEO and paid media work is currently happening with zero visibility into on-site behavior: no real attribution model, no remarketing audiences, no source of truth for what happens after the click. This is the single highest-leverage, lowest-cost fix available &mdash; and it should happen before anything else.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 8: TECHNICAL & ON-PAGE SEO -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">SEO Audit</p>
+    <h2>On-Page SEO Basics Are Missing Sitewide</h2>
+    <p class="subtitle">We crawled 10 representative pages directly (Search Console access hasn't been granted for this domain yet, so this is a live on-site read, not GSC data).</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value red">0 / 10</div><div class="stat-label">Pages with a meta description</div></div>
+      <div class="stat-card"><div class="stat-value orange">2 / 10</div><div class="stat-label">Pages with any schema markup</div></div>
+      <div class="stat-card"><div class="stat-value red">~70%</div><div class="stat-label">Of images sitewide missing alt text</div></div>
+      <div class="stat-card"><div class="stat-value red">0</div><div class="stat-label">Open Graph tags found anywhere (broken social previews)</div></div>
+    </div>
+    <div class="sample-card mt-8">
+      <div class="s-url">/ (Homepage)</div>
+      <div class="s-grade red">Grade D</div>
+      <div class="s-detail">No meta description, no schema markup, 9 of 11 images missing alt text</div>
+    </div>
+    <div class="sample-card">
+      <div class="s-url">/urgent-care/</div>
+      <div class="s-grade red">Grade D</div>
+      <div class="s-detail">No meta description, no schema markup, 2 of 3 images missing alt text</div>
+    </div>
+    <div class="sample-card">
+      <div class="s-url">/urgent-care-clinic-silver-spring-md/ &amp; /urgent-care-clinic-gaithersburg-md/</div>
+      <div class="s-grade orange">Grade C</div>
+      <div class="s-detail">The only pages with full MedicalClinic schema (GeoCoordinates, OpeningHours, PostalAddress) &mdash; but still no meta description, and 7&ndash;8 of 10 images missing alt text</div>
+    </div>
+    <div class="sample-card">
+      <div class="s-url">/medical-weight-loss-with-glp-1-therapy/</div>
+      <div class="s-grade red">Grade D</div>
+      <div class="s-detail">Your newest, highest-margin service line &mdash; no meta description, no schema markup</div>
+    </div>
+    <div class="sample-card">
+      <div class="s-url">/contact-us/</div>
+      <div class="s-grade red">Grade D</div>
+      <div class="s-detail">No H1 tag at all, no meta description</div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 9: CRAWL WASTE & CONTENT GAPS -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">SEO Audit</p>
+    <h2>A Small Site, Made Smaller by Crawl Waste</h2>
+    <p class="subtitle">The sitemap lists 19 URLs total for a two-location, multi-service medical practice. Four of them are junk or duplicate pages sitting fully indexable.</p>
+    <table>
+      <thead><tr><th>URL</th><th>Issue</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">/sample-page/</td><td>Default WordPress placeholder page &mdash; live, indexable, zero content value</td></tr>
+        <tr><td class="mono">/410-page/</td><td>Named for a "410 Gone" response but actually returns HTTP 200 &mdash; a confusing utility page fully exposed to Google</td></tr>
+        <tr><td class="mono">/home-for-ads/</td><td>Near-duplicate of the homepage &mdash; same navigation, structure, and most body copy, built for paid landing traffic &mdash; but not noindexed or canonicalized, so it competes with the real homepage in organic search</td></tr>
+        <tr><td class="mono">Legacy image assets</td><td>Multiple images still linked over plain <span class="mono">http://</span> on an https page, several dated as far back as 2018</td></tr>
+      </tbody>
+    </table>
+    <h3 class="mt-16" style="font-size:16px;">Content Gap: You're Already Paying for These Searches in Ads &mdash; With No Organic Page to Catch Them</h3>
+    <table>
+      <thead><tr><th>Opportunity</th><th>Why It Matters</th></tr></thead>
+      <tbody>
+        <tr><td>DOT physicals</td><td>Appears repeatedly in your own Ads search terms &mdash; you're paying per click with zero organic capture</td></tr>
+        <tr><td>STD testing, blood work, immunizations</td><td>Real search terms already driving paid clicks today; no dedicated content targeting any of them</td></tr>
+        <tr><td>Sports / school physicals</td><td>High-intent, seasonal, hyper-local category entirely absent from the site</td></tr>
+        <tr><td>FAQ / symptom content</td><td>No blog, no FAQ schema anywhere &mdash; effectively zero long-tail organic footprint</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation info">
+      <strong>Note:</strong> EmberTribe does not yet have Search Console access for this domain. Granting <span class="mono">embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</span> access should be one of the first things done &mdash; it's the only way to see real indexing errors, impressions, and click data for this site.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 10: LOCAL SEO / GBP -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Local SEO Audit</p>
+    <h2>Two Locations, Two Very Different Realities</h2>
+    <p class="subtitle">Silver Spring has years of accumulated trust. Gaithersburg is starting from almost nothing &mdash; and needs to close that gap fast, not organically over years.</p>
+    <div class="two-col flex-grow">
+      <div class="channel-card">
+        <h3>Silver Spring (Flagship)</h3>
+        <ul>
+          <li>13823 Outlet Dr, Silver Spring, MD 20904 &middot; (301) 890-8000</li>
+          <li><strong>4.5&#9733; across 744 reviews</strong> &mdash; a strong, defensible trust signal</li>
+          <li>44+ photos uploaded</li>
+          <li>Single category: "Urgent care center" only</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <h3>Gaithersburg (New)</h3>
+        <ul>
+          <li>803 Russell Ave STE 1A, Gaithersburg, MD 20879 &middot; (301) 890-8000 <span class="dim">(same number as Silver Spring)</span></li>
+          <li><strong>4.5&#9733; across only 16 reviews</strong> &mdash; a brand-new profile with almost no volume</li>
+          <li>Only 6 photos uploaded</li>
+          <li>Single category: "Urgent care center" only</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation danger mt-16">
+      <strong>Gap alert:</strong> Gaithersburg is riding on almost no review volume or photo coverage while Silver Spring took years to build 744 reviews organically &mdash; it needs an active, structured review-generation push now. Both profiles are also single-category only: occupational health, travel vaccinations, and the new GLP-1 weight-loss line aren't reflected in either listing, which limits how often either location surfaces for those searches. And because both locations share one phone number, call-tracking can't yet attribute leads to a specific clinic in Ads or Analytics once GA4 measurement is fixed.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 11: STRATEGY -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Fix This</h2>
+    <p class="subtitle">Three workstreams, run in parallel &mdash; because the Ads tracking fix, the site fixes, and the local presence fixes all reinforce each other.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Paid Media Rescue</h3>
+        <ul>
+          <li>Rebuild conversion tracking around real leads only &mdash; exclude Directions and other engagement actions from bidding</li>
+          <li>Lock geo-targeting to Presence-only with a proper Maryland/DC-metro radius</li>
+          <li>Replace legacy Expanded Text Ads with tested Responsive Search Ads; retire the four dormant paused campaigns</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🛠️</div>
+        <h3>Technical &amp; Local Foundation</h3>
+        <ul>
+          <li>Diagnose and fix GA4 measurement inside the GTM container &mdash; get real data flowing immediately</li>
+          <li>Meta descriptions and schema markup (MedicalClinic, FAQPage) across every page, not just the two location pages</li>
+          <li>Grant GSC access; noindex or remove sample-page, 410-page, and home-for-ads</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📍</div>
+        <h3>Content &amp; GBP Authority</h3>
+        <ul>
+          <li>Service-specific landing pages for searches you're already paying for (DOT physicals, travel vaccinations, occupational health, GLP-1)</li>
+          <li>Multi-category GBP optimization plus a regular Google Posts cadence for both locations</li>
+          <li>Structured review-generation campaign specifically for Gaithersburg to close the 744-vs-16 gap</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 12: ROADMAP -->
+  <div class="slide" data-slide="12">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Measurement gets fixed in week one so every decision after that is made on real data, not guesses.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Fix GA4/GTM measurement so real data starts flowing</li>
+          <li>Audit &amp; clean Google Ads account structure</li>
+          <li>Grant GSC access; fix meta descriptions &amp; schema on top 10 pages</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Launch</h4>
+        <ul>
+          <li>Rebuild conversion tracking &amp; bidding around real leads only</li>
+          <li>Lock geo-targeting; launch Gaithersburg review-generation campaign</li>
+          <li>Publish 2&ndash;3 new service landing pages (DOT physicals, GLP-1, occupational health)</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Optimize &amp; Scale</h4>
+        <ul>
+          <li>Test Responsive Search Ads against a cleaned-up keyword list</li>
+          <li>Expand GBP categories &amp; posting cadence at both locations</li>
+          <li>Report true cost-per-patient with real GA4 data behind it</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 13: INVESTMENT -->
+  <div class="slide" data-slide="13">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Presented as ranges &mdash; final scope depends on how many locations and service lines we're actively building content and campaigns for.</p>
+    <table>
+      <thead><tr><th>Service</th><th>Monthly</th><th>Includes</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill paid">Paid Media</span></td><td class="bold">$1,500 &ndash; $3,000</td><td>Full Google Ads account rebuild, conversion tracking fix, geo-targeting lockdown, ongoing bid &amp; keyword management</td></tr>
+        <tr><td><span class="pill setup">Technical SEO</span></td><td class="bold">$1,000 &ndash; $2,000</td><td>GA4/GTM repair, GSC setup, meta/schema fixes sitewide, crawl cleanup, Local SEO/GBP management for both locations</td></tr>
+        <tr><td><span class="pill seo">SEO Content</span></td><td class="bold">$2,000 &ndash; $4,000</td><td>New service landing pages, FAQ/blog content, ongoing on-page optimization</td></tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);"><td>Full-Service Package</td><td>$5,000 &ndash; $10,000</td><td>All three, bundled and coordinated</td></tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>What you get:</strong> a working measurement foundation in month one, a cleaned-up and geo-locked ad account, sitewide technical fixes, and a structured plan to make Gaithersburg competitive with Silver Spring &mdash; not just more spend chasing the same broken conversion counts.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Briggs Chaney Walk-In Clinic &mdash; Growth Audit</span></div>
+  </div>
+
+  <!-- SLIDE 14: NEXT STEPS -->
+  <div class="slide dark" data-slide="14">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Fix What's Actually Broken?</h1>
+      <p class="subtitle" style="text-align:center;">Your ad spend and your Silver Spring reputation are real assets. Right now they're being undercut by a measurement gap, an under-built website, and a second location starting from zero trust. A focused 90-day engagement closes all three.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Book a 30-minute strategy call with EmberTribe</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.5); margin-top:8px;">Reach out to your EmberTribe contact to schedule</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 14</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
