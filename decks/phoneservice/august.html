@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhoneService.com - SEO & AI Visibility Audit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --client-dark: #0B1F3A;
+    --client-deep: #071427;
+    --client-mid:  #16447A;
+    --client-light:#2589F5;
+    --client-accent:#2589F5;
+    --client-sand: #DCEBFD;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --light-bg: #f7f7f8;
+    --card-bg: #ffffff;
+    --text: #1a1a1f;
+    --text-light: #6b7280;
+    --border: #e7e7eb;
+    --nav-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--client-deep);
+    color: var(--text);
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: calc(100vh - var(--nav-h));
+    display: none;
+    flex-direction: column;
+    padding: 52px 88px 32px;
+    background: var(--card-bg);
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.dark {
+    background: linear-gradient(135deg, var(--client-deep) 0%, var(--client-dark) 45%, var(--client-mid) 100%);
+    color: #fff;
+  }
+
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 6px;
+  }
+  .slide.dark .slide-label { color: var(--client-light); }
+
+  h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 14px; letter-spacing: -1px; }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.5px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 760px;
+  }
+  .slide.dark .subtitle { color: rgba(255,255,255,0.62); }
+
+  .stats-row { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 160px;
+  }
+  .slide.dark .stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .stat-value { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.accent { color: var(--client-mid); }
+  .stat-value.light { color: var(--client-light); }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); margin-top: 4px; }
+  .slide.dark .stat-value { color: #fff; }
+  .slide.dark .stat-value.accent { color: var(--client-light); }
+  .slide.dark .stat-value.green { color: #6fe0a3; }
+  .slide.dark .stat-value.red { color: #ff8a80; }
+  .slide.dark .stat-label { color: rgba(255,255,255,0.55); }
+
+  .annotation {
+    background: #FFF6E5;
+    border-left: 3px solid var(--client-accent);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 10px 0;
+    color: var(--text);
+  }
+  .annotation strong { color: var(--client-dark); }
+  .annotation.info { background: #E3F2FD; border-color: var(--client-light); }
+  .annotation.info strong { color: var(--client-dark); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+  .slide.dark .annotation { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--client-light); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th {
+    text-align: left; padding: 8px 12px;
+    background: var(--light-bg);
+    font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-light); border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .th-red { background: var(--ember-red) !important; color: #fff !important; border-bottom: none !important; }
+  .th-accent { background: var(--client-mid) !important; color: #fff !important; border-bottom: none !important; }
+  .num { text-align: right; }
+  th.num { text-align: right; }
+
+  .mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .accent { color: var(--client-mid); }
+  .light-blue { color: var(--client-mid); }
+  .bold { font-weight: 700; }
+  .dim { opacity: 0.45; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col { display: flex; flex-direction: column; }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 110px; font-size: 12px; font-weight: 500; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 5px; overflow: hidden; }
+  .slide.dark .bar-track { background: rgba(255,255,255,0.07); }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.client-fill { background: linear-gradient(90deg, var(--client-light), var(--client-mid)); }
+  .bar-fill.accent-fill { background: linear-gradient(90deg, var(--client-accent), #0B1F3A); }
+  .bar-fill.green-fill  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+  .bar-fill.red-fill    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+  .bar-fill.neutral-fill{ background: linear-gradient(90deg, #6b7280, #3f4753); }
+
+  .logo-row { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 14px; }
+  .logo-ember { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-light); }
+  .logo-date { font-size: 11px; color: var(--text-light); }
+
+  #nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(7,20,39,0.97);
+    border-top: 1px solid rgba(37,137,245,0.25);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200;
+    user-select: none;
+  }
+  #nav-bar .nb-brand {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.38);
+  }
+  #nav-bar .nb-controls {
+    display: flex; align-items: center; gap: 20px;
+  }
+  #nav-bar button {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  #nav-bar button:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  #slide-counter {
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5);
+    min-width: 56px; text-align: center;
+  }
+  .nb-dots { display: flex; gap: 5px; align-items: center; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.15s;
+  }
+  .dot.active { background: var(--client-light); }
+</style>
+</head>
+<body>
+
+<!-- ============================= SLIDES ============================= -->
+
+<!-- 1: Cover -->
+<div class="slide dark active">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="slide-label">SEO & AI Visibility Audit &middot; August 2026</div>
+    <h1 style="font-size:48px; margin-bottom:16px;">Impressions are up 245% &mdash; but clicks are down, and the term that used to convert is fading.</h1>
+    <p class="subtitle" style="max-width:780px; font-size:20px;">PhoneService.com. This is the first live Search Console pull we have on file for this account &mdash; no prior roadmap or audit exists, so this establishes the baseline going forward.</p>
+    <div class="stats-row" style="margin-top:36px;">
+      <div class="stat-card">
+        <div class="stat-value orange">+245%</div>
+        <div class="stat-label">GSC impressions, prior 30d &rarr; last 30d (9,889 &rarr; 34,151)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">-47%</div>
+        <div class="stat-label">GSC clicks, same window (15 &rarr; 8)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">-86%</div>
+        <div class="stat-label">Impressions on "phone service" &mdash; the core head term (1,102 &rarr; 149)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">1,329 &rarr; 3,943</div>
+        <div class="stat-label">Distinct ranking queries, same window (+197%)</div>
+      </div>
+    </div>
+    <p style="margin-top:36px; font-size:13px; opacity:0.42;">Prepared by EmberTribe &middot; Live Search Console data, pulled August 2026 &middot; No GA4 access on this account</p>
+  </div>
+</div>
+
+<!-- 2: Site-wide GSC Trend -->
+<div class="slide">
+  <div class="slide-label">Monthly Trend &middot; Verified GSC Data</div>
+  <h2>Rising impressions, worsening position &mdash; the two numbers are moving in opposite directions.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Month-by-month Search Console data, December 2025&ndash;August 2026 (the full history available for this property). Impressions have grown roughly 30x since December; average position has gotten worse for most of that same stretch.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:10px;">Monthly performance</h3>
+      <table>
+        <thead>
+          <tr>
+            <th class="th-accent">Month</th>
+            <th class="th-accent num">Clicks</th>
+            <th class="th-accent num">Impressions</th>
+            <th class="th-accent num">Avg. Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Dec 2025</td><td class="num">6</td><td class="num">372</td><td class="num">64.6</td></tr>
+          <tr><td>Jan 2026</td><td class="num">12</td><td class="num">1,608</td><td class="num">64.3</td></tr>
+          <tr><td>Feb</td><td class="num">11</td><td class="num">1,640</td><td class="num">51.1</td></tr>
+          <tr><td>Mar</td><td class="num">12</td><td class="num">3,122</td><td class="num">45.0</td></tr>
+          <tr><td>Apr</td><td class="num">15</td><td class="num">3,451</td><td class="num">40.7</td></tr>
+          <tr style="background:#e3f2fd;"><td class="bold">May (best position on record)</td><td class="num bold">19</td><td class="num bold">4,902</td><td class="num bold">38.3</td></tr>
+          <tr><td>Jun</td><td class="num">19</td><td class="num">9,515</td><td class="num orange bold">46.6</td></tr>
+          <tr><td>Jul</td><td class="num bold">32</td><td class="num bold">35,267</td><td class="num red bold">58.5</td></tr>
+          <tr><td>Aug (5 days so far)</td><td class="num">1</td><td class="num">3,352</td><td class="num red bold">60.6</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation danger" style="margin-top:14px;">
+        <strong>Position has degraded every month since May</strong> (38.3 &rarr; 58.5 in July) while impressions kept climbing &mdash; the opposite of a healthy trend, where more visibility usually comes with better rankings, not worse.
+      </div>
+    </div>
+
+    <div class="col">
+      <h3 style="margin-bottom:10px;">What this rules out</h3>
+      <div class="annotation info">
+        <strong>This isn't demand drying up.</strong> Raw impression volume is at an all-time high. The problem is what's generating those impressions and where it ranks &mdash; covered on the next two slides.
+      </div>
+      <div class="annotation danger" style="margin-top:10px;">
+        <strong>Clicks have not kept pace with impressions at any point.</strong> Even July's high-water mark (32 clicks on 35,267 impressions) is a 0.09% CTR &mdash; far below what a page-one ranking would produce on this volume.
+      </div>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>August is only 5 days old</strong> but already tracking below July's daily pace on clicks (0.2/day vs. ~1/day) &mdash; worth revisiting once the full month closes.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3: Head Term Collapse -->
+<div class="slide">
+  <div class="slide-label">Query-Level &middot; Prior 30 Days vs. Last 30 Days</div>
+  <h2>The queries that used to convert are losing both volume and position.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Exact-match GSC data comparing the two most recent 30-day windows (Jun 3&ndash;Jul 2 vs. Jul 3&ndash;Aug 2). These are the highest-volume, most literal buyer-intent terms on the account &mdash; the ones a phone-service company would most want to rank for.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="th-red">Query</th>
+        <th class="th-red num">Impr. (prior 30d)</th>
+        <th class="th-red num">Impr. (last 30d)</th>
+        <th class="th-red num">Position (prior &rarr; last)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono light-blue">phone service</td><td class="num">1,102</td><td class="num red bold">149</td><td class="num red bold">28.9 &rarr; 33.5</td></tr>
+      <tr><td class="mono light-blue">phone services</td><td class="num">443</td><td class="num red bold">123</td><td class="num red bold">32.3 &rarr; 36.5</td></tr>
+      <tr><td class="mono light-blue">mobile service</td><td class="num">507</td><td class="num bold">775</td><td class="num green bold">33.6 &rarr; 24.1</td></tr>
+      <tr><td class="mono light-blue">internet phone services</td><td class="num">457</td><td class="num">363</td><td class="num">45.7 &rarr; 46.3</td></tr>
+      <tr><td class="mono light-blue">google voice</td><td class="num">150</td><td class="num bold">395</td><td class="num orange">62.2 &rarr; 50.8</td></tr>
+      <tr><td class="mono light-blue">telephone service</td><td class="num">144</td><td class="num">148</td><td class="num">21.7 &rarr; 20.8</td></tr>
+      <tr><td class="mono light-blue">phoneservice (brand)</td><td class="num">109</td><td class="num">82</td><td class="num">4.3 &rarr; 3.7</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="margin-top:14px;">
+    <div class="annotation danger">
+      <strong>"phone service" &mdash; the single closest match to the business itself &mdash; lost 86% of its impressions</strong> and got almost 5 positions worse in one month. "phone services" (plural) shows the same pattern: -72% impressions, -4.2 positions.
+      </div>
+    <div class="annotation success">
+      <strong>Not everything declined.</strong> "mobile service" and "google voice" both gained impressions and improved position in the same window &mdash; the drop is concentrated in the exact-match "phone service(s)" terms, not site-wide.
+    </div>
+  </div>
+</div>
+
+<!-- 4: New Page Flood -->
+<div class="slide">
+  <div class="slide-label">Page-Level &middot; Where the New Impressions Are Coming From</div>
+  <h2>A wave of new pages is absorbing the impression growth &mdash; at positions nobody scrolls to.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Distinct ranking pages went from 27 to 88 in one month. Below are the largest new impression sources in the last 30 days &mdash; all absent from the prior 30-day window entirely.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="th-accent">Page (new in last 30d)</th>
+        <th class="th-accent num">Impressions</th>
+        <th class="th-accent num">Clicks</th>
+        <th class="th-accent num">Avg. Position</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>/en-us/best-voip-for-small-business</td><td class="num">4,275</td><td class="num">0</td><td class="num red">72.1</td></tr>
+      <tr><td>/en-us/best-prepaid-cell-phone-plans</td><td class="num">3,734</td><td class="num">1</td><td class="num red">60.8</td></tr>
+      <tr><td>/en-us/voip/sip-trunking</td><td class="num">1,774</td><td class="num">2</td><td class="num red">68.1</td></tr>
+      <tr><td>/en-us/best-mvno-plans</td><td class="num">1,483</td><td class="num">0</td><td class="num red">68.0</td></tr>
+      <tr><td>/en-us/ivr-systems</td><td class="num">1,378</td><td class="num">0</td><td class="num red">81.3</td></tr>
+      <tr><td>/en-us/voip-pricing-comparison</td><td class="num">1,298</td><td class="num">0</td><td class="num red">67.4</td></tr>
+      <tr><td>/en-us/voip/business</td><td class="num">662</td><td class="num">0</td><td class="num red">75.8</td></tr>
+      <tr><td>/en-us/best-cell-phone-plans-for-seniors</td><td class="num">563</td><td class="num">0</td><td class="num red">67.8</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col" style="margin-top:14px;">
+    <div class="annotation danger">
+      <strong>These 8 new pages account for roughly 15,000 impressions and 3 total clicks.</strong> Positions in the high 60s&ndash;80s put them on page 6&ndash;9 of Google &mdash; essentially invisible to a real searcher, but still counted toward "impressions."
+    </div>
+    <div class="annotation info">
+      <strong>The homepage stayed stable through all of this</strong> (4,284 &rarr; 4,160 impressions, 8 &rarr; 11 clicks, position flat at ~40) &mdash; it's the one page unaffected by the new-content wave, for better or worse.
+    </div>
+  </div>
+</div>
+
+<!-- 5: AI Visibility -->
+<div class="slide">
+  <div class="slide-label">AI Search Presence &middot; Current Snapshot</div>
+  <h2>Essentially no AI Search visibility &mdash; despite being crawled and cited.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">SEMrush AI Visibility data, pulled August 2026. This is a first-look snapshot &mdash; there's no prior AI visibility pull on file for this account to compare against.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px;">
+    <div class="stat-card">
+      <div class="stat-label">AI Visibility Score</div>
+      <div class="stat-value red">0</div>
+      <div style="font-size:12px;color:var(--text-light);">Across ChatGPT, Google AI Overview, AI Mode, and Gemini</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Brand Mentions</div>
+      <div class="stat-value red">0</div>
+      <div style="font-size:12px;color:var(--text-light);">No engine is naming the brand in a response</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pages Cited as Sources</div>
+      <div class="stat-value">12</div>
+      <div style="font-size:12px;color:var(--text-light);">All 12 via ChatGPT &mdash; 0 via AI Overview, AI Mode, or Gemini</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">By AI engine</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Engine</th>
+            <th class="num">Mentions</th>
+            <th class="num">Cited Pages</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="bold">ChatGPT</td><td class="num">0</td><td class="num bold">12</td></tr>
+          <tr><td class="bold">Google AI Overview</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td class="bold">Google AI Mode</td><td class="num">0</td><td class="num">0</td></tr>
+          <tr><td class="bold">Gemini</td><td class="num">0</td><td class="num">0</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin:14px 0 8px;">Distribution by country</h3>
+      <table>
+        <tbody>
+          <tr><td class="bold">Worldwide</td><td class="num">14 visibility / 2 mentions</td></tr>
+          <tr><td>France</td><td class="num">14 visibility / 2 mentions</td></tr>
+          <tr><td>UAE</td><td class="num">0 / 0</td></tr>
+          <tr><td>United States</td><td class="num">0 / 0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:8px;">What this means</h3>
+      <div class="annotation danger">
+        <strong>ChatGPT is reading the site (12 cited pages) but not surfacing it</strong> &mdash; ChatGPT will pull content from these pages into a response without ever naming or recommending the brand itself.
+      </div>
+      <div class="annotation danger" style="margin-top:10px;">
+        <strong>Zero presence in Google AI Overview, AI Mode, and Gemini</strong> &mdash; for a business-services company, this is the highest-intent surface to be missing from entirely.
+      </div>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>The country breakdown looks off for a US-facing brand</strong>: all measured visibility and mentions are attributed to France, with 0 recorded for the US. Worth confirming with SEMrush directly (market/locale filter) before treating this as a real signal &mdash; we don't have direct SEMrush API access to re-pull it independently.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6: Diagnosis -->
+<div class="slide">
+  <div class="slide-label">Diagnosis</div>
+  <h2>This isn't the "rankings we earned are sliding" problem. It's dilution.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Putting the last three slides together: the site published a batch of new content, and it's actively pulling attention (and likely internal links/crawl budget) away from the term that used to work.</p>
+
+  <div class="three-col">
+    <div class="col">
+      <h3>What happened</h3>
+      <div class="annotation danger">
+        A wave of new VoIP/business-phone content went live between the two 30-day windows &mdash; 8+ new pages, all ranking position 60&ndash;90.
+      </div>
+    </div>
+    <div class="col">
+      <h3>What it's costing</h3>
+      <div class="annotation danger">
+        The core term "phone service" fell 86% in impressions and nearly 5 positions in the same stretch &mdash; the one query most tied to actual buyer intent.
+      </div>
+    </div>
+    <div class="col">
+      <h3>What's still fine</h3>
+      <div class="annotation success">
+        The homepage held steady, and a couple of adjacent terms ("mobile service," "google voice") actually improved &mdash; this is targeted, not a site-wide penalty.
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation info" style="margin-top:18px;">
+    <strong>No previous roadmap or audit exists for this account</strong> to compare against or confirm intent behind the new content push &mdash; this deck establishes the first documented baseline. Recommended next step is a content/internal-linking review of the new pages against the "phone service" money pages, not a fresh strategy rebuild.
+  </div>
+</div>
+
+<!-- 7: Next Steps -->
+<div class="slide dark">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;">
+    <div class="slide-label">Next Steps</div>
+    <h1 style="font-size:44px;">Worth a conversation before more ground is lost.</h1>
+    <p class="subtitle" style="max-width:700px; font-size:18px; margin-bottom:24px;">The pages and rankings that earned this account's traffic are still live &mdash; this is a maintenance and dilution problem, not a demand problem, which means it's fixable. The longer the new content sits unreviewed, the more it compounds against the terms that matter.</p>
+    <div class="stats-row" style="max-width:700px;">
+      <div class="stat-card">
+        <div class="stat-value accent">This week</div>
+        <div class="stat-label">Proposed timing for a 30-minute call to walk through findings</div>
+      </div>
+    </div>
+    <p style="margin-top:32px; font-size:13px; opacity:0.5;">Prepared by EmberTribe</p>
+  </div>
+</div>
+
+<!-- ============================= NAV BAR ============================= -->
+<div id="nav-bar">
+  <div class="nb-brand">EmberTribe &middot; PhoneService.com &middot; SEO & AI Visibility Audit</div>
+  <div class="nb-controls">
+    <button onclick="navigate(-1)" title="Previous (&#8592;)">&#8592;</button>
+    <div id="slide-counter">1 / 7</div>
+    <button onclick="navigate(1)" title="Next (&#8594;)">&#8594;</button>
+  </div>
+  <div class="nb-dots" id="dot-container"></div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+
+  function buildDots() {
+    const container = document.getElementById('dot-container');
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      container.appendChild(d);
+    });
+  }
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    document.querySelectorAll('.dot')[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    document.querySelectorAll('.dot')[cur].classList.add('active');
+    document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + slides.length;
+    slides[cur].scrollTop = 0;
+  }
+
+  function navigate(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  });
+
+  buildDots();
+  document.getElementById('slide-counter').textContent = '1 / ' + slides.length;
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('button, a, input, select, .dot, #nav-bar')) return;
+    const ratio = e.clientX / window.innerWidth;
+    if (ratio < 0.12) navigate(-1);
+    else if (ratio > 0.88) navigate(1);
+  });
+</script>
+</body>
+</html>
