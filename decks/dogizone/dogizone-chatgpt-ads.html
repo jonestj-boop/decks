@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DogiZone — Advertise in ChatGPT | EmberTribe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #003D5C;
+  --primary-mid: #005578;
+  --primary-light: #007A9A;
+  --accent: #00B4D0;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.68); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.04); }
+
+h1 { font-size: 46px; font-weight: 900; letter-spacing: -1px; line-height: 1.12; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 18px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 20px; }
+
+.slide-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: #8FE0EF; }
+
+.stats-row { display: flex; gap: 16px; margin: 14px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; }
+.stat-value { font-size: 32px; font-weight: 800; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #E6F7FA; border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13.5px;
+  margin: 10px 0; line-height: 1.55;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.warn { background: #FFF8E1; border-left-color: var(--yellow); }
+.annotation.warn strong { color: #B8860B; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
+table.compact th, table.compact td { padding: 6px 11px; font-size: 12px; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 9px 11px; border-bottom: 2px solid var(--border); }
+td { padding: 9px 11px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12.5px; }
+.dim { opacity: 0.55; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
+.channel-card .channel-icon { font-size: 26px; margin-bottom: 8px; }
+.channel-card h3 { margin-bottom: 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.timeline { display: flex; gap: 0; margin: 14px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 18px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 5px; font-size: 12.5px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 18px; font-weight: 800; color: var(--primary-dark); margin-top: 10px; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.pill.paid { background: #DCF3F7; color: #004D5C; }
+.pill.special { background: linear-gradient(90deg, var(--accent), var(--primary-light)); color: #fff; }
+.pill.muted { background: #ECEFF1; color: #607D8B; }
+.pill.new { background: #E3F2FD; color: #0D47A1; }
+.pill.green { background: #E8F5E9; color: var(--green); }
+.pill.orange { background: #FFF3E0; color: var(--orange); }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.red { color: var(--red); } .green { color: var(--green); } .orange { color: var(--orange); }
+.teal { color: var(--teal); } .blue { color: var(--blue); } .accent-text { color: var(--accent); }
+
+.logo-row { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.15); }
+.logo-ember { font-size: 13px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11.5px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.45); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.45); color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.65); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.35); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 34px; } h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">New Channel Opportunity</p>
+      <h1>Advertise in ChatGPT:<br>The Honest Read for DogiZone</h1>
+      <p class="subtitle">OpenAI's self-serve "Advertise in ChatGPT" isn't limited to product catalogs — "local services" is an explicitly allowed advertiser category, and campaigns can now optimize toward phone calls and lead submissions, the same conversion events DogiZone already runs Google and Meta on. Eligibility isn't the open question here. Attribution maturity is. Here's the breakdown, straight.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">Jul 22</div>
+          <div class="stat-label">Self-serve Ads Manager opened to any U.S. business, 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">Local Services</div>
+          <div class="stat-label">Explicitly allowed advertiser category — OpenAI Ad Policy</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">oCPC</div>
+          <div class="stat-label">New: optimize toward phone-call &amp; lead-submission conversions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value green">$25/day</div>
+          <div class="stat-label">Minimum daily budget per campaign (US) — no platform-wide commitment</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for DogiZone — August 4, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHAT CHANGED -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">What Changed</p>
+    <h2>ChatGPT Ads Just Got More Capable — and More Eligible</h2>
+    <p class="subtitle">Ads had been quietly live since a Feb 9, 2026 pilot. Self-serve rolled out in stages — CPC bidding and a lowered spend minimum on April 10, that minimum dropped to $0 on May 5, then broadened publicly on July 22 under the "Advertise in ChatGPT" name. Two of those updates matter most for DogiZone: standard ads no longer require a product catalog, and campaigns can now optimize toward the same conversion events — calls and lead forms — DogiZone's paid program already runs on.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's New</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ The standard ad format — title, copy, image, landing page — is open to <strong>any eligible advertiser</strong>. Product feeds are a separate, optional bulk-creation tool for large catalogs, not a requirement</li>
+          <li class="mb-8">→ New <strong>oCPC (Conversion-optimized)</strong> campaigns: pick one conversion event — lead submission, phone call, or similar — and delivery optimizes toward it</li>
+          <li class="mb-8">→ <strong>"Local services"</strong> is one of a short list of explicitly allowed advertiser categories during this early phase</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What to Know Before Testing</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Ads shown only to <strong>ChatGPT Free and Go plan users</strong> — Plus, Team, and Enterprise stay ad-free</li>
+          <li class="mb-8">→ Conversion tracking runs through OpenAI's own Conversions API / JS pixel — CallRail shipped a direct integration in June 2026, but there's no confirmed native integration yet for Nimbata, DogiZone's call-tracking platform</li>
+          <li class="mb-8">→ Eligible categories are explicitly framed as "early phase" — the list could tighten or shift as the program matures</li>
+          <li class="mb-8">→ Platform is genuinely new — no multi-year benchmark history like Google or Meta</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: HOW IT WORKS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">How It Works</p>
+    <h2>Two Ways In — Not Just One</h2>
+    <p class="subtitle">Product feed ads are real, but they're an optional bulk-creation tool for catalog businesses — not a gate on who can advertise. Here are both paths, and where each maps onto DogiZone.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">📞</div>
+        <h3>Standard Ads + oCPC</h3>
+        <ul>
+          <li>Build one ad — title, copy, image, landing page — same as any Search or Display ad, no catalog required</li>
+          <li>Set the campaign objective to Conversions (oCPC), pick one event: lead submission or phone call</li>
+          <li>Fits DogiZone's service business — Boarding, Training, Daycare, Grooming</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📦</div>
+        <h3>Product Feed Ads</h3>
+        <ul>
+          <li>Connect a Merchant Center-style catalog (100+ SKUs)</li>
+          <li>ChatGPT auto-generates sponsored cards directly from product data</li>
+          <li>Optional bulk tool — fits DogiMarket's retail catalog specifically</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🎯</div>
+        <h3>Context-Matched Serving (Both Paths)</h3>
+        <ul>
+          <li>Advertiser supplies "context hints" — topics, scenarios, intent</li>
+          <li>OpenAI matches those to live conversation intent via auction</li>
+          <li>Ads labeled "Sponsored," shown below the response — never inside it</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>Why this matters for DogiZone:</strong> the service business doesn't need a product feed to test this channel. A standard ad optimized toward phone-call or lead-submission conversions is the more direct fit — and it's the same conversion logic already running in DogiZone's Google Ads account today.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: CURRENT STATE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Current State</p>
+    <h2>Your Paid Media Program Today</h2>
+    <p class="subtitle">Blended Google + Meta, July 2026 (most recent full month), plus a live Google Ads campaign pull, trailing 30 days. This is the program a ChatGPT pilot would sit alongside.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--accent);">$11,300.86</div>
+        <div class="stat-label">Blended ad spend, July 2026 (Google + Meta)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value teal">$22.36</div>
+        <div class="stat-label">Blended CPL, 505 leads across both platforms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value green">28.7x</div>
+        <div class="stat-label">MER — $324,367.73 revenue ÷ ad spend</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">3,759</div>
+        <div class="stat-label">Total calls generated, July</div>
+      </div>
+    </div>
+    <table class="mt-16">
+      <thead>
+        <tr><th>Google Ads Campaign (trailing 30 days)</th><th>Type</th><th class="right">Spend</th><th class="right">Clicks</th><th class="right">Conv.</th><th class="right">CPL</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PMax — Training (Max Conversions)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$2,618.73</td><td class="right mono">747</td><td class="right mono">141.1</td><td class="right bold">$18.56</td></tr>
+        <tr><td>PMax — Boarding, New Customers (Max Conversions)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$2,646.06</td><td class="right mono">578</td><td class="right mono">68.5</td><td class="right bold orange">$38.63</td></tr>
+        <tr><td>PMax — Daycare, New Customers (Max Conversions)</td><td><span class="pill paid">PMax</span></td><td class="right mono">$2,174.25</td><td class="right mono">618</td><td class="right mono">68.8</td><td class="right bold">$31.60</td></tr>
+        <tr><td>Search — Boarding (Target CPA)</td><td><span class="pill new">Search</span></td><td class="right mono">$1,161.92</td><td class="right mono">197</td><td class="right mono">27.5</td><td class="right bold orange">$42.25</td></tr>
+        <tr><td>Search — Training (Max Conversions)</td><td><span class="pill new">Search</span></td><td class="right mono">$748.24</td><td class="right mono">88</td><td class="right mono">6.0</td><td class="right bold red">$124.71</td></tr>
+        <tr><td>Search — Branded (Target ROAS)</td><td><span class="pill new">Search</span></td><td class="right mono">$445.63</td><td class="right mono">572</td><td class="right mono">239.4</td><td class="right bold green">$1.86</td></tr>
+        <tr><td>Search — Grooming (Target CPA)</td><td><span class="pill new">Search</span></td><td class="right mono">$289.61</td><td class="right mono">84</td><td class="right mono">12.0</td><td class="right bold">$24.13</td></tr>
+        <tr><td>Search — Daycare (Target CPA)</td><td><span class="pill new">Search</span></td><td class="right mono">$143.47</td><td class="right mono">34</td><td class="right mono">4.0</td><td class="right bold">$35.87</td></tr>
+        <tr class="dim"><td>Shopping — DogiMarket Retail (8 campaigns) <span class="pill muted">Paused</span></td><td><span class="pill muted">Shopping</span></td><td class="right mono">$0.00</td><td class="right mono">0</td><td class="right mono">0.0</td><td class="right mono">—</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation mt-8">
+      <strong>Read on this:</strong> DogiZone's Google Ads program is already built around exactly the conversion events — calls and forms — that a ChatGPT oCPC campaign would optimize toward. Branded Search's $1.86 CPL is the clearest proof that phone-call funnel converts; that's the same signal a ChatGPT service pilot would be trying to replicate. DogiMarket's Shopping feed — the piece that maps to Product Feed Ads — remains fully paused, 8 campaigns, $0 spend.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: WHERE DOGIZONE ACTUALLY FITS -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Where This Fits</p>
+    <h2>Both Sides of the Business Have a Path In</h2>
+    <p class="subtitle">DogiZone isn't limited to a retail-only test. Services and retail each have a route onto this channel — they just look different, and the real risk isn't eligibility.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🐕</div>
+        <h3 class="teal">Services — ~88% of Revenue</h3>
+        <ul>
+          <li>Lodging/Boarding, Training, Daycare, Grooming — plus smaller Activities &amp; Transportation lines</li>
+          <li>Converts via phone call — "local services" is an explicitly allowed ChatGPT ad category</li>
+          <li>Path in: standard ad + oCPC, optimized toward phone-call or lead-submission conversions</li>
+          <li>Real constraint: needs OpenAI's Conversions API/pixel wired up first — no native call-tracking integration confirmed yet</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🛒</div>
+        <h3 class="orange">DogiMarket Retail — ~12% of Revenue</h3>
+        <ul>
+          <li>Dog food, accessories, gear sold through dogizone.com</li>
+          <li>Merchant Center feed already exists — 8 past Shopping campaigns, all currently <strong>paused</strong>, $0 spend</li>
+          <li>Path in: Product Feed Ads, once the feed is audited and reactivated</li>
+          <li>Real constraint: catalog has been dormant — product data needs a health check before spending against it</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">📋</div>
+        <h3>The Honest Read</h3>
+        <ul>
+          <li>Eligibility isn't the blocker for either side — "local services" is allowed, and DogiMarket already has a feed</li>
+          <li>The real open question is attribution maturity: conversion tracking here is newer than Google/Meta's, and phone-call attribution specifically needs proper setup to trust</li>
+          <li>Right move: pilot both tracks small and isolated — don't let one block the other</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: RECOMMENDED APPROACH -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Approach</p>
+    <h2>Two Small, Isolated Pilots — Tracking Set Up First</h2>
+    <p class="subtitle">Services and retail move on separate tracks, sized to their actual opportunity, with conversion tracking verified before either one spends seriously.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Set Up &amp; Audit</span>
+        <h4>Tracking First</h4>
+        <ul>
+          <li>Install OpenAI's Conversions API / pixel; verify lead-submission and phone-call events fire correctly</li>
+          <li>In parallel, audit DogiMarket's dormant Merchant Center feed for reactivation</li>
+          <li>Go/no-go call on each track independently</li>
+        </ul>
+        <div class="phase-cost">$0 mgmt fee — setup</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Launch Both Pilots</span>
+        <h4>Isolated, Parallel Tests</h4>
+        <ul>
+          <li>Services: standard ad + oCPC, optimized toward the lead-submission event first — more reliable to verify than phone-call at launch</li>
+          <li>Retail: reactivate feed, launch Product Feed Ads — only if the audit clears</li>
+          <li>Both budgets isolated from the existing $10.2K/mo Google program</li>
+        </ul>
+        <div class="phase-cost">$200/mo mgmt fee</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Review, Per Track</span>
+        <h4>Decide Independently</h4>
+        <ul>
+          <li>Judge Services against existing benchmarks — $22.89 Google-only CPL, $1.86 Branded Search CPL</li>
+          <li>Judge Retail against a ≤$40 ceiling given its smaller catalog</li>
+          <li>Scale, hold, or pause each track on its own merits</li>
+        </ul>
+        <div class="phase-cost">$200/mo mgmt fee</div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: INVESTMENT -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Investment</p>
+    <h2>Pilot Budget &amp; Management Fee</h2>
+    <p class="subtitle" style="margin-bottom:14px;">OpenAI's own platform minimum is $25/day per campaign on a daily budget (US) — that sets the floor for the Services pilot. Retail can start smaller using a campaign-total budget instead.</p>
+    <table class="compact">
+      <thead>
+        <tr><th>Track</th><th>Ad Spend</th><th>Structure</th><th>What It Tells Us</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Tracking Setup</td>
+          <td class="mono">$0</td>
+          <td>—</td>
+          <td>Confirms Conversions API/pixel fires correctly before either pilot spends</td>
+        </tr>
+        <tr>
+          <td class="bold">Services Pilot</td>
+          <td class="mono">$25/day (~$750/mo)</td>
+          <td>oCPC, daily budget — platform minimum</td>
+          <td>Real read on whether phone/lead conversions transfer to this channel</td>
+        </tr>
+        <tr>
+          <td class="bold">Retail Pilot</td>
+          <td class="mono">$300 – $500 total</td>
+          <td>CPC, campaign-total budget over 30–45 days</td>
+          <td>Directional signal on a small, recently-dormant catalog</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="mt-8" style="font-size:16px;">EmberTribe Beta Management Fee</h3>
+    <table class="compact">
+      <thead>
+        <tr><th>Period</th><th>Management Fee</th><th>Covers</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Month 1</td>
+          <td class="mono">$0</td>
+          <td>Conversion tracking setup, feed audit, go/no-go on each track</td>
+        </tr>
+        <tr>
+          <td class="bold">Month 2</td>
+          <td class="mono">$200</td>
+          <td>Launch and manage both pilots — Services always, Retail only if greenlit</td>
+        </tr>
+        <tr>
+          <td class="bold">Month 3</td>
+          <td class="mono">$200</td>
+          <td>Management through the go/no-go decision, per track</td>
+        </tr>
+        <tr>
+          <td class="bold">Ongoing <span class="pill special">Early Tester Special</span></td>
+          <td class="mono">$350</td>
+          <td>Locked-in beta rate for whichever track(s) continue past the pilot</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation warn mt-8">
+      <strong>Recommendation:</strong> don't skip the tracking setup step. A $750/mo Services pilot optimized toward an unverified conversion event is money spent guessing at attribution, not testing the channel. Confirm the pixel/API fires correctly first, then let both pilots run at the sizes above.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: RISKS & GUARDRAILS -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Risks &amp; Guardrails</p>
+    <h2>What Could Go Wrong — and How We'd Catch It</h2>
+    <p class="subtitle">The blocker here was never eligibility. It's attribution maturity — and that's a real, current limitation worth naming plainly.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3 class="red">Real Risks</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Conversion tracking runs through OpenAI's own Conversions API/pixel — no confirmed native integration with Nimbata (DogiZone's call-tracking platform) yet, so early phone-call attribution may be more directional than definitive</li>
+          <li class="mb-8">→ The retail feed has been paused across all 8 campaigns — product data may be stale, mispriced, or out of stock after being dormant</li>
+          <li class="mb-8">→ Eligible categories are explicitly framed as "early phase" by OpenAI — the list could tighten before either pilot has time to prove out</li>
+          <li class="mb-8">→ Platform is genuinely new — no multi-year benchmark data for either the local-service or pet-retail category</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="green">Guardrails Built Into This Plan</h3>
+        <ul style="list-style:none; padding:0;">
+          <li class="mb-8">→ Verify Conversions API/pixel accuracy before either pilot spends seriously — start Services on the lead-submission event, which is easier to confirm than phone-call</li>
+          <li class="mb-8">→ No retail ad spend until the feed audit confirms the catalog is healthy enough to test</li>
+          <li class="mb-8">→ Both test budgets capped and fully isolated from the $10.2K/mo existing Google program, and from each other</li>
+          <li class="mb-8">→ Fixed 30–45 day checkpoint per track, with Services and Retail reviewed and decided independently</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">DogiZone — Advertise in ChatGPT</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS -->
+  <div class="slide dark" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Set Up Tracking. Then Test Both Sides.</h1>
+      <p class="subtitle" style="text-align:center;">Approve the $0 setup phase, and EmberTribe verifies conversion tracking and audits the DogiMarket feed — then launches two small, isolated pilots.</p>
+      <div class="mt-24">
+        <p style="font-size:17px; font-weight:600;">1. Approve the $0 setup: Conversions API/pixel install + DogiMarket feed audit</p>
+        <p style="font-size:17px; font-weight:600; margin-top:6px;">2. EmberTribe launches the Services pilot ($25/day oCPC), and the Retail pilot if the feed clears</p>
+        <p style="font-size:17px; font-weight:600; margin-top:6px;">3. Review both at the 30–45 day checkpoint — scale, hold, or pause each on its own merits</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.55); margin-top:16px;">Prepared by the EmberTribe paid media team</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential — August 4, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
