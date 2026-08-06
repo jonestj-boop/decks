@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>doctronic.ai - SEO & AI Visibility Audit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --client-dark: #0A0A10;
+    --client-deep: #000000;
+    --client-mid:  #14141F;
+    --client-light:#38BDF8;
+    --client-accent:#38BDF8;
+    --client-sand: #7dd3fc;
+    --ember-red: #ff333d;
+    --ember-dark: #e0202a;
+    --green: #27AE60;
+    --yellow: #F39C12;
+    --red: #E74C3C;
+    --light-bg: #f7f7f8;
+    --card-bg: #ffffff;
+    --text: #1a1a1f;
+    --text-light: #6b7280;
+    --border: #e7e7eb;
+    --nav-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--client-deep);
+    color: var(--text);
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: calc(100vh - var(--nav-h));
+    display: none;
+    flex-direction: column;
+    padding: 52px 88px 32px;
+    background: var(--card-bg);
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.dark {
+    background: linear-gradient(135deg, var(--client-deep) 0%, var(--client-dark) 45%, var(--client-mid) 100%);
+    color: #fff;
+  }
+  .slide.divider {
+    background: linear-gradient(160deg, var(--client-deep) 0%, var(--client-dark) 60%, var(--client-mid) 100%);
+    color: #fff;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 52px 88px;
+  }
+
+  .slide-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ember-red);
+    margin-bottom: 6px;
+  }
+  .slide.dark .slide-label,
+  .slide.divider .slide-label { color: var(--client-accent); }
+
+  h1 { font-size: 52px; font-weight: 900; line-height: 1.1; margin-bottom: 14px; letter-spacing: -1px; }
+  h2 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.5px; }
+  h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+
+  .subtitle {
+    font-size: 18px;
+    color: var(--text-light);
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 760px;
+  }
+  .slide.dark .subtitle,
+  .slide.divider .subtitle { color: rgba(255,255,255,0.62); }
+
+  .stats-row { display: flex; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+  .stat-card {
+    background: var(--light-bg);
+    border-radius: 10px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 160px;
+  }
+  .slide.dark .stat-card,
+  .slide.divider .stat-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .stat-value { font-size: 32px; font-weight: 800; color: var(--text); line-height: 1.1; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.orange { color: var(--ember-red); }
+  .stat-value.accent { color: var(--client-accent); }
+  .stat-value.light { color: var(--client-light); }
+  .stat-label { font-size: 12px; font-weight: 500; color: var(--text-light); margin-top: 4px; }
+  .slide.dark .stat-value,
+  .slide.divider .stat-value { color: #fff; }
+  .slide.dark .stat-value.accent,
+  .slide.divider .stat-value.accent { color: var(--client-accent); }
+  .slide.dark .stat-label,
+  .slide.divider .stat-label { color: rgba(255,255,255,0.55); }
+
+  .annotation {
+    background: #FFF6E5;
+    border-left: 3px solid var(--client-accent);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 10px 0;
+    color: var(--text);
+  }
+  .annotation strong { color: var(--client-mid); }
+  .annotation.info { background: #E8F1F7; border-color: var(--client-light); }
+  .annotation.info strong { color: var(--client-mid); }
+  .annotation.danger { background: #FFEBEE; border-color: var(--red); }
+  .annotation.danger strong { color: var(--red); }
+  .annotation.success { background: #E8F5E9; border-color: var(--green); }
+  .annotation.success strong { color: var(--green); }
+  .slide.dark .annotation { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+  .slide.dark .annotation strong { color: var(--client-accent); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  th {
+    text-align: left; padding: 8px 12px;
+    background: var(--light-bg);
+    font-weight: 600; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--text-light); border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,0,0,0.02); }
+  .th-red { background: var(--ember-red) !important; color: #fff !important; border-bottom: none !important; }
+  .th-accent { background: var(--client-mid) !important; color: #fff !important; border-bottom: none !important; }
+  .num { text-align: right; }
+  th.num { text-align: right; }
+
+  .mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  .red { color: var(--red); }
+  .green { color: var(--green); }
+  .orange { color: var(--ember-red); }
+  .accent { color: var(--client-accent); }
+  .light-blue { color: var(--client-light); }
+  .bold { font-weight: 700; }
+  .dim { opacity: 0.45; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .col { display: flex; flex-direction: column; }
+
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .pill.p1 { background: #FFEBEE; color: #C62828; }
+  .pill.p2 { background: #FFF3E0; color: #E65100; }
+  .pill.p3 { background: #E8F5E9; color: #2E7D32; }
+
+  .bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 100px; font-size: 12px; font-weight: 500; text-align: right; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 5px; overflow: hidden; }
+  .slide.dark .bar-track { background: rgba(255,255,255,0.07); }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.client-fill { background: linear-gradient(90deg, var(--client-light), var(--client-mid)); }
+  .bar-fill.ember-fill  { background: linear-gradient(90deg, var(--ember-red), var(--ember-dark)); }
+  .bar-fill.accent-fill { background: linear-gradient(90deg, var(--client-accent), #0369a1); }
+  .bar-fill.neutral-fill{ background: linear-gradient(90deg, #6b7280, #3f4753); }
+  .bar-fill.green-fill  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+
+  .logo-row { display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:16px; }
+  .logo-ember { font-size:11px; font-weight:800; letter-spacing:1.5px; color: var(--ember-red); }
+  .logo-date { font-size:11px; color: var(--text-light); }
+  .slide.dark .logo-date { color: rgba(255,255,255,0.5); }
+
+  #nav-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: rgba(10,10,10,0.97);
+    border-top: 1px solid rgba(56,189,248,0.22);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 28px; z-index: 200;
+    user-select: none;
+  }
+  #nav-bar .nb-brand {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.38);
+  }
+  #nav-bar .nb-controls {
+    display: flex; align-items: center; gap: 20px;
+  }
+  #nav-bar button {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  #nav-bar button:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  #slide-counter {
+    font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5);
+    min-width: 56px; text-align: center;
+  }
+  .nb-dots { display: flex; gap: 5px; align-items: center; }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.15); cursor: pointer; transition: background 0.15s;
+  }
+  .dot.active { background: var(--client-accent); }
+</style>
+</head>
+<body>
+
+<!-- ============================= SLIDES ============================= -->
+
+<!-- 1: Cover -->
+<div class="slide dark active">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+    <div class="slide-label">SEO & AI Visibility Audit &middot; August 2026</div>
+    <h1 style="font-size:56px; margin-bottom:16px;">Search traffic held. AI is forgetting you.</h1>
+    <p class="subtitle" style="max-width:780px; font-size:20px;">doctronic.ai &middot; Live Search Console, GA4, and SEMrush AI Visibility data since our last pull in May 2026. Classic search is volatile but resilient &mdash; AI Search visibility has collapsed every month since, and hasn't recovered.</p>
+    <div class="stats-row" style="margin-top:36px;">
+      <div class="stat-card">
+        <div class="stat-value red">&minus;89%</div>
+        <div class="stat-label">AI mentions, May &rarr; July (734 &rarr; 81)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">&minus;91%</div>
+        <div class="stat-label">AI Overview mentions, May &rarr; now (474 &rarr; 43)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value light">9.6 &rarr; 9.7</div>
+        <div class="stat-label">Avg. Google position, roughly unchanged since May</div>
+      </div>
+    </div>
+    <p style="margin-top:36px; font-size:13px; opacity:0.42;">Prepared by EmberTribe &middot; Follow-up to the May 2026 AI Visibility Optimization deck</p>
+  </div>
+</div>
+
+<!-- 2: The Paradox -->
+<div class="slide">
+  <div class="slide-label">The Paradox</div>
+  <h2>Three data sources, three different stories.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">We pulled Search Console, GA4, and SEMrush AI Visibility data live for this report. They don't agree &mdash; and that disagreement is itself the finding.</p>
+
+  <div class="three-col">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">Search Console</h3>
+      <div class="stat-card" style="margin-bottom:10px;">
+        <div class="stat-value orange">Volatile</div>
+        <div class="stat-label">Clicks dipped 39% in June, then recovered 43% in July</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Rankings and CTR never moved. This reads as normal fluctuation, not decline.</p>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:8px;">GA4</h3>
+      <div class="stat-card" style="margin-bottom:10px;">
+        <div class="stat-value green">Growing</div>
+        <div class="stat-label">Organic sessions hit an all-time high in July (1.18M)</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5;">Grew straight through the GSC dip. Worth reconciling &mdash; the two sources shouldn't diverge this much.</p>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:8px;">AI Visibility (SEMrush)</h3>
+      <div class="stat-card" style="margin-bottom:10px;">
+        <div class="stat-value red">Collapsing</div>
+        <div class="stat-label">Mentions down 89% May&rarr;July, still down ~90% now</div>
+      </div>
+      <p style="font-size:13px; color:var(--text-light); line-height:1.5;">The only metric with a clean, sustained, every-engine decline. This is the real signal.</p>
+    </div>
+  </div>
+
+  <div class="annotation danger" style="margin-top:18px;">
+    <strong>The headline isn't "traffic is down."</strong> It's that classic search is holding steady while the site's presence inside AI answers &mdash; ChatGPT, Gemini, AI Overview, AI Mode &mdash; is quietly disappearing. That's a growing blind spot, not a visible one.
+  </div>
+</div>
+
+<!-- 3: GSC Monthly Trend -->
+<div class="slide">
+  <div class="slide-label">Monthly Trend &middot; Verified GSC Data</div>
+  <h2>A June dip, a July rebound &mdash; rankings never moved.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Search Console clicks and impressions, April&ndash;August 2026 (Aug covers Aug 1&ndash;5, a partial month &mdash; see note below each chart). Avg. position held between 9.4&ndash;10.4 the entire period.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">Monthly clicks</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Apr 2026</span><div class="bar-track"><div class="bar-fill client-fill" style="width:82%;">305,103</div></div></div>
+        <div class="bar-row"><span class="bar-label">May</span><div class="bar-track"><div class="bar-fill accent-fill" style="width:100%;">374,307</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jun</span><div class="bar-track"><div class="bar-fill ember-fill" style="width:61%;">227,053</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jul</span><div class="bar-track"><div class="bar-fill neutral-fill" style="width:87%;">324,924</div></div></div>
+        <div class="bar-row"><span class="bar-label">Aug 1&ndash;5</span><div class="bar-track"><div class="bar-fill neutral-fill" style="width:14%;">51,715</div></div></div>
+      </div>
+      <div class="annotation" style="margin-top:10px; font-size:12px;">May = last-pull peak. Red = the June dip. Jul recovered to 87% of the May peak.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:8px;">Monthly impressions</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Apr 2026</span><div class="bar-track"><div class="bar-fill client-fill" style="width:89%;">72.0M</div></div></div>
+        <div class="bar-row"><span class="bar-label">May</span><div class="bar-track"><div class="bar-fill accent-fill" style="width:100%;">80.7M</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jun</span><div class="bar-track"><div class="bar-fill ember-fill" style="width:61%;">48.9M</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jul</span><div class="bar-track"><div class="bar-fill neutral-fill" style="width:79%;">63.8M</div></div></div>
+        <div class="bar-row"><span class="bar-label">Aug 1&ndash;5</span><div class="bar-track"><div class="bar-fill neutral-fill" style="width:14%;">10.9M</div></div></div>
+      </div>
+      <div class="annotation" style="margin-top:10px; font-size:12px;">Same shape as clicks: dip in June, recovered in July. Aug is a 5-day window, not comparable in bar length.</div>
+    </div>
+  </div>
+
+  <div class="two-col" style="align-items:start; margin-top:18px;">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">Avg. position &amp; CTR</h3>
+      <table>
+        <thead><tr><th class="th-accent">Month</th><th class="th-accent num">Position</th><th class="th-accent num">CTR</th></tr></thead>
+        <tbody>
+          <tr><td>May 2026</td><td class="num">9.6</td><td class="num">0.46%</td></tr>
+          <tr><td>Jun 2026</td><td class="num">10.4</td><td class="num">0.46%</td></tr>
+          <tr><td>Jul 2026</td><td class="num">9.6</td><td class="num">0.51%</td></tr>
+          <tr><td>Aug 1&ndash;5</td><td class="num">9.7</td><td class="num">0.47%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <div class="annotation info">
+        <strong>Rankings and CTR barely moved (&plusmn;1 position, &plusmn;0.05pt CTR).</strong> Whatever caused the June dip, it wasn't a ranking/relevance problem &mdash; and it already self-corrected.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4: GA4 vs GSC divergence -->
+<div class="slide">
+  <div class="slide-label">Cross-Check &middot; Verified GA4 Data</div>
+  <h2>GA4 shows session growth, but the quality behind it tells a different story.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">GA4 Organic Search data for doctronic.ai, April&ndash;August 2026 (Aug covers Aug 1&ndash;5). On the surface, session volume kept climbing through the same period Search Console clicks dipped. Here's what's actually behind that growth.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">GA4 organic sessions by month</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">Apr 2026</span><div class="bar-track"><div class="bar-fill client-fill" style="width:61%;">720,112</div></div></div>
+        <div class="bar-row"><span class="bar-label">May</span><div class="bar-track"><div class="bar-fill client-fill" style="width:49%;">581,363</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jun</span><div class="bar-track"><div class="bar-fill client-fill" style="width:74%;">867,131</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jul</span><div class="bar-track"><div class="bar-fill accent-fill" style="width:100%;">1,176,677</div></div></div>
+        <div class="bar-row"><span class="bar-label">Aug 1&ndash;5</span><div class="bar-track"><div class="bar-fill neutral-fill" style="width:16%;">186,956</div></div></div>
+      </div>
+      <div class="annotation success" style="margin-top:10px; font-size:12px;">July is the highest organic-session month on record for this property. Aug is a 5-day window, not comparable in bar length.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:10px;">What's behind the session growth</h3>
+      <div class="annotation danger">
+        <strong>Nearly all of the increase is coming through Google itself</strong> &mdash; not from other search engines picking up the slack. Google-sourced sessions grew from 478K in May to 1.04M in July. Bing, DuckDuckGo, and Yahoo grew too, but far more slowly, so their combined share of total organic traffic actually shrank over the same period.
+      </div>
+      <div class="annotation danger" style="margin-top:10px;">
+        <strong>But visitors are engaging with the site noticeably less as this volume climbs.</strong> The share of sessions that count as genuinely engaged fell from 70% in May to roughly 52&ndash;58% since, and average time on site dropped by about a third.
+      </div>
+      <div class="annotation info" style="margin-top:10px;">
+        <strong>Bottom line:</strong> more sessions, but shorter and shallower visits, concentrated almost entirely in one source (Google) and one country (US, up 163% May&rarr;July while every other market held flat) &mdash; this combination is consistent with lower-quality or automated traffic being counted alongside genuine visitors, not real demand rising. GSC, which only counts actual clicks from real search results, doesn't pick up this kind of traffic &mdash; which is likely why it shows the more conservative, June-dip-then-recovery picture instead. This is our best read of the available data, not a confirmed diagnosis; a closer look at GA4's internal-traffic rules and session-level detail would help confirm it.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5: AI Visibility — the main story -->
+<div class="slide">
+  <div class="slide-label">The Main Story &middot; SEMrush AI Visibility</div>
+  <h2>Every AI engine is citing doctronic.ai less &mdash; and it's been falling for three straight months.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Same SEMrush AI Search dataset, pulled monthly since our last report. Unlike GSC and GA4, this metric shows an unambiguous, accelerating decline.</p>
+
+  <div class="two-col" style="align-items:start;">
+    <div class="col">
+      <h3 style="margin-bottom:8px;">Total AI mentions by month</h3>
+      <div class="bar-chart">
+        <div class="bar-row"><span class="bar-label">May 2026</span><div class="bar-track"><div class="bar-fill accent-fill" style="width:100%;">734</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jun</span><div class="bar-track"><div class="bar-fill ember-fill" style="width:32%;">235</div></div></div>
+        <div class="bar-row"><span class="bar-label">Jul</span><div class="bar-track"><div class="bar-fill ember-fill" style="width:11%;">81</div></div></div>
+        <div class="bar-row"><span class="bar-label">Aug (5th)</span><div class="bar-track"><div class="bar-fill ember-fill" style="width:11%;">77</div></div></div>
+      </div>
+      <div class="annotation danger" style="margin-top:10px; font-size:12px;"><strong>&minus;89% May&rarr;Jul.</strong> The +2pt visibility-score tick in August (19&rarr;21) is not a recovery &mdash; mentions are still flat at the July low.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-bottom:8px;">AI Visibility score &amp; Cited Pages</h3>
+      <table>
+        <thead><tr><th class="th-red">Month</th><th class="th-red num">Visibility</th><th class="th-red num">Cited Pages</th></tr></thead>
+        <tbody>
+          <tr><td>May 2026</td><td class="num bold">27</td><td class="num bold">9.5K</td></tr>
+          <tr><td>Jun 2026</td><td class="num red">20</td><td class="num red">7.8K</td></tr>
+          <tr><td>Jul 2026</td><td class="num red">19</td><td class="num red">5.9K</td></tr>
+          <tr><td>Aug 2026 (5th)</td><td class="num" style="color:var(--yellow);">21</td><td class="num red">6.2K</td></tr>
+        </tbody>
+      </table>
+      <div class="annotation danger" style="margin-top:10px;">
+        <strong>Cited Pages down 35% (9.5K &rarr; 6.2K).</strong> Fewer distinct pages are being pulled into AI answers at all &mdash; this isn't just fewer repeats of the same citation, the underlying footprint is shrinking.
+      </div>
+    </div>
+  </div>
+  <div class="logo-row">
+    <span class="logo-ember">EMBERTRIBE</span>
+    <span class="logo-date">Source: SEMrush AI Search, US/Desktop, May&ndash;Aug 2026</span>
+  </div>
+</div>
+
+<!-- 6: AI Visibility by engine -->
+<div class="slide">
+  <div class="slide-label">By Engine &middot; SEMrush AI Visibility</div>
+  <h2>The drop isn't one engine deprioritizing the site. It's all four.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Mentions / Cited Pages by AI platform, May&ndash;August 2026. If this were one engine's algorithm change, we'd expect the others to hold steady. They didn't.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="th-accent">Engine</th>
+        <th class="th-accent num">May</th>
+        <th class="th-accent num">Jun</th>
+        <th class="th-accent num">Jul</th>
+        <th class="th-accent num">Aug (5th)</th>
+        <th class="th-accent num">Change (May&rarr;Now)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="bold">AI Overview</td><td class="num">474 / 8.4K</td><td class="num">135 / 6.7K</td><td class="num">43 / 5K</td><td class="num">43 / 5.3K</td><td class="num bold red">&minus;91% mentions</td></tr>
+      <tr><td class="bold">Gemini</td><td class="num">190 / 1.7K</td><td class="num">40 / 1.1K</td><td class="num">10 / 867</td><td class="num">9 / 925</td><td class="num bold red">&minus;95% mentions</td></tr>
+      <tr><td class="bold">ChatGPT</td><td class="num">41 / 1.2K</td><td class="num">36 / 971</td><td class="num">9 / 609</td><td class="num">4 / 555</td><td class="num bold red">&minus;90% mentions</td></tr>
+      <tr><td class="bold">AI Mode</td><td class="num">29 / 1.9K</td><td class="num">24 / 1.4K</td><td class="num">19 / 949</td><td class="num">21 / 1.1K</td><td class="num bold red">&minus;28% mentions</td></tr>
+    </tbody>
+  </table>
+
+  <div class="annotation danger" style="margin-top:16px;">
+    <strong>Every engine declined &mdash; AI Overview and Gemini hardest, AI Mode the mildest.</strong> A single-platform algorithm shift would leave at least one engine flat or growing. This pattern points to something about the site's content or structure becoming less citable across the board, not a Google-specific event.
+  </div>
+</div>
+
+<!-- 7: What held steady -->
+<div class="slide">
+  <div class="slide-label">The Counterpoint &middot; Verified GSC Data</div>
+  <h2>Classic rankings for core terms are untouched. AI citations are not.</h2>
+  <p class="subtitle" style="margin-bottom:14px;">Top queries, last 5 weeks, pulled live from Search Console. The brand and core terms rank at or near #1 &mdash; this is not a "your content lost authority" story in classic search.</p>
+
+  <table>
+    <thead>
+      <tr><th class="th-red">Query</th><th class="th-red num">Position</th><th class="th-red num">Clicks</th><th class="th-red num">Impressions</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono light-blue">doctronic ai</td><td class="num bold green">1.0</td><td class="num">1,717</td><td class="num">4,303</td></tr>
+      <tr><td class="mono light-blue">doctronic</td><td class="num bold green">1.3</td><td class="num">3,055</td><td class="num">10,599</td></tr>
+      <tr><td class="mono light-blue">ai doctor</td><td class="num bold green">1.8</td><td class="num">11,238</td><td class="num">24,940</td></tr>
+      <tr><td class="mono light-blue">doctor ai</td><td class="num bold green">2.9</td><td class="num">2,141</td><td class="num">9,790</td></tr>
+      <tr><td class="mono light-blue">medical ai</td><td class="num" style="color:var(--yellow);">12.2</td><td class="num">202</td><td class="num">4,711</td></tr>
+    </tbody>
+  </table>
+
+  <div class="annotation info" style="margin-top:16px;">
+    <strong>This is the gap worth closing.</strong> The site has already won the ranking fight for its core terms &mdash; the content and authority Google trusts are still there. What's disappearing is the separate, faster-growing surface: whether AI engines pull that same content into their answers. Winning Google rankings no longer guarantees winning the AI answer.
+  </div>
+</div>
+
+<!-- 8: Next Steps -->
+<div class="slide dark">
+  <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;">
+    <div class="slide-label">Next Steps</div>
+    <h1 style="font-size:44px;">Classic SEO is stable. AI visibility needs attention now, while it's still fixable.</h1>
+    <p class="subtitle" style="max-width:700px; font-size:18px; margin-bottom:24px;">The 3-month mention collapse (734 &rarr; 77) hasn't reversed on its own, and it's happening across every AI engine at once. The earlier this gets addressed, the smaller the gap to close.</p>
+    <div class="stats-row" style="max-width:700px;">
+      <div class="stat-card">
+        <div class="stat-value accent">This week</div>
+        <div class="stat-label">Proposed timing for a 30-minute review call</div>
+      </div>
+    </div>
+    <p style="margin-top:32px; font-size:13px; opacity:0.5;">Prepared by EmberTribe</p>
+  </div>
+</div>
+
+<!-- ============================= NAV BAR ============================= -->
+<div id="nav-bar">
+  <div class="nb-brand">EmberTribe &middot; doctronic.ai &middot; SEO & AI Visibility Audit</div>
+  <div class="nb-controls">
+    <button onclick="navigate(-1)" title="Previous (&#8592;)">&#8592;</button>
+    <div id="slide-counter">1 / 8</div>
+    <button onclick="navigate(1)" title="Next (&#8594;)">&#8594;</button>
+  </div>
+  <div class="nb-dots" id="dot-container"></div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let cur = 0;
+
+  function buildDots() {
+    const container = document.getElementById('dot-container');
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => goTo(i);
+      container.appendChild(d);
+    });
+  }
+
+  function goTo(n) {
+    slides[cur].classList.remove('active');
+    document.querySelectorAll('.dot')[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    document.querySelectorAll('.dot')[cur].classList.add('active');
+    document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + slides.length;
+    slides[cur].scrollTop = 0;
+  }
+
+  function navigate(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); navigate(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') { e.preventDefault(); navigate(-1); }
+  });
+
+  buildDots();
+  document.getElementById('slide-counter').textContent = '1 / ' + slides.length;
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('button, a, input, select, .dot, #nav-bar')) return;
+    const ratio = e.clientX / window.innerWidth;
+    if (ratio < 0.12) navigate(-1);
+    else if (ratio > 0.88) navigate(1);
+  });
+</script>
+</body>
+</html>
