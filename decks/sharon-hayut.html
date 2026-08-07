@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharon Hayut — EmberTribe AI Visibility + Reddit Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-dark: #0E2033;
+  --primary-mid: #163A5C;
+  --primary-light: #235684;
+  --accent: #C6A15B;
+
+  --ember-red: #ff333d;
+  --ember-dark: #e0202a;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+  --gold: #C6A15B;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 800px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 14px;
+  margin: 14px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 130px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FBF6EA;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 15px;
+  font-size: 14px;
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E8EEF8; border-left-color: var(--blue); }
+.annotation.info strong { color: var(--blue); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.gold { background: #FBF5E0; border-left-color: var(--gold); }
+.annotation.gold strong { color: #8B6D0A; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 170px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 26px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.gold   { background: linear-gradient(90deg, #8B6D0A, var(--gold)); }
+.bar-fill.navy   { background: linear-gradient(90deg, var(--primary-dark), var(--primary-light)); }
+
+.bar-value {
+  width: 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.reddit  { background: #FFF0E6; color: #FF4500; }
+.pill.ai      { background: #E8EEF8; color: var(--primary-dark); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+.pill.gold    { background: #FBF5E0; color: #8B6D0A; }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.four-col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.channel-card .channel-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 10px; font-size: 17px; }
+
+.channel-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 14px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 18px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold);
+  margin-bottom: 5px;
+}
+
+.timeline-phase h4 { margin-bottom: 8px; }
+
+.timeline-phase ul {
+  list-style: none;
+  padding: 0;
+}
+
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 13px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.big-stat {
+  text-align: center;
+  padding: 20px;
+  background: var(--light-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.big-stat .num {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.big-stat .lbl {
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.pricing-card {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+}
+
+.pricing-card.featured {
+  border-color: var(--gold);
+  background: #FDFAF0;
+}
+
+.pricing-card .plan-name {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.pricing-card .plan-price {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  margin-bottom: 2px;
+}
+
+.pricing-card .plan-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.pricing-card .plan-commitment {
+  font-size: 12px;
+  color: #8B6D0A;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.pricing-card ul li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.pricing-card ul li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.featured-badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gold);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.prepay-box {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.pricing-card.featured .prepay-box { border-top-color: #E8D48C; }
+.prepay-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-light);
+  margin-bottom: 3px;
+}
+.prepay-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--blue);
+}
+.prepay-eff {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+.save-tag {
+  display: inline-block;
+  background: #E8F5E9;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.subreddit-tag {
+  display: inline-block;
+  background: #FFF0E6;
+  color: #FF4500;
+  border: 1px solid #FFD0B8;
+  border-radius: 6px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 3px 3px 3px 0;
+}
+
+.cluster-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--light-bg);
+}
+.cluster-card .hub {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cluster-card .kw {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--text-light);
+  margin: 2px 2px 0 0;
+  font-family: monospace;
+}
+
+.offer-card {
+  background: #FDFAF0;
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 26px 30px;
+  position: relative;
+}
+.offer-price-old {
+  font-size: 18px;
+  color: var(--text-light);
+  text-decoration: line-through;
+  margin-right: 8px;
+}
+.offer-price {
+  font-size: 46px;
+  font-weight: 900;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+
+.deliverable {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.deliverable:last-child { border-bottom: none; }
+.deliverable .num {
+  background: var(--primary-dark);
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 15px;
+  border-radius: 8px;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-10 { margin-top: 10px; }
+.mt-12 { margin-top: 12px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+.gold-color { color: var(--gold); }
+.navy { color: var(--primary-dark); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; }
+  h2 { font-size: 28px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .four-col { grid-template-columns: 1fr 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 110px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AI Visibility + Reddit Strategy</p>
+      <h1>The Wealth Conversation Is<br>Happening on AI &amp; Reddit &mdash;<br>Without Sharon Hayut in It</h1>
+      <p class="subtitle">Every woman weighing a divorce, an inheritance, or a move to a new advisor is asking ChatGPT and reading Reddit long before she books a call. Here's how we make Sharon Hayut the advisor AI recommends by name.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">18M+</div>
+          <div class="stat-label">Members in r/personalfinance researching money decisions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--teal);">~21%</div>
+          <div class="stat-label">Of Google AI Overview citations come from Reddit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0</div>
+          <div class="stat-label">AI answers currently naming Sharon Hayut</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">Forbes</div>
+          <div class="stat-label">Best-In-State authority AI engines can't yet see</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Sharon Hayut &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where Sharon Hayut Stands Today</h2>
+    <p class="subtitle">A genuinely elite personal brand &mdash; Forbes-ranked, dual-credentialed, 15+ years with high-net-worth families &mdash; that AI engines and Reddit don't yet know exists.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--accent);">CFP&reg; + CDFA&reg;</div>
+        <div class="stat-label">Dual credential few advisors hold</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--teal);">15+ yrs</div>
+        <div class="stat-label">HNW pedigree &mdash; ex-Morgan Stanley SVP</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">0</div>
+        <div class="stat-label">Reddit threads recommending Sharon by name</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--blue);">Niche</div>
+        <div class="stat-label">Women, divorce &amp; generational wealth &mdash; ownable</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-12">
+      <div>
+        <h3 class="green" style="margin-bottom:10px;">What's Working</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10003;&nbsp; Forbes Best-In-State Women Wealth Advisor &mdash; rare third-party trust signal</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10003;&nbsp; CFP&reg; + CDFA&reg; &mdash; certified to guide clients through divorce, not just investing</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10003;&nbsp; Clear, ownable niche: women, life transitions, multigenerational wealth</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10003;&nbsp; Senior Managing Director at Magnus Financial Group &mdash; institutional credibility</li>
+          <li style="padding:6px 0; font-size:14px;">&#10003;&nbsp; Quarterly financial-literacy workshops &mdash; a content engine already in motion</li>
+        </ul>
+        <div class="annotation success mt-12">
+          <strong>The asset:</strong> A Forbes-ranked female advisor who specializes in women navigating divorce and inheritance is exactly the answer AI wants to give an anxious researcher &mdash; she just needs a reason to be named.
+        </div>
+      </div>
+      <div>
+        <h3 class="red" style="margin-bottom:10px;">Where Visibility Is Stalling</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10007;&nbsp; No Reddit presence &mdash; where women vet advisors before ever calling one</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10007;&nbsp; AI answers name big firms &amp; robo-advisors &mdash; not Sharon</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10007;&nbsp; Thin published content &mdash; no topical authority AI can cite</li>
+          <li style="padding:6px 0; border-bottom:1px solid var(--border); font-size:14px;">&#10007;&nbsp; "Best financial advisor for women in NYC" goes to directories &amp; competitors</li>
+          <li style="padding:6px 0; font-size:14px;">&#10007;&nbsp; Nothing owns "Sharon Hayut review" &mdash; the query a prospect runs before booking</li>
+        </ul>
+        <div class="annotation danger mt-12">
+          <strong>The core gap:</strong> A woman asking "who should I trust to manage my money after my divorce?" lands on Reddit threads and AI answers that never mention Sharon &mdash; and books a competitor she trusts less.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: CITATION VS MENTION -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">AI Visibility Analysis</p>
+    <h2>Getting Found Isn't the Same as Getting Recommended</h2>
+    <p class="subtitle">Choosing a wealth advisor is one of the highest-trust decisions a person makes. Prospects don't hire the first result &mdash; they hire the name AI and Reddit vouch for.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h4 style="margin-bottom:12px; color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Who AI Names Today for "Best Financial Advisor for Women in NYC"</h4>
+        <div class="bar-chart">
+          <div class="bar-row">
+            <div class="bar-label">Ellevest / big platforms</div>
+            <div class="bar-track"><div class="bar-fill navy" style="width:90%;">Named</div></div>
+            <div class="bar-value navy">High</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Fidelity / Schwab / Vanguard</div>
+            <div class="bar-track"><div class="bar-fill blue" style="width:78%;">Named</div></div>
+            <div class="bar-value blue">High</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">NAPFA / directory picks</div>
+            <div class="bar-track"><div class="bar-fill teal" style="width:65%;">Named</div></div>
+            <div class="bar-value teal">Med</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Reddit consensus advisors</div>
+            <div class="bar-track"><div class="bar-fill gold" style="width:80%;">Cited</div></div>
+            <div class="bar-value gold-color">High</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Sharon Hayut</div>
+            <div class="bar-track"><div class="bar-fill red" style="width:4%;"></div></div>
+            <div class="bar-value red">0</div>
+          </div>
+        </div>
+        <div class="annotation gold mt-16">
+          <strong>The pattern:</strong> When a woman asks an AI engine "who should I trust with my money?", it answers with brands that have community consensus and citeable content. Right now, that's never Sharon.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:12px; color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:1px;">The Citation vs. Mention Gap</h4>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+          <div style="background:#E8F5E9; border-radius:10px; padding:16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--green); text-transform:uppercase; margin-bottom:6px;">Citation (a start)</div>
+            <div style="font-size:13px; color:var(--text);">AI pulls one of Sharon's pages as a source for a broad question &mdash; "how does a QDRO work in divorce?" Her URL appears in footnotes, but no buyer intent attaches to it.</div>
+          </div>
+          <div style="background:#FFEBEE; border-radius:10px; padding:16px;">
+            <div style="font-size:12px; font-weight:700; color:var(--red); text-transform:uppercase; margin-bottom:6px;">Mention (what drives clients)</div>
+            <div style="font-size:13px; color:var(--text);">AI proactively names her &mdash; "Sharon Hayut is a Forbes-ranked CFP&reg; and CDFA&reg; in NYC who specializes in women navigating divorce and inheritance." That turns a researcher into a booked consultation.</div>
+          </div>
+          <div style="background:#FBF5E0; border-radius:10px; padding:16px;">
+            <div style="font-size:12px; font-weight:700; color:#8B6D0A; text-transform:uppercase; margin-bottom:6px;">How to earn mentions</div>
+            <div style="font-size:13px; color:var(--text);">Genuine Reddit authority + pillar content AI can cite by name = the signal engines need to recommend a person confidently. We build both at once.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: WHY REDDIT -->
+  <div class="slide dark" data-slide="4">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">The Reddit Advantage</p>
+      <h2 style="max-width:760px;">Reddit Is the #1 Upstream Data Source for Every Major AI Engine</h2>
+      <p class="subtitle" style="margin-top:12px;">And for personal finance specifically, Reddit isn't a side channel &mdash; it's where people go to ask what they'd never ask an advisor to their face.</p>
+      <div class="stats-row" style="margin-top:20px;">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">$60M</div>
+          <div class="stat-label">Google pays Reddit per year to train AI systems</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">$70M</div>
+          <div class="stat-label">OpenAI pays Reddit per year to power ChatGPT</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">~21%</div>
+          <div class="stat-label">Of all Google AI Overview citations come from Reddit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">~47%</div>
+          <div class="stat-label">Of Perplexity AI answers cite Reddit content</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">18M+</div>
+          <div class="stat-label">r/personalfinance &mdash; the default hub for money questions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent);">"Fee-only"</div>
+          <div class="stat-label">Reddit's advice trends toward exactly Sharon's model</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">0</div>
+          <div class="stat-label">Reddit threads currently naming Sharon Hayut</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: TWO-LAYER STRATEGY -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">The Strategy</p>
+    <h2>Two Layers. One Compounding System.</h2>
+    <p class="subtitle">Reddit and pillar content aren't separate tactics &mdash; they reinforce each other at every stage of AI retrieval and organic search.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <div style="background:#FFF0E6; border:1px solid #FFD0B8; border-radius:12px; padding:22px; height:100%;">
+          <div style="font-size:24px; margin-bottom:8px;">&#128172;</div>
+          <h3 style="color:#FF4500; margin-bottom:10px;">Layer 1: Reddit AEO</h3>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Feeds AI with the human-experience signals and community consensus that drive brand mentions</p>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:5px 0; border-bottom:1px solid #FFD0B8; font-size:13px;">&#10003;&nbsp; Genuine expert participation in high-AI-indexed finance subreddits</li>
+            <li style="padding:5px 0; border-bottom:1px solid #FFD0B8; font-size:13px;">&#10003;&nbsp; Thread seeding: "How do I find a financial advisor after divorce?" &mdash; asked constantly, answered poorly</li>
+            <li style="padding:5px 0; border-bottom:1px solid #FFD0B8; font-size:13px;">&#10003;&nbsp; Educational, first-person answers formatted for AI retrieval</li>
+            <li style="padding:5px 0; border-bottom:1px solid #FFD0B8; font-size:13px;">&#10003;&nbsp; Covers long-tail conversational queries women actually type</li>
+            <li style="padding:5px 0; font-size:13px;">&#10003;&nbsp; Builds consensus AI treats as a trusted recommendation</li>
+          </ul>
+          <div style="margin-top:14px; padding:10px; background:white; border-radius:8px; font-size:12px; color:#FF4500; font-weight:600;">
+            Result: AI finds community proof that Sharon is the trusted, credentialed choice for women
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#FBF5E0; border:1px solid #E8D48C; border-radius:12px; padding:22px; height:100%;">
+          <div style="font-size:24px; margin-bottom:8px;">&#128218;</div>
+          <h3 style="color:#8B6D0A; margin-bottom:10px;">Layer 2: Pillar SEO Content</h3>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:12px;">Feeds AI with authoritative, structured, citeable source material that also drives organic traffic</p>
+          <ul style="list-style:none; padding:0;">
+            <li style="padding:5px 0; border-bottom:1px solid #E8D48C; font-size:13px;">&#10003;&nbsp; Entity-rich guides AI engines can confidently cite by name</li>
+            <li style="padding:5px 0; border-bottom:1px solid #E8D48C; font-size:13px;">&#10003;&nbsp; Topical clusters that establish women's-wealth &amp; divorce-finance authority</li>
+            <li style="padding:5px 0; border-bottom:1px solid #E8D48C; font-size:13px;">&#10003;&nbsp; Covers divorce, inheritance, retirement, estate &amp; sudden-wealth intent</li>
+            <li style="padding:5px 0; border-bottom:1px solid #E8D48C; font-size:13px;">&#10003;&nbsp; Reddit threads link back to pillar articles &mdash; amplifying both</li>
+            <li style="padding:5px 0; font-size:13px;">&#10003;&nbsp; Drives organic traffic independent of AI discovery</li>
+          </ul>
+          <div style="margin-top:14px; padding:10px; background:white; border-radius:8px; font-size:12px; color:#8B6D0A; font-weight:600;">
+            Result: AI has authoritative pages to surface and cite Sharon Hayut by name
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation success" style="margin-top:12px;">
+      <strong>Why both matter:</strong> Reddit without content = social proof with nowhere to send a prospect. Content without Reddit = articles AI can't build consensus around. Together they move Sharon from invisible to recommended.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: REDDIT EXECUTION -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Reddit Execution</p>
+    <h2>The Seeding Process &mdash; Built for a Regulated Advisor</h2>
+    <p class="subtitle">Your future clients are already asking the right questions on Reddit. Our job is to make Sharon the credentialed voice they find &mdash; the compliant way.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+            <div style="background:#FBF5E0; color:#8B6D0A; font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">1</div>
+            <div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Subreddit Landscape Mapping</div>
+              <div style="font-size:13px; color:var(--text-light);">Identify which subreddits AI engines already index for divorce-finance, women's-wealth, retirement, and "how to pick an advisor" queries</div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+            <div style="background:#FBF5E0; color:#8B6D0A; font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">2</div>
+            <div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Discovery &amp; Analysis</div>
+              <div style="font-size:13px; color:var(--text-light);">Find threads already ranking on Google or cited by AI &mdash; "financial advisor after divorce", "what to do with an inheritance", "is a financial advisor worth it"</div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+            <div style="background:#FBF5E0; color:#8B6D0A; font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">3</div>
+            <div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Educational Comment Strategy</div>
+              <div style="font-size:13px; color:var(--text-light);">Genuinely helpful, first-person answers that establish Sharon's expertise &mdash; formatted for AI retrieval, never spam, never a fabricated testimonial</div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start;">
+            <div style="background:#FBF5E0; color:#8B6D0A; font-weight:800; font-size:16px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">4</div>
+            <div>
+              <div style="font-weight:700; font-size:14px; margin-bottom:3px;">Thread Seeding &amp; Authority Posts</div>
+              <div style="font-size:13px; color:var(--text-light);">Original explainer posts &mdash; "how a CDFA&reg; actually helps in a divorce" &mdash; that become the reference AI and searchers cite</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation info mt-12">
+          <strong>Compliance-aware by design:</strong> Sharon is a registered advisor, so we build authority through <em>education and genuine participation</em> &mdash; aligned with the SEC Marketing Rule. No invented client testimonials, no performance promises. All copy is yours to review before anything goes live.
+        </div>
+      </div>
+      <div>
+        <h4 style="margin-bottom:10px; color:var(--text-light); font-size:12px; text-transform:uppercase; letter-spacing:1px;">Target Subreddits</h4>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Women &amp; Wealth</div>
+          <span class="subreddit-tag">r/MoneyDiariesACTIVE</span>
+          <span class="subreddit-tag">r/womeninvesting</span>
+          <span class="subreddit-tag">r/AskWomenOver30</span>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">Divorce &amp; Life Transitions</div>
+          <span class="subreddit-tag">r/Divorce</span>
+          <span class="subreddit-tag">r/widowers</span>
+          <span class="subreddit-tag">r/inheritance</span>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">High-Net-Worth Planning</div>
+          <span class="subreddit-tag">r/fatFIRE</span>
+          <span class="subreddit-tag">r/ChubbyFIRE</span>
+          <span class="subreddit-tag">r/RichPeoplePF</span>
+          <span class="subreddit-tag">r/estateplanning</span>
+        </div>
+        <div style="margin-bottom:10px;">
+          <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:5px;">General / High-AI-Indexed</div>
+          <span class="subreddit-tag">r/personalfinance</span>
+          <span class="subreddit-tag">r/financialplanning</span>
+          <span class="subreddit-tag">r/investing</span>
+        </div>
+        <div style="margin-top:12px; background:#FBF6EA; border-left:3px solid var(--gold); border-radius:0 8px 8px 0; padding:10px 12px; font-size:13px;">
+          <strong style="color:#8B6D0A;">Top AI-targetable queries:</strong> "Financial advisor after divorce" &bull; "What to do with an inheritance" &bull; "How to choose a financial advisor" &bull; "Financial planning for women" &bull; "Do I need a CFP or a CDFA?"
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: REDDIT MENTION PLAYBOOK -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Reddit Mention Strategy</p>
+    <h2>Subreddit Playbook: Where Your Clients Are Already Asking</h2>
+    <p class="subtitle">These subreddits are actively indexed by Google and AI engines for money, divorce, and advisor-selection queries &mdash; and Sharon isn't in a single thread.</p>
+
+    <table style="margin-top:8px; font-size:13px;">
+      <thead>
+        <tr>
+          <th style="width:19%;">Subreddit</th>
+          <th style="width:9%;">Members</th>
+          <th style="width:14%;">Client Type</th>
+          <th style="width:33%;">Best Thread Angles for Sharon</th>
+          <th style="width:13%;">AI Index Priority</th>
+          <th style="width:12%;">Placement Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">r/personalfinance</td>
+          <td>18M+</td>
+          <td><span class="pill blue">Broad</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"Is a financial advisor worth it?" / "How do I vet a fee-only advisor?"</td>
+          <td><span class="pill green">Very High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/Divorce</td>
+          <td>250K+</td>
+          <td><span class="pill orange">Women</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"How do I protect my finances in a divorce?" / "What does a CDFA&reg; actually do?"</td>
+          <td><span class="pill green">Very High</span></td>
+          <td style="font-size:12px;">Comment + seed</td>
+        </tr>
+        <tr>
+          <td class="bold">r/fatFIRE</td>
+          <td>500K+</td>
+          <td><span class="pill seo">HNW</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"When is a wealth advisor worth the fee at 7 figures?" / "Advisor vs. DIY at $5M+"</td>
+          <td><span class="pill green">Very High</span></td>
+          <td style="font-size:12px;">Comment + seed</td>
+        </tr>
+        <tr>
+          <td class="bold">r/MoneyDiariesACTIVE</td>
+          <td>250K+</td>
+          <td><span class="pill orange">Women</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"How do women my age actually build wealth?" / "Finding an advisor who gets women"</td>
+          <td><span class="pill green">High</span></td>
+          <td style="font-size:12px;">Comment + seed</td>
+        </tr>
+        <tr>
+          <td class="bold">r/inheritance</td>
+          <td>40K+</td>
+          <td><span class="pill content">Transition</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"Just inherited $XXX &mdash; what do I do first?" / "Do I need an advisor for a windfall?"</td>
+          <td><span class="pill green">Very High</span></td>
+          <td style="font-size:12px;">Comment + seed</td>
+        </tr>
+        <tr>
+          <td class="bold">r/estateplanning</td>
+          <td>90K+</td>
+          <td><span class="pill content">HNW</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"How do I pass wealth to my kids tax-efficiently?" / "Advisor + estate attorney coordination"</td>
+          <td><span class="pill green">High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/widowers</td>
+          <td>60K+</td>
+          <td><span class="pill orange">Transition</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"Lost my spouse &mdash; overwhelmed by the finances" / "Who helps with sudden money decisions?"</td>
+          <td><span class="pill orange">Medium-High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/ChubbyFIRE</td>
+          <td>250K+</td>
+          <td><span class="pill seo">HNW</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"Retirement income strategy for $2&ndash;5M" / "When to bring in a real advisor"</td>
+          <td><span class="pill green">High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/womeninvesting</td>
+          <td>120K+</td>
+          <td><span class="pill orange">Women</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"How do I start taking control of my finances?" / "Financial literacy resources for women"</td>
+          <td><span class="pill green">High</span></td>
+          <td style="font-size:12px;">Comment + seed</td>
+        </tr>
+        <tr>
+          <td class="bold">r/RichPeoplePF</td>
+          <td>250K+</td>
+          <td><span class="pill seo">HNW</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"What does a good advisor actually do for HNW clients?" / "Fee structures worth paying"</td>
+          <td><span class="pill green">High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/financialplanning</td>
+          <td>800K+</td>
+          <td><span class="pill blue">Broad</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"CFP vs CDFA &mdash; which do I need?" / "How to choose the right advisor for my situation"</td>
+          <td><span class="pill green">Very High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/AskWomenOver30</td>
+          <td>800K+</td>
+          <td><span class="pill orange">Women</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"How did you get financially confident?" / "Best money moves in your 40s/50s"</td>
+          <td><span class="pill orange">Medium-High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+        <tr>
+          <td class="bold">r/investing</td>
+          <td>3M+</td>
+          <td><span class="pill blue">Broad</span></td>
+          <td style="font-size:12px; color:var(--text-light);">"Advisor or index funds for a large portfolio?" / "When complexity justifies professional help"</td>
+          <td><span class="pill orange">Medium-High</span></td>
+          <td style="font-size:12px;">Comment</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="stats-row mt-12" style="gap:12px;">
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value" style="color:var(--ember-red); font-size:28px;">0</div>
+        <div class="stat-label">Current Sharon Hayut mentions across these subreddits</div>
+      </div>
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value" style="color:var(--green); font-size:28px;">25M+</div>
+        <div class="stat-label">Combined reach across target subreddits</div>
+      </div>
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value" style="color:var(--accent); font-size:28px;">3&ndash;5</div>
+        <div class="stat-label">Weeks until AI engines begin indexing placements</div>
+      </div>
+      <div class="stat-card" style="text-align:center;">
+        <div class="stat-value" style="color:var(--teal); font-size:28px;">~21%</div>
+        <div class="stat-label">Of Google AI Overview citations come from Reddit</div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: PILLAR-CLUSTER STRATEGY -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Pillar-Cluster Strategy</p>
+    <h2>The Topical Authority Map</h2>
+    <p class="subtitle">Eight pillar hubs, each surrounded by a cluster of supporting keywords. Pillars earn AI citations; clusters capture the long tail and link up to the hub &mdash; the structure AI engines read as topical authority.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1;" class="mt-8">
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill orange">Pillar 1</span> Financial Planning for Women</div>
+        <span class="kw">financial advisor for women</span>
+        <span class="kw">women and wealth</span>
+        <span class="kw">financial planning for women</span>
+        <span class="kw">how women build wealth</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">Sharon's signature niche &bull; <span class="green">Commercial</span> &bull; the central hub every other pillar links to</div>
+      </div>
+
+      <div class="cluster-card" style="border-color:var(--gold); background:#FDFAF0;">
+        <div class="hub"><span class="pill gold">Pillar 2</span> Divorce Financial Planning (CDFA&reg;)</div>
+        <span class="kw">financial advisor for divorce</span>
+        <span class="kw">what is a CDFA</span>
+        <span class="kw">dividing assets in divorce</span>
+        <span class="kw">financial planning after divorce</span>
+        <div style="font-size:11px; color:#8B6D0A; margin-top:6px;">Highest-intent differentiator &bull; <span class="green">Commercial</span> &bull; pairs with r/Divorce placements</div>
+      </div>
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill seo">Pillar 3</span> High-Net-Worth Wealth Management</div>
+        <span class="kw">high net worth financial advisor</span>
+        <span class="kw">wealth management strategies</span>
+        <span class="kw">how much for a wealth advisor</span>
+        <span class="kw">managing a $5M portfolio</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">Core client value &bull; <span class="green">Commercial</span> &bull; pairs with r/fatFIRE + r/RichPeoplePF</div>
+      </div>
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill blue">Pillar 4</span> Inheritance &amp; Sudden Wealth</div>
+        <span class="kw">what to do with an inheritance</span>
+        <span class="kw">sudden wealth management</span>
+        <span class="kw">inherited money financial advisor</span>
+        <span class="kw">windfall planning</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">High-intent life event &bull; <span class="green">Commercial</span> &bull; pairs with r/inheritance</div>
+      </div>
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill content">Pillar 5</span> Retirement &amp; Income Planning</div>
+        <span class="kw">retirement planning for high earners</span>
+        <span class="kw">retirement income strategies</span>
+        <span class="kw">how much do I need to retire</span>
+        <span class="kw">retirement planning for women</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">Broad, high-volume &bull; <span class="blue">Informational</span> &bull; strong internal-link magnet</div>
+      </div>
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill blue">Pillar 6</span> Estate Planning &amp; Generational Wealth</div>
+        <span class="kw">how to pass wealth to children</span>
+        <span class="kw">estate planning basics</span>
+        <span class="kw">generational wealth strategies</span>
+        <span class="kw">gifting money to family</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">Multigenerational focus &bull; <span class="blue">Informational</span> &bull; pairs with r/estateplanning</div>
+      </div>
+
+      <div class="cluster-card">
+        <div class="hub"><span class="pill orange">Pillar 7</span> Financial Literacy &amp; Confidence</div>
+        <span class="kw">financial literacy for women</span>
+        <span class="kw">how to start investing</span>
+        <span class="kw">taking control of your finances</span>
+        <span class="kw">money confidence for women</span>
+        <div style="font-size:11px; color:var(--text-light); margin-top:6px;">Repurposes her workshops &bull; <span class="blue">Informational</span> &bull; top-of-funnel reach</div>
+      </div>
+
+      <div class="cluster-card" style="border-color:var(--gold); background:#FDFAF0;">
+        <div class="hub"><span class="pill gold">Pillar 8</span> Choosing a Financial Advisor <span style="font-size:10px; color:#8B6D0A; font-weight:700;">(BOTTOM-FUNNEL)</span></div>
+        <span class="kw">how to choose a financial advisor</span>
+        <span class="kw">fee-only vs commission advisor</span>
+        <span class="kw">questions to ask a financial advisor</span>
+        <span class="kw">sharon hayut review</span>
+        <div style="font-size:11px; color:#8B6D0A; margin-top:6px;">Decision-stage &bull; <span class="green">Commercial</span> &bull; <strong>own your brand query before competitors do</strong></div>
+      </div>
+
+    </div>
+    <div class="annotation info mt-10">
+      <strong>The Reddit connection:</strong> Each pillar article becomes a reference link inside seeded Reddit threads &mdash; "here's a clear breakdown of how a CDFA&reg; helps in divorce," linking to the hub. Reddit drives the engagement signal; the article captures the AI citation. Both compound together.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: ROADMAP -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 6 Months to AI Visibility</h2>
+    <p class="subtitle">Reddit authority and pillar content compound &mdash; each month builds on the last. Early placements keep gaining weight while new content deepens topical authority.</p>
+    <div class="timeline flex-grow mt-16">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Foundation</h4>
+        <ul>
+          <li>Subreddit landscape audit</li>
+          <li>Thread discovery &amp; targeting list</li>
+          <li>First Reddit placements live</li>
+          <li>Pillar-cluster map locked</li>
+          <li>First article batch published</li>
+          <li>Brand-query article live ("Sharon Hayut review")</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:#FDFAF0; border-color:#E8D48C;">
+        <span class="phase-label">Month 2</span>
+        <h4>Expand &amp; Amplify</h4>
+        <ul>
+          <li>Expanded placements + seeded threads</li>
+          <li>Cross-link Reddit &#8594; pillar hubs</li>
+          <li>Divorce + inheritance pillars published</li>
+          <li>First AI-citation movement</li>
+          <li>Competitor displacement begins</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Lift &amp; Optimize</h4>
+        <ul>
+          <li>Brand mentions appear in AI answers</li>
+          <li>First Reddit threads indexed by Google</li>
+          <li>Cluster keywords start ranking</li>
+          <li>Adjust targeting on citation data</li>
+          <li>Content velocity hits stride</li>
+        </ul>
+      </div>
+      <div class="timeline-phase" style="background:#FDFAF0; border-color:#E8D48C;">
+        <span class="phase-label">Months 4&ndash;6</span>
+        <h4>Compounding Authority</h4>
+        <ul>
+          <li>Community consensus established</li>
+          <li>AI cites &amp; names Sharon by brand</li>
+          <li>"Advisor for women after divorce" &mdash; Sharon wins</li>
+          <li>Category presence in AI search</li>
+          <li>Organic traffic growing independently</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation gold mt-12">
+      <strong>Why it compounds:</strong> Reddit threads age into credibility &mdash; early placements keep accumulating upvotes and AI-indexing weight. By Month 6, a woman researching "financial advisor after divorce in NYC" finds Sharon's name in the answer, the thread, and the article all at once.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: AI VISIBILITY PRICING -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">The Ongoing Engagement</p>
+    <h2>AI Visibility Packages</h2>
+    <p class="subtitle">Once the roadmap sets the plan, these packages execute it month over month. AEO drives demand capture, content builds authority, backlinks strengthen trust &mdash; compounding AI visibility.</p>
+
+    <div class="three-col mt-8" style="gap:16px; flex:1;">
+      <div class="pricing-card">
+        <div class="plan-name">AI Visibility Starter</div>
+        <div class="plan-price">$1,750<span style="font-size:16px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="plan-sub">Get your name into AI conversations</div>
+        <ul>
+          <li>5 AEO placements / month</li>
+          <li>10 SEO articles / month</li>
+          <li>Subreddit landscape mapping</li>
+          <li>Thread discovery &amp; comment strategy</li>
+          <li>Quarterly performance report</li>
+        </ul>
+        <div class="prepay-box">
+          <div class="prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="prepay-price">$4,725</div>
+          <div class="prepay-eff">$1,575/mo effective</div>
+          <span class="save-tag">Save $525</span>
+        </div>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="plan-name">AI Growth Engine</div>
+        <div class="plan-price" style="color:var(--gold);">$3,450<span style="font-size:16px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="plan-sub">Accelerate authority + content velocity</div>
+        <ul>
+          <li>8 AEO placements / month</li>
+          <li>25 SEO articles / month</li>
+          <li>2 DA40+ authority backlinks / month</li>
+          <li>Full thread seeding + authority posts</li>
+          <li>Backlink target prioritization</li>
+          <li>Keyword cluster expansion</li>
+          <li>Quarterly performance reporting</li>
+        </ul>
+        <div class="prepay-box">
+          <div class="prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="prepay-price">$9,315</div>
+          <div class="prepay-eff">$3,105/mo effective</div>
+          <span class="save-tag">Save $1,035</span>
+        </div>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">AI Authority Accelerator</div>
+        <div class="plan-price">$5,250<span style="font-size:16px; font-weight:400; color:var(--text-light);">/mo</span></div>
+        <div class="plan-sub">Dominate your category in AI search</div>
+        <ul>
+          <li>12 AEO placements / month</li>
+          <li>40 SEO articles / month</li>
+          <li>2 DA50+ authority backlinks / month</li>
+          <li>Full competitive displacement strategy</li>
+          <li>Technical SEO management</li>
+          <li>Quarterly reporting &amp; strategy sessions</li>
+          <li>Priority page &amp; content optimization</li>
+        </ul>
+        <div class="prepay-box">
+          <div class="prepay-label">Quarterly Prepay &mdash; 10% Off</div>
+          <div class="prepay-price">$14,175</div>
+          <div class="prepay-eff">$4,725/mo effective</div>
+          <span class="save-tag">Save $1,575</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation info" style="margin-top:14px;">
+      <strong>All packages include:</strong> ClusterMagic keyword research, AI-assisted content refined by expert editors, the compliance-aware Reddit process, and monthly AI-visibility benchmarking vs. your top competitors.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: THE OFFER — SEO GROWTH ROADMAP -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Start Here</p>
+    <h2>The SEO Growth Roadmap &mdash; Your De-Risked First Step</h2>
+    <p class="subtitle">Before committing to a monthly engagement, see the exact plan. The Roadmap maps your keyword and AI-visibility opportunity into a step-by-step blueprint &mdash; delivered in 48 hours.</p>
+    <div class="two-col flex-grow mt-8" style="gap:24px;">
+      <div>
+        <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+          <div class="deliverable" style="padding:14px 18px;">
+            <div class="num">1</div>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Strategic Deck (13 slides)</div>
+              <div style="font-size:12px; color:var(--text-light);">Competitor analysis, your top 10 missed searches with traffic value, "almost there" keywords ranking #11&ndash;30, technical issues, and 3/6/12-month traffic projections</div>
+            </div>
+          </div>
+          <div class="deliverable" style="padding:14px 18px;">
+            <div class="num">2</div>
+            <div>
+              <div style="font-weight:700; font-size:14px;">3-Month Content Plan (120 articles)</div>
+              <div style="font-size:12px; color:var(--text-light);">40 articles/month across 4 thematic clusters, tagged by buyer-journey stage, with traffic potential and difficulty ratings</div>
+            </div>
+          </div>
+          <div class="deliverable" style="padding:14px 18px;">
+            <div class="num">3</div>
+            <div>
+              <div style="font-weight:700; font-size:14px;">Keyword Research Workbook</div>
+              <div style="font-size:12px; color:var(--text-light);">300&ndash;500 researched keyword opportunities across 4 tabs &mdash; the 120 selected articles plus excluded options with reasoning</div>
+            </div>
+          </div>
+          <div class="deliverable" style="padding:14px 18px;">
+            <div class="num">4</div>
+            <div>
+              <div style="font-weight:700; font-size:14px;">30-Minute Growth Consultation</div>
+              <div style="font-size:12px; color:var(--text-light);">1:1 with a senior strategist to walk the findings, the rationale, and your specific questions</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation success mt-12">
+          <strong>Risk-free guarantee:</strong> Complete onboarding and if the Roadmap doesn't deliver useful insight, you get a full refund &mdash; processed within 5 business days.
+        </div>
+      </div>
+      <div>
+        <div class="offer-card" style="height:100%; display:flex; flex-direction:column; justify-content:center;">
+          <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#8B6D0A; margin-bottom:10px;">The Offer</div>
+          <div style="margin-bottom:6px;">
+            <span class="offer-price-old">$197</span>
+            <span class="offer-price">$47</span>
+          </div>
+          <div style="font-size:13px; color:var(--text-light); margin-bottom:18px;">One-time. No subscription. No commitment.</div>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; gap:10px; align-items:center; font-size:13px;"><span style="color:var(--gold); font-weight:800;">&#10003;</span> 5-minute onboarding to kick off</div>
+            <div style="display:flex; gap:10px; align-items:center; font-size:13px;"><span style="color:var(--gold); font-weight:800;">&#10003;</span> Delivered in 48 business hours</div>
+            <div style="display:flex; gap:10px; align-items:center; font-size:13px;"><span style="color:var(--gold); font-weight:800;">&#10003;</span> Built specifically for sharonhayut.com</div>
+            <div style="display:flex; gap:10px; align-items:center; font-size:13px;"><span style="color:var(--gold); font-weight:800;">&#10003;</span> Yours to keep &mdash; whether or not you continue</div>
+          </div>
+          <div style="margin-top:20px; padding:14px; background:var(--primary-dark); border-radius:10px; text-align:center;">
+            <div style="font-size:13px; color:var(--accent); font-weight:600;">The Roadmap becomes the blueprint your AI Visibility package executes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Sharon Hayut &mdash; AI Visibility + Reddit Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: NEXT STEPS -->
+  <div class="slide dark" data-slide="12">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1 style="max-width:760px;">Become the Advisor<br>AI Recommends by Name</h1>
+      <p class="subtitle" style="text-align:center; max-width:620px; margin-top:12px;">Every week without a Reddit presence and citeable content is a week a big platform or a competitor builds the AI consensus Sharon Hayut should own. Start with the Roadmap &mdash; see the plan before you commit a dollar to execution.</p>
+      <div class="stats-row mt-24" style="justify-content:center; max-width:820px;">
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:26px;">Step 1</div>
+          <div class="stat-label" style="margin-top:6px;">Claim your SEO Growth Roadmap &mdash; $47, delivered in 48 hours, fully refundable</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:26px;">Step 2</div>
+          <div class="stat-label" style="margin-top:6px;">Review it on your 30-minute consultation &mdash; findings, plan, and priorities</div>
+        </div>
+        <div class="stat-card" style="text-align:center;">
+          <div class="stat-value" style="color:var(--accent); font-size:26px;">Step 3</div>
+          <div class="stat-label" style="margin-top:6px;">Choose your AI Visibility package &mdash; and go live within 7 days of kickoff</div>
+        </div>
+      </div>
+      <div style="margin-top:28px; font-size:17px; font-weight:700; color:#ffffff;">Claim Your SEO Growth Roadmap &mdash; <span style="color:var(--accent);">$47</span></div>
+      <div style="font-size:14px; color:rgba(255,255,255,0.5); margin-top:6px;">offers.embertribe.com/seo-growth-roadmap</div>
+      <div class="logo-row" style="width:100%; margin-top:auto;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; Prepared for Sharon Hayut</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
