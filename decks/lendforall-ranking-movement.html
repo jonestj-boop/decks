@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LendForAll Canada — Ranking Movement</title>
+<style>
+  :root{
+    --primary-dark:#1a1a2e; --primary-mid:#16213e; --primary-light:#0f3460;
+    --accent:#e94560; --ember-red:#ff333d; --ember-dark:#e0202a;
+    --text:#2c3e50; --text-light:#7f8c8d; --light-bg:#f8f9fa; --card-bg:#fff;
+    --border:#e9ecef; --green:#27AE60; --red:#E74C3C; --teal:#00B4D8; --blue:#3498DB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#e9edf2;color:var(--text);line-height:1.5;padding:32px 16px;}
+  .page{max-width:980px;margin:0 auto;background:var(--card-bg);border-radius:14px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.12);}
+  .header{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-mid) 50%,var(--primary-light) 100%);color:#fff;padding:34px 40px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px;font-size:13px;text-transform:uppercase;color:rgba(255,255,255,.75);}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--ember-red);box-shadow:0 0 0 4px rgba(255,51,61,.25);}
+  h1{font-size:29px;font-weight:800;margin:14px 0 6px;}
+  .sub{color:rgba(255,255,255,.7);font-size:15px;}
+  .verdict{display:inline-block;margin-top:16px;background:rgba(39,174,96,.18);border:1px solid rgba(39,174,96,.5);color:#7ee2a8;font-weight:700;font-size:13px;padding:7px 14px;border-radius:30px;}
+  .body{padding:30px 40px 40px;}
+  /* explainer */
+  .explain{display:flex;gap:14px;align-items:flex-start;background:#EAF4FB;border:1px solid #cfe6f6;border-radius:10px;padding:14px 18px;margin-bottom:26px;font-size:13.5px;}
+  .explain .ic{font-size:20px;line-height:1.2;}
+  .explain b{color:var(--primary-dark);}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:30px;}
+  .kpi{background:var(--light-bg);border:1px solid var(--border);border-radius:10px;padding:16px 14px;text-align:center;}
+  .kpi .big{font-size:26px;font-weight:800;color:var(--primary-dark);line-height:1.1;}
+  .kpi .lbl{font-size:12px;color:var(--text-light);font-weight:600;margin-top:6px;}
+  .section-label{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ember-red);margin-bottom:6px;}
+  h2{font-size:19px;font-weight:800;color:var(--primary-dark);margin-bottom:4px;}
+  .scale-note{font-size:11.5px;color:var(--text-light);margin-bottom:16px;}
+  /* rank track rows */
+  .track-head{display:grid;grid-template-columns:1fr 300px 118px;gap:14px;align-items:center;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-light);font-weight:700;padding:0 0 8px;border-bottom:2px solid var(--border);margin-bottom:6px;}
+  .track-head .zones{position:relative;height:14px;}
+  .track-head .zones span{position:absolute;top:0;font-size:10px;}
+  .row{display:grid;grid-template-columns:1fr 300px 118px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);}
+  .row:last-child{border-bottom:none;}
+  .q{font-weight:600;font-size:13.5px;}
+  .q .imp{display:block;font-size:11px;color:var(--text-light);font-weight:500;}
+  .track{position:relative;height:26px;background:linear-gradient(90deg,rgba(39,174,96,.16) 0%,rgba(39,174,96,.16) 20%,var(--light-bg) 20%,var(--light-bg) 100%);border:1px solid var(--border);border-radius:6px;}
+  .track .p1line{position:absolute;left:20%;top:-3px;bottom:-3px;width:2px;background:var(--green);opacity:.5;}
+  .seg{position:absolute;top:50%;height:3px;background:var(--ember-red);transform:translateY(-50%);border-radius:2px;}
+  .dot{position:absolute;top:50%;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);}
+  .dot.jun{background:#fff;border:2px solid var(--text-light);}
+  .dot.now{background:var(--ember-red);border:2px solid #fff;box-shadow:0 0 0 1px var(--ember-red);}
+  .move{text-align:right;font-weight:800;font-size:14px;}
+  .move small{display:block;font-weight:600;font-size:10.5px;color:var(--text-light);}
+  .up{color:var(--green);} .down{color:var(--red);}
+  .p1badge{display:inline-block;font-size:9.5px;font-weight:800;background:rgba(39,174,96,.14);color:var(--green);padding:2px 6px;border-radius:10px;margin-left:6px;vertical-align:middle;}
+  .legend{display:flex;gap:20px;margin-top:14px;font-size:11.5px;color:var(--text-light);flex-wrap:wrap;}
+  .legend span{display:flex;align-items:center;gap:7px;}
+  .ld{width:13px;height:13px;border-radius:50%;}
+  .block{margin-top:34px;}
+  .watch .track .seg{background:var(--red);}
+  .watch .dot.now{background:var(--red);box-shadow:0 0 0 1px var(--red);}
+  .callout{margin-top:30px;background:#FFF8E1;border-left:4px solid var(--ember-red);border-radius:0 10px 10px 0;padding:18px 22px;font-size:14px;}
+  .callout b{color:var(--primary-dark);}
+  .foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--text-light);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  @media print{body{background:#fff;padding:0;}.page{box-shadow:none;border-radius:0;max-width:100%;}}
+  @media(max-width:760px){.kpis{grid-template-columns:1fr;}.track-head,.row{grid-template-columns:1fr 150px 90px;}.track-head .zones{display:none;}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="brand"><span class="dot"></span>EmberTribe &nbsp;·&nbsp; Organic Search</div>
+    <h1>LendForAll Canada — Ranking Movement</h1>
+    <div class="sub">Average Google position by query · June 2026 vs. last 30 days</div>
+    <div class="verdict">✔ Core money terms climbing — two now on page 1</div>
+  </div>
+
+  <div class="body">
+    <div class="explain">
+      <span class="ic">🧭</span>
+      <div><b>How to read this:</b> “Position” is your average rank in Google results — <b>lower is better</b> (position 1 = top of page 1; positions 1–10 = page 1). So a move from <b>29 → 12</b> means the term <b>climbed 17 spots</b> up the results. Green = moved up; red = slipped. <i>(This is different from the clicks table in the recovery report — that one counted visits, where higher is better.)</i></div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="big">6 of 7</div><div class="lbl">core money terms climbed vs. June</div></div>
+      <div class="kpi"><div class="big">2</div><div class="lbl">core terms now on page 1 (top 10)</div></div>
+      <div class="kpi"><div class="big">341</div><div class="lbl">queries tracked with steady visibility</div></div>
+    </div>
+
+    <div class="section-label">Core money terms</div>
+    <h2>The keywords that drive applications</h2>
+    <div class="scale-note">Scale below runs position 1 (left) → 50 (right). Shaded band = page 1 (positions 1–10). ○ June &nbsp;•&nbsp; ● now.</div>
+
+    <div class="track-head">
+      <div>Query</div>
+      <div class="zones"><span style="left:0;color:var(--green);font-weight:800;">◄ Page 1</span><span style="right:0;">deeper ►</span></div>
+      <div style="text-align:right;">Jun → Now</div>
+    </div>
+
+    <!-- rows: track width scale = position/50*100%, capped -->
+    <div class="row">
+      <div class="q">loans for bad credit<span class="imp">2,686 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:24.8%;width:33.6%;"></div><div class="dot jun" style="left:58.4%;"></div><div class="dot now" style="left:24.8%;"></div></div>
+      <div class="move up">29 → 12<small class="up">▲ up 17</small></div>
+    </div>
+    <div class="row">
+      <div class="q">bad credit loans<span class="imp">1,136 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:29.4%;width:34.4%;"></div><div class="dot jun" style="left:63.8%;"></div><div class="dot now" style="left:29.4%;"></div></div>
+      <div class="move up">32 → 15<small class="up">▲ up 17</small></div>
+    </div>
+    <div class="row">
+      <div class="q">bad credit loans canada<span class="imp">813 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:19.6%;width:14.2%;"></div><div class="dot jun" style="left:33.8%;"></div><div class="dot now" style="left:19.6%;"></div></div>
+      <div class="move up">17 → 9.8<small class="up">▲ page 1 <span class="p1badge">NEW</span></small></div>
+    </div>
+    <div class="row">
+      <div class="q">loans for bad credit canada<span class="imp">501 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:19.2%;width:9.8%;"></div><div class="dot jun" style="left:29%;"></div><div class="dot now" style="left:19.2%;"></div></div>
+      <div class="move up">15 → 9.6<small class="up">▲ page 1 <span class="p1badge">NEW</span></small></div>
+    </div>
+    <div class="row">
+      <div class="q">personal loans canada<span class="imp">613 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:21.6%;width:11.2%;"></div><div class="dot jun" style="left:32.8%;"></div><div class="dot now" style="left:21.6%;"></div></div>
+      <div class="move up">16 → 11<small class="up">▲ up 5</small></div>
+    </div>
+    <div class="row">
+      <div class="q">no credit check loans canada<span class="imp">102 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:43.8%;width:39.2%;"></div><div class="dot jun" style="left:83%;"></div><div class="dot now" style="left:43.8%;"></div></div>
+      <div class="move up">42 → 22<small class="up">▲ up 20</small></div>
+    </div>
+    <div class="row">
+      <div class="q">payday loans alberta<span class="imp">234 impressions</span></div>
+      <div class="track"><div class="p1line"></div><div class="seg" style="left:86.6%;width:2.8%;"></div><div class="dot jun" style="left:89.4%;"></div><div class="dot now" style="left:86.6%;"></div></div>
+      <div class="move up">45 → 43<small class="up">▲ up 1</small></div>
+    </div>
+
+    <div class="legend">
+      <span><span class="ld" style="background:#fff;border:2px solid var(--text-light);"></span>June position</span>
+      <span><span class="ld" style="background:var(--ember-red);border:2px solid #fff;box-shadow:0 0 0 1px var(--ember-red);"></span>Position now</span>
+      <span><span class="ld" style="border-radius:2px;width:16px;height:10px;background:rgba(39,174,96,.35);"></span>Page 1 zone (1–10)</span>
+    </div>
+
+    <div class="block">
+      <div class="section-label">Biggest upward movers</div>
+      <h2>Deeper long-tail terms surging up the results</h2>
+      <div class="scale-note">A sample of the wider recovery — terms that jumped 25+ positions since June (each with steady impressions).</div>
+      <div class="track-head">
+        <div>Query</div><div class="zones"><span style="left:0;color:var(--green);font-weight:800;">◄ Page 1</span><span style="right:0;">deeper ►</span></div><div style="text-align:right;">Jun → Now</div>
+      </div>
+      <div class="row">
+        <div class="q">guaranteed approval loans for poor credit canada<span class="imp">100 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:50%;width:65%;max-width:calc(100% - 50%);"></div><div class="dot jun" style="left:100%;"></div><div class="dot now" style="left:50%;"></div></div>
+        <div class="move up">58 → 25<small class="up">▲ up 33</small></div>
+      </div>
+      <div class="row">
+        <div class="q">bad credit loans no credit check<span class="imp">59 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:27.8%;width:61%;"></div><div class="dot jun" style="left:88.8%;"></div><div class="dot now" style="left:27.8%;"></div></div>
+        <div class="move up">44 → 14<small class="up">▲ up 30</small></div>
+      </div>
+      <div class="row">
+        <div class="q">bad credit loans guaranteed approval<span class="imp">67 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:39.2%;width:51.2%;"></div><div class="dot jun" style="left:90.4%;"></div><div class="dot now" style="left:39.2%;"></div></div>
+        <div class="move up">45 → 20<small class="up">▲ up 26</small></div>
+      </div>
+      <div class="row">
+        <div class="q">bad credit financing<span class="imp">144 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:68.4%;width:31.6%;"></div><div class="dot jun" style="left:100%;"></div><div class="dot now" style="left:68.4%;"></div></div>
+        <div class="move up">62 → 34<small class="up">▲ up 27</small></div>
+      </div>
+    </div>
+
+    <div class="block watch">
+      <div class="section-label">Watch list — slipped since June</div>
+      <h2>The honest other side</h2>
+      <div class="scale-note">A handful of terms lost ground and are on our radar for the next optimization pass.</div>
+      <div class="track-head">
+        <div>Query</div><div class="zones"><span style="left:0;color:var(--green);font-weight:800;">◄ Page 1</span><span style="right:0;">deeper ►</span></div><div style="text-align:right;">Jun → Now</div>
+      </div>
+      <div class="row">
+        <div class="q">payday loans<span class="imp">492 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:21.8%;width:22.6%;"></div><div class="dot jun" style="left:21.8%;"></div><div class="dot now" style="left:44.4%;"></div></div>
+        <div class="move down">11 → 22<small class="down">▼ down 11</small></div>
+      </div>
+      <div class="row">
+        <div class="q">payday loans toronto<span class="imp">172 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:14.8%;width:17.6%;"></div><div class="dot jun" style="left:14.8%;"></div><div class="dot now" style="left:32.4%;"></div></div>
+        <div class="move down">7 → 16<small class="down">▼ down 9</small></div>
+      </div>
+      <div class="row">
+        <div class="q">borrow money<span class="imp">128 impressions</span></div>
+        <div class="track"><div class="p1line"></div><div class="seg" style="left:33.8%;width:17%;"></div><div class="dot jun" style="left:33.8%;"></div><div class="dot now" style="left:50.8%;"></div></div>
+        <div class="move down">17 → 25<small class="down">▼ down 8</small></div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>Bottom line for the call:</b> the recovery isn't just more clicks — it's <b>underlying rank gains on the terms that matter most</b>. LendForAll's two biggest bad-credit-loan phrases (<b>“loans for bad credit,” “bad credit loans”</b>) each climbed ~17 spots to the top of page 2, and the Canada-qualified versions have <b>broken onto page 1</b>. That's what's converting into the click recovery — and the ~2,000 keywords still sitting on pages 3–5 are the next tranche a link push can move up.
+    </div>
+
+    <div class="foot">
+      <span>Source: Google Search Console (sc-domain:lendforall.ca). Avg. position, impression-weighted. Terms shown had ≥20 impressions in both periods.</span>
+      <span>Prepared by EmberTribe · Aug 6, 2026</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
