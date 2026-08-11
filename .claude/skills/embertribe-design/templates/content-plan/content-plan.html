@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — CONTENT PLAN TEMPLATE (keyword-research-driven SEO plan)
+     Structure: summary stats → pillar/funnel charts → month tabs → article tables.
+
+     HOW TO USE (for Claude Code)
+     1. Copy this whole folder into the client repo (keep /fonts alongside).
+     2. Set --client-accent to the client color. Keep the red/black/honey frame.
+     3. Optional client logo on the masthead.
+     4. PILLARS: define the client's content pillars in :root (--pillar-1..4) and
+        reuse those colors on every .pillar-chip. Update the "Coverage by pillar" bars.
+     5. Duplicate a <section class="month"> per month; give it data-month="N" and add
+        a matching tab. Duplicate <tr> rows and fill in article / keyword / volume / KD.
+     6. KD pill color = difficulty band (see .kd helper classes). Add REFRESH badge on
+        rows that update an existing post.
+     RULES: headers Sentence case · labels ALL CAPS · Quatro · numbers tabular.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Name — 6-Month Content Plan · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2F5D7C; --client-accent-soft:#eaf1f6;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --bg:#f4f5f7; --border:#e5e7eb;
+    /* Content pillars — set these to the client's pillars, reuse on every chip */
+    --pillar-1:#FF333C; --pillar-2:#2F5D7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    /* Keyword-difficulty (KD) bands */
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --maxw:1200px;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--bg); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--et-red); color:#fff; border-bottom:5px solid var(--et-black);
+              padding:56px 0 48px; position:relative; overflow:hidden; }
+  .masthead::after { content:"e"; position:absolute; right:-30px; bottom:-150px; font-weight:700;
+    font-size:480px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .masthead .wrap { position:relative; z-index:1; }
+  .masthead .client-logo { max-height:40px; max-width:180px; margin-bottom:22px; object-fit:contain; }
+  .masthead .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); margin-bottom:12px; }
+  .masthead h1 { margin:0 0 10px; font-weight:700; font-size:44px; line-height:1.02; letter-spacing:-0.02em; }
+  .masthead .sub { font-size:17px; color:rgba(255,255,255,0.92); }
+  .masthead .sub b { font-weight:700; }
+  .masthead .meta { margin-top:16px; font-size:13px; color:rgba(255,255,255,0.8); }
+
+  /* ── SUMMARY CARDS ─────────────────────────────────────────────────── */
+  .section { padding:32px 0; }
+  .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+  .card .num { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); font-variant-numeric:tabular-nums; }
+  .card .num.red { color:var(--et-red); } .card .num.accent { color:var(--client-accent); }
+  .card .lbl { font-size:12px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.06em; margin-top:8px; }
+
+  /* ── CHARTS ────────────────────────────────────────────────────────── */
+  .charts { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+  .chart-card h3 { margin:0 0 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-500); }
+  .bar-row { display:grid; grid-template-columns:150px 1fr 40px; align-items:center; gap:12px; margin-bottom:10px; }
+  .bar-row:last-child { margin-bottom:0; }
+  .bar-label { font-size:13.5px; }
+  .bar-track { height:22px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:6px; }
+  .bar-count { font-size:13px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* ── MONTH TABS ────────────────────────────────────────────────────── */
+  .month-tabs { display:flex; gap:8px; flex-wrap:wrap; position:sticky; top:0; z-index:20;
+                background:var(--bg); padding:14px 0; border-bottom:1px solid var(--border); }
+  .tab { display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+         border:1px solid var(--border); border-radius:10px; padding:9px 16px; cursor:pointer;
+         font-family:inherit; color:var(--ink-700); transition:all .15s; min-width:104px; }
+  .tab:hover { border-color:var(--et-red); }
+  .tab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .tab .tab-num { font-weight:700; font-size:14.5px; }
+  .tab .tab-count { font-size:11px; opacity:0.8; margin-top:2px; text-transform:uppercase; letter-spacing:0.04em; }
+  .tab-all { margin-left:auto; }
+  .tab-all.is-active { background:var(--et-black); border-color:var(--et-black); }
+
+  /* ── MONTH SECTION ─────────────────────────────────────────────────── */
+  section.month { background:var(--surface); border:1px solid var(--border); border-radius:12px;
+                  margin-bottom:20px; overflow:hidden; display:none; }
+  section.month.is-active { display:block; }
+  body.show-all section.month { display:block !important; }
+  .month-head { background:var(--et-black); color:#fff; padding:18px 24px; display:flex;
+                align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .month-head h2 { margin:0; font-weight:700; font-size:21px; letter-spacing:-0.01em; }
+  .month-stats { font-size:13px; display:flex; gap:20px; flex-wrap:wrap; color:rgba(255,255,255,0.72); }
+  .month-stats strong { color:var(--et-honey); font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; }
+  thead th { text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase;
+             letter-spacing:0.07em; color:var(--ink-500); background:var(--ink-50); border-bottom:1px solid var(--border); }
+  thead th.num, tbody td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tbody td { padding:14px 16px; border-bottom:1px solid var(--border); vertical-align:top; font-size:14px; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover td { background:var(--ink-50); }
+  .r-num { color:var(--ink-300); font-weight:700; font-variant-numeric:tabular-nums; }
+  .title { font-weight:600; color:var(--et-black); margin-bottom:7px; line-height:1.35; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:5px; }
+  .note { font-size:12px; color:var(--ink-500); font-style:italic; margin-top:6px; }
+
+  /* chips */
+  .pillar-chip, .funnel-chip, .intent-chip { display:inline-block; font-size:10.5px; padding:2px 9px;
+    border-radius:20px; font-weight:700; letter-spacing:0.03em; }
+  .pillar-chip { color:#fff; }
+  .funnel-chip { background:var(--ink-100); color:var(--ink-600); }
+  .intent-chip { background:#fff4e0; color:#9a6a00; }
+  .badge-refresh { display:inline-block; font-size:9.5px; padding:2px 7px; border-radius:5px; font-weight:700;
+    letter-spacing:0.06em; background:#fff0d6; color:#a86a00; vertical-align:middle; margin-left:4px; }
+
+  /* keyword */
+  .kw code { background:var(--ink-50); border:1px solid var(--border); padding:4px 9px; border-radius:6px;
+    font-size:12.5px; color:var(--ink-700); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; }
+
+  /* KD pill */
+  .kd-pill { display:inline-block; min-width:34px; text-align:center; padding:3px 9px; border-radius:20px;
+    color:#fff; font-weight:700; font-size:13px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);}
+  .kd-pill.m{background:var(--kd-m);color:var(--et-black);} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .kd-label { font-size:11px; color:var(--ink-500); margin-top:3px; }
+
+  /* ── METHODOLOGY FOOTER ────────────────────────────────────────────── */
+  .method { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px 26px;
+            font-size:13px; color:var(--ink-500); line-height:1.7; }
+  .method h3 { margin:0 0 10px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--et-black); }
+  .method strong { color:var(--ink-700); }
+  .legend-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+
+  @media (max-width:820px) {
+    .summary { grid-template-columns:repeat(2,1fr); } .charts { grid-template-columns:1fr; }
+    .bar-row { grid-template-columns:110px 1fr 36px; }
+    thead th:nth-child(3), tbody td.kw { display:none; }
+    .masthead h1 { font-size:32px; } .month-tabs { position:static; }
+    .tab { min-width:0; padding:8px 12px; } .tab-all { margin-left:0; }
+  }
+  @media print {
+    body, body.show-all { background:#fff; } .month-tabs { display:none; }
+    section.month { display:block !important; page-break-inside:avoid; border:none; }
+    tbody tr:hover td { background:transparent; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ MASTHEAD ══════════════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="wrap">
+    <img class="client-logo" src="" alt="" onerror="this.style.display='none'">
+    <div class="label">6-Month Content Plan</div>
+    <h1>Client Name</h1>
+    <div class="sub"><b>150 articles</b> &middot; 25 per month &middot; SEO content roadmap</div>
+    <div class="meta">Based on keyword research — 10,000+ keywords across 47 clusters, prioritized by volume &amp; difficulty.</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ══ SUMMARY STATS ═══════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="summary">
+      <div class="card"><div class="num red">150</div><div class="lbl">Articles planned</div></div>
+      <div class="card"><div class="num">426,633</div><div class="lbl">Total monthly search volume</div></div>
+      <div class="card"><div class="num accent">104</div><div class="lbl">Low-difficulty wins (KD ≤ 35)</div></div>
+      <div class="card"><div class="num">12</div><div class="lbl">Existing posts to refresh</div></div>
+    </div>
+  </section>
+
+  <!-- ══ CHARTS ══════════════════════════════════════════════════════════ -->
+  <section class="section" style="padding-top:0">
+    <div class="charts">
+      <div class="chart-card">
+        <h3>Coverage by pillar</h3>
+        <div class="bar-row"><div class="bar-label">Pillar one</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--pillar-1)"></div></div><div class="bar-count">49</div></div>
+        <div class="bar-row"><div class="bar-label">Pillar two</div><div class="bar-track"><div class="bar-fill" style="width:86%;background:var(--pillar-2)"></div></div><div class="bar-count">42</div></div>
+        <div class="bar-row"><div class="bar-label">Pillar three</div><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--pillar-3)"></div></div><div class="bar-count">32</div></div>
+        <div class="bar-row"><div class="bar-label">Pillar four</div><div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--pillar-4)"></div></div><div class="bar-count">27</div></div>
+      </div>
+      <div class="chart-card">
+        <h3>Funnel mix</h3>
+        <div class="bar-row"><div class="bar-label">Top of funnel</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--et-honey)"></div></div><div class="bar-count">97</div></div>
+        <div class="bar-row"><div class="bar-label">Middle of funnel</div><div class="bar-track"><div class="bar-fill" style="width:53%;background:var(--client-accent)"></div></div><div class="bar-count">51</div></div>
+        <div class="bar-row"><div class="bar-label">Bottom of funnel</div><div class="bar-track"><div class="bar-fill" style="width:8%;background:var(--et-red)"></div></div><div class="bar-count">2</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MONTH TABS ══════════════════════════════════════════════════════ -->
+  <nav class="month-tabs" id="tabs">
+    <button class="tab is-active" data-target="1"><span class="tab-num">Month 1</span><span class="tab-count">25 articles</span></button>
+    <button class="tab" data-target="2"><span class="tab-num">Month 2</span><span class="tab-count">25 articles</span></button>
+    <button class="tab" data-target="3"><span class="tab-num">Month 3</span><span class="tab-count">25 articles</span></button>
+    <button class="tab" data-target="4"><span class="tab-num">Month 4</span><span class="tab-count">25 articles</span></button>
+    <button class="tab" data-target="5"><span class="tab-num">Month 5</span><span class="tab-count">25 articles</span></button>
+    <button class="tab" data-target="6"><span class="tab-num">Month 6</span><span class="tab-count">25 articles</span></button>
+    <button class="tab tab-all" data-target="all"><span class="tab-num">All months</span><span class="tab-count">150 articles</span></button>
+  </nav>
+
+  <section class="section" style="padding-top:20px">
+
+    <!-- ══ MONTH BLOCK — duplicate per month; data-month must match tab ══ -->
+    <section class="month is-active" data-month="1">
+      <header class="month-head">
+        <h2>Month 1</h2>
+        <div class="month-stats">
+          <span><strong>25</strong> articles</span>
+          <span><strong>17,470</strong> total monthly searches</span>
+          <span>Avg difficulty: <strong>34</strong></span>
+        </div>
+      </header>
+      <table>
+        <thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="r-num">1</td>
+            <td>
+              <div class="title">How [topic] actually works — the plain-English guide</div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-1)">Pillar one</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Commercial</span></div>
+              <div class="note">Pillar hub — links all sub-posts in this cluster.</div>
+            </td>
+            <td class="kw"><code>how does [topic] work</code></td>
+            <td class="num">1,300</td>
+            <td class="num"><span class="kd-pill ve">14</span><div class="kd-label">Very easy</div></td>
+          </tr>
+          <tr>
+            <td class="r-num">2</td>
+            <td>
+              <div class="title">[Product] vs [competitor]: an honest comparison</div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-2)">Pillar two</span><span class="funnel-chip">Middle of funnel</span><span class="intent-chip">Commercial</span></div>
+            </td>
+            <td class="kw"><code>[product] vs [competitor]</code></td>
+            <td class="num">2,900</td>
+            <td class="num"><span class="kd-pill e">29</span><div class="kd-label">Easy</div></td>
+          </tr>
+          <tr>
+            <td class="r-num">3</td>
+            <td>
+              <div class="title">The complete beginner's guide to [category] <span class="badge-refresh">REFRESH</span></div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-3)">Pillar three</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Info</span></div>
+              <div class="note">Refresh existing /beginners-guide/ — expand into full pillar hub.</div>
+            </td>
+            <td class="kw"><code>how to [category]</code></td>
+            <td class="num">8,100</td>
+            <td class="num"><span class="kd-pill m">41</span><div class="kd-label">Moderate</div></td>
+          </tr>
+          <tr>
+            <td class="r-num">4</td>
+            <td>
+              <div class="title">Best [product] for [use case] in 2026</div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-1)">Pillar one</span><span class="funnel-chip">Bottom of funnel</span><span class="intent-chip">Commercial</span></div>
+            </td>
+            <td class="kw"><code>best [product] [use case]</code></td>
+            <td class="num">4,400</td>
+            <td class="num"><span class="kd-pill h">67</span><div class="kd-label">Hard</div></td>
+          </tr>
+          <tr>
+            <td class="r-num">5</td>
+            <td>
+              <div class="title">[High-volume head term] explained</div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-4)">Pillar four</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Info</span></div>
+              <div class="note">AEO / answer-box play — high volume, evergreen.</div>
+            </td>
+            <td class="kw"><code>[head term]</code></td>
+            <td class="num">90,500</td>
+            <td class="num"><span class="kd-pill vh">77</span><div class="kd-label">Very hard</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ Remaining months — same structure, fill from keyword research ══ -->
+    <section class="month" data-month="2">
+      <header class="month-head">
+        <h2>Month 2</h2>
+        <div class="month-stats"><span><strong>25</strong> articles</span><span><strong>105,237</strong> total monthly searches</span><span>Avg difficulty: <strong>33</strong></span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="r-num">1</td>
+            <td>
+              <div class="title">[Article title from keyword research] <span class="badge-refresh">REFRESH</span></div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-2)">Pillar two</span><span class="funnel-chip">Middle of funnel</span><span class="intent-chip">Commercial</span></div>
+              <div class="note">Refresh existing post.</div>
+            </td>
+            <td class="kw"><code>[primary keyword]</code></td>
+            <td class="num">1,000</td>
+            <td class="num"><span class="kd-pill e">30</span><div class="kd-label">Easy</div></td>
+          </tr>
+          <tr>
+            <td class="r-num">2</td>
+            <td>
+              <div class="title">[Article title]</div>
+              <div class="chips"><span class="pillar-chip" style="background:var(--pillar-3)">Pillar three</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Info</span></div>
+            </td>
+            <td class="kw"><code>[primary keyword]</code></td>
+            <td class="num">22,200</td>
+            <td class="num"><span class="kd-pill m">43</span><div class="kd-label">Moderate</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="month" data-month="3">
+      <header class="month-head"><h2>Month 3</h2><div class="month-stats"><span><strong>25</strong> articles</span><span><strong>186,645</strong> total monthly searches</span><span>Avg difficulty: <strong>33</strong></span></div></header>
+      <table><thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody><tr><td class="r-num">1</td><td><div class="title">[Article title]</div><div class="chips"><span class="pillar-chip" style="background:var(--pillar-1)">Pillar one</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Commercial</span></div></td><td class="kw"><code>[primary keyword]</code></td><td class="num">590</td><td class="num"><span class="kd-pill ve">14</span><div class="kd-label">Very easy</div></td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="month" data-month="4">
+      <header class="month-head"><h2>Month 4</h2><div class="month-stats"><span><strong>25</strong> articles</span><span><strong>32,526</strong> total monthly searches</span><span>Avg difficulty: <strong>34</strong></span></div></header>
+      <table><thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody><tr><td class="r-num">1</td><td><div class="title">[Article title]</div><div class="chips"><span class="pillar-chip" style="background:var(--pillar-4)">Pillar four</span><span class="funnel-chip">Middle of funnel</span><span class="intent-chip">Commercial</span></div></td><td class="kw"><code>[primary keyword]</code></td><td class="num">1,457</td><td class="num"><span class="kd-pill e">25</span><div class="kd-label">Easy</div></td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="month" data-month="5">
+      <header class="month-head"><h2>Month 5</h2><div class="month-stats"><span><strong>25</strong> articles</span><span><strong>68,740</strong> total monthly searches</span><span>Avg difficulty: <strong>33</strong></span></div></header>
+      <table><thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody><tr><td class="r-num">1</td><td><div class="title">[Article title]</div><div class="chips"><span class="pillar-chip" style="background:var(--pillar-2)">Pillar two</span><span class="funnel-chip">Top of funnel</span><span class="intent-chip">Info</span></div></td><td class="kw"><code>[primary keyword]</code></td><td class="num">319</td><td class="num"><span class="kd-pill ve">20</span><div class="kd-label">Very easy</div></td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="month" data-month="6">
+      <header class="month-head"><h2>Month 6</h2><div class="month-stats"><span><strong>25</strong> articles</span><span><strong>16,015</strong> total monthly searches</span><span>Avg difficulty: <strong>32</strong></span></div></header>
+      <table><thead><tr><th style="width:44px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Monthly searches</th><th class="num">Difficulty (KD)</th></tr></thead>
+        <tbody><tr><td class="r-num">1</td><td><div class="title">[Article title]</div><div class="chips"><span class="pillar-chip" style="background:var(--pillar-3)">Pillar three</span><span class="funnel-chip">Middle of funnel</span><span class="intent-chip">Commercial</span></div></td><td class="kw"><code>[primary keyword]</code></td><td class="num">753</td><td class="num"><span class="kd-pill e">27</span><div class="kd-label">Easy</div></td></tr></tbody>
+      </table>
+    </section>
+
+  </section>
+
+  <!-- ══ METHODOLOGY ═════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="method">
+      <h3>Methodology &amp; how to read this plan</h3>
+      <p>Every article is mapped to a <strong>content pillar</strong>, a <strong>funnel stage</strong> (top / middle / bottom), and a <strong>search intent</strong> (informational, commercial, navigational). Articles are sequenced to front-load low-difficulty, high-relevance wins that can rank quickly, then build toward higher-volume, more competitive terms as domain authority grows.</p>
+      <p><strong>Monthly searches</strong> = combined monthly search volume for the target keyword cluster. <strong>Difficulty (KD)</strong> = keyword difficulty on a 0–100 scale.</p>
+      <div class="legend-row">
+        <span class="kd-pill ve">0–20</span><span class="kd-label" style="margin:0">Very easy</span>
+        <span class="kd-pill e">21–35</span><span class="kd-label" style="margin:0">Easy</span>
+        <span class="kd-pill m">36–50</span><span class="kd-label" style="margin:0">Moderate</span>
+        <span class="kd-pill h">51–70</span><span class="kd-label" style="margin:0">Hard</span>
+        <span class="kd-pill vh">71–100</span><span class="kd-label" style="margin:0">Very hard</span>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:40px"></div>
+</div>
+
+<script>
+  const tabs = [...document.querySelectorAll('.tab')];
+  const months = [...document.querySelectorAll('.month')];
+  const body = document.body;
+  function activate(target) {
+    tabs.forEach(t => t.classList.toggle('is-active', t.getAttribute('data-target') === target));
+    if (target === 'all') {
+      body.classList.add('show-all');
+    } else {
+      body.classList.remove('show-all');
+      months.forEach(m => m.classList.toggle('is-active', m.getAttribute('data-month') === target));
+    }
+    try { localStorage.setItem('et-content-tab', target); } catch (e) {}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.getAttribute('data-target'))));
+  try {
+    const saved = localStorage.getItem('et-content-tab');
+    if (saved && tabs.some(t => t.getAttribute('data-target') === saved)) activate(saved);
+  } catch (e) {}
+</script>
+</body>
+</html>

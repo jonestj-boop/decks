@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — CLIENT REPORT / ONE-PAGER TEMPLATE
+     Long scrolling report. CRO audit · ecommerce report · implementation workbook.
+
+     HOW TO USE (for Claude Code)
+     1. Copy this whole folder into the client repo (keep /fonts alongside).
+     2. Set --client-accent to the client color (see TOKENS). Keep the red/black/
+        honey EmberTribe palette — that's the house frame.
+     3. Optional client logo on the masthead (see .masthead).
+     4. Duplicate any <section class="block"> and fill with real content. Every
+        module you need appears once below — reorder/duplicate, don't invent new ones.
+     5. Sidebar nav auto-builds from each <section class="block" id="…" data-nav="…">.
+     RULES: headers Sentence case · labels ALL CAPS · bullets em-dash (—) · Quatro.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Name — CRO Audit · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2F5D7C; --client-accent-soft:#eaf1f6;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .client-logo { max-height:46px; max-width:200px; margin-bottom:30px; object-fit:contain; }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:#fff; font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── SCORE GAUGE (CRO audit) ───────────────────────────────────────── */
+  .score { display:flex; align-items:center; gap:26px; background:var(--subtle); border-radius:16px; padding:26px 30px; margin:10px 0; }
+  .score .ring { --p:64; width:104px; height:104px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring::after { content:""; position:absolute; }
+  .score .ring b { width:78px; height:78px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--et-black); }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  /* ── FINDINGS (numbered) ───────────────────────────────────────────── */
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 62px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); } .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  /* ── FIGURE PLACEHOLDER ────────────────────────────────────────────── */
+  .figure { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:220px;
+            display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:24px; margin:16px 0; }
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══ SIDEBAR (nav auto-fills from sections) ══════════════════════════ -->
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">CRO Audit</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>sales@embertribe.com</div>
+  </aside>
+
+  <main>
+    <!-- ══ MASTHEAD ══════════════════════════════════════════════════════ -->
+    <section class="masthead" id="top">
+      <img class="client-logo" src="" alt="" onerror="this.style.display='none'">
+      <div class="label">Conversion Rate Audit</div>
+      <h1>Client Name<br>CRO audit</h1>
+      <p class="subtitle">A page-by-page teardown of where revenue is leaking — and the highest-leverage fixes, ranked.</p>
+      <div class="meta">
+        <div>Prepared for<b>Client stakeholder</b></div>
+        <div>Date<b>Month 2026</b></div>
+        <div>Pages reviewed<b>Home · PDP · Cart · Checkout</b></div>
+      </div>
+    </section>
+
+    <!-- ══ EXECUTIVE SUMMARY ═════════════════════════════════════════════ -->
+    <section class="block" id="summary" data-nav="Executive summary">
+      <div class="label">Executive summary</div>
+      <h2>The headline</h2>
+      <p class="lede">The store converts at 2.1% against a category benchmark of ~3.2%. Closing even half that gap is a ~26% revenue lift on the traffic you already pay for.</p>
+      <p>We reviewed the full purchase path and found 12 issues. Three are responsible for most of the leak — all three are fixable inside 30 days without touching ad spend.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">2.1%</div><div class="k">Current conversion rate</div></div>
+        <div class="stat"><div class="v accent">3.2%</div><div class="k">Category benchmark</div></div>
+        <div class="stat"><div class="v good">+26%</div><div class="k">Revenue at half the gap</div></div>
+        <div class="stat"><div class="v accent">12</div><div class="k">Issues identified</div></div>
+      </div>
+      <div class="callout"><strong>Bottom line:</strong> the traffic is healthy. The money is being lost between the product page and the confirmation screen.</div>
+    </section>
+
+    <!-- ══ SCORE / SCORECARD ═════════════════════════════════════════════ -->
+    <section class="block" id="score" data-nav="Overall score">
+      <div class="label">Scorecard</div>
+      <h2>How the funnel scores</h2>
+      <div class="score">
+        <div class="ring" style="--p:64;position:relative"><b>64</b></div>
+        <div class="st"><h3>Conversion health: 64 / 100</h3><p>Above average on speed and trust, dragged down by product-page clarity and a heavy checkout.</p></div>
+      </div>
+      <div class="bars">
+        <div class="bar"><div class="bl">Site speed</div><div class="bt"><div class="bf" style="width:82%"></div></div><div class="bv">82</div></div>
+        <div class="bar"><div class="bl">Trust &amp; proof</div><div class="bt"><div class="bf" style="width:74%"></div></div><div class="bv">74</div></div>
+        <div class="bar"><div class="bl">Product page</div><div class="bt"><div class="bf red" style="width:48%"></div></div><div class="bv">48</div></div>
+        <div class="bar"><div class="bl">Checkout</div><div class="bt"><div class="bf red" style="width:41%"></div></div><div class="bv">41</div></div>
+      </div>
+    </section>
+
+    <!-- ══ FINDINGS (numbered, prioritized) ══════════════════════════════ -->
+    <section class="block" id="findings" data-nav="Key findings">
+      <div class="label">Findings</div>
+      <h2>What's costing conversions</h2>
+      <div class="finding">
+        <div class="fn">01</div>
+        <div>
+          <h3>Product page buries the add-to-cart</h3>
+          <p>On mobile the CTA sits below three scrolls of copy. 60% of sessions never reach it. This is the single biggest leak in the funnel.</p>
+          <div class="tag-row"><span class="pill p1">P1 · Critical</span><span class="pill eff">Effort: Low</span><span class="pill eff">Est. lift: +12%</span></div>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="fn">02</div>
+        <div>
+          <h3>Checkout forces account creation</h3>
+          <p>No guest checkout. Forced sign-up is the #1 cause of abandonment in the category — you're losing an estimated 22% of ready buyers here.</p>
+          <div class="tag-row"><span class="pill p1">P1 · Critical</span><span class="pill eff">Effort: Med</span><span class="pill eff">Est. lift: +9%</span></div>
+        </div>
+      </div>
+      <div class="finding">
+        <div class="fn">03</div>
+        <div>
+          <h3>No visible trust signals near the buy box</h3>
+          <p>Reviews, returns policy, and payment badges are absent at the decision point. Adding them is a fast, high-confidence win.</p>
+          <div class="tag-row"><span class="pill p2">P2 · High</span><span class="pill eff">Effort: Low</span><span class="pill eff">Est. lift: +4%</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ DATA TABLE ════════════════════════════════════════════════════ -->
+    <section class="block" id="funnel" data-nav="Funnel data">
+      <div class="label">Funnel data</div>
+      <h2>Where users drop off</h2>
+      <table>
+        <thead><tr><th>Funnel step</th><th class="num">Sessions</th><th class="num">Drop-off</th><th class="num">Benchmark</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Landing → PDP</td><td class="num">100%</td><td class="num">−34%</td><td class="num dim">−28%</td><td><span class="pill p2">Watch</span></td></tr>
+          <tr><td class="strong">PDP → Add to cart</td><td class="num">66%</td><td class="num down">−71%</td><td class="num dim">−52%</td><td><span class="pill p1">Critical</span></td></tr>
+          <tr><td class="strong">Cart → Checkout</td><td class="num">19%</td><td class="num">−21%</td><td class="num dim">−20%</td><td><span class="pill p3">OK</span></td></tr>
+          <tr><td class="strong">Checkout → Purchase</td><td class="num">15%</td><td class="num down">−48%</td><td class="num dim">−26%</td><td><span class="pill p1">Critical</span></td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">Trailing 90-day session data. Benchmark = category median for comparable AOV.</p>
+    </section>
+
+    <!-- ══ FIGURE / SCREENSHOT ═══════════════════════════════════════════ -->
+    <section class="block" id="evidence" data-nav="Evidence">
+      <div class="label">Evidence</div>
+      <h2>What we're looking at</h2>
+      <p>Annotated screenshots make findings concrete. Drop client-safe captures here with callouts.</p>
+      <div class="figure">[ Annotated screenshot — e.g. mobile PDP with the buried CTA circled ]</div>
+    </section>
+
+    <!-- ══ RECOMMENDATIONS / ROADMAP ═════════════════════════════════════ -->
+    <section class="block" id="recommendations" data-nav="Recommendations">
+      <div class="label">Recommendations</div>
+      <h2>The fix list, in order</h2>
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>This week — quick wins</h3></div>
+        <ul class="checklist"><li>Move add-to-cart above the fold on mobile PDP</li><li>Add review stars + returns badge to the buy box</li><li>Surface free-shipping threshold in the cart</li></ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Weeks 2–4 — structural fixes</h3></div>
+        <ul class="checklist"><li>Enable guest checkout</li><li>Collapse checkout to a single page</li><li>Add express payment (Apple / Shop Pay)</li></ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Ongoing — test &amp; learn</h3></div>
+        <ul class="checklist"><li>A/B test PDP layout variants</li><li>Add exit-intent offer on cart</li><li>Monthly funnel review against benchmark</li></ul>
+      </div>
+    </section>
+
+    <!-- ══ CTA ═══════════════════════════════════════════════════════════ -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>Ready to close the gap?</h2>
+      <p>We can have the week-one fixes live in five business days. Let's book a working session to prioritize and start.</p>
+      <a class="btn" href="mailto:sales@embertribe.com">Book a working session →</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Build sidebar nav from sections that declare data-nav
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>

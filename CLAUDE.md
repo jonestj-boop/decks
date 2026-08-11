@@ -35,6 +35,11 @@ embertribe-decks/
 |-------|---------|
 | `pitch-deck` | Generate branded audit/pitch decks from prospect data — output to `decks/{slug}.html` |
 | `seo-growth-roadmap` | Generate SEO growth roadmap bundle (deck + xlsx) — output to `decks/{client-slug}/` |
+| `embertribe-design` | EmberTribe brand design system — tokens, Quatro fonts, logos, components, and page templates (`templates/growth-roadmap-deck`, `templates/client-report`, `templates/content-plan`) |
+
+## Design system
+
+The EmberTribe brand design system lives in `.claude/skills/embertribe-design/`. **Load the `embertribe-design` skill before generating or restyling any deck, report, or other EmberTribe-branded HTML** — colors, type, spacing, and logo rules come from its tokens and guidelines, not from memory. The `pitch-deck` and `seo-growth-roadmap` templates predate the design system; if their styling conflicts with it, flag the discrepancy for Josh rather than silently changing the templates.
 
 ## Rules
 

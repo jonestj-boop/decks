@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6-Month Content Plan — Lend For All Canada</title>
+<style>
+  :root {
+    --lfa-primary: #46AE41;
+    --lfa-secondary: #357A32;
+    --lfa-accent: #8CC53F;
+    --lfa-dark: #111E26;
+    --text: #2a3340;
+    --muted: #6b7684;
+    --border: #e5e9ee;
+    --bg: #f7f9fb;
+    --surface: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  header.top {
+    background: linear-gradient(135deg, var(--lfa-secondary) 0%, var(--lfa-primary) 50%, var(--lfa-accent) 100%);
+    color: white;
+    padding: 48px 32px;
+    border-radius: 14px;
+    margin-bottom: 28px;
+  }
+  header.top h1 { margin: 0 0 8px; font-size: 34px; letter-spacing: -0.5px; }
+  header.top .sub { opacity: 0.95; font-size: 17px; }
+  header.top .meta { margin-top: 20px; font-size: 14px; opacity: 0.85; }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card .num { font-size: 32px; font-weight: 700; color: var(--lfa-secondary); line-height: 1; margin-bottom: 6px; }
+  .card .lbl { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .chart-card h3 {
+    margin: 0 0 14px;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+  }
+  .bar-row { display: grid; grid-template-columns: 160px 1fr 40px; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .bar-label { font-size: 14px; }
+  .bar-track { height: 20px; background: var(--bg); border-radius: 10px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 10px; }
+  .bar-count { font-size: 13px; color: var(--muted); text-align: right; }
+
+  .month-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    padding: 12px 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text);
+    transition: all 0.15s ease;
+    min-width: 110px;
+  }
+  .tab:hover { border-color: var(--lfa-primary); background: #fafcfb; }
+  .tab.is-active {
+    background: var(--lfa-secondary);
+    border-color: var(--lfa-secondary);
+    color: white;
+  }
+  .tab .tab-num { font-weight: 700; font-size: 15px; line-height: 1.2; }
+  .tab .tab-count { font-size: 11px; opacity: 0.75; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .tab-all { margin-left: auto; }
+
+  section.month {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    display: none;
+  }
+  section.month.is-active { display: block; }
+  body.show-all section.month { display: block !important; }
+  .month-head {
+    background: var(--lfa-dark);
+    color: white;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .month-head h2 { margin: 0; font-size: 22px; }
+  .month-stats { font-size: 13px; opacity: 0.9; display: flex; gap: 18px; flex-wrap: wrap; }
+  .month-stats strong { color: var(--lfa-accent); font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  thead th.num, tbody td.num { text-align: right; }
+  tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    font-size: 14px;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: #fafcfb; }
+
+  .title { font-weight: 600; color: var(--lfa-dark); margin-bottom: 6px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+  .pillar-chip, .funnel-chip, .intent-chip {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .pillar-chip { color: white; }
+  .funnel-chip { background: #eef3f7; color: #4a5664; }
+  .intent-chip { background: #fff6e6; color: #8a5a00; }
+  .note { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 6px; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+  .badge-refresh { background: #fff0d6; color: #a86a00; }
+
+  .kw code {
+    background: #f1f4f7;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    color: var(--lfa-dark);
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  .kd-pill {
+    display: inline-block;
+    min-width: 36px;
+    text-align: center;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .kd-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  footer {
+    margin-top: 40px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  footer h3 { color: var(--lfa-dark); font-size: 15px; margin: 0 0 10px; }
+  footer strong { color: var(--text); }
+
+  @media (max-width: 768px) {
+    .summary { grid-template-columns: repeat(2, 1fr); }
+    .charts { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 110px 1fr 35px; }
+    thead th:nth-child(3), tbody td.kw { display: none; }
+    header.top h1 { font-size: 26px; }
+    .month-tabs { position: static; }
+    .tab { min-width: 80px; padding: 8px 10px; }
+    .tab-all { margin-left: 0; }
+  }
+  @media print {
+    body, body.show-all { background: white; }
+    header.top { background: var(--lfa-secondary); }
+    .month-tabs { display: none; }
+    section.month { display: block !important; page-break-inside: avoid; break-inside: avoid; }
+    tbody tr:hover { background: transparent; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <h1>6-Month Content Plan</h1>
+  <div class="sub">Lend For All Canada &middot; 150 articles &middot; 25 per month</div>
+  <div class="meta">Based on SEMrush keyword research (10,285 Canadian keywords across 47 clusters)</div>
+</header>
+
+<section class="summary">
+  <div class="card">
+    <div class="num">150</div>
+    <div class="lbl">Articles planned</div>
+  </div>
+  <div class="card">
+    <div class="num">426,633</div>
+    <div class="lbl">Total monthly search volume</div>
+  </div>
+  <div class="card">
+    <div class="num">104</div>
+    <div class="lbl">Low-difficulty wins (KD ≤ 35)</div>
+  </div>
+  <div class="card">
+    <div class="num">12</div>
+    <div class="lbl">Existing posts to refresh</div>
+  </div>
+</section>
+
+<section class="charts">
+  <div class="chart-card">
+    <h3>Coverage by Pillar</h3>
+    
+        <div class="bar-row">
+          <div class="bar-label">Personal Finance</div>
+          <div class="bar-track"><div class="bar-fill" style="width:32.7%;background:#6B9E67"></div></div>
+          <div class="bar-count">49</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Bad Credit Loans</div>
+          <div class="bar-track"><div class="bar-fill" style="width:28.0%;background:#46AE41"></div></div>
+          <div class="bar-count">42</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Credit & Debt</div>
+          <div class="bar-track"><div class="bar-fill" style="width:21.3%;background:#8CC53F"></div></div>
+          <div class="bar-count">32</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Payday Loans</div>
+          <div class="bar-track"><div class="bar-fill" style="width:18.0%;background:#357A32"></div></div>
+          <div class="bar-count">27</div>
+        </div>
+  </div>
+  <div class="chart-card">
+    <h3>Funnel Mix</h3>
+    
+        <div class="bar-row">
+          <div class="bar-label">Top of funnel</div>
+          <div class="bar-track"><div class="bar-fill" style="width:64.7%;background:#8CC53F"></div></div>
+          <div class="bar-count">97</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Middle of funnel</div>
+          <div class="bar-track"><div class="bar-fill" style="width:34.0%;background:#46AE41"></div></div>
+          <div class="bar-count">51</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Bottom of funnel</div>
+          <div class="bar-track"><div class="bar-fill" style="width:1.3%;background:#357A32"></div></div>
+          <div class="bar-count">2</div>
+        </div>
+  </div>
+</section>
+
+<nav class="month-tabs"><button class="tab is-active" data-target="1"><span class="tab-num">Month 1</span><span class="tab-count">25 articles</span></button><button class="tab" data-target="2"><span class="tab-num">Month 2</span><span class="tab-count">25 articles</span></button><button class="tab" data-target="3"><span class="tab-num">Month 3</span><span class="tab-count">25 articles</span></button><button class="tab" data-target="4"><span class="tab-num">Month 4</span><span class="tab-count">25 articles</span></button><button class="tab" data-target="5"><span class="tab-num">Month 5</span><span class="tab-count">25 articles</span></button><button class="tab" data-target="6"><span class="tab-num">Month 6</span><span class="tab-count">25 articles</span></button><button class="tab tab-all" data-target="all"><span class="tab-num">All Months</span><span class="tab-count">150 articles</span></button></nav>
+
+
+        <section class="month is-active" data-month="1">
+          <header class="month-head">
+            <h2>Month 1</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>17,470</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>34</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">How Bad Credit Loans Actually Work in Canada (Plain-English Guide)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Pillar hub — links all bad-credit sub-posts | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>how do bad credit loans work canada</code></td>
+              <td class="num">140</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">14</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">How Payday Loans Work in Canada (and the Real Cost Behind Them)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub — anchors city/province payday sub-posts | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>how do payday loans work canada</code></td>
+              <td class="num">90</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">41</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">What Affects Your Credit Score in Canada (the Five Factors)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what affects credit score canada</code></td>
+              <td class="num">70</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">33</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">Top Credit Cards Approved at a 580–649 Credit Score in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub — anchors card sub-posts | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>credit cards 580 credit score canada</code></td>
+              <td class="num">5,400</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">67</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">How to Reduce and Manage Debt in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub</div>
+              </td>
+              <td class="kw"><code>debt management canada</code></td>
+              <td class="num">260</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">57</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">Canada Pension Plan (CPP): Payment Dates, Amounts &amp; Eligibility <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub — highest-volume cluster | Refresh existing /a-guide-to-cpp-payment-dates-for-the-canada-pension-plan/ — expand into full pillar hub</div>
+              </td>
+              <td class="kw"><code>cpp payment dates</code></td>
+              <td class="num">1,300</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">41</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">Canadian Government Benefits and Financial Assistance Programs</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub — anchors benefit sub-posts</div>
+              </td>
+              <td class="kw"><code>canadian government benefits</code></td>
+              <td class="num">480</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">56</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">Essential Financial Calculators Every Canadian Should Use</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Pillar hub — anchors calculator sub-posts</div>
+              </td>
+              <td class="kw"><code>financial calculators canada</code></td>
+              <td class="num">731</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">Bad Credit Loan Alternatives: Credit Unions, Co-Signers &amp; More</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>bad credit loan alternatives</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">31</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">7 Alternatives to Bad Credit Loans (and When to Use Each)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>alternatives to bad credit loans</code></td>
+              <td class="num">428</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">How to Get Your First Loan With No Credit History in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Retitled from &#x27;Can You Get Approved Without a Credit Score&#x27; to avoid cannibalization with existing /can-you-get-approved-for-a-loan-in-canada-without-a-credit-score-or-with-bad-credit/ — distinct angle: first-time borrowers, newcomers, students</div>
+              </td>
+              <td class="kw"><code>first loan no credit history canada</code></td>
+              <td class="num">140</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">16</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">How Much Can You Borrow with Bad Credit in Canada?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>how much can i borrow bad credit</code></td>
+              <td class="num">453</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">What Counts as Bad Credit in Ontario? (Score Ranges Lenders Use)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what counts as bad credit ontario</code></td>
+              <td class="num">1,300</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">29</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">What Counts as Bad Credit in British Columbia?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what counts as bad credit bc</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">62</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">What Counts as Bad Credit in Alberta?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what counts as bad credit alberta</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">10</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">Bad Credit Loans Quebec: Provincial Guide</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>bad credit loans quebec</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">43</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">Average Credit Score by Age in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>average credit score canada by age</code></td>
+              <td class="num">170</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">17</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">How to Check Your Credit Score in Canada for Free</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>check credit score canada</code></td>
+              <td class="num">50</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">37</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Equifax vs TransUnion Canada: Which to Use</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>equifax or transunion</code></td>
+              <td class="num">390</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">How to Improve Your Credit Score in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>how to improve credit score canada</code></td>
+              <td class="num">480</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">35</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">Best Secured Credit Cards in Canada for Building Credit</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>best secured credit card canada</code></td>
+              <td class="num">590</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">29</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">Financial Literacy for Canadians: The Basics Everyone Should Know</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>financial literacy canada</code></td>
+              <td class="num">320</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">50</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">How to Build an Emergency Fund in Canada (Even on a Tight Budget)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>emergency fund canada</code></td>
+              <td class="num">110</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">39</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">Saving Strategies That Actually Work for Canadian Households</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>saving strategies canada</code></td>
+              <td class="num">753</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">How to Budget for Loan Repayments in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">LFA-aligned budgeting</div>
+              </td>
+              <td class="kw"><code>budget for loan payments</code></td>
+              <td class="num">275</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+        <section class="month" data-month="2">
+          <header class="month-head">
+            <h2>Month 2</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>105,237</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>33</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">Bad Credit Personal Loans in Canada <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Refresh existing post</div>
+              </td>
+              <td class="kw"><code>bad credit personal loans canada</code></td>
+              <td class="num">1,000</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">30</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">No Credit Check Loans in Canada: How They Actually Work <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Refresh existing Myth-vs-Reality post</div>
+              </td>
+              <td class="kw"><code>no credit check loans canada</code></td>
+              <td class="num">260</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">38</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">How Fast Can You Get a Loan in Canada? <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing</div>
+              </td>
+              <td class="kw"><code>fast cash loans canada</code></td>
+              <td class="num">243</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">20</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">How to Apply for a Bad Credit Loan in Canada: Step-by-Step <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Bottom of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing</div>
+              </td>
+              <td class="kw"><code>how to apply bad credit loan</code></td>
+              <td class="num">90</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">12</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">&quot;Guaranteed Approval&quot; Loans in Canada: The Truth Behind the Promise <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing</div>
+              </td>
+              <td class="kw"><code>guaranteed approval loans canada</code></td>
+              <td class="num">170</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">42</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">How Much Can You Borrow with Bad Credit? <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing</div>
+              </td>
+              <td class="kw"><code>how much can i borrow bad credit refresh</code></td>
+              <td class="num">453</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">Debt Consolidation in Canada: 6 Real Examples (With Numbers) <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>debt consolidation examples canada</code></td>
+              <td class="num">260</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">42</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">How to Spot a Legitimate Online Bad Credit Lender in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Net-new (was refresh — moved to distinct slug to avoid colliding with #1&#x27;s refresh target)</div>
+              </td>
+              <td class="kw"><code>online bad credit lender legitimacy canada</code></td>
+              <td class="num">628</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">20</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">Personal Loans vs. Lines of Credit for Bad Credit Borrowers</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Net-new comparison post (was refresh — moved to distinct slug to avoid colliding with #1&#x27;s refresh target)</div>
+              </td>
+              <td class="kw"><code>personal loan vs line of credit</code></td>
+              <td class="num">260</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">38</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">CPP Disability Benefits: Eligibility and Application</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>cpp disability</code></td>
+              <td class="num">1,000</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">19</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">OAS (Old Age Security): Payment Dates and Amounts <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing /oas-payment-dates-get-your-old-age-security-benefits/</div>
+              </td>
+              <td class="kw"><code>oas payment dates</code></td>
+              <td class="num">22,200</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">GIS (Guaranteed Income Supplement): Who Qualifies</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>guaranteed income supplement</code></td>
+              <td class="num">2,900</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">43</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">EI Benefits in Canada: How Many Weeks You Get</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>ei benefits canada</code></td>
+              <td class="num">1,900</td>
+              <td class="num"><span class="kd-pill" style="background:#D94C3D">76</span><div class="kd-label">Very Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">Canada Child Benefit (CCB): Payment Dates and Amounts</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>canada child benefit</code></td>
+              <td class="num">40,500</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">70</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">Canada Workers Benefit (ACWB): What You Get</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — 839-kw cluster, 263 easy wins</div>
+              </td>
+              <td class="kw"><code>canada workers benefit</code></td>
+              <td class="num">27,100</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">34</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">Disability Tax Credit in Canada: Who Qualifies</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — audience overlap with LFA</div>
+              </td>
+              <td class="kw"><code>disability tax credit canada</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">41</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">PC Financial Mastercard Review: Good for Bad Credit?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Nav</span>
+                </div>
+                <div class="note">Promoted from M4 — top commercial-intent card review</div>
+              </td>
+              <td class="kw"><code>pc financial mastercard</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">Capital One Guaranteed Approval Credit Cards: The Reality</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Promoted from M4 — top commercial-intent</div>
+              </td>
+              <td class="kw"><code>capital one guaranteed approval</code></td>
+              <td class="num">1,457</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">25</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Edmonton Payday Loan Costs: What $300 Really Costs You</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>edmonton payday loan cost</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">5 Free Financial Resources for Winnipeg Borrowers</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>winnipeg financial help</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">Vancouver Payday Loan Regulations Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>vancouver payday loan regulations</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">Hamilton Family Finance Guide: When Short-Term Borrowing Hurts</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>hamilton family finance</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">Consumer Proposal Timeline: What 5 Years Actually Looks Like</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>consumer proposal timeline canada</code></td>
+              <td class="num">590</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">Credit Counselling Services in Canada: Free Help</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit counselling canada</code></td>
+              <td class="num">50</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">49</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">How to Dispute a Credit Report Error in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>dispute credit report error canada</code></td>
+              <td class="num">110</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+        <section class="month" data-month="3">
+          <header class="month-head">
+            <h2>Month 3</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>186,645</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>33</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">Ontario Payday Loan Laws: $15 Per $100 Cap Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Promoted from M6 — higher volume than city posts | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>ontario payday loan laws</code></td>
+              <td class="num">590</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">14</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">BC Payday Loan Rules: Borrower Rights You Should Know</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Promoted from M6 — higher volume | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>bc payday loan rules</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">Alberta Payday Loan Rates and Recent Reforms</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Promoted from M6 — higher volume | Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>alberta payday loan rates</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">Toronto Payday Loan Alternatives That Actually Work</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>toronto payday loan alternatives</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">How Calgary&#x27;s Energy Sector Volatility Affects Borrowing</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>calgary borrowing economy</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">Ottawa Public Servant Borrower Tips (For Government Employees)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>ottawa government employee loans</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">Quebec Payday Loan Caps: Why Montrealers Pay Less</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>montreal payday loan cost</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">Brampton Newcomer Borrower Guide: Building Canadian Credit</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>brampton newcomer credit</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">Saskatoon Borrower Resources: Free Credit Help</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>saskatoon credit help</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">How Quebec Borrower Protections Work (Strictest in Canada)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>quebec borrower protections</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">Online Payday Loans in Canada: How to Apply Safely</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>online payday loans canada</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">66</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">Alternatives to Payday Loans in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>alternatives to payday loans</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">53</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">Payday Loan Myths Debunked (Canadian Edition)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Promoted from M6 — refresh existing if present</div>
+              </td>
+              <td class="kw"><code>payday loan myths</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">Toronto&#x27;s Average Credit Score: How You Compare</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>average credit score toronto</code></td>
+              <td class="num">4,400</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">61</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">Credit Building Tips for Calgary Borrowers</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>credit building tips calgary</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">Ottawa Borrower&#x27;s Guide: Rebuilding After a Financial Setback</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>rebuild credit ottawa</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">Winnipeg Family Finance: Recovering From Bad Credit</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>winnipeg credit recovery</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">Edmonton Job-Loss Recovery: Borrowing After a Layoff</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>edmonton borrowing after job loss</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Bad Credit Loans Vancouver: Local Guide</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>bad credit loans vancouver</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">43</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">Canada Retirement Age Changes: What You Should Know</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — high volume, answer-box candidate</div>
+              </td>
+              <td class="kw"><code>canada retirement age</code></td>
+              <td class="num">9,900</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">31</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">GST/HST Payment Dates Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — recurring search, snippet-eligible</div>
+              </td>
+              <td class="kw"><code>gst payment dates</code></td>
+              <td class="num">22,200</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">Prime Rate in Canada: What It Is and Why It Matters</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M6 — strong AEO/LLM play</div>
+              </td>
+              <td class="kw"><code>prime rate canada</code></td>
+              <td class="num">40,500</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">51</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">Compound Interest Explained (with Canadian Examples)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — AEO play, evergreen</div>
+              </td>
+              <td class="kw"><code>compound interest calculator</code></td>
+              <td class="num">90,500</td>
+              <td class="num"><span class="kd-pill" style="background:#D94C3D">77</span><div class="kd-label">Very Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">TFSA vs RRSP: Which One First?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M5 — high commercial intent</div>
+              </td>
+              <td class="kw"><code>tfsa vs rrsp</code></td>
+              <td class="num">753</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">Understanding Canadian Interest Rates</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Promoted from M6 — AEO/LLM play</div>
+              </td>
+              <td class="kw"><code>canadian interest rates</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">67</span><div class="kd-label">Hard</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+        <section class="month" data-month="4">
+          <header class="month-head">
+            <h2>Month 4</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>32,526</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>34</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">Home Trust Secured Visa Review: Build Credit Safely</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>home trust secured visa</code></td>
+              <td class="num">1,457</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">25</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">Neo Financial Credit Card Review (Canada)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>neo financial credit card</code></td>
+              <td class="num">3,600</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">Tangerine Credit Cards: Are They Worth It?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>tangerine credit card</code></td>
+              <td class="num">3,600</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">American Express Credit Cards for Bad Credit in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>amex bad credit canada</code></td>
+              <td class="num">1,900</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">38</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">Credit Cards for Poor Credit in Canada: Best Options</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit cards poor credit canada</code></td>
+              <td class="num">1,300</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">No-Fee Credit Cards for Bad Credit in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>no fee credit cards bad credit canada</code></td>
+              <td class="num">1,900</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">38</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">How to Build Credit with a Credit Card</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>build credit with credit card</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">43</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">Credit Card Balance Transfer in Canada: How It Works</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit card balance transfer canada</code></td>
+              <td class="num">320</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">39</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">Minimum Credit Card Payment: What Happens If You Only Pay That?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>minimum credit card payment</code></td>
+              <td class="num">930</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">22</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">Credit Utilization Ratio Explained for Canadians</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit utilization canada</code></td>
+              <td class="num">70</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">47</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">Hard vs Soft Credit Inquiries in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>hard vs soft credit inquiry</code></td>
+              <td class="num">493</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">How Long Does Bad Credit Stay on Your Report in Canada?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>how long bad credit stay on report</code></td>
+              <td class="num">170</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">31</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">Credit Repair in Canada: Is It Worth Paying For?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit repair canada</code></td>
+              <td class="num">390</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">Consumer Proposal vs Bankruptcy in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>consumer proposal vs bankruptcy</code></td>
+              <td class="num">1,000</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">17</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">How to Rebuild Credit After a Bankruptcy in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>rebuild credit after bankruptcy canada</code></td>
+              <td class="num">70</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">25</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">Debt Settlement vs Debt Consolidation in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>debt settlement vs consolidation</code></td>
+              <td class="num">9,900</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">59</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">Snowball vs Avalanche: Which Debt Payoff Method Wins?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>snowball vs avalanche debt</code></td>
+              <td class="num">1,000</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">66</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">How to Pay Off Credit Card Debt Faster</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#8CC53F">Credit & Debt</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>pay off credit card debt faster</code></td>
+              <td class="num">90</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">40</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Co-Signer Loans in Canada: How They Work (and What You Risk)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>co-signer loans canada</code></td>
+              <td class="num">1,000</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">35</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">Secured Loans for Bad Credit: A Safer Path to Approval</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>secured loans bad credit</code></td>
+              <td class="num">110</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">41</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">Credit Union Loans in Canada: Why They&#x27;re Often a Better Deal</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit union loans canada</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">52</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">Installment Loan Approval: What Bad Credit Borrowers Need to Show</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>installment loan approval bad credit</code></td>
+              <td class="num">1,122</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">Private Lenders for Bad Credit in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>private lenders bad credit canada</code></td>
+              <td class="num">320</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">Same-Day Loans in Canada: When Same-Day Actually Means Same-Day</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>same day loan timing canada</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">E-Transfer Payday Loans in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>e-transfer payday loans canada</code></td>
+              <td class="num">70</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">25</span><div class="kd-label">Easy</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+        <section class="month" data-month="5">
+          <header class="month-head">
+            <h2>Month 5</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>68,740</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>33</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">How Single Mothers in Canada Can Borrow Without Wrecking Their Credit</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>single mother loans canada</code></td>
+              <td class="num">221</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">Lending Options for Canadian Seniors With Bad Credit</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>senior loans bad credit canada</code></td>
+              <td class="num">221</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">How Canadian Students Can Build Credit (Even With No Credit History)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>students build credit canada</code></td>
+              <td class="num">319</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">20</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">Can I Get a $500 Loan with Bad Credit?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Bottom of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>500 dollar loan bad credit</code></td>
+              <td class="num">453</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">Loans on CPP or Disability Income in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>loans on cpp disability</code></td>
+              <td class="num">221</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">Loans While on EI in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>loans while on ei</code></td>
+              <td class="num">221</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">Self-Employed in Canada: How to Borrow When Your Income Is Variable</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>self employed borrowing canada</code></td>
+              <td class="num">221</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">How to Rebuild Credit with a Bad Credit Loan <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing /how-to-use-bad-credit-loans-to-rebuild-your-credit/</div>
+              </td>
+              <td class="kw"><code>rebuild credit with loan</code></td>
+              <td class="num">390</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">56</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">Ontario Trillium Benefit (OTB): Dates and Eligibility</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>ontario trillium benefit</code></td>
+              <td class="num">880</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">29</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">Death Benefit in Canada: CPP Lump-Sum Rules</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>cpp death benefit canada</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">CPP Survivor Benefits: What Spouses Receive</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>cpp survivor benefits</code></td>
+              <td class="num">6,325</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">Canada Disability Benefit: How to Apply</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>canada disability benefit application</code></td>
+              <td class="num">6,600</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">Student Aid in Canada: Loans, Grants &amp; Bursaries</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>student aid canada</code></td>
+              <td class="num">18,100</td>
+              <td class="num"><span class="kd-pill" style="background:#D94C3D">72</span><div class="kd-label">Very Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">Canada Apprentice Loan: How to Apply</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>canada apprentice loan</code></td>
+              <td class="num">2,400</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">22</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">Registered Disability Savings Plan (RDSP) Guide</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>rdsp canada</code></td>
+              <td class="num">753</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">Canada Learning Bond: How to Get $2,000 for Your Child</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>canada learning bond</code></td>
+              <td class="num">4,485</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">26</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">Carbon Tax Rebate in Canada Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>carbon tax rebate canada</code></td>
+              <td class="num">590</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">39</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">High-Interest Savings Accounts in Canada Compared</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>high interest savings canada</code></td>
+              <td class="num">8,100</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">59</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Net Worth by Age in Canada: Where You Should Be</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>net worth by age canada</code></td>
+              <td class="num">880</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">Retirement Calculator: How Much You Need in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>retirement calculator canada</code></td>
+              <td class="num">5,400</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">50</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">RRIF Calculator Canada: Understanding Withdrawals</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>rrif calculator canada</code></td>
+              <td class="num">480</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">28</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">LIF Calculator: Locked-In Funds Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>lif calculator</code></td>
+              <td class="num">480</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">Loan Calculator Canada: How to Use It Right</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>loan calculator canada</code></td>
+              <td class="num">4,400</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">48</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">Pension Calculator Canada: Planning Retirement Income</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>pension calculator canada</code></td>
+              <td class="num">1,300</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">32</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">How to Budget on a Low Income in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>budget low income canada</code></td>
+              <td class="num">2,900</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">53</span><div class="kd-label">Hard</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+        <section class="month" data-month="6">
+          <header class="month-head">
+            <h2>Month 6</h2>
+            <div class="month-stats">
+              <span><strong>25</strong> articles</span>
+              <span><strong>16,015</strong> total monthly searches</span>
+              <span>Avg difficulty: <strong>25</strong></span>
+            </div>
+          </header>
+          <table>
+            <thead>
+              <tr><th>#</th><th>Article</th><th>Primary Keyword</th><th>Monthly Searches</th><th>Difficulty (KD)</th></tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td>
+                <div class="title">Budgeting Apps for Canadians Compared</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>budgeting apps canada</code></td>
+              <td class="num">720</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">42</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td>
+                <div class="title">How to Save Money on a Tight Budget</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>how to save money canada</code></td>
+              <td class="num">320</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">27</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td>
+                <div class="title">E-Transfer Scams in Canada: How to Spot Them</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing if present</div>
+              </td>
+              <td class="kw"><code>e-transfer scams</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td>
+                <div class="title">Credit Card Fraud Prevention in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>credit card fraud canada</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">5</td>
+              <td>
+                <div class="title">How to Dispute Unauthorized Charges on Your Credit Card</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>dispute unauthorized charges canada</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td>
+                <div class="title">How to Negotiate a Lower Interest Rate on Your Loan</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Middle of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>negotiate lower interest rate</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">7</td>
+              <td>
+                <div class="title">Variable vs Fixed Interest Rates Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>variable vs fixed interest rate</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">8</td>
+              <td>
+                <div class="title">Direct Deposit in Canada: How It Works</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Ready to buy</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>direct deposit canada</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#F4B942">38</span><div class="kd-label">Moderate</div></td>
+            </tr>
+            <tr>
+              <td class="num">9</td>
+              <td>
+                <div class="title">How to Read Your T4 Slip in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>how to read t4 slip</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">10</td>
+              <td>
+                <div class="title">Canadian Tax Brackets Explained</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>canadian tax brackets</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">11</td>
+              <td>
+                <div class="title">Gross vs Net Income in Canada: What&#x27;s the Difference? <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing /gross-vs-net-income/</div>
+              </td>
+              <td class="kw"><code>gross vs net income</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">12</td>
+              <td>
+                <div class="title">Tax Refund Timing in Canada: When Will Yours Arrive?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>tax refund timing canada</code></td>
+              <td class="num">4,485</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">26</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">13</td>
+              <td>
+                <div class="title">How Technology Can Improve Your Finances <span class="badge badge-refresh">REFRESH</span></div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#6B9E67">Personal Finance</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Refresh existing /how-technology-can-improve-your-finances/</div>
+              </td>
+              <td class="kw"><code>fintech canada</code></td>
+              <td class="num">382</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">23</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">14</td>
+              <td>
+                <div class="title">Loan Scams in Canada: Red Flags Every Borrower Should Know</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>loan scams canada</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">15</td>
+              <td>
+                <div class="title">Warning Signs of Bad Credit Loan Scams in Canada</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>bad credit loan scams canada</code></td>
+              <td class="num">140</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">16</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">16</td>
+              <td>
+                <div class="title">What Counts as Bad Credit in Nova Scotia?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what counts as bad credit nova scotia</code></td>
+              <td class="num">670</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">18</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">17</td>
+              <td>
+                <div class="title">What Counts as Bad Credit in Saskatchewan?</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>what counts as bad credit saskatchewan</code></td>
+              <td class="num">210</td>
+              <td class="num"><span class="kd-pill" style="background:#E8743C">62</span><div class="kd-label">Hard</div></td>
+            </tr>
+            <tr>
+              <td class="num">18</td>
+              <td>
+                <div class="title">Bad Credit Loans Manitoba: Provincial Guide</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#46AE41">Bad Credit Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>bad credit loans manitoba</code></td>
+              <td class="num">70</td>
+              <td class="num"><span class="kd-pill" style="background:#46AE41">17</span><div class="kd-label">Very Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">19</td>
+              <td>
+                <div class="title">Manitoba Payday Loan Rules and Alternatives</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>manitoba payday loan rules</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">20</td>
+              <td>
+                <div class="title">Saskatchewan Payday Loan Costs: Province Cap Rules</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>saskatchewan payday loan costs</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">21</td>
+              <td>
+                <div class="title">Atlantic Canada Borrower Rights (NS, NB, PEI, NL)</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>atlantic canada borrower rights</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">22</td>
+              <td>
+                <div class="title">Halifax Cost of Living: Borrowing Without Falling Behind</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>halifax cost of living credit</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">23</td>
+              <td>
+                <div class="title">Mississauga Family Finance: Avoiding the Debt Cycle</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                <div class="note">Reframed: complements existing service page (no slug conflict).</div>
+              </td>
+              <td class="kw"><code>mississauga family finance</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">24</td>
+              <td>
+                <div class="title">First-Time Payday Loan Borrowers: What to Expect</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Commercial</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>first time payday loan borrower</code></td>
+              <td class="num">784</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">21</span><div class="kd-label">Easy</div></td>
+            </tr>
+            <tr>
+              <td class="num">25</td>
+              <td>
+                <div class="title">How to Avoid Payday Loan Debt Cycles</div>
+                <div class="meta">
+                  <span class="pillar-chip" style="background:#357A32">Payday Loans</span>
+                  <span class="funnel-chip">Top of funnel</span>
+                  <span class="intent-chip">Info</span>
+                </div>
+                
+              </td>
+              <td class="kw"><code>payday loan debt cycle</code></td>
+              <td class="num">90</td>
+              <td class="num"><span class="kd-pill" style="background:#8CC53F">24</span><div class="kd-label">Easy</div></td>
+            </tr></tbody>
+          </table>
+        </section>
+        
+
+<footer>
+  <h3>How to read this plan</h3>
+  <p><strong>Primary Keyword:</strong> the main search term each article will be optimized for. Each keyword expands into dozens of related long-tail searches during the writing process.</p>
+  <p><strong>Monthly Searches:</strong> how many Canadians search this exact term each month (SEMrush, Canadian database).</p>
+  <p><strong>Difficulty (KD):</strong> how hard it is to rank on page one of Google. <span class="kd-pill" style="background:#46AE41">0–20</span> Very Easy &middot; <span class="kd-pill" style="background:#8CC53F">21–35</span> Easy &middot; <span class="kd-pill" style="background:#F4B942">36–50</span> Moderate &middot; <span class="kd-pill" style="background:#E8743C">51–70</span> Hard.</p>
+  <p><strong>Pillar:</strong> which content cluster the article belongs to. Articles within a pillar link to each other and to a central "hub" post for maximum SEO authority.</p>
+  <p><strong>Funnel Stage:</strong> <em>Top</em> = awareness &amp; education, <em>Middle</em> = comparison &amp; research, <em>Bottom</em> = ready to apply.</p>
+  <p><strong>REFRESH badge:</strong> this article already exists on the site and will be updated and expanded rather than rewritten from scratch — a faster way to recover lost rankings.</p>
+  <p style="margin-top: 20px; color: var(--lfa-secondary);"><strong>Next step:</strong> approve this plan and we'll begin writing the Month 1 batch.</p>
+</footer>
+
+</div>
+<script>
+  (function() {
+    var tabs = document.querySelectorAll('.tab');
+    var months = document.querySelectorAll('section.month');
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.getAttribute('data-target');
+        tabs.forEach(function(t) { t.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+        if (target === 'all') {
+          document.body.classList.add('show-all');
+          months.forEach(function(m) { m.classList.remove('is-active'); });
+        } else {
+          document.body.classList.remove('show-all');
+          months.forEach(function(m) {
+            m.classList.toggle('is-active', m.getAttribute('data-month') === target);
+          });
+          // Scroll to top of month section when tab clicked
+          window.scrollTo({ top: document.querySelector('.month-tabs').offsetTop - 10, behavior: 'smooth' });
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
