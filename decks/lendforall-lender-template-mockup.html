@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LendForAll — New Lender Review Template</title>
+<style>
+  @font-face{font-family:"Quatro";src:url("fonts/Quatro_Reg.otf") format("opentype");font-weight:400;font-display:swap;}
+  @font-face{font-family:"Quatro";src:url("fonts/Quatro_SemiBold.otf") format("opentype");font-weight:600;font-display:swap;}
+  @font-face{font-family:"Quatro";src:url("fonts/Quatro_Bold.otf") format("opentype");font-weight:700;font-display:swap;}
+  :root{
+    --red:#FF333C; --red-hover:#e62831; --yellow:#FFB000; --black:#000; --white:#fff;
+    --charcoal:#474747; --gray:#DFDFDF; --ink-700:#303030; --ink-500:#6b6b6b; --ink-100:#efefef; --ink-50:#f7f7f7;
+    --oxford:#131354; --azure:#30C0F2; --shamrock:#2FC171;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"Quatro",-apple-system,sans-serif;color:var(--black);background:var(--ink-50);line-height:1.5;padding:30px 18px;}
+  .wrap{max-width:1180px;margin:0 auto;}
+  /* header */
+  .head{margin-bottom:24px;}
+  .slabel{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+  h1{font-size:32px;font-weight:700;line-height:1.08;margin-bottom:10px;}
+  .sub{font-size:15px;color:var(--ink-700);max-width:760px;}
+  /* legend */
+  .legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:18px;padding:14px 18px;background:var(--white);border:1px solid var(--gray);border-radius:12px;}
+  .legend .item{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;}
+  .swatch{width:16px;height:16px;border-radius:4px;flex-shrink:0;}
+  .sw-tpl{background:rgba(19,19,84,.12);border:2px solid var(--oxford);}
+  .sw-fact{background:rgba(255,51,60,.1);border:2px dashed var(--red);}
+  .legend .note{font-size:12.5px;color:var(--ink-500);font-weight:400;}
+  /* layout */
+  .cols{display:grid;grid-template-columns:1.35fr 1fr;gap:26px;align-items:start;margin-top:24px;}
+  /* browser mock */
+  .browser{background:var(--white);border:1px solid var(--gray);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08);}
+  .bbar{background:var(--ink-100);padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--gray);}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--gray);}
+  .url{flex:1;background:var(--white);border:1px solid var(--gray);border-radius:6px;padding:5px 12px;font-size:12px;color:var(--ink-500);margin-left:8px;}
+  .page{padding:22px 24px 26px;}
+  /* pin */
+  .pin{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:700;flex-shrink:0;box-shadow:0 2px 6px rgba(255,51,60,.4);}
+  .rowpin{display:flex;gap:10px;align-items:flex-start;}
+  /* template outline vs fact outline */
+  .tpl{border:2px solid var(--oxford);border-radius:10px;padding:14px 16px;position:relative;margin-bottom:16px;}
+  .fact{border:2px dashed var(--red);border-radius:10px;padding:14px 16px;position:relative;margin-bottom:16px;background:rgba(255,51,60,.02);}
+  .zt{position:absolute;top:-9px;left:12px;font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:1px 7px;border-radius:10px;}
+  .zt.b{background:var(--oxford);color:#fff;}
+  .zt.r{background:var(--red);color:#fff;}
+  .pinabs{position:absolute;top:-12px;right:-12px;}
+  /* page content bits */
+  .stars{color:var(--yellow);font-size:15px;letter-spacing:1px;}
+  .h1mock{font-size:21px;font-weight:700;line-height:1.15;margin-bottom:6px;}
+  .lead{font-size:13px;color:var(--ink-700);}
+  .facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-top:4px;}
+  .fitem{font-size:12.5px;}
+  .fitem .k{color:var(--ink-500);font-weight:600;text-transform:uppercase;letter-spacing:.3px;font-size:10.5px;}
+  .fitem .v{font-weight:700;font-size:13.5px;}
+  .pc{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .pc h4{font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .pc ul{list-style:none;}
+  .pc li{font-size:12.5px;padding:3px 0 3px 16px;position:relative;color:var(--ink-700);}
+  .pc li:before{position:absolute;left:0;font-weight:700;}
+  .pc .pros li:before{content:"+";color:var(--shamrock);}
+  .pc .cons li:before{content:"–";color:var(--red);}
+  .verdict-box{margin-top:12px;background:var(--ink-50);border-radius:8px;padding:10px 14px;font-size:12.5px;}
+  .verdict-box b{font-weight:700;}
+  .faq-q{border-top:1px solid var(--gray);padding:11px 0 11px 26px;position:relative;font-weight:600;font-size:13px;}
+  .faq-q:first-of-type{border-top:none;}
+  .faq-q:after{content:"+";position:absolute;right:2px;top:10px;color:var(--red);font-weight:700;font-size:16px;}
+  .faq-q .chip{position:absolute;left:0;top:12px;}
+  .qchip{display:inline-block;font-size:9px;font-weight:700;color:var(--red);border:1px solid var(--red);border-radius:8px;padding:0 5px;vertical-align:middle;margin-left:8px;text-transform:none;letter-spacing:0;}
+  .faq-a{font-size:12.5px;color:var(--ink-700);padding:0 0 12px 26px;}
+  .schema-strip{margin-top:4px;background:var(--oxford);color:#fff;border-radius:8px;padding:12px 16px;font-size:12px;display:flex;align-items:center;gap:12px;}
+  .schema-strip .serp{background:#fff;color:var(--black);border-radius:6px;padding:8px 12px;flex:1;}
+  .serp .t{color:#1a0dab;font-size:12.5px;font-weight:600;}
+  .serp .u{color:var(--shamrock);font-size:10.5px;}
+  .serp .d{font-size:11px;color:var(--ink-700);}
+  /* annotations panel */
+  .annos{position:sticky;top:20px;}
+  .anno{background:var(--white);border:1px solid var(--gray);border-radius:12px;padding:16px 18px;margin-bottom:14px;}
+  .anno h3{font-size:14.5px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:10px;}
+  .anno p{font-size:12.8px;color:var(--ink-700);}
+  .anno .why{margin-top:7px;font-size:11.5px;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+  /* bottom mechanic band */
+  .band{margin-top:26px;background:var(--black);color:#fff;border-radius:14px;padding:30px 34px;}
+  .band h2{font-size:22px;font-weight:700;margin-bottom:8px;}
+  .band .bsub{color:rgba(255,255,255,.7);font-size:14px;max-width:820px;margin-bottom:22px;}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:18px 20px;}
+  .step .n{font-size:12px;font-weight:700;color:var(--yellow);letter-spacing:.5px;}
+  .step h4{font-size:15px;margin:5px 0 6px;}
+  .step p{font-size:12.5px;color:rgba(255,255,255,.72);}
+  .foot{text-align:center;font-size:11.5px;color:var(--ink-500);margin-top:22px;}
+  @media print{body{background:#fff;padding:0;}.browser{box-shadow:none;}.annos{position:static;}}
+  @media(max-width:880px){.cols{grid-template-columns:1fr;}.steps{grid-template-columns:1fr;}.facts-grid,.pc{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="slabel">LendForAll · Lender Template Refresh</div>
+    <h1>The new lender review template</h1>
+    <div class="sub">One improved review layout, built once and applied to all 11 lender pages — then populated with each lender's own verified facts. Below is the design on a worked example (<b>iCash</b>), with the SEO rationale for each block.</div>
+    <div class="legend">
+      <div class="item"><span class="swatch sw-tpl"></span>Shared template structure <span class="note">— same on all 11 pages, built in one pass</span></div>
+      <div class="item"><span class="swatch sw-fact"></span>Lender-specific facts <span class="note">— unique to each page, verified per lender</span></div>
+    </div>
+  </div>
+
+  <div class="cols">
+    <!-- BROWSER MOCK -->
+    <div class="browser">
+      <div class="bbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">lendforall.ca/lenders/icash/</span></div>
+      <div class="page">
+
+        <!-- 1. Snippet / H1 -->
+        <div class="tpl">
+          <span class="zt b">Template</span><span class="pinabs pin">1</span>
+          <div class="stars">★★★★☆ <span style="color:var(--ink-500);font-size:11px;font-weight:600;">4.1 · LendForAll review</span></div>
+          <div class="h1mock">iCash Review (2026): E-Transfer Payday Loans in Canada</div>
+          <div class="lead">iCash is a licensed online lender offering fast e-Transfer payday loans across most Canadian provinces. Here's how it works, what it costs, who qualifies, and whether it's legit — based on the real terms.</div>
+        </div>
+
+        <!-- 2. Key facts box (lender specific) -->
+        <div class="fact">
+          <span class="zt r">Lender facts</span><span class="pinabs pin">2</span>
+          <div class="facts-grid">
+            <div class="fitem"><div class="k">Loan amount</div><div class="v">$100 – $1,500</div></div>
+            <div class="fitem"><div class="k">Cost of borrowing</div><div class="v">$14–$17 per $100*</div></div>
+            <div class="fitem"><div class="k">Funding speed</div><div class="v">e-Transfer in minutes</div></div>
+            <div class="fitem"><div class="k">Provinces</div><div class="v">ON, BC, AB, NB, NS, +4</div></div>
+            <div class="fitem"><div class="k">Eligibility</div><div class="v">19+, income, CA bank acct</div></div>
+            <div class="fitem"><div class="k">Licensing</div><div class="v">Provincially licensed</div></div>
+          </div>
+        </div>
+
+        <!-- 3. Pros/cons + verdict -->
+        <div class="tpl">
+          <span class="zt b">Template</span><span class="pinabs pin">3</span>
+          <div class="pc">
+            <div><h4 style="color:var(--shamrock);">Pros</h4><ul class="pros"><li>Funds by e-Transfer, often minutes</li><li>Fully licensed &amp; regulated</li><li>No credit-score minimum</li></ul></div>
+            <div><h4 style="color:var(--red);">Cons</h4><ul class="cons"><li>High cost vs. installment loans</li><li>Not available in Quebec</li><li>Short repayment window</li></ul></div>
+          </div>
+          <div class="verdict-box"><b>Verdict:</b> A legitimate, fast option for small short-term needs in eligible provinces — best when repaid on the next payday to avoid the high cost.</div>
+        </div>
+
+        <!-- 4. Accordion FAQ -->
+        <div class="tpl">
+          <span class="zt b">Template</span><span class="pinabs pin">4</span>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-500);margin-bottom:6px;">Frequently asked questions</div>
+          <div class="faq-q">Is iCash legit and safe?<span class="qchip">"is icash legit" · 20 impr/day</span></div>
+          <div class="faq-a">Yes — iCash is a licensed Canadian lender. Here's how to verify it and what to watch for…</div>
+          <div class="faq-q">How does iCash work?<span class="qchip">"how does icash work"</span></div>
+          <div class="faq-q">How fast does iCash send funds?<span class="qchip">"icash e-transfer time"</span></div>
+        </div>
+
+        <!-- 5. Schema -->
+        <div class="fact" style="border-style:solid;border-color:var(--oxford);background:none;">
+          <span class="zt b">Template</span><span class="pinabs pin">5</span>
+          <div class="schema-strip">
+            <div><b>Review + FAQ schema</b><br><span style="color:rgba(255,255,255,.65);font-size:11px;">= rich result in Google →</span></div>
+            <div class="serp"><div class="t">iCash Review (2026): E-Transfer Payday…</div><div class="u">lendforall.ca › lenders › icash</div><div class="stars" style="font-size:12px;">★★★★☆ <span style="color:var(--ink-500);font-size:10px;">Rating 4.1 · Is iCash legit? ▾</span></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ANNOTATIONS -->
+    <div class="annos">
+      <div class="anno"><h3><span class="pin">1</span>Review snippet + H1</h3><p>A clear "iCash Review (2026)" H1 and a 2-line answer up top, matching the exact review intent people search.</p><div class="why">Captures "icash reviews" — currently stuck at position 20</div></div>
+      <div class="anno"><h3><span class="pin">2</span>Lender key-facts box</h3><p>The specified facts for each lender — amounts, cost, funding speed, provinces, eligibility, licensing. <b>This is the block that's unique per page.</b></p><div class="why">Your requirement: real facts per Canadian lender</div></div>
+      <div class="anno"><h3><span class="pin">3</span>Pros / cons + verdict</h3><p>The review substance searchers (and Google) expect on a review page — balanced, useful, trustworthy.</p><div class="why">Signals genuine review content, not a thin stub</div></div>
+      <div class="anno"><h3><span class="pin">4</span>Accordion FAQ <span style="font-size:11px;color:var(--ink-500);font-weight:600;">(new)</span></h3><p>The element these pages don't have today. Built from the real "is [lender] legit / how it works" queries in Search Console — same accordion you approved on the pillar pages.</p><div class="why">Captures the brand-review long tail at positions 9–24</div></div>
+      <div class="anno"><h3><span class="pin">5</span>Review + FAQ schema</h3><p>Structured data so Google can show star ratings and FAQ drop-downs directly in the results.</p><div class="why">Rich results lift click-through on brand searches</div></div>
+    </div>
+  </div>
+
+  <!-- MECHANIC BAND -->
+  <div class="band">
+    <h2>Why it's a template refresh, not 11 rewrites</h2>
+    <div class="bsub">You're right that the 11 lender pages share one template — so a structure change hits all of them. That's exactly what we're using to your advantage.</div>
+    <div class="steps">
+      <div class="step"><div class="n">STEP 1 · ONCE</div><h4>Design the template</h4><p>One design pass on the shared template: the new structure, the accordion FAQ block, and Review/FAQ schema. Built and reviewed a single time.</p></div>
+      <div class="step"><div class="n">STEP 2 · AUTOMATIC</div><h4>The whole shelf updates</h4><p>Because all 11 use that template, the new structure rolls out across every lender page at once — no page-by-page redesign.</p></div>
+      <div class="step"><div class="n">STEP 3 · PER LENDER</div><h4>Drop in the facts</h4><p>Each page is populated with its own verified facts (amounts, rates, provinces, eligibility) and FAQs from that lender's real queries.</p></div>
+    </div>
+    <div style="margin-top:18px;font-size:12.5px;color:rgba(255,255,255,.7);">* Fact values shown are illustrative — every figure is verified per lender with your team before it goes live.</div>
+  </div>
+
+  <div class="foot">EmberTribe · LendForAll lender template mockup · design reference for discussion · Aug 2026</div>
+
+</div>
+</body>
+</html>
