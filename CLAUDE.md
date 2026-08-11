@@ -39,13 +39,13 @@ embertribe-decks/
 
 ## Design system
 
-The EmberTribe brand design system lives in `.claude/skills/embertribe-design/`. **Load the `embertribe-design` skill before generating or restyling any deck, report, or other EmberTribe-branded HTML** — colors, type, spacing, and logo rules come from its tokens and guidelines, not from memory. The `pitch-deck` and `seo-growth-roadmap` templates predate the design system; if their styling conflicts with it, flag the discrepancy for Josh rather than silently changing the templates.
+The EmberTribe brand design system lives in `.claude/skills/embertribe-design/`. **Load the `embertribe-design` skill before generating or restyling any deck, report, or other EmberTribe-branded HTML** — colors, type, spacing, and logo rules come from its tokens and guidelines, not from memory. The `pitch-deck` and `seo-growth-roadmap` skills build on it: EmberTribe constants use the canonical tokens (`--ember-red: #FF333C`) and Quatro is served from the shared `decks/fonts/` folder.
 
 ## Rules
 
 1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO growth roadmaps → `decks/{client-slug}/growth-roadmap.html`** (nested)
 2. **xlsx companions live in the client folder** but aren't linked from anywhere public — sales team grabs them from the repo or shares directly with prospects
-3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/`, referenced as `../images/...` from inside a client folder)
+3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/` and shared Quatro fonts in `decks/fonts/`, referenced as `../images/...` / `../fonts/...` from inside a client folder, or `fonts/...` from a flat deck)
 4. **`pitch-deck` skill** — if something needs changing, flag it for Josh
 5. **`seo-growth-roadmap` skill** — canonical copy is mirrored in both `embertribe-decks` and `EmberTribe`; supporting scripts (site crawl, PageSpeed, GA4/GSC pulls, xlsx generators) live in `EmberTribe/scripts/`. Keep both copies in sync when editing.
 

@@ -109,13 +109,16 @@ Build the deck using the template in `.claude/skills/pitch-deck/template.html`.
 
 ### Phase 3: Branding & Theming
 
+**Load the `embertribe-design` skill first** (`.claude/skills/embertribe-design/`). It is the source of truth for every EmberTribe brand element in the deck — color tokens (`tokens/colors.css`), the Quatro type system (`tokens/typography.css`), and logo usage rules (`guidelines/`). The prospect's colors theme the deck; EmberTribe's own elements always come from the design system.
+
 1. **Visit the prospect's website** to identify their brand colors
 2. **Set CSS variables:**
    - `--primary-dark`: Prospect's darkest brand color (for dark slides)
    - `--primary-mid`: Mid-tone for gradients
    - `--accent`: Prospect's accent/CTA color
-   - EmberTribe red (`--ember-red: #ff333d`) stays constant
-3. **Dark slide gradient:** `linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, [third-tone] 100%)`
+   - EmberTribe constants stay fixed at the design-system values: `--ember-red: #FF333C` (Candy Apple Red), `--ember-dark: #e62831` (hover/press shade), `--ember-yellow: #FFB000` (Honey Yellow)
+3. **Typography is always Quatro** — never the prospect's typeface. The template's `@font-face` rules load `fonts/Quatro_*.otf` from the shared `decks/fonts/` folder; keep those paths intact (flat decks at `decks/{slug}.html` resolve `fonts/...` correctly). Follow the brand type system: headers Quatro Bold sentence case, labels/subheads ALL CAPS, body Regular.
+4. **Dark slide gradient:** `linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, [third-tone] 100%)`
 
 ### Phase 4: Save & Preview
 
@@ -172,6 +175,7 @@ Before saving the deck, verify:
 - [ ] Investment slide has realistic EmberTribe pricing
 - [ ] CTA slide has a clear next step
 - [ ] Colors match the prospect's brand (check their website)
+- [ ] EmberTribe brand elements follow the `embertribe-design` skill — Quatro `@font-face` paths intact (`fonts/Quatro_*.otf`), `--ember-red` is `#FF333C`
 - [ ] No broken HTML — single-file, self-contained
 - [ ] File saved to `decks/{prospect-slug}.html`
 - [ ] Total slide count matches counter in nav
