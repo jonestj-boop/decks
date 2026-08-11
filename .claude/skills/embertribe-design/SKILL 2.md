@@ -12,8 +12,6 @@ If the user invokes this skill without any other guidance, ask them what they wa
 - **Brand:** EmberTribe — growth-marketing agency ("A NAPKIN Company"). Voice: bold, punchy. Hero line: "Breakthrough needs method and madness."
 - **Type:** Quatro (Bold/SemiBold/Regular) in `assets/fonts/`. Headers = Bold sentence case; nav/subheads = ALL CAPS; body = Regular. Bullets use an em dash (—).
 - **Color:** Black + Candy Apple Red (#FF333C) on white; Honey Yellow (#FFB000) accent. Full secondary/tertiary palettes in `tokens/colors.css`.
-- **Deck & report covers:** solid Candy Apple Red field with white headline text and black ALL-CAPS labels — never a black cover with yellow accents. Honey Yellow is a small accent only, never the dominant color of any slide. Body slides stay black-on-white.
-- **Logo on red/dark grounds:** place the primary lockup on a small white chip (rounded corners, ~8–12px padding). No reversed lockup exists — never apply a CSS invert/brightness filter to the logo; it destroys the mark.
 - **Tokens:** link `styles.css` (root) — it `@import`s all token files.
 - **Components:** `components/` (Button, Tag, Badge, Card, SectionLabel, Logo, Input, Textarea, Select, Checkbox).
 - **Logos:** `assets/logos/` — never redraw the mark.
