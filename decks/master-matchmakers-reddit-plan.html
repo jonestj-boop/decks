@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<!-- EmberTribe — Master Matchmakers Reddit Seeding Plan (Months 4–9) -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Matchmakers — Reddit Seeding Plan · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#27318B; --client-accent-soft:#eceef7;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --bg:#f4f5f7; --border:#e5e7eb;
+    --track-exp:#27318B; --track-anc:#6b6b6b; --track-nat:#a86a00;
+    --maxw:1200px;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--bg); line-height:1.55; -webkit-font-smoothing:antialiased; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+  .wrap { max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  /* ── MASTHEAD ── */
+  .masthead { background:var(--et-red); color:#fff; border-bottom:5px solid var(--et-black);
+              padding:56px 0 48px; position:relative; overflow:hidden; }
+  .masthead::after { content:"e"; position:absolute; right:-30px; bottom:-150px; font-weight:700;
+    font-size:480px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .masthead .wrap { position:relative; z-index:1; }
+  .masthead .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); margin-bottom:12px; }
+  .masthead h1 { margin:0 0 10px; font-weight:700; font-size:44px; line-height:1.02; letter-spacing:-0.02em; }
+  .masthead .sub { font-size:17px; color:rgba(255,255,255,0.92); }
+  .masthead .sub b { font-weight:700; }
+  .masthead .meta { margin-top:16px; font-size:13px; color:rgba(255,255,255,0.82); max-width:760px; }
+
+  /* ── SUMMARY CARDS ── */
+  .section { padding:32px 0; }
+  .summary { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+  .card .num { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); font-variant-numeric:tabular-nums; }
+  .card .num.red { color:var(--et-red); } .card .num.accent { color:var(--client-accent); }
+  .card .lbl { font-size:12px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.06em; margin-top:8px; }
+
+  /* ── CHARTS ── */
+  .charts { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .chart-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 22px; }
+  .chart-card h3 { margin:0 0 16px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-500); }
+  .bar-row { display:grid; grid-template-columns:180px 1fr 34px; align-items:center; gap:12px; margin-bottom:10px; }
+  .bar-row:last-child { margin-bottom:0; }
+  .bar-label { font-size:13.5px; }
+  .bar-track { height:22px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:6px; }
+  .bar-count { font-size:13px; font-weight:700; text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* ── MONTH TABS ── */
+  .month-tabs { display:flex; gap:8px; flex-wrap:wrap; position:sticky; top:0; z-index:20;
+                background:var(--bg); padding:14px 0; border-bottom:1px solid var(--border); }
+  .tab { display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+         border:1px solid var(--border); border-radius:10px; padding:9px 15px; cursor:pointer;
+         font-family:inherit; color:var(--ink-700); transition:all .15s; min-width:132px; }
+  .tab:hover { border-color:var(--et-red); }
+  .tab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .tab .tab-num { font-weight:700; font-size:14.5px; }
+  .tab .tab-count { font-size:11px; opacity:0.82; margin-top:2px; letter-spacing:0.01em; }
+  .tab-all { margin-left:auto; }
+  .tab-all.is-active { background:var(--et-black); border-color:var(--et-black); }
+
+  /* ── MONTH SECTION ── */
+  section.month { background:var(--surface); border:1px solid var(--border); border-radius:12px;
+                  margin-bottom:20px; overflow:hidden; display:none; }
+  section.month.is-active { display:block; }
+  body.show-all section.month { display:block !important; }
+  .month-head { background:var(--et-black); color:#fff; padding:18px 24px; display:flex;
+                align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .month-head h2 { margin:0; font-weight:700; font-size:21px; letter-spacing:-0.01em; }
+  .month-head .focus { font-size:13px; color:rgba(255,255,255,0.6); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin-top:3px; }
+  .month-stats { font-size:13px; display:flex; gap:20px; flex-wrap:wrap; color:rgba(255,255,255,0.72); }
+  .month-stats strong { color:var(--et-honey); font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── TABLE ── */
+  table { width:100%; border-collapse:collapse; }
+  thead th { text-align:left; padding:12px 16px; font-size:11px; font-weight:700; text-transform:uppercase;
+             letter-spacing:0.07em; color:var(--ink-500); background:var(--ink-50); border-bottom:1px solid var(--border); }
+  thead th.num, tbody td.num { text-align:center; font-variant-numeric:tabular-nums; }
+  tbody td { padding:13px 16px; border-bottom:1px solid var(--border); vertical-align:top; font-size:14px; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:hover td { background:var(--ink-50); }
+  tbody tr.anchor td { background:#fbfbfd; }
+  tbody tr.anchor:hover td { background:var(--ink-50); }
+  .r-num { color:var(--ink-300); font-weight:700; font-variant-numeric:tabular-nums; }
+  .sub-name { font-weight:700; color:var(--et-black); font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; font-size:13.5px; }
+  .targets { color:var(--ink-600); }
+  .angle { color:var(--ink-500); font-size:13px; }
+  .m-count { font-weight:700; font-size:15px; color:var(--et-black); }
+
+  /* chips + badges */
+  .track { display:inline-block; font-size:10.5px; padding:2px 9px; border-radius:20px; font-weight:700; letter-spacing:0.03em; color:#fff; white-space:nowrap; }
+  .track.exp { background:var(--track-exp); }
+  .track.anc { background:#eceef2; color:#555; }
+  .badge { display:inline-block; font-size:9.5px; padding:2px 7px; border-radius:5px; font-weight:700;
+    letter-spacing:0.05em; vertical-align:middle; margin-left:5px; }
+  .badge.white { background:#ffe2e4; color:var(--et-red-deep); }
+  .badge.reclaim { background:#fff0d6; color:#a86a00; }
+  .badge.new { background:var(--client-accent-soft); color:var(--client-accent); }
+
+  /* ── METHODOLOGY FOOTER ── */
+  .method { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px 26px;
+            font-size:13px; color:var(--ink-500); line-height:1.7; }
+  .method h3 { margin:0 0 10px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--et-black); }
+  .method strong { color:var(--ink-700); }
+  .method + .method { margin-top:14px; }
+  .legend-row { display:flex; gap:16px; flex-wrap:wrap; margin-top:12px; align-items:center; font-size:12.5px; }
+  .legend-row .track { margin-right:5px; }
+
+  @media (max-width:900px) {
+    .summary { grid-template-columns:repeat(2,1fr); } .charts { grid-template-columns:1fr; }
+    .bar-row { grid-template-columns:130px 1fr 30px; }
+    thead th:nth-child(5), tbody td.angle-cell { display:none; }
+    .masthead h1 { font-size:32px; } .month-tabs { position:static; }
+    .tab { min-width:0; padding:8px 12px; } .tab-all { margin-left:0; }
+  }
+  @media print {
+    body, body.show-all { background:#fff; } .month-tabs { display:none; }
+    section.month { display:block !important; page-break-inside:avoid; border:none; }
+    tbody tr:hover td { background:transparent; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ MASTHEAD ══ -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="label">Reddit Seeding Plan · Months 4–9</div>
+    <h1>Master Matchmakers</h1>
+    <div class="sub"><b>78 mentions</b> &middot; 13 per month &middot; 13 metros &middot; 25+ subreddits</div>
+    <div class="meta">Reddit is the driver behind your AI-visibility surge — engines lean on it heavily. This plan pushes into new top-tier and secondary markets each month while sustaining the metros already winning. Cadence: <b>5 anchor mentions/mo (base)</b> + <b>8 expansion mentions/mo (upsell)</b>.</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ══ SUMMARY STATS ══ -->
+  <section class="section">
+    <div class="summary">
+      <div class="card"><div class="num red">78</div><div class="lbl">Mentions planned (Mo 4–9)</div></div>
+      <div class="card"><div class="num">13</div><div class="lbl">Mentions per month</div></div>
+      <div class="card"><div class="num accent">13</div><div class="lbl">Metros activated</div></div>
+      <div class="card"><div class="num">25+</div><div class="lbl">Subreddits in rotation</div></div>
+    </div>
+  </section>
+
+  <!-- ══ CHARTS ══ -->
+  <section class="section" style="padding-top:0">
+    <div class="charts">
+      <div class="chart-card">
+        <h3>Mentions by track</h3>
+        <div class="bar-row"><div class="bar-label">Expansion — new markets <span style="color:var(--ink-300)">(upsell)</span></div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--track-exp)"></div></div><div class="bar-count">48</div></div>
+        <div class="bar-row"><div class="bar-label">Anchor — sustain wins <span style="color:var(--ink-300)">(base)</span></div><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--ink-300)"></div></div><div class="bar-count">30</div></div>
+      </div>
+      <div class="chart-card">
+        <h3>Mentions by market tier</h3>
+        <div class="bar-row"><div class="bar-label">Top-tier expansion</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--client-accent)"></div></div><div class="bar-count">32</div></div>
+        <div class="bar-row"><div class="bar-label">Secondary expansion</div><div class="bar-track"><div class="bar-fill" style="width:50%;background:#5560b0"></div></div><div class="bar-count">16</div></div>
+        <div class="bar-row"><div class="bar-label">Anchor metros (LA · SD · NY)</div><div class="bar-track"><div class="bar-fill" style="width:63%;background:var(--et-honey)"></div></div><div class="bar-count">20</div></div>
+        <div class="bar-row"><div class="bar-label">National verticals</div><div class="bar-track"><div class="bar-fill" style="width:31%;background:var(--ink-500)"></div></div><div class="bar-count">10</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MONTH TABS ══ -->
+  <nav class="month-tabs" id="tabs">
+    <button class="tab is-active" data-target="4"><span class="tab-num">Month 4</span><span class="tab-count">New York</span></button>
+    <button class="tab" data-target="5"><span class="tab-num">Month 5</span><span class="tab-count">Chicago · Boston</span></button>
+    <button class="tab" data-target="6"><span class="tab-num">Month 6</span><span class="tab-count">SF · Bay Area</span></button>
+    <button class="tab" data-target="7"><span class="tab-num">Month 7</span><span class="tab-count">Dallas · Houston</span></button>
+    <button class="tab" data-target="8"><span class="tab-num">Month 8</span><span class="tab-count">DC · Philadelphia</span></button>
+    <button class="tab" data-target="9"><span class="tab-num">Month 9</span><span class="tab-count">Miami · Atlanta</span></button>
+    <button class="tab tab-all" data-target="all"><span class="tab-num">All months</span><span class="tab-count">78 mentions</span></button>
+  </nav>
+
+  <section class="section" style="padding-top:20px">
+
+    <!-- ══ MONTH 4 — NEW YORK ══ -->
+    <section class="month is-active" data-month="4">
+      <header class="month-head">
+        <div><h2>Month 4 — New York re-focus</h2><div class="focus">Fill the NYC whitespace · reclaim gendered search</div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaking service in NYC</td><td class="angle-cell angle">"How do busy pros actually meet people here?" — recommend a vetted local option</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/nyc</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in NYC</td><td class="angle-cell angle">Reply on dating-scene / burnout threads</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking for men in NYC <span class="badge white">WHITESPACE</span></td><td class="angle-cell angle">NYC male-dater threads — currently a 0-score prompt</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking for women in NYC <span class="badge white">WHITESPACE</span></td><td class="angle-cell angle">30+ women in NYC — the other 0-score prompt</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/FinancialCareers</span></td><td><span class="track exp">Expansion</span></td><td class="targets">High-net-worth NYC professionals</td><td class="angle-cell angle">"Is a matchmaker worth it?" for time-poor high earners</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/Manhattan</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Personal matchmaker to hire in NYC</td><td class="angle-cell angle">Hyper-local recommendation thread</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">7</td><td><span class="sub-name">r/AskMenOver30</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Serious relationships, NYC men</td><td class="angle-cell angle">Men done with apps, seeking committed matches</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Defend LA (score 56)</td><td class="angle-cell angle">Keep the crown-jewel market warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego surge (+155%)</td><td class="angle-cell angle">Maintain the Month-2 momentum</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/AskLosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Best matchmaker in LA</td><td class="angle-cell angle">Local recommendation reinforcement</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/datingoverforty</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Matchmaker for divorced women <span class="badge reclaim">RECLAIM</span></td><td class="angle-cell angle">Reclaim the prompt that dropped to 0</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">12</td><td><span class="sub-name">r/relationship_advice</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Best matchmaking company (broad)</td><td class="angle-cell angle">National category authority</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ MONTH 5 — CHICAGO + BOSTON ══ -->
+    <section class="month" data-month="5">
+      <header class="month-head">
+        <div><h2>Month 5 — Chicago &amp; Boston</h2><div class="focus">Top-tier expansion · Midwest + Northeast <span class="badge new" style="margin-left:8px">NEW MARKET</span></div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/chicago</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Chicago</td><td class="angle-cell angle">Dating-scene + "tired of apps" threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/AskChicago</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service in Chicago</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/boston</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Boston</td><td class="angle-cell angle">Professional / academic dating threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/askboston</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service in Boston</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track exp">Expansion</span></td><td class="targets">30+ professionals, Chi/Bos</td><td class="angle-cell angle">Serious-intent daters in both metros</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">High-end matchmaking service</td><td class="angle-cell angle">Reinforce the +233% "high-end" prompt</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">7</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain NYC (Month 4)</td><td class="angle-cell angle">Keep the new NYC gains warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Defend LA (score 56)</td><td class="angle-cell angle">Crown-jewel maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego</td><td class="angle-cell angle">Momentum maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/datingoverforty</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Divorced / HNW segment</td><td class="angle-cell angle">National vertical authority</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/relationship_advice</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Most trustworthy matchmaker</td><td class="angle-cell angle">Reinforce the +160% "trustworthy" prompt</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ MONTH 6 — SF + BAY AREA ══ -->
+    <section class="month" data-month="6">
+      <header class="month-head">
+        <div><h2>Month 6 — San Francisco &amp; Bay Area</h2><div class="focus">Top-tier expansion · West Coast + LA reinforcement <span class="badge new" style="margin-left:8px">NEW MARKET</span></div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/sanfrancisco</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in SF</td><td class="angle-cell angle">Tech-professional dating burnout threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/bayarea</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, Bay Area</td><td class="angle-cell angle">Regional recommendation requests</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/AskSF</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Personal matchmaker in SF</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Grow LA beyond 56</td><td class="angle-cell angle">Push the anchor market even higher</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/AskLosAngeles</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best professional matchmaking, LA</td><td class="angle-cell angle">Reinforce the top-scoring prompt</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">HNW West-Coast professionals</td><td class="angle-cell angle">Reinforce the +225% HNW prompt</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">7</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain NYC</td><td class="angle-cell angle">Rolling maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/chicago</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain Chicago (Month 5)</td><td class="angle-cell angle">Keep new gains warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego</td><td class="angle-cell angle">Momentum maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Best matchmaking company</td><td class="angle-cell angle">National category authority</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/relationship_advice</span></td><td><span class="track anc">Anchor</span></td><td class="targets">It's Just Lunch alternative <span class="badge reclaim">DEFEND</span></td><td class="angle-cell angle">Protect the +500% comparison win</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ MONTH 7 — DALLAS + HOUSTON ══ -->
+    <section class="month" data-month="7">
+      <header class="month-head">
+        <div><h2>Month 7 — Dallas &amp; Houston</h2><div class="focus">Top-tier expansion · Texas <span class="badge new" style="margin-left:8px">NEW MARKET</span></div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/Dallas</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Dallas</td><td class="angle-cell angle">Dating-scene + relocation threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/askdfw</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, DFW</td><td class="angle-cell angle">Metroplex recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/houston</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Houston</td><td class="angle-cell angle">Professional dating threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/askhouston</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, Houston</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">TX high earners, oil/energy</td><td class="angle-cell angle">Time-poor professionals angle</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track exp">Expansion</span></td><td class="targets">30+ professionals, Texas</td><td class="angle-cell angle">Serious-intent daters</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">7</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Defend LA</td><td class="angle-cell angle">Crown-jewel maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/sanfrancisco</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain SF (Month 6)</td><td class="angle-cell angle">Keep new gains warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain NYC</td><td class="angle-cell angle">Rolling maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego</td><td class="angle-cell angle">Momentum maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/datingoverforty</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Divorced / HNW segment</td><td class="angle-cell angle">National vertical authority</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ MONTH 8 — DC + PHILADELPHIA ══ -->
+    <section class="month" data-month="8">
+      <header class="month-head">
+        <div><h2>Month 8 — Washington DC &amp; Philadelphia</h2><div class="focus">Secondary expansion · Mid-Atlantic <span class="badge new" style="margin-left:8px">NEW MARKET</span></div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/washingtondc</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in DC</td><td class="angle-cell angle">Politics / law / consulting dating threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">DC power-professionals</td><td class="angle-cell angle">High-status, time-poor angle</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/FinancialCareers</span></td><td><span class="track exp">Expansion</span></td><td class="targets">HNW DC / consulting</td><td class="angle-cell angle">"Worth hiring a matchmaker?" for high earners</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/philadelphia</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Philadelphia</td><td class="angle-cell angle">Local dating-scene threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/askphilly</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, Philly</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track exp">Expansion</span></td><td class="targets">30+ professionals, Mid-Atlantic</td><td class="angle-cell angle">Serious-intent daters</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">7</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Defend LA</td><td class="angle-cell angle">Crown-jewel maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/Dallas</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain Dallas (Month 7)</td><td class="angle-cell angle">Keep new gains warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain NYC</td><td class="angle-cell angle">Rolling maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego</td><td class="angle-cell angle">Momentum maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/relationship_advice</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Best matchmaking company</td><td class="angle-cell angle">National category authority</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══ MONTH 9 — MIAMI + ATLANTA ══ -->
+    <section class="month" data-month="9">
+      <header class="month-head">
+        <div><h2>Month 9 — Miami &amp; Atlanta</h2><div class="focus">Secondary expansion · Southeast <span class="badge new" style="margin-left:8px">NEW MARKET</span></div></div>
+        <div class="month-stats"><span><strong>13</strong> mentions</span><span><strong>8</strong> expansion</span><span><strong>5</strong> anchor</span></div>
+      </header>
+      <table>
+        <thead><tr><th style="width:40px">#</th><th>Subreddit</th><th style="width:110px">Track</th><th>Reinforces</th><th>Thread angle</th><th class="num" style="width:70px">Mentions</th></tr></thead>
+        <tbody>
+          <tr><td class="r-num">1</td><td><span class="sub-name">r/Miami</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Miami</td><td class="angle-cell angle">Affluent / transplant dating threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">2</td><td><span class="sub-name">r/florida</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, South Florida</td><td class="angle-cell angle">Statewide recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">3</td><td><span class="sub-name">r/Atlanta</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Best matchmaker in Atlanta</td><td class="angle-cell angle">Professional dating-scene threads</td><td class="num m-count">2</td></tr>
+          <tr><td class="r-num">4</td><td><span class="sub-name">r/askatlanta</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Matchmaking service, Atlanta</td><td class="angle-cell angle">Local recommendation request</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">5</td><td><span class="sub-name">r/dating_advice</span></td><td><span class="track exp">Expansion</span></td><td class="targets">Southeast professionals</td><td class="angle-cell angle">Time-poor high earners angle</td><td class="num m-count">1</td></tr>
+          <tr><td class="r-num">6</td><td><span class="sub-name">r/datingoverthirty</span></td><td><span class="track exp">Expansion</span></td><td class="targets">30+ professionals, Southeast</td><td class="angle-cell angle">Serious-intent daters</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">7</td><td><span class="sub-name">r/LosAngeles</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Defend LA</td><td class="angle-cell angle">Crown-jewel maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">8</td><td><span class="sub-name">r/washingtondc</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain DC (Month 8)</td><td class="angle-cell angle">Keep new gains warm</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">9</td><td><span class="sub-name">r/AskNYC</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain NYC</td><td class="angle-cell angle">Rolling maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">10</td><td><span class="sub-name">r/sandiego</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Sustain San Diego</td><td class="angle-cell angle">Momentum maintenance</td><td class="num m-count">1</td></tr>
+          <tr class="anchor"><td class="r-num">11</td><td><span class="sub-name">r/datingoverforty</span></td><td><span class="track anc">Anchor</span></td><td class="targets">Divorced / HNW segment</td><td class="angle-cell angle">National vertical authority</td><td class="num m-count">1</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </section>
+
+  <!-- ══ METHODOLOGY ══ -->
+  <section class="section">
+    <div class="method">
+      <h3>How this plan works</h3>
+      <p>Each month runs <strong>13 mentions</strong> split across two tracks. <strong>Expansion (8/mo, upsell-funded)</strong> attacks one new top-tier or secondary market — seeding authentic recommendations where a fresh audience is asking. <strong>Anchor (5/mo, base)</strong> keeps the markets you've already won warm, so gains like LA (score 56) and San Diego (+155%) don't decay while we push elsewhere. Markets activated earlier roll into the anchor rotation in later months — nothing gets abandoned after one push.</p>
+      <div class="legend-row">
+        <span><span class="track exp">Expansion</span> new-market push (upsell)</span>
+        <span><span class="track anc">Anchor</span> sustain proven wins (base)</span>
+        <span><span class="badge white">WHITESPACE</span> a current 0-score prompt</span>
+        <span><span class="badge reclaim">RECLAIM/DEFEND</span> a prompt that slipped or must be protected</span>
+        <span><span class="badge new">NEW MARKET</span> first activation</span>
+      </div>
+    </div>
+    <div class="method">
+      <h3>Seeding standards — how we stay credible</h3>
+      <p>Every mention is a <strong>value-first comment on a relevant, active thread</strong> (or an occasional genuine post) — never copy-paste drops. We use <strong>aged accounts with real karma and posting history</strong>, follow each subreddit's self-promotion rules, disclose affiliation where required, and keep the mention rate natural so it reads as a real recommendation. This is exactly why AI engines trust the signal — and why it moved your visibility score. Volume is a target, not a quota: we skip a placement rather than force one that would read as spam.</p>
+    </div>
+  </section>
+
+  <div style="height:40px"></div>
+</div>
+
+<script>
+  const tabs = [...document.querySelectorAll('.tab')];
+  const months = [...document.querySelectorAll('.month')];
+  const body = document.body;
+  function activate(target) {
+    tabs.forEach(t => t.classList.toggle('is-active', t.getAttribute('data-target') === target));
+    if (target === 'all') {
+      body.classList.add('show-all');
+    } else {
+      body.classList.remove('show-all');
+      months.forEach(m => m.classList.toggle('is-active', m.getAttribute('data-month') === target));
+    }
+    try { localStorage.setItem('mm-reddit-tab', target); } catch (e) {}
+  }
+  tabs.forEach(t => t.addEventListener('click', () => activate(t.getAttribute('data-target'))));
+  try {
+    const saved = localStorage.getItem('mm-reddit-tab');
+    if (saved && tabs.some(t => t.getAttribute('data-target') === saved)) activate(saved);
+  } catch (e) {}
+</script>
+</body>
+</html>
