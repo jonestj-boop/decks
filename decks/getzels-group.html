@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getzels Group — AI Visibility &amp; SEO Audit</title>
+<style>
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  /* Getzels Group brand — monochrome luxury (black + white) pulled from getzelsgroup.com,
+     with a champagne-gold accent (luxury real-estate convention) */
+  --primary-dark: #111111;
+  --primary-mid: #1c1c1c;
+  --primary-light: #2a2a2a;
+  --accent: #C4A15A;        /* champagne gold */
+
+  /* EmberTribe constants — canonical values from embertribe-design/tokens/colors.css */
+  --ember-red: #FF333C;     /* Candy Apple Red */
+  --ember-dark: #e62831;    /* red hover/press shade */
+  --ember-yellow: #FFB000;  /* Honey Yellow accent */
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #00B4D8;
+  --blue: #3498DB;
+  --gold: #C4A15A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Quatro", "Calibri", "Segoe UI", system-ui, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+.slide.dark .stat-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* EmberTribe brand cover — solid Candy Apple Red field (per embertribe-design) */
+.slide.cover { background: var(--ember-red); color: #ffffff; overflow: hidden; }
+.slide.cover::after {
+  content: "e"; position: absolute; right: -40px; bottom: -190px;
+  font-weight: 700; font-size: 620px; line-height: 1;
+  color: rgba(0,0,0,0.08); pointer-events: none; z-index: 0;
+}
+.slide.cover > div { position: relative; z-index: 1; }
+.slide.cover .slide-label { color: #000000; }
+.slide.cover h1 { color: #ffffff; }
+.slide.cover .subtitle { color: rgba(255,255,255,0.92); }
+.slide.cover .accent-rule { width: 64px; height: 5px; background: #000000; margin-bottom: 22px; }
+.slide.cover .stat-card { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.28); }
+.slide.cover .stat-value { color: #ffffff; }
+.slide.cover .stat-label { color: rgba(255,255,255,0.82); }
+.slide.cover .logo-row { border-top-color: rgba(0,0,0,0.18); }
+.slide.cover .logo-ember { color: #000000; }
+.slide.cover .logo-date { color: rgba(255,255,255,0.85); }
+
+h1 { font-size: 48px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; margin-bottom: 12px; }
+h2 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 19px; font-weight: 400; color: var(--text-light); max-width: 900px; margin-bottom: 22px; }
+
+.slide-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--ember-red); margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 140px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+.stat-value { font-size: 34px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF8E1; border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 14px; margin: 12px 0; line-height: 1.5;
+}
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #FBF6EC; border-left-color: var(--gold); }
+.annotation.info strong { color: #9c7b32; }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.dim { opacity: 0.5; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 200px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text); }
+.bar-track { flex: 1; height: 26px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; font-size: 12px; font-weight: 700; color: white; transition: width 0.8s ease; }
+.bar-fill.gold   { background: linear-gradient(90deg, #a9863f, var(--gold)); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.dark   { background: linear-gradient(90deg, #000000, #333333); }
+.bar-fill.gray   { background: linear-gradient(90deg, #9aa0a6, #c4c9ce); color:#333; }
+.bar-value { width: 90px; text-align: right; font-size: 13px; font-weight: 600; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.gold    { background: #FBF6EC; color: #9c7b32; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.channel-card .channel-icon { color: var(--gold); margin-bottom: 12px; display:flex; }
+.channel-card .channel-icon svg { width: 30px; height: 30px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 14px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 6px; }
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 4px; font-size: 13px; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.phase-cost { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin-top: 12px; }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+.red { color: var(--red); } .green { color: var(--green); } .gold { color: var(--gold); } .ember { color: var(--ember-red); }
+
+.logo-row { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+.logo-ember { font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--gold)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.15); background: rgba(0,0,0,0.55); color: white; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav button:hover { background: rgba(0,0,0,0.8); transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: rgba(0,0,0,0.55); background: rgba(0,0,0,0.06); padding: 6px 14px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 36px; } h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 130px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide cover active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Your AI Visibility &amp; SEO Audit &middot; Prepared by EmberTribe</p>
+      <div class="accent-rule"></div>
+      <h1>Getzels Group</h1>
+      <p class="subtitle">Los Angeles luxury real estate has a new front door — and it isn't the ten blue links. This audit shows where Getzels Group stands when a high-net-worth buyer asks an AI assistant "who's the best luxury agent in Calabasas?" — and how the SEO Growth Roadmap turns that answer into your name.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Priority luxury markets you serve</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">800M+</div>
+          <div class="stat-label">Weekly ChatGPT users asking for picks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">~60%</div>
+          <div class="stat-label">Searches that now end without a click</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">1</div>
+          <div class="stat-label">Agent an AI names when asked "the best"</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Nathaniel Pitchon-Getzels &mdash; Aug 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE OPPORTUNITY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Opportunity</p>
+    <h2>Your buyer researches for months before they call</h2>
+    <p class="subtitle">A $3M+ move is the most-researched purchase of someone's life. By the time a luxury buyer or seller reaches out, they've already decided who to trust — from what they read online, and increasingly, from what an AI assistant told them.</p>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="gold">Where Getzels is strong</h3>
+        <ul style="list-style:none; padding:0; font-size:15px;">
+          <li style="margin-bottom:10px;">— A clean, editorial brand and real portfolio depth across Calabasas, Encino, Woodland Hills, Tarzana, Hollywood Hills &amp; Westlake Village.</li>
+          <li style="margin-bottom:10px;">— Genuine trust signals: named founder (Nathaniel Pitchon-Getzels), testimonials, and the Compass Concierge offering.</li>
+          <li style="margin-bottom:10px;">— A defined luxury niche — exactly the kind of specialist AI assistants love to recommend.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">Where the gap is</h3>
+        <ul style="list-style:none; padding:0; font-size:15px;">
+          <li style="margin-bottom:10px;">— The site lives on Compass's platform — great for listings, thin on the authority signals that win organic and AI visibility.</li>
+          <li style="margin-bottom:10px;">— "Luxury realtor Calabasas / Hidden Hills" searches are dominated by portals (Zillow, Redfin) and larger brands, not by you.</li>
+          <li style="margin-bottom:10px;">— Ask ChatGPT or Perplexity for the top agents in your markets today and Getzels Group is unlikely to be the name that surfaces.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>The discovery question:</strong> you've built the reputation offline. Does the internet — and the AI now summarizing it — tell that same story? That's what we're here to find out.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: THE SHIFT / AI VISIBILITY -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">The Shift</p>
+    <h2>Search moved into the answer</h2>
+    <p class="subtitle">Your best-fit clients — busy, high-net-worth professionals — no longer scroll ten blue links. They ask ChatGPT, Gemini, Google's AI Overviews, and Perplexity "who should I hire?" and act on the shortlist they get back.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+        <h3>The behavior changed</h3>
+        <ul>
+          <li>AI assistants answer high-intent questions directly</li>
+          <li>One vetted recommendation replaces a page of options</li>
+          <li>If you're not named, you're not considered</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h3>The stakes are higher</h3>
+        <ul>
+          <li>Luxury real estate is a high-trust, high-ticket decision</li>
+          <li>Being the AI's pick signals authority instantly</li>
+          <li>Your exact buyer is the person using these tools</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>AI reads the open web</h3>
+        <ul>
+          <li>Assistants lean on reviews, Reddit, local press &amp; structured data</li>
+          <li>Real third-party mentions carry outsized weight</li>
+          <li>Show up in the right sources and the engines follow</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Answer Engine Optimization (AEO):</strong> the work of becoming the name AI assistants recommend. It's the new front door for luxury real estate — and almost no agent in your markets is working it yet. That's the opening.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: WHERE YOU LIKELY STAND -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">The Diagnostic</p>
+    <h2>What the AI says about you today</h2>
+    <p class="subtitle">Here's the diagnostic we run in week one: ask the assistants your buyers actually use the questions they actually type, across your six markets, and score whether Getzels Group is named, cited, or invisible.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row">
+        <span class="bar-label">"Best luxury realtor in Calabasas"</span>
+        <div class="bar-track"><div class="bar-fill gray" style="width:22%;">Portals + big brands win</div></div>
+        <span class="bar-value">At risk</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">"Top agent Hidden Hills / Westlake"</span>
+        <div class="bar-track"><div class="bar-fill gray" style="width:22%;">Portals + big brands win</div></div>
+        <span class="bar-value">At risk</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">"Who should sell my $4M home in Encino?"</span>
+        <div class="bar-track"><div class="bar-fill gray" style="width:22%;">Generic advice, no name</div></div>
+        <span class="bar-value">Open</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">"Getzels Group reviews"</span>
+        <div class="bar-track"><div class="bar-fill gold" style="width:70%;">Your name — you can own this</div></div>
+        <span class="bar-value">Winnable</span>
+      </div>
+    </div>
+    <div class="annotation danger">
+      <strong>The pattern in luxury:</strong> assistants default to portals and national brands for "best agent" prompts and give generic, name-free advice for high-value seller questions. Every one of those is a slot you can take — because the specialist with the strongest third-party proof usually wins.
+    </div>
+    <p style="font-size:12px; color:var(--text-light); margin-top:4px;">Directional, based on how these prompts typically resolve in luxury real-estate markets. Slide 5 is the live scorecard we'd build for your exact six markets.</p>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: COMPETITIVE LANDSCAPE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">The Landscape</p>
+    <h2>Who's taking the answer slot now</h2>
+    <p class="subtitle">In your markets, the visibility isn't being won by better agents — it's being won by better-documented ones. Here's who AI and search lean on today, and why.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Who shows up</th>
+          <th>Why the AI trusts them</th>
+          <th>Their weakness you exploit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">Zillow / Redfin / Realtor.com</td>
+          <td>Massive structured data, review volume, domain authority</td>
+          <td>Impersonal, no relationship, not a named local expert</td>
+        </tr>
+        <tr>
+          <td class="bold">National luxury brands<br><span class="dim">(The Agency, The Oppenheim Group)</span></td>
+          <td>Press coverage, strong brand entities, content volume</td>
+          <td>Broad, not hyper-local to Calabasas / Hidden Hills</td>
+        </tr>
+        <tr>
+          <td class="bold">Top individual Compass teams</td>
+          <td>Personal brand content, reviews, neighborhood pages</td>
+          <td>Few are actively working AI visibility — thin moat</td>
+        </tr>
+        <tr>
+          <td class="bold gold">Getzels Group</td>
+          <td>Real reputation, true specialist, Compass Concierge edge</td>
+          <td>Under-documented online — the fixable gap</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Gap alert:</strong> the agents beating you in AI answers aren't better at selling homes — they're better at leaving evidence the machines can read. That's a content-and-authority problem, and it's exactly what we solve.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How we'd grow Getzels Group</h2>
+    <p class="subtitle">Three tracks that compound. AI visibility is the headline, but it only works when the foundation and the authority signals feed it.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.3c1.8-1.2 3-3.3 3-5.7a7 7 0 0 0-7-7Z"/><path d="M9 21h6"/></svg></div>
+        <h3>AI Visibility &amp; AEO</h3>
+        <ul>
+          <li>Rank across the prompts your buyers ask the assistants</li>
+          <li>Build the entity, reviews &amp; citations AI reads</li>
+          <li>Own "Getzels Group" and "best agent" answers</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/></svg></div>
+        <h3>Local SEO &amp; Authority Site</h3>
+        <ul>
+          <li>Neighborhood authority pages that outrank portals</li>
+          <li>Google Business Profile + review velocity engine</li>
+          <li>Technical + structured data so machines parse you</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg></div>
+        <h3>Content &amp; Reputation</h3>
+        <ul>
+          <li>Market reports &amp; guides that become the cited source</li>
+          <li>Third-party mentions: press, forums, local features</li>
+          <li>Listing storytelling that travels across the web</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Why this order:</strong> AI assistants recommend the entity with the strongest, most consistent evidence trail. We build that trail once — and it pays off in AI answers, Google rankings, and buyer trust at the same time.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: AI VISIBILITY PLAYBOOK -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">The AI Playbook</p>
+    <h2>From invisible to recommended</h2>
+    <p class="subtitle">The specific moves that make an AI assistant name Getzels Group. This is the work almost no agent in your markets is doing — which is exactly why it's winnable now.</p>
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h3 class="gold">Become the entity AI understands</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:9px;">— <strong>Structured data &amp; schema</strong> so engines read Getzels as a defined local business, team &amp; area authority.</li>
+          <li style="margin-bottom:9px;">— <strong>Consistent entity footprint</strong> — name, markets, credentials aligned across the web and knowledge panel.</li>
+          <li style="margin-bottom:9px;">— <strong>Neighborhood authority pages</strong> the assistants quote for "living in Calabasas / Hidden Hills."</li>
+        </ul>
+        <h3 class="gold mt-16">Build the proof AI trusts</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:9px;">— <strong>Review velocity engine</strong> — steady, specific Google &amp; third-party reviews naming markets and outcomes.</li>
+          <li style="margin-bottom:9px;">— <strong>Third-party citations</strong> — local press, luxury features, and community threads AI reads.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="gold">Feed the answer engines</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:9px;">— <strong>Question-shaped content</strong> that answers the exact prompts buyers ask ("best agent to sell a $4M Encino home").</li>
+          <li style="margin-bottom:9px;">— <strong>Data-rich market reports</strong> — the kind of original source AI loves to cite over portals.</li>
+          <li style="margin-bottom:9px;">— <strong>Listing &amp; sold-story content</strong> that documents wins in a machine-readable way.</li>
+        </ul>
+        <h3 class="gold mt-16">Measure what matters</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:9px;">— <strong>Prompt tracking</strong> across ChatGPT, Gemini &amp; Perplexity for your six markets — monthly scorecard.</li>
+          <li style="margin-bottom:9px;">— <strong>Share-of-answer</strong>: how often you're named vs. portals and rivals, trending up.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>The goal:</strong> when a qualified buyer or seller asks any assistant about luxury real estate in your markets, Getzels Group is the specialist it recommends by name — with the reviews and reporting to back it up.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 days</h2>
+    <p class="subtitle">Your SEO Growth Roadmap maps this out in full. A staged plan that shows visible movement fast, then compounds — every phase produces evidence AI and search can read.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Baseline &amp; Foundation</h4>
+        <ul>
+          <li>AI visibility audit across your 6 markets</li>
+          <li>Entity, schema &amp; Google Business cleanup</li>
+          <li>Review-engine + keyword/prompt map</li>
+          <li>Priority neighborhood pages scoped</li>
+        </ul>
+        <div class="phase-cost">Set the baseline</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build &amp; Publish</h4>
+        <ul>
+          <li>Launch neighborhood authority pages</li>
+          <li>First market report &amp; buyer/seller guides</li>
+          <li>Review velocity live; citation outreach begins</li>
+          <li>Structured data shipped sitewide</li>
+        </ul>
+        <div class="phase-cost">Create the proof</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Amplify &amp; Measure</h4>
+        <ul>
+          <li>Prompt scorecard: named vs. invisible, trending</li>
+          <li>Expand content to winning markets</li>
+          <li>Press &amp; third-party mentions push</li>
+          <li>Double down where share-of-answer climbs</li>
+        </ul>
+        <div class="phase-cost">Own the answer</div>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>What you'll see:</strong> by day 90, a measurable move from "invisible" to "cited" on your priority prompts — plus stronger organic rankings and a review flywheel that keeps compounding.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; Discovery</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: THE OFFER — SEO GROWTH ROADMAP -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Your Next Step</p>
+    <h2>The SEO Growth Roadmap</h2>
+    <p class="subtitle">This audit shows the gap. The roadmap is the exact, custom plan to close it — the same system behind an 8,500 &rarr; 500,000 monthly-visit growth story, built for your six markets and the AI answers you want to own.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value gold">$47</div>
+        <div class="stat-label">Today &mdash; regularly $197</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">48 hrs</div>
+        <div class="stat-label">Delivered after onboarding</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">100%</div>
+        <div class="stat-label">Money-back guarantee</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="gold">What you get</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:8px;">— <strong>Strategic deck (13 slides)</strong> — competitor gaps &amp; the traffic + AI-visibility opportunities in your markets</li>
+          <li style="margin-bottom:8px;">— <strong>3-month content plan</strong> — 120 prioritized articles, sequenced to build authority</li>
+          <li style="margin-bottom:8px;">— <strong>Keyword research workbook</strong> — 300&ndash;500 opportunities across four tabs</li>
+          <li style="margin-bottom:8px;">— <strong>30-minute consult</strong> with a senior strategist to walk it through</li>
+          <li style="margin-bottom:8px;">— <strong>Optional analytics integration</strong> for verified traffic data</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="gold">Why it's a no-brainer</h3>
+        <ul style="list-style:none; padding:0; font-size:14.5px;">
+          <li style="margin-bottom:8px;">— A real, data-driven plan — no templates, no filler</li>
+          <li style="margin-bottom:8px;">— Built specifically around Getzels Group's luxury niche and AI-visibility upside</li>
+          <li style="margin-bottom:8px;">— If we can't deliver useful insights after onboarding, you get a full refund</li>
+        </ul>
+        <div class="annotation success mt-16">
+          <strong>The math:</strong> one additional luxury transaction returns this many thousands of times over. $47 buys you the map.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Getzels Group &mdash; AI Visibility &amp; SEO Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: CTA — GET YOUR ROADMAP -->
+  <div class="slide cover" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Claim Your Roadmap</p>
+      <div class="accent-rule"></div>
+      <h1>You've seen the gap.<br>Now get the plan.</h1>
+      <p class="subtitle">The audit told you where Getzels Group stands in Google and the AI answers today. The SEO Growth Roadmap is the exact, custom plan to own those answers — deck, 120-article content plan, keyword workbook, and a strategist consult, delivered in 48 hours.</p>
+      <div class="mt-24" style="font-size:17px; line-height:1.9;">
+        <div>&mdash; <strong>Step 1:</strong> Claim your roadmap for <strong>$47</strong> (regularly $197)</div>
+        <div>&mdash; <strong>Step 2:</strong> Complete the quick onboarding</div>
+        <div>&mdash; <strong>Step 3:</strong> Your custom plan lands within 48 business hours &mdash; guaranteed useful, or your money back</div>
+      </div>
+      <div style="margin-top:30px;">
+        <span style="display:inline-block; background:#000000; color:#ffffff; font-weight:700; font-size:19px; padding:16px 32px; border-radius:10px; letter-spacing:0.3px;">Get Your Roadmap &nbsp;$47&nbsp; &rarr;</span>
+        <div style="margin-top:14px; font-size:16px; font-weight:600; color:#ffffff;">offers.embertribe.com/seo-growth-roadmap</div>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Getzels Group &mdash; Aug 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
