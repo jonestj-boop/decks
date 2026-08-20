@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toothfairy — EmberTribe Growth Audit</title>
+<style>
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  --primary-dark: #00393A;
+  --primary-mid: #281634;
+  --primary-light: #3A8F8C;
+  --accent: #60DBD5;
+
+  --ember-red: #FF333C;
+  --ember-dark: #e62831;
+  --ember-yellow: #FFB000;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #23C9C4;
+  --blue: #3498DB;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Quatro", "Calibri", "Segoe UI", system-ui, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 50%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+
+.slide.dark table th {
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+}
+
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+h1 {
+  font-size: 46px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 20px;
+}
+
+.slide-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 150px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+.annotation {
+  background: #FFF8E1;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #E3F2FD; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.warn { background: #FFF3E0; border-left-color: var(--orange); }
+.annotation.warn strong { color: var(--orange); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 12px 0;
+}
+
+th {
+  background: var(--light-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+  color: var(--text-light);
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td { background: rgba(0,0,0,0.02); }
+
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; }
+.dim { opacity: 0.5; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 14px 0;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 90px;
+  text-align: right;
+  font-size: 12.5px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--text-light);
+}
+
+.bar-track {
+  flex: 1;
+  height: 24px;
+  background: var(--light-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: white;
+  transition: width 0.8s ease;
+}
+
+.bar-fill.teal   { background: linear-gradient(90deg, var(--teal), #48CAE4); }
+.bar-fill.ember  { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green  { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.yellow { background: linear-gradient(90deg, #d4930d, var(--yellow)); }
+.bar-fill.red    { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue   { background: linear-gradient(90deg, #2471a3, var(--blue)); }
+.bar-fill.accent { background: linear-gradient(90deg, var(--accent), var(--primary-light)); }
+
+/* Higher specificity than the .red/.teal/etc text-color utilities below, so bar-fill labels stay white regardless of source order */
+.bar-fill.teal, .bar-fill.ember, .bar-fill.green, .bar-fill.yellow, .bar-fill.red, .bar-fill.blue, .bar-fill.accent { color: #fff; }
+
+.bar-value {
+  width: 70px;
+  text-align: right;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pill.seo     { background: #E8F5E9; color: #1B5E20; }
+.pill.paid    { background: #E3F2FD; color: #0D47A1; }
+.pill.content { background: #FFF3E0; color: #E65100; }
+.pill.setup   { background: #F3E5F5; color: #6A1B9A; }
+.pill.red     { background: #FFEBEE; color: var(--red); }
+.pill.green   { background: #E8F5E9; color: var(--green); }
+.pill.blue    { background: #E3F2FD; color: var(--blue); }
+.pill.orange  { background: #FFF3E0; color: var(--orange); }
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  flex: 1;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
+}
+
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.channel-card .channel-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.channel-card h3 { margin-bottom: 10px; }
+
+.channel-card ul { list-style: none; padding: 0; }
+
+.channel-card ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.channel-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.finding-box {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.finding-box ul { list-style: none; padding: 0; margin: 10px 0; }
+.finding-box ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.finding-box ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.finding-box.danger ul li::before { background: var(--red); }
+.finding-box.warn ul li::before { background: var(--orange); }
+
+.timeline {
+  display: flex;
+  gap: 0;
+  margin: 16px 0;
+}
+
+.timeline-phase {
+  flex: 1;
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+
+.phase-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li {
+  position: relative;
+  padding-left: 14px;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+}
+.timeline-phase ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+
+.red { color: var(--red); }
+.green { color: var(--green); }
+.orange { color: var(--orange); }
+.teal { color: var(--teal); }
+.blue { color: var(--blue); }
+.ember { color: var(--ember-red); }
+
+.logo-row {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.1); }
+
+.logo-ember {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--ember-red);
+}
+
+.logo-date {
+  font-size: 12px;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ember-red), var(--accent));
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+.nav {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.nav button {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: rgba(0,0,0,0.6);
+  transform: scale(1.05);
+}
+
+.counter {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 34px; }
+  h2 { font-size: 26px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+  .bar-label { width: 70px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Growth Audit</p>
+      <h1>Toothfairy</h1>
+      <p class="subtitle">You rank #1 for your own name. The measurement that would tell us what happens after someone finds you went dark two and a half weeks ago, and it isn't the reason your rankings dropped.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value teal">29</div>
+          <div class="stat-label">Domain Authority Score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value red">18 days</div>
+          <div class="stat-label">Of near-zero GA4 data since the domain migration</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value orange">0 of 75</div>
+          <div class="stat-label">Form submits counted as a GA4 conversion, last 90 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--primary-light)">#16&ndash;19</div>
+          <div class="stat-label">Ranking position on your two biggest category terms</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Deepak, Linur &amp; Abduqodir &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: CURRENT STATE -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where You Are Today</h2>
+    <p class="subtitle">Pulled directly from your GA4 and Search Console properties, not estimates.</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value teal">4,748</div>
+        <div class="stat-label">Organic keywords ranking (UK)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" style="color:var(--primary-light)">553</div>
+        <div class="stat-label">Referring domains, incl. Forbes, TechCrunch, Daily Mail</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value red">-44%</div>
+        <div class="stat-label">Organic sessions, Jan 2026 peak to July 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value orange">274</div>
+        <div class="stat-label">Branded clicks/quarter on "toothfairy" + "tooth fairy" alone</div>
+      </div>
+    </div>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's Working</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; #1&ndash;2 rankings on every branded variant (toothfairy, tooth fairy, tooth fairy aligners, tooth fairy dentist) &mdash; real, high-intent clicks, not vanity rankings.</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; A genuinely strong earned-media backlink profile (Forbes, TechCrunch, Daily Mail, Metro, Harper's Bazaar) built through PR, not link buying.</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; Existing blog content already ranks for real volume &mdash; canker sores (#7, 18,100 searches/mo), retainer cleaner (#6, 8,100/mo).</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; Search Console confirms real users are still landing on the site throughout the recent domain migration.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's Holding You Back</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; Category terms people search before they know your name &mdash; teeth whitening kits, teeth straightening &mdash; sit on page two.</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; GA4 has recorded almost no data since the site started redirecting to www in early August.</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; Real form submissions aren't being counted as a conversion anywhere in GA4.</li>
+          <li style="margin-bottom:10px; font-size:14px;">&#8226;&nbsp; Average ranking position has weakened noticeably in the weeks since the migration &mdash; worth watching closely before it settles.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: TRACKING & MEASUREMENT GAPS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">What We Found First</p>
+    <h2>Two Measurement Gaps, Live Right Now</h2>
+    <p class="subtitle">Neither of these showed up on the discovery call because they weren't visible without account access. Both are fixable in days, not months.</p>
+    <div class="two-col">
+      <div class="finding-box danger">
+        <span class="pill red" style="width:fit-content;">Urgent</span>
+        <h3 class="mt-8">Analytics Blind Spot</h3>
+        <ul>
+          <li>toothfairyapp.co.uk now 301-redirects to www.toothfairyapp.co.uk &mdash; confirmed live today.</li>
+          <li>GA4 sessions on the tracked property collapsed from ~450&ndash;550/day to 1&ndash;3/day the moment that redirect went live, around August 3rd.</li>
+          <li>Search Console shows the opposite story over the same window: daily impressions on the www property jumped from ~20 to 2,000&ndash;3,600.</li>
+        </ul>
+        <div class="annotation danger">
+          <strong>Read:</strong> this isn't a traffic drop. It's a tracking tag that never followed the domain to its new home. Every day it stays broken is a day of conversion, funnel, and channel data you can't get back.
+        </div>
+      </div>
+      <div class="finding-box warn">
+        <span class="pill orange" style="width:fit-content;">Ongoing</span>
+        <h3 class="mt-8">Conversion Signal Gap</h3>
+        <ul>
+          <li>75 form_submit events logged directly in GA4 over the last 90 days, roughly 25 a month of real activity.</li>
+          <li>Not one of them is marked as a GA4 key event (conversion).</li>
+          <li>Anything that leans on GA4 conversions for optimization, including Google Ads Smart Bidding if you ever turn it on, currently has zero signal to work with.</li>
+        </ul>
+        <div class="annotation warn">
+          <strong>Read:</strong> we've watched this exact gap quietly cap ad performance for other clients for over a year before it was caught. It's a five-minute fix once flagged.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: TRAFFIC TRAJECTORY -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Traffic Trends</p>
+    <h2>12-Month Organic Trajectory</h2>
+    <p class="subtitle">GA4 organic search sessions by month. August is excluded from the trend line, it's the tracking outage above, not real traffic.</p>
+    <div class="bar-chart flex-grow">
+      <div class="bar-row"><span class="bar-label">Aug 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:70%;">5,854</div></div></div>
+      <div class="bar-row"><span class="bar-label">Sep 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:82%;">6,900</div></div></div>
+      <div class="bar-row"><span class="bar-label">Oct 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:88%;">7,386</div></div></div>
+      <div class="bar-row"><span class="bar-label">Nov 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:79%;">6,587</div></div></div>
+      <div class="bar-row"><span class="bar-label">Dec 2025</span><div class="bar-track"><div class="bar-fill teal" style="width:73%;">6,124</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jan 2026</span><div class="bar-track"><div class="bar-fill accent" style="width:100%;">8,376</div></div></div>
+      <div class="bar-row"><span class="bar-label">Feb 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:71%;">5,984</div></div></div>
+      <div class="bar-row"><span class="bar-label">Mar 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:82%;">6,876</div></div></div>
+      <div class="bar-row"><span class="bar-label">Apr 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:74%;">6,171</div></div></div>
+      <div class="bar-row"><span class="bar-label">May 2026</span><div class="bar-track"><div class="bar-fill teal" style="width:67%;">5,649</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jun 2026</span><div class="bar-track"><div class="bar-fill red" style="width:62%;">5,219</div></div></div>
+      <div class="bar-row"><span class="bar-label">Jul 2026</span><div class="bar-track"><div class="bar-fill red" style="width:56%;">4,701</div></div></div>
+    </div>
+    <div class="annotation">
+      <strong>Key takeaway:</strong> organic sessions peaked in January 2026 at 8,376 and had already fallen 44% by July, before the August tracking outage ever hit. That decline is the real, separate problem, worth its own root-cause dig once measurement is stable again.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: COMPETITIVE LANDSCAPE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Competitive Landscape</p>
+    <h2>How You Stack Up</h2>
+    <p class="subtitle">UK organic search, Semrush. Similar keyword footprint to SmileWhite, a fraction of the traffic.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Toothfairy</th>
+          <th>SmileWhite.co.uk</th>
+          <th>CasperSmile.uk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Organic keywords</td>
+          <td class="bold">4,748</td>
+          <td>4,849</td>
+          <td>4,144</td>
+        </tr>
+        <tr>
+          <td>Est. monthly organic traffic</td>
+          <td class="bold red">4,513</td>
+          <td class="bold">27,531</td>
+          <td>6,603</td>
+        </tr>
+        <tr>
+          <td>Keyword overlap with Toothfairy</td>
+          <td class="dim">&mdash;</td>
+          <td>132 shared keywords</td>
+          <td>90 shared keywords</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation danger mt-16">
+      <strong>Gap alert:</strong> Toothfairy and SmileWhite rank for almost the same number of keywords, but SmileWhite pulls roughly 6x the monthly traffic. That gap lives in category terms (whitening, straightening) where SmileWhite ranks higher, not in brand search, where you already win.
+    </div>
+    <div class="annotation info mt-8">
+      <strong>For scale:</strong> Invisalign.co.uk ranks for 6,776 keywords and pulls ~62,500 monthly visits &mdash; the category ceiling, not a realistic near-term target. SmileWhite and CasperSmile are the comparable set worth closing the gap against first.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: KEYWORD OPPORTUNITY -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Keyword Opportunity</p>
+    <h2>Where the Next Layer of Traffic Sits</h2>
+    <p class="subtitle">You've proven the engine works. It just hasn't been pointed at the terms with real category volume yet.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Keyword</th>
+          <th>Search volume</th>
+          <th>Current position</th>
+          <th>Why it matters</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>best at home teeth whitening kits</td>
+          <td>33,100/mo</td>
+          <td class="bold red">#19</td>
+          <td>Highest-volume category term you rank for at all &mdash; page two</td>
+        </tr>
+        <tr>
+          <td>teeth straightening</td>
+          <td>6,600/mo</td>
+          <td class="bold red">#16</td>
+          <td>Core service term, page two</td>
+        </tr>
+        <tr>
+          <td>toothfairy app</td>
+          <td>854 impr / 90d</td>
+          <td class="bold orange">#11.5</td>
+          <td>Sitting just off page one &mdash; the closest, cheapest win on the board</td>
+        </tr>
+        <tr>
+          <td>canker sores</td>
+          <td>18,100/mo</td>
+          <td class="bold green">#7</td>
+          <td>Proof this content strategy already works when applied</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>The pattern:</strong> every branded query converts to a #1&ndash;3 ranking. The content that targets category terms instead of your name is thinner and older, and it shows in the rankings. This is a content and internal-linking gap, not a domain authority problem.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: STRATEGY OVERVIEW -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Recommended Strategy</p>
+    <h2>How We'd Grow Toothfairy</h2>
+    <p class="subtitle">Three tracks, sequenced so measurement is trustworthy before we spend a dollar optimizing against it.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">&#128295;</div>
+        <h3>Technical Foundation</h3>
+        <ul>
+          <li>Fix the GA4 tracking gap left by the domain migration</li>
+          <li>Wire form submissions up as real GA4 conversions</li>
+          <li>Audit for keyword cannibalization across existing pages</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#9999;&#65039;</div>
+        <h3>Content &amp; On-Page</h3>
+        <ul>
+          <li>Build out the category terms currently stuck on page two</li>
+          <li>Refresh and strengthen the content already proven to rank</li>
+          <li>Bring in-house dentist review for EEAT without slowing velocity</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">&#128172;</div>
+        <h3>AEO &amp; High-Intent Capture</h3>
+        <ul>
+          <li>Selective, natural Reddit presence to seed LLM mentions</li>
+          <li>Grow beyond your current ~25 AI citations without tripping spam flags</li>
+          <li>Layer in Google Ads / early ChatGPT Ads once tracking is trustworthy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: ROADMAP -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Stabilize measurement first. Everything after that is only as good as the data it's built on.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1</span>
+        <h4>Stabilize</h4>
+        <ul>
+          <li>Fix the GA4/domain tracking gap</li>
+          <li>Turn on real conversion tracking</li>
+          <li>Technical + cannibalization audit</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2</span>
+        <h4>Build</h4>
+        <ul>
+          <li>Priority content for weak category terms</li>
+          <li>On-page fixes for near-page-one keywords</li>
+          <li>Begin selective Reddit/AEO seeding</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3</span>
+        <h4>Scale &amp; Prove</h4>
+        <ul>
+          <li>Expand content velocity on what's working</li>
+          <li>Reassess PR/backlink spend vs. competitor authority</li>
+          <li>Test Google Ads / ChatGPT Ads on validated intent terms</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: INVESTMENT -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Investment</p>
+    <h2>Pricing &amp; Deliverables</h2>
+    <p class="subtitle">Presented as ranges, final scope confirmed once we're inside the account and can size the content backlog precisely.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Investment</th>
+          <th>Includes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Technical Foundation <span class="dim">(Month 1, one-time)</span></td>
+          <td class="bold">$1,000&ndash;$2,000</td>
+          <td>Tracking/migration repair, conversion event setup, cannibalization audit</td>
+        </tr>
+        <tr>
+          <td>SEO Content <span class="dim">(ongoing)</span></td>
+          <td class="bold">$2,000&ndash;$4,000/mo</td>
+          <td>Content built around validated category terms, on-page optimization, quarterly refresh of top performers</td>
+        </tr>
+        <tr>
+          <td>AEO / Reddit Seeding <span class="dim">(ongoing)</span></td>
+          <td class="bold">$750&ndash;$1,500/mo</td>
+          <td>Selective, natural mentions calibrated to your current authority level</td>
+        </tr>
+        <tr>
+          <td>PR / Backlinks <span class="dim">(existing agency)</span></td>
+          <td class="dim">Not included</td>
+          <td>At 29 Authority Score, hold current spend unless competitor authority pulls ahead</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr style="font-weight:700; border-top:2px solid var(--border);">
+          <td>Directional monthly total</td>
+          <td>$2,750&ndash;$5,500/mo <span class="dim" style="font-weight:400;">+ Month 1 setup</span></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>What you get:</strong> a measurement foundation you can trust, content built around the terms with real category volume, and a controlled AEO presence, all benchmarked against SmileWhite and CasperSmile rather than guessed at.
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">Toothfairy &mdash; Growth Audit</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: NEXT STEPS -->
+  <div class="slide dark" data-slide="10">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Ready to Grow?</h1>
+      <p class="subtitle" style="text-align:center;">This is the diagnostic. Every day the tracking gap stays open is another day of data we can't get back, so the fastest next step is the most valuable one.</p>
+      <div class="mt-24">
+        <p style="font-size:18px; font-weight:600;">Review &amp; approve scope &rarr; Sign &amp; kickoff &rarr; Onboarding call within 48 hours</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.5); margin-top:8px;">Melissa Cedeno, EmberTribe &mdash; melissa@embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
