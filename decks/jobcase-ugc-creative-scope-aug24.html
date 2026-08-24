@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC Creative Scope — Jobcase — EmberTribe</title>
+<style>
+/* ============================================================
+   EmberTribe — Quatro (primary identity typeface)
+   ============================================================ */
+@font-face {
+  font-family: "Quatro";
+  src: url("fonts/Quatro_Reg.otf") format("opentype");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Quatro";
+  src: url("fonts/Quatro_SemiBold.otf") format("opentype");
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "Quatro";
+  src: url("fonts/Quatro_Bold.otf") format("opentype");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* --- Primary palette (brand guidelines V2) --- */
+  --et-red: #FF333C;         /* Candy Apple Red */
+  --et-red-hover: #e62831;
+  --et-red-soft: #ffe5e6;
+  --et-charcoal: #474747;
+  --et-yellow: #FFB000;      /* Honey Yellow */
+  --et-black: #000000;
+  --et-white: #FFFFFF;
+
+  /* --- Neutral ink ramp --- */
+  --et-ink-900: #000000;
+  --et-ink-700: #303030;
+  --et-ink-600: #474747;
+  --et-ink-500: #6b6b6b;
+  --et-ink-300: #c4c4c4;
+  --et-ink-200: #DFDFDF;
+  --et-ink-100: #efefef;
+  --et-ink-50:  #f7f7f7;
+
+  /* --- Semantic aliases --- */
+  --ember-red: var(--et-red);
+  --accent: var(--et-yellow);
+  --accent-dark: #B07A00;
+
+  --text: var(--et-ink-700);
+  --text-light: var(--et-ink-500);
+  --heading: var(--et-black);
+  --light-bg: var(--et-ink-50);
+  --card-bg: var(--et-white);
+  --border: var(--et-ink-200);
+
+  --green: #2FC171;          /* Shamrock — status success */
+  --teal: #30C0F2;           /* Azure — status info */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Quatro', 'Calibri', 'Segoe UI', system-ui, sans-serif;
+  background: var(--et-black);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+/* Cover — solid Candy Apple Red field, white/black text */
+.slide.dark {
+  background: var(--et-red);
+  color: #ffffff;
+}
+/* CTA close — solid Candy Apple Red field */
+.slide.cta {
+  background: var(--et-red);
+  color: #ffffff;
+}
+
+.slide.dark .text-light,
+.slide.dark .stat-label,
+.slide.dark .subtitle,
+.slide.cta .text-light,
+.slide.cta .stat-label,
+.slide.cta .subtitle { color: rgba(255,255,255,0.72); }
+
+.slide.dark .stat-card {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.16);
+}
+
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark table tr:hover td { background: rgba(255,255,255,0.03); }
+
+/* Type — Quatro Bold headers, sentence case */
+h1 { font-family: 'Quatro'; font-weight: 700; font-size: 52px; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 14px; color: var(--heading); }
+h2 { font-family: 'Quatro'; font-weight: 700; font-size: 40px; letter-spacing: -0.015em; line-height: 1.15; margin-bottom: 8px; color: var(--heading); }
+h3 { font-family: 'Quatro'; font-weight: 700; font-size: 22px; margin-bottom: 8px; color: var(--heading); }
+h4 { font-family: 'Quatro'; font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--heading); }
+.slide.dark h1, .slide.dark h2, .slide.dark h3, .slide.dark h4,
+.slide.cta h1, .slide.cta h2, .slide.cta h3, .slide.cta h4 { color: #fff; }
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-light);
+  max-width: 820px;
+  margin-bottom: 24px;
+}
+
+/* Section label — Quatro Bold, ALL CAPS */
+.slide-label {
+  font-family: 'Quatro';
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ember-red);
+  margin-bottom: 8px;
+}
+.slide.dark .slide-label { color: var(--et-black); }
+.slide.cta .slide-label { color: var(--et-black); }
+
+.tagline {
+  font-family: 'Quatro';
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 18px;
+}
+
+/* STAT CARDS */
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card {
+  flex: 1; min-width: 140px;
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+.stat-value { font-family: 'Quatro'; font-size: 38px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 400; color: var(--text-light); }
+
+/* ANNOTATIONS */
+.annotation {
+  background: #FFF6E0;
+  border-left: 3px solid var(--ember-red);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+.annotation strong { color: var(--et-black); }
+.annotation.info { background: #E7F6FD; border-left-color: var(--teal); }
+.annotation.info strong { color: #0B7FA8; }
+.annotation.success { background: #E7F7EE; border-left-color: var(--green); }
+.annotation.success strong { color: #1E8A50; }
+.mt-16 { margin-top: 16px; }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--light-bg); font-weight: 700; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.06em; color: var(--text-light);
+  text-align: left; padding: 12px 14px; border-bottom: 2px solid var(--border);
+}
+td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.center { text-align: center; }
+.bold { font-weight: 700; }
+
+/* PILLS */
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.pill.red { background: var(--et-red-soft); color: var(--et-red-hover); }
+.pill.gold { background: #FFF1CC; color: #8A6100; }
+.pill.green { background: #E7F7EE; color: #1E8A50; }
+
+/* COLUMNS */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+
+/* CHANNEL / VALUE CARDS */
+.channel-card {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.channel-card .channel-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: var(--et-red-soft); color: var(--ember-red);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.channel-card .channel-icon svg { width: 24px; height: 24px; }
+.channel-card h3 { margin-bottom: 12px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li {
+  position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 14px; line-height: 1.5;
+}
+.channel-card ul li::before {
+  content: '—'; position: absolute; left: 0; top: 0; color: var(--ember-red); font-weight: 700;
+}
+
+/* PRICING CARDS */
+.price-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; flex: 1; align-items: stretch; }
+.price-card {
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--card-bg);
+  position: relative;
+}
+.price-card.featured {
+  border: 2px solid var(--ember-red);
+  box-shadow: 0 12px 32px rgba(255,51,60,0.16);
+}
+.price-card .tier-name {
+  font-family: 'Quatro'; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ember-red); margin-bottom: 10px;
+}
+.price-card .price { font-family: 'Quatro'; font-size: 40px; font-weight: 700; line-height: 1; letter-spacing: -0.02em; color: var(--heading); }
+.price-card .price small { font-size: 15px; font-weight: 600; color: var(--text-light); letter-spacing: 0; }
+.price-card .per-video { font-size: 14px; font-weight: 700; color: var(--accent-dark); margin-top: 4px; }
+.price-card .volume { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 6px; }
+.price-card .blurb {
+  font-size: 13px; color: var(--text-light); margin: 12px 0 16px; line-height: 1.5;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.price-card ul { list-style: none; padding: 0; margin-top: auto; }
+.price-card ul li {
+  position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 13.5px; line-height: 1.4;
+}
+.price-card ul li::before {
+  content: '✓'; position: absolute; left: 0; top: 0; color: var(--green); font-weight: 800; font-size: 13px;
+}
+.tier-badge {
+  position: absolute; top: -11px; right: 20px;
+  background: var(--ember-red); color: #fff; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+}
+
+/* TIMELINE */
+.timeline { display: flex; gap: 0; margin: 16px 0; flex: 1; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 22px; display: flex; flex-direction: column; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label {
+  font-family: 'Quatro'; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ember-red); margin-bottom: 8px;
+}
+.phase-num {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--et-black); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Quatro'; font-size: 18px; font-weight: 700; margin-bottom: 12px;
+}
+.timeline-phase h4 { margin-bottom: 10px; }
+.timeline-phase p { font-size: 13px; color: var(--text-light); }
+
+/* INFO PANEL */
+.info-panel {
+  background: var(--light-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+.info-panel h3 { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.info-panel h3 svg { width: 22px; height: 22px; color: var(--ember-red); flex: none; }
+.info-panel ul { list-style: none; padding: 0; }
+.info-panel ul li {
+  position: relative; padding-left: 20px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5;
+}
+.info-panel ul li::before {
+  content: '—'; position: absolute; left: 0; top: 0; color: var(--ember-red); font-weight: 700;
+}
+
+/* TITLE LAYOUT */
+.title-split { flex: 1; display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center; }
+.title-photo {
+  border-radius: 20px; overflow: hidden; height: 78%; max-height: 560px; align-self: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45); border: 3px solid rgba(255,255,255,0.12);
+}
+.title-photo img,
+.title-photo video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* LOGO ROW */
+.logo-row {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.16); }
+.slide.cta .logo-row { border-top-color: rgba(255,255,255,0.28); }
+.logo-img { height: 28px; width: auto; display: block; }
+/* On red/dark fields the primary lockup sits on a white chip — no reversed
+   version of the logo exists, and inverting it destroys the mark */
+.slide.dark .logo-img,
+.slide.cta .logo-img { background: #fff; padding: 8px 12px; border-radius: 8px; height: 44px; }
+.logo-date { font-size: 12px; color: var(--text-light); font-style: italic; }
+.slide.dark .logo-date { color: rgba(255,255,255,0.6); }
+.slide.cta .logo-date { color: rgba(255,255,255,0.75); }
+
+/* PROGRESS BAR */
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: var(--ember-red);
+  z-index: 100; transition: width 0.3s ease;
+}
+
+/* NAV */
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button {
+  width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.4); color: white; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+}
+.nav button:hover { background: rgba(0,0,0,0.6); transform: scale(1.05); }
+.counter {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.3); padding: 6px 14px; border-radius: 6px;
+}
+
+.flex-grow { flex: 1; }
+.green { color: var(--green); }
+.ember { color: var(--ember-red); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 40px; }
+  h1 { font-size: 38px; }
+  h2 { font-size: 28px; }
+  .two-col, .three-col, .price-grid { grid-template-columns: 1fr; }
+  .title-split { grid-template-columns: 1fr; }
+  .title-photo { display: none; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .timeline-phase:first-child { border-radius: 12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius: 0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div class="title-split">
+      <div>
+        <p class="slide-label">EmberTribe Creative Services</p>
+        <h1>UGC video<br>production</h1>
+        <p class="tagline">AI-Powered · Scalable · Ad-Ready</p>
+        <p class="subtitle" style="color:rgba(255,255,255,0.85);">High-volume UGC video creation optimized for paid social and organic distribution.</p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value" style="color:#fff;">$85</div>
+            <div class="stat-label">Per video at scale</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:#fff;">500+</div>
+            <div class="stat-label">Videos per batch</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="color:#fff;">30</div>
+            <div class="stat-label">Business-day turnaround</div>
+          </div>
+        </div>
+      </div>
+      <div class="title-photo">
+        <video src="images/ugc-creator.mp4" poster="images/ugc-creator.jpg" autoplay muted loop playsinline></video>
+      </div>
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">Prepared for Jobcase &mdash; Aug 24, 2026</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: EXECUTIVE SUMMARY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Executive Summary</p>
+    <h2>New creative is the fastest lever on your CPA</h2>
+    <p class="subtitle">Last week (Aug 17&ndash;23), blended CPA drifted up to $0.71 on $18.9K in spend and 26,570 trials &mdash; above the ~$0.67 seven-week baseline. The average is moving the wrong way: your biggest employer campaigns are fatiguing while your cheapest performers sit starved of budget. Fresh creative is what closes that gap.</p>
+    <div class="two-col">
+      <div class="info-panel">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+          The challenge
+        </h3>
+        <ul>
+          <li><strong>Big spenders are fatiguing</strong> &mdash; GM hit $0.89 last week (vs $0.74 base), with Instacart ($0.85) and DHL ($0.77) also above account average</li>
+          <li><strong>The blended CPA is climbing</strong> &mdash; $0.71 last week vs the $0.67 baseline, and one campaign (State Govs &mdash; Minnesota) spiked to $1.34</li>
+          <li><strong>Too few angles get tested</strong> &mdash; most creative is text- or SERP-based, and one ad often carries an ad set</li>
+          <li><strong>Proven-cheap campaigns are underfunded</strong> &mdash; USDA Forest Service ($0.31) drew just $69 last week and Veterans Affairs ($0.53) barely spends</li>
+        </ul>
+      </div>
+      <div class="info-panel">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+          The opportunity
+        </h3>
+        <ul>
+          <li><strong>Refresh the fatiguing high-spenders</strong> &mdash; new video angles for GM, DHL, and Instacart, where CPA runs highest</li>
+          <li><strong>Templatize what already wins</strong> &mdash; the &ldquo;Job Titles&rdquo; angle drove your lowest CPAs last week (Oklahoma $0.56)</li>
+          <li><strong>Scale the cheap winners</strong> &mdash; feed budget and fresh creative to USDA, Veterans Affairs, and Coca-Cola</li>
+          <li><strong>Test new hooks per employer</strong> &mdash; day-in-the-life, salary highlights, and city-based openers</li>
+          <li><strong>Raise lead quality, not just cut cost</strong> &mdash; sharper hooks and clearer messaging pre-qualify the click, so more of the leads actually convert</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success mt-16">
+      <strong>The bottom line:</strong> high-volume UGC video turns creative testing into a repeatable engine &mdash; refresh the employers that are fatiguing, scale the ones that already convert cheap, and pull the blended CPA back below $0.67 while lifting the quality of the leads it brings in.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: PRIORITY ROADMAP -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Where To Start</p>
+    <h2>Where new creative pays back first</h2>
+    <p class="subtitle">Two moves, ranked by impact. Point the first batch at the fatiguing high-spenders, and use the same creative to scale the winners that already convert cheap. Spend &amp; CPA are last week (Aug 17&ndash;23); trend is vs the 7-week baseline.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Employer / campaign</th>
+          <th class="right">Spend</th>
+          <th class="right">CPA</th>
+          <th>Recent trend</th>
+          <th>Play</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">General Motors</td>
+          <td class="right">$1.6K</td>
+          <td class="right bold">$0.89</td>
+          <td class="ember bold">&#9650; vs $0.74 base</td>
+          <td><span class="pill red">Build new</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Instacart</td>
+          <td class="right">$0.7K</td>
+          <td class="right bold">$0.85</td>
+          <td class="ember bold">Above account avg</td>
+          <td><span class="pill red">Build new</span></td>
+        </tr>
+        <tr>
+          <td class="bold">DHL</td>
+          <td class="right">$2.1K</td>
+          <td class="right bold">$0.77</td>
+          <td>High spend, above avg</td>
+          <td><span class="pill red">Build new</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Goodwill</td>
+          <td class="right">$4.1K</td>
+          <td class="right bold">$0.66</td>
+          <td>Biggest single spender</td>
+          <td><span class="pill red">Build new</span></td>
+        </tr>
+        <tr>
+          <td class="bold">State Govs &mdash; MN / SC / OH</td>
+          <td class="right">$7.7K</td>
+          <td class="right bold">$0.75&ndash;1.34</td>
+          <td class="ember bold">&#9650; MN spiked to $1.34</td>
+          <td><span class="pill red">Build new</span></td>
+        </tr>
+        <tr>
+          <td class="bold">USDA Forest Service</td>
+          <td class="right">$0.07K</td>
+          <td class="right bold green">$0.31</td>
+          <td class="green bold">Best CPA &mdash; starved</td>
+          <td><span class="pill green">Scale</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Veterans Affairs</td>
+          <td class="right">$0.6K</td>
+          <td class="right bold">$0.53</td>
+          <td class="green bold">&#9660; vs $0.55 base</td>
+          <td><span class="pill green">Scale</span></td>
+        </tr>
+        <tr>
+          <td class="bold">Coca-Cola</td>
+          <td class="right">$0.7K</td>
+          <td class="right bold">$0.59</td>
+          <td class="green bold">&#9660; vs $0.67 base</td>
+          <td><span class="pill green">Scale</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation mt-16">
+      <strong>The angle to templatize:</strong> the &ldquo;Job Titles&rdquo; format drove your lowest CPAs last week (Oklahoma $0.56, Florida $0.68). Productize it as UGC video first, then layer in day-in-the-life and salary-highlight hooks per employer.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">Prepared for Jobcase</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: THE OFFERING -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">The Offering</p>
+    <h2>Creative volume without the production drag</h2>
+    <p class="subtitle">Paid social rewards volume and variation. We generate ad-ready UGC at a fraction of traditional cost &mdash; so you can test more hooks, kill creative fatigue, and keep winning ads in market.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>
+        </div>
+        <h3>AI-powered</h3>
+        <ul>
+          <li>Script &amp; prompt development built for the hook</li>
+          <li>Consistent visual style across every video</li>
+          <li>Fast batch generation with human QA</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/></svg>
+        </div>
+        <h3>Scalable</h3>
+        <ul>
+          <li>From 100 pilot videos to 500+ per batch</li>
+          <li>Effective rate drops as volume grows</li>
+          <li>Built for creative-testing at scale</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <h3>Ad-ready</h3>
+        <ul>
+          <li>Vertical format for TikTok, Reels &amp; Shorts</li>
+          <li>Performance-oriented hooks &amp; pacing</li>
+          <li>Delivered in MP4, ready to launch</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: HOW IT WORKS -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">How It Works</p>
+    <h2>From brief to ad-ready in one cycle</h2>
+    <p class="subtitle">A repeatable production pipeline that turns a single creative direction into dozens of distinct, on-brand variations.</p>
+    <div class="timeline">
+      <div class="timeline-phase">
+        <div class="phase-num">1</div>
+        <span class="phase-label">Direction</span>
+        <h4>Script &amp; prompt</h4>
+        <p>We develop scripts, hooks, and prompts around your offer and creative direction for the campaign.</p>
+      </div>
+      <div class="timeline-phase">
+        <div class="phase-num">2</div>
+        <span class="phase-label">Generate</span>
+        <h4>Batch production</h4>
+        <p>Fast batch generation in a consistent visual style, with performance-oriented pacing baked in.</p>
+      </div>
+      <div class="timeline-phase">
+        <div class="phase-num">3</div>
+        <span class="phase-label">Refine</span>
+        <h4>QA &amp; revisions</h4>
+        <p>Every batch is quality-checked and includes a revision pass to keep output on-brand and ad-ready.</p>
+      </div>
+      <div class="timeline-phase">
+        <div class="phase-num">4</div>
+        <span class="phase-label">Launch</span>
+        <h4>Delivery</h4>
+        <p>Vertical MP4 files delivered ready for TikTok, Reels, and Shorts &mdash; organic or paid.</p>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Built for creative fatigue management:</strong> instead of one hero video, you get a library of variations to rotate as performance dips &mdash; the fuel paid acquisition actually runs on.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: PRICING TIERS -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Pricing Tiers</p>
+    <h2>Three ways to buy</h2>
+    <p class="subtitle">Start with a pilot batch &mdash; as small as 25 videos &mdash; then scale into discounted bulk volume as you find winners.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="tier-name">Starter Batch</div>
+        <div class="price">$15,000</div>
+        <div class="per-video">$150 / video</div>
+        <div class="volume">0&ndash;100 videos</div>
+        <p class="blurb">Ideal for testing creatives, new brands, or campaign pilots.</p>
+        <ul>
+          <li>Script + prompt development</li>
+          <li>Consistent visual style</li>
+          <li>Vertical format (TikTok / Reels / Shorts)</li>
+          <li>1 revision pass per batch</li>
+          <li>Delivery in MP4</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <span class="tier-badge">Most Popular</span>
+        <div class="tier-name">Growth Batch</div>
+        <div class="price">$10,000<small> add-on</small></div>
+        <div class="per-video">$100 / video</div>
+        <div class="volume">100&ndash;200 videos</div>
+        <p class="blurb">Discounted bulk add-on for scaling brands &mdash; purchased after or alongside a Starter Batch.</p>
+        <ul>
+          <li>Everything in Starter</li>
+          <li>Batch-level creative variations</li>
+          <li>Performance-oriented hooks &amp; pacing</li>
+          <li>Priority turnaround</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="tier-name">Scale / Enterprise</div>
+        <div class="price">$85<small> / video</small></div>
+        <div class="per-video">200+ videos</div>
+        <div class="volume">Custom volume (200, 300, 500+)</div>
+        <p class="blurb">Built for aggressive paid acquisition &amp; creative fatigue management.</p>
+        <ul>
+          <li>Same creative framework as Starter</li>
+          <li>Dedicated creative direction per campaign</li>
+          <li>Fast batch generation &amp; QA</li>
+          <li>Optimized for creative testing at scale</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation mt-16">
+      <strong>Not ready for 100? Start smaller.</strong> Run a right-sized pilot at the same $150/video Starter rate and full deliverables &mdash; <strong>25 videos for $3,750</strong> or <strong>50 videos for $7,500</strong>. Prove it out on your fatiguing high-spenders, then scale into the discounted Growth and Scale tiers.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: EXAMPLE PRICING SCENARIOS -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Example Pricing Scenarios</p>
+    <h2>The more you run, the less you pay</h2>
+    <p class="subtitle">Effective per-video rate by total volume. Bulk and enterprise tiers compound your savings as you scale.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Total Videos</th>
+          <th class="right">Total Cost</th>
+          <th class="right">Effective Rate</th>
+          <th>Tier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="bold">100</td>
+          <td class="right">$15,000</td>
+          <td class="right bold">$150 / video</td>
+          <td><span class="pill red">Starter</span></td>
+        </tr>
+        <tr>
+          <td class="bold">200</td>
+          <td class="right">$25,000</td>
+          <td class="right bold">$125 / video</td>
+          <td><span class="pill gold">Starter + Growth</span></td>
+        </tr>
+        <tr>
+          <td class="bold">200+</td>
+          <td class="right">Custom</td>
+          <td class="right bold ember">$85 / video</td>
+          <td><span class="pill green">Scale / Enterprise</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16">
+      <strong>The math that matters:</strong> doubling your order from 100 to 200 videos drops your effective rate from $150 to $125 &mdash; and enterprise volume lands at just $85 per video, nearly half the pilot rate.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: USAGE RIGHTS & TURNAROUND -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Logistics</p>
+    <h2>Usage rights &amp; turnaround</h2>
+    <p class="subtitle">No surprise licensing fees and predictable delivery windows, so you can plan campaigns with confidence.</p>
+    <div class="two-col">
+      <div class="info-panel">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+          Usage rights &amp; licensing
+        </h3>
+        <ul>
+          <li><strong>Included by default:</strong> organic social usage, website &amp; email marketing</li>
+          <li><strong>Paid ads &amp; whitelisting:</strong> no additional charge</li>
+          <li>Full flexibility to run delivered assets across your channels</li>
+        </ul>
+      </div>
+      <div class="info-panel">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" x2="14" y1="2" y2="2"/><line x1="12" x2="15" y1="14" y2="11"/><circle cx="12" cy="14" r="8"/></svg>
+          Turnaround time
+        </h3>
+        <ul>
+          <li><strong>100 videos:</strong> 30 business days</li>
+          <li><strong>200&ndash;300 videos:</strong> 30 business days</li>
+          <li><strong>Rush delivery:</strong> available, quoted separately</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16">
+      <strong>No usage tax:</strong> unlike traditional UGC creators who charge recurring whitelisting and paid-ads fees, every video you commission is yours to run across organic and paid &mdash; at no extra cost.
+    </div>
+    <div class="logo-row">
+      <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+      <span class="logo-date">UGC Video Production</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: NEXT STEPS -->
+  <div class="slide cta" data-slide="9">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's fuel your<br>ad account</h1>
+      <p class="subtitle" style="text-align:center; color:rgba(255,255,255,0.9);">Pick a batch size, share your creative direction, and we'll have ad-ready UGC in market within 30 business days.</p>
+      <div style="margin-top:24px;">
+        <p style="font-size:18px; font-weight:700;">Start with a Starter Batch &mdash; 100 videos, $15,000</p>
+        <p style="font-size:16px; color:rgba(255,255,255,0.8); margin-top:8px;">tj@embertribe.com &nbsp;·&nbsp; embertribe.com</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <img class="logo-img" src="images/embertribe-logo.svg" alt="EmberTribe">
+        <span class="logo-date">Confidential &mdash; August 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
