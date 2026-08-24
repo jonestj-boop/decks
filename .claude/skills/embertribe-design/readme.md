@@ -92,3 +92,21 @@ The brand guidelines do **not** define a proprietary icon set. The identity is t
 - **Lucide icon set** (CDN) — no source icon library existed; added for functional UI needs.
 - **Neutral ink ramp** (`--et-ink-*`) — derived from Dark Charcoal / Cloudy Gray so UI has enough greys for text, borders, surfaces.
 - Component families (Button, Card, Input, etc.) are a standard from-scratch web set, since no source component inventory was provided.
+
+---
+
+## Keeping the three copies in sync
+
+This skill lives in **three repos** (EmberTribe, embertribe-decks, embertribe-clients)
+because users have different repo access, and everyone needs the design system.
+**The EmberTribe copy is canonical** — edit there, then mirror outward:
+
+```bash
+rsync -a --delete "EmberTribe/.claude/skills/embertribe-design/" "embertribe-decks/.claude/skills/embertribe-design/"
+rsync -a --delete "EmberTribe/.claude/skills/embertribe-design/" "embertribe-clients/.claude/skills/embertribe-design/"
+```
+
+(paths relative to the folder that holds all three repos; commit and push each repo).
+If you must hotfix a non-canonical copy, port the change back to EmberTribe in the
+same sitting — that is how the Aug 2026 print-stylesheet fix briefly stranded in
+embertribe-decks.
