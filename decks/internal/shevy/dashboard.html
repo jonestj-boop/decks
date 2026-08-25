@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shevy's Book — Active Accounts &amp; Tier Status · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:48px; line-height:1.05; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:30px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:17px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:#9a6a00;} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .score { display:flex; align-items:center; gap:30px; background:var(--subtle); border-radius:16px; padding:30px 34px; margin:10px 0; }
+  .score .ring { --p:75; width:128px; height:128px; border-radius:50%; flex:none; position:relative;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring b { width:96px; height:96px; background:var(--surface); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score .ring b span.big { font-size:26px; font-weight:700; color:var(--et-black); line-height:1; }
+  .score .ring b span.small { font-size:10.5px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.06em; margin-top:3px; }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.yes{background:#e4f6ec;color:#1f8a4c;} .pill.no{background:#ffe1e2;color:#c62828;}
+
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .dim{color:var(--ink-500);}
+
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 70px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--et-red); }
+  .bar .bf.dim-fill { background:var(--ink-300); }
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+    .score { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Internal · CMO Book</div>
+    <nav id="toc"></nav>
+    <div class="foot">Internal use only<br>Not for external distribution</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Active Accounts &amp; Tier Status</div>
+      <h1>Shevy's book</h1>
+      <p class="subtitle">Where his portfolio sits against the partner active-account tier rules, with the $1,500 MRR floor applied.</p>
+      <div class="meta">
+        <div>Prepared for<b>Shevy</b></div>
+        <div>Date<b>August 2026</b></div>
+        <div>Accounts<b>5</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="summary" data-nav="Summary">
+      <div class="label">Summary</div>
+      <h2>Where the book stands</h2>
+      <p class="lede">5 accounts, $6,800 in total MRR. Once the $1,500 MRR floor is applied, only 3 of those 5 count toward tier — which is the difference between Affiliate (10%) and Silver (15%) tier under the Model A structure.</p>
+      <div class="stats">
+        <div class="stat"><div class="v">5</div><div class="k">Total accounts</div></div>
+        <div class="stat"><div class="v red">3</div><div class="k">Qualifying accounts (≥$1,500 MRR)</div></div>
+        <div class="stat"><div class="v">$6,800</div><div class="k">Total MRR</div></div>
+        <div class="stat"><div class="v good">$5,800</div><div class="k">Qualifying MRR</div></div>
+      </div>
+    </section>
+
+    <section class="block" id="tier" data-nav="Tier status">
+      <div class="label">Tier status</div>
+      <h2>Current tier: Affiliate</h2>
+      <div class="score">
+        <div class="ring" style="--p:75"><b><span class="big">3/4</span><span class="small">to Silver</span></b></div>
+        <div class="st">
+          <h3>Affiliate — 10% off rate card</h3>
+          <p>3 qualifying accounts, in the 1–3 range. One more account at $1,500 MRR or more moves the book into Silver (4–7 accounts, 15% off).</p>
+        </div>
+      </div>
+      <div class="bars">
+        <div class="bar"><div class="bl">Affiliate (1–3)</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">Reached</div></div>
+        <div class="bar"><div class="bl">Silver (4–7)</div><div class="bt"><div class="bf dim-fill" style="width:75%"></div></div><div class="bv">3 / 4</div></div>
+        <div class="bar"><div class="bl">Gold (8–14)</div><div class="bt"><div class="bf dim-fill" style="width:21%"></div></div><div class="bv">3 / 8</div></div>
+      </div>
+      <div class="callout warn">
+        <strong>Without the floor:</strong> counting all 5 raw accounts would place this book in Silver (15% off) today. That's exactly the lopsided case Deanna flagged — two sub-$1,500 accounts shouldn't be enough to unlock a bigger discount that then applies to accounts like Ayoub.
+      </div>
+    </section>
+
+    <section class="block" id="accounts" data-nav="Accounts">
+      <div class="label">Accounts</div>
+      <h2>Account breakdown</h2>
+      <table>
+        <thead><tr><th>Account</th><th class="num">MRR</th><th>Counts toward tier?</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Ayoub</td><td class="num">$2,300</td><td><span class="pill yes">Qualifies</span></td></tr>
+          <tr><td class="strong">Calligaris</td><td class="num">$1,750</td><td><span class="pill yes">Qualifies</span></td></tr>
+          <tr><td class="strong">Adriana Hoyos</td><td class="num">$1,750</td><td><span class="pill yes">Qualifies</span></td></tr>
+          <tr><td class="strong">Lifeline</td><td class="num">$500</td><td><span class="pill no">Below floor</span></td></tr>
+          <tr><td class="strong">MyCMO Google Grant</td><td class="num">$500</td><td><span class="pill no">Below floor</span></td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">Floor: $1,500 MRR per account, per the updated partner-program rules.</p>
+    </section>
+
+    <section class="block" id="path" data-nav="Path to Silver">
+      <div class="label">Path to next tier</div>
+      <h2>What moves this book to Silver</h2>
+      <p>Either works — they're not additive, one is enough:</p>
+      <ul class="body" style="list-style:none; margin:0 0 16px; padding:0;">
+        <li style="font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px;"><span style="position:absolute;left:0;color:var(--et-red);font-weight:700;">—</span>Add a 4th account already billing at $1,500 MRR or more.</li>
+        <li style="font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px;"><span style="position:absolute;left:0;color:var(--et-red);font-weight:700;">—</span>Grow Lifeline or MyCMO Google Grant past the $1,500 floor.</li>
+      </ul>
+      <div class="callout good"><strong>Note:</strong> cumulative-MRR as a second, independent gate on top of account count (the Hilton/airline-style dual gate Deanna proposed) isn't finalized yet — this report shows account-count status only, against the floor that's now live on the partner-program page.</div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
