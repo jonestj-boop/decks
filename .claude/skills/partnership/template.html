@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — PARTNERSHIP DASHBOARD TEMPLATE
+     One partner's active-account tier status: qualifying accounts against
+     the $1,500 MRR floor, current tier, and path to the next tier.
+
+     HOW TO USE (for Claude Code)
+     1. Copy this file to decks/internal/{partner-slug}/dashboard.html
+        (or decks/{partner-slug}/dashboard.html if the user wants it public —
+        see SKILL.md for when to use which).
+     2. Replace every {{TOKEN}} — see SKILL.md Phase 2 for the tier math.
+     3. Duplicate the marked <tr>/<li> rows once per account/bullet, then
+        delete the REPEAT comment.
+     4. Reference links at the bottom of the sidebar are static — don't
+        change the URLs, they point at the two canonical rate/tier pages.
+     RULES: headers Sentence case · labels ALL CAPS · Quatro · EmberTribe
+     red/black/honey palette only, no invented colors.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} — Active Accounts &amp; Tier Status · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+  /* If saving to decks/{slug}/dashboard.html (public, one level up from
+     decks/) instead of decks/internal/{slug}/dashboard.html (two levels
+     up), change ../../fonts/ to ../fonts/ in the three rules above. */
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .refs { margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.15); display:flex; flex-direction:column; gap:8px; }
+  aside .refs-label { font-size:10.5px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-bottom:2px; }
+  aside .refs a { color:rgba(255,255,255,0.85); font-size:12.5px; font-weight:600; }
+  aside .refs a:hover { color:#fff; }
+  aside .foot { margin-top:16px; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:48px; line-height:1.05; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:30px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:17px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:#9a6a00;} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .score { display:flex; align-items:center; gap:30px; background:var(--subtle); border-radius:16px; padding:30px 34px; margin:10px 0; }
+  .score .ring { --p:75; width:128px; height:128px; border-radius:50%; flex:none; position:relative;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring b { width:96px; height:96px; background:var(--surface); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score .ring b span.big { font-size:26px; font-weight:700; color:var(--et-black); line-height:1; }
+  .score .ring b span.small { font-size:10.5px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.06em; margin-top:3px; }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.yes{background:#e4f6ec;color:#1f8a4c;} .pill.no{background:#ffe1e2;color:#c62828;}
+
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .dim{color:var(--ink-500);}
+
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 70px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--et-red); }
+  .bar .bf.dim-fill { background:var(--ink-300); }
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+    .score { flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">{{DOC_TYPE}}</div>
+    <nav id="toc"></nav>
+    <div class="refs">
+      <div class="refs-label">Reference</div>
+      <a href="https://decks.embertribe.com/partner-program">Partner program pricing →</a>
+      <a href="https://decks.embertribe.com/partner-rate-cards">Partner rate card →</a>
+    </div>
+    <div class="foot">Not for external distribution</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Active Accounts &amp; Tier Status</div>
+      <h1>{{TITLE}}</h1>
+      <p class="subtitle">{{SUBTITLE — e.g. "Where {{PARTNER_NAME}}'s account portfolio sits against the partner active-account tier rules, with the $1,500 MRR floor applied."}}</p>
+      <div class="meta">
+        <div>Prepared for<b>{{PARTNER_NAME}}</b></div>
+        <div>Date<b>{{MONTH_YEAR}}</b></div>
+        <div>Accounts<b>{{TOTAL_ACCOUNTS}}</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="summary" data-nav="Summary">
+      <div class="label">Summary</div>
+      <h2>Where the book stands</h2>
+      <p class="lede">{{TOTAL_ACCOUNTS}} accounts, ${{TOTAL_MRR}} in total MRR. Once the $1,500 MRR floor is applied, {{QUALIFYING_ACCOUNTS}} of those {{TOTAL_ACCOUNTS}} count toward tier{{ — if this changes the tier outcome, say so, e.g. " — which is the difference between {{CURRENT_TIER}} and {{TIER_WITHOUT_FLOOR}} tier under the Model A structure."}}</p>
+      <div class="stats">
+        <div class="stat"><div class="v">{{TOTAL_ACCOUNTS}}</div><div class="k">Total accounts</div></div>
+        <div class="stat"><div class="v red">{{QUALIFYING_ACCOUNTS}}</div><div class="k">Qualifying accounts (≥$1,500 MRR)</div></div>
+        <div class="stat"><div class="v">${{TOTAL_MRR}}</div><div class="k">Total MRR</div></div>
+        <div class="stat"><div class="v good">${{QUALIFYING_MRR}}</div><div class="k">Qualifying MRR</div></div>
+      </div>
+    </section>
+
+    <section class="block" id="tier" data-nav="Tier status">
+      <div class="label">Tier status</div>
+      <h2>Current tier: {{CURRENT_TIER}}</h2>
+      <div class="score">
+        <!-- ring --p: (qualifying accounts / next tier's lower bound) * 100, capped at 100.
+             If already at Platinum (15+, the top tier), see SKILL.md Phase 2 for the
+             "max tier reached" variant of this block instead. -->
+        <div class="ring" style="--p:{{RING_PERCENT}}"><b><span class="big">{{QUALIFYING_ACCOUNTS}}/{{NEXT_TIER_THRESHOLD}}</span><span class="small">to {{NEXT_TIER_NAME}}</span></b></div>
+        <div class="st">
+          <h3>{{CURRENT_TIER}} — {{CURRENT_DISCOUNT}}% off rate card</h3>
+          <p>{{QUALIFYING_ACCOUNTS}} qualifying accounts, in the {{CURRENT_TIER_RANGE}} range. {{GAP_TO_NEXT}} more account{{S}} at $1,500 MRR or more moves the book into {{NEXT_TIER_NAME}} ({{NEXT_TIER_RANGE}} accounts, {{NEXT_DISCOUNT}}% off).</p>
+        </div>
+      </div>
+      <div class="bars">
+        <!-- One .bar row per tier (Affiliate 1–3, Silver 4–7, Gold 8–14, Platinum 15+).
+             Tiers already reached: bf full width, "Reached". Current/upcoming tiers:
+             bf dim-fill at (qualifying / that tier's lower bound), label "{{Q}} / {{N}}". -->
+        <div class="bar"><div class="bl">Affiliate (1–3)</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">Reached</div></div>
+        <div class="bar"><div class="bl">Silver (4–7)</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
+        <div class="bar"><div class="bl">Gold (8–14)</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
+      </div>
+      <!-- Only include this callout if the floor actually changes the outcome
+           (i.e. raw account count would land in a different tier than qualifying
+           count does). Drop it entirely if the floor doesn't change anything. -->
+      <div class="callout warn">
+        <strong>Why it's {{CURRENT_TIER}}, not {{TIER_WITHOUT_FLOOR}}:</strong> counting all {{TOTAL_ACCOUNTS}} raw accounts would put this book in {{TIER_WITHOUT_FLOOR}} ({{TIER_WITHOUT_FLOOR_DISCOUNT}}% off). {{NAMES_OF_SUB_FLOOR_ACCOUNTS}} fall under the $1,500 floor, so only {{QUALIFYING_ACCOUNTS}} accounts qualify — which keeps it at {{CURRENT_TIER}} ({{CURRENT_DISCOUNT}}%) for now.
+      </div>
+    </section>
+
+    <section class="block" id="accounts" data-nav="Accounts">
+      <div class="label">Accounts</div>
+      <h2>Account breakdown</h2>
+      <table>
+        <thead><tr><th>Account</th><th class="num">MRR</th><th>Counts toward tier?</th></tr></thead>
+        <tbody>
+          <!-- REPEAT per account, sorted MRR descending. pill "yes"/"Qualifies" if
+               MRR >= 1500, pill "no"/"Below floor" otherwise. -->
+          <tr><td class="strong">{{ACCOUNT_NAME}}</td><td class="num">${{MRR}}</td><td><span class="pill yes">Qualifies</span></td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">Floor: $1,500 MRR per account, per the updated partner-program rules.</p>
+    </section>
+
+    <section class="block" id="path" data-nav="Path to {{NEXT_TIER_NAME}}">
+      <div class="label">Path to next tier</div>
+      <h2>What moves this book to {{NEXT_TIER_NAME}}</h2>
+      <p>Either works — they're not additive, one is enough:</p>
+      <ul class="body" style="list-style:none; margin:0 0 16px; padding:0;">
+        <li style="font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px;"><span style="position:absolute;left:0;color:var(--et-red);font-weight:700;">—</span>Add a {{NEXT_ORDINAL}} account already billing at $1,500 MRR or more.</li>
+        <li style="font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px;"><span style="position:absolute;left:0;color:var(--et-red);font-weight:700;">—</span>Grow {{NAMES_OF_SUB_FLOOR_ACCOUNTS}} past the $1,500 floor.</li>
+      </ul>
+      <div class="callout good"><strong>Note:</strong> tier is based on qualifying account count against the $1,500 floor now live on the partner-program page.</div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
