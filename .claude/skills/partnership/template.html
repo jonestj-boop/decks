@@ -5,9 +5,8 @@
      the $1,500 MRR floor, current tier, and path to the next tier.
 
      HOW TO USE (for Claude Code)
-     1. Copy this file to decks/internal/{partner-slug}/dashboard.html
-        (or decks/{partner-slug}/dashboard.html if the user wants it public —
-        see SKILL.md for when to use which).
+     1. Copy this file to decks/{partner-slug}/dashboard.html (public,
+        no password gate — see SKILL.md Phase 3).
      2. Replace every {{TOKEN}} — see SKILL.md Phase 2 for the tier math.
      3. Duplicate the marked <tr>/<li> rows once per account/bullet, then
         delete the REPEAT comment.
@@ -23,12 +22,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{TITLE}} — Active Accounts &amp; Tier Status · EmberTribe</title>
 <style>
-  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
-  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
-  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
-  /* If saving to decks/{slug}/dashboard.html (public, one level up from
-     decks/) instead of decks/internal/{slug}/dashboard.html (two levels
-     up), change ../../fonts/ to ../fonts/ in the three rules above. */
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
 
   :root {
     --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
@@ -113,7 +109,7 @@
   .dim{color:var(--ink-500);}
 
   .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
-  .bar { display:grid; grid-template-columns:180px 1fr 70px; align-items:center; gap:14px; }
+  .bar { display:grid; grid-template-columns:200px 1fr 70px; align-items:center; gap:14px; }
   .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
   .bar .bf { height:100%; border-radius:6px; background:var(--et-red); }
   .bar .bf.dim-fill { background:var(--ink-300); }
@@ -181,12 +177,14 @@
         </div>
       </div>
       <div class="bars">
-        <!-- One .bar row per tier (Affiliate 1–3, Silver 4–7, Gold 8–14, Platinum 15+).
+        <!-- One .bar row per tier (Affiliate 1–3 · 10%, Silver 4–7 · 15%,
+             Gold 8–14 · 20%, Platinum 15+ · 25%) — always show the discount
+             each tier unlocks alongside its account range.
              Tiers already reached: bf full width, "Reached". Current/upcoming tiers:
              bf dim-fill at (qualifying / that tier's lower bound), label "{{Q}} / {{N}}". -->
-        <div class="bar"><div class="bl">Affiliate (1–3)</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">Reached</div></div>
-        <div class="bar"><div class="bl">Silver (4–7)</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
-        <div class="bar"><div class="bl">Gold (8–14)</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
+        <div class="bar"><div class="bl">Affiliate (1–3) · 10%</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">Reached</div></div>
+        <div class="bar"><div class="bl">Silver (4–7) · 15%</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
+        <div class="bar"><div class="bl">Gold (8–14) · 20%</div><div class="bt"><div class="bf dim-fill" style="width:{{PCT}}%"></div></div><div class="bv">{{Q}} / {{N}}</div></div>
       </div>
       <!-- Only include this callout if the floor actually changes the outcome
            (i.e. raw account count would land in a different tier than qualifying

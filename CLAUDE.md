@@ -36,7 +36,7 @@ embertribe-decks/
 | `pitch-deck` | Generate branded audit/pitch decks from prospect data — output to `decks/{slug}.html` |
 | `seo-growth-roadmap` | Generate SEO growth roadmap bundle (deck + xlsx) — output to `decks/{client-slug}/` |
 | `embertribe-design` | EmberTribe brand design system — tokens, Quatro fonts, logos, components, and page templates (`templates/growth-roadmap-deck`, `templates/client-report`, `templates/content-plan`) |
-| `partnership` | Generate a partner's active-account tier dashboard ("setup /partnership for {name}") — qualifying accounts against the $1,500 MRR floor, current tier, path to next tier. Output to `decks/internal/{partner-slug}/dashboard.html` by default |
+| `partnership` | Generate a partner's active-account tier dashboard ("setup /partnership for {name}") — qualifying accounts against the $1,500 MRR floor, current tier, path to next tier. Output to `decks/{partner-slug}/dashboard.html`, public |
 
 ## Design system
 
@@ -44,7 +44,7 @@ The EmberTribe brand design system lives in `.claude/skills/embertribe-design/`.
 
 ## Rules
 
-1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO growth roadmaps → `decks/{client-slug}/growth-roadmap.html`** (nested); **partnership dashboards → `decks/internal/{partner-slug}/dashboard.html`** (password-gated by default — only publish outside `/internal/` if explicitly asked)
+1. **Pitch decks → `decks/{slug}.html`** (flat); **SEO growth roadmaps → `decks/{client-slug}/growth-roadmap.html`** (nested); **partnership dashboards → `decks/{partner-slug}/dashboard.html`** (public, no password gate)
 2. **xlsx companions live in the client folder** but aren't linked from anywhere public — sales team grabs them from the repo or shares directly with prospects
 3. **Single-file HTML** — no external dependencies, everything inline (except shared images in `decks/images/` and shared Quatro fonts in `decks/fonts/`, referenced as `../images/...` / `../fonts/...` from inside a client folder, or `fonts/...` from a flat deck)
 4. **`pitch-deck` skill** — if something needs changing, flag it for Josh

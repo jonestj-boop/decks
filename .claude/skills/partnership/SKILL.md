@@ -60,21 +60,17 @@ This is the same logic live on `decks/partner-program.html` — don't drift from
 7. `gap_to_next` = `next_tier's lower bound − qualifying_accounts`
 8. `tier_without_floor` = what tier the *raw* account count (no floor applied) would land in — only surface this if it differs from `current_tier`. This is the gap the floor exists to close: a partner shouldn't unlock a bigger discount off a stack of tiny accounts and have it apply to one large one (see the $1,500-floor rationale on `partner-program.html`).
 
-**Bars section:** one row per tier band from Affiliate through the tier one above current (or through Gold if current is Silver+, matching the 3-row pattern in the template — don't show a bar for a tier already several steps past reach, it's not useful). Tiers fully reached: full bar, "Reached". Current-and-above tiers: dim-fill bar at `qualifying_accounts / that tier's lower bound`, label "`{{qualifying}} / {{lower bound}}`".
+**Bars section:** one row per tier band from Affiliate through the tier one above current (or through Gold if current is Silver+, matching the 3-row pattern in the template — don't show a bar for a tier already several steps past reach, it's not useful). Each row's label includes that tier's discount (e.g. "Affiliate (1–3) · 10%"). Tiers fully reached: full bar, "Reached". Current-and-above tiers: dim-fill bar at `qualifying_accounts / that tier's lower bound`, label "`{{qualifying}} / {{lower bound}}`".
 
 ### Phase 3: Fill the template
 
 Copy `.claude/skills/partnership/template.html` — every instruction for filling it (including the ring/bars math shorthand) is inline as HTML/CSS comments in the file itself. Read those before filling.
 
-**Where to save:**
-- **Default: `decks/internal/{partner-slug}/dashboard.html`** — password-gated same as every other internal doc (`/internal/*` via the repo's Cloudflare middleware). This is real MRR data; keep it behind the wall by default.
-- **Only publish outside `/internal/` if the user explicitly asks** (this happened with Shevy's — he asked for the password removed because it's *his own* dashboard he needs to check without a login). If the user asks after the fact to make an existing one public, move the file rather than duplicating it, and fix the relative font paths (`../../fonts/` → `../fonts/`, one directory shallower).
-
-Slug format: lowercase, hyphens, no special characters.
+**Where to save:** `decks/{partner-slug}/dashboard.html` — public, no password gate. Slug format: lowercase, hyphens, no special characters.
 
 ### Phase 4: Save & report
 
-Report the file path (and the live URL only if it's public). If password-gated, remind the user the login is the same one used for every other `/internal/*` doc — don't restate the password in chat unless asked; point them to it the way it's referenced elsewhere (`functions/internal/_middleware.js`, or the `INTERNAL_DOCS_PASSWORD` Cloudflare env var if overridden).
+Report the file path and the live URL: `https://decks.embertribe.com/{partner-slug}/dashboard.html`.
 
 ---
 
@@ -100,8 +96,7 @@ Skill:
    Next tier: Silver at 4. Gap: 2 more qualifying accounts.
 3. Raw count (3) would also land in Affiliate (1–3) — floor doesn't
    change the outcome here, so the "why" callout gets dropped.
-4. Saves to decks/internal/marisol-vega/dashboard.html (password-gated
-   default, not made public since nobody asked for that).
-5. Reports the file path and that it's behind the same /internal/
-   password as the other internal docs.
+4. Saves to decks/marisol-vega/dashboard.html.
+5. Reports the file path and the live URL:
+   decks.embertribe.com/marisol-vega/dashboard.html
 ```
