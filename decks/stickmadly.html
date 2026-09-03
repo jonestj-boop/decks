@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stickmadly · EmberTribe Growth Strategy</title>
+<style>
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  --primary-dark: #0a0a0a;
+  --primary-mid: #122036;
+  --primary-light: #25415f;
+  --accent: #C9A227;
+
+  --ember-red: #FF333C;
+  --ember-dark: #e62831;
+  --ember-yellow: #FFB000;
+
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --light-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --border: #e9ecef;
+  --green: #27AE60;
+  --yellow: #F39C12;
+  --red: #E74C3C;
+  --orange: #E67E22;
+  --teal: #0E7C86;
+  --blue: #2E5C8A;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Quatro", "Calibri", "Segoe UI", system-ui, sans-serif;
+  background: var(--primary-dark);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 44px 60px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+
+.slide.active { display: flex; }
+
+.slide.dark {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 55%, var(--primary-light) 100%);
+  color: #ffffff;
+}
+
+.slide.dark .text-light, .slide.dark .stat-label, .slide.dark .subtitle { color: rgba(255,255,255,0.65); }
+.slide.dark .stat-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+.slide.dark tr:hover td { background: rgba(255,255,255,0.03); }
+.slide.dark h2, .slide.dark h3, .slide.dark h4 { color: #fff; }
+.slide.dark .channel-card, .slide.dark .timeline-phase { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+.slide.dark .channel-card ul li::before, .slide.dark .timeline-phase ul li::before { background: var(--accent); }
+.slide.dark .quote-block { background: rgba(255,255,255,0.05); border-left-color: var(--accent); }
+.slide.dark .quote-block cite { color: rgba(255,255,255,0.55); }
+
+h1 { font-size: 44px; font-weight: 700; letter-spacing: -1px; line-height: 1.12; margin-bottom: 12px; }
+h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 6px; }
+h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 16px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 16px; }
+
+.slide-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--ember-red); margin-bottom: 6px; }
+.slide.dark .slide-label { color: var(--accent); }
+
+.stats-row { display: flex; gap: 14px; margin: 12px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; margin-bottom: 3px; }
+.stat-label { font-size: 11.5px; font-weight: 500; color: var(--text-light); }
+
+.annotation { background: #FFF8E1; border-left: 3px solid var(--ember-red); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 12.5px; margin: 10px 0; line-height: 1.5; }
+.annotation strong { color: var(--primary-dark); }
+.annotation.info { background: #EAF3F6; border-left-color: var(--teal); }
+.annotation.info strong { color: var(--teal); }
+.annotation.danger { background: #FFEBEE; border-left-color: var(--red); }
+.annotation.danger strong { color: var(--red); }
+.annotation.success { background: #E8F5E9; border-left-color: var(--green); }
+.annotation.success strong { color: var(--green); }
+.annotation.gold { background: #FBF3DE; border-left-color: var(--accent); }
+.annotation.gold strong { color: #8a6d13; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 8px 0; }
+th { background: var(--light-bg); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; color: var(--text-light); text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--border); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:hover td { background: rgba(0,0,0,0.02); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; }
+.dim { opacity: 0.55; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { width: 140px; text-align: right; font-size: 12px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 24px; background: var(--light-bg); border-radius: 5px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; justify-content: flex-end; padding-right: 9px; font-size: 11px; font-weight: 700; color: white; }
+.bar-fill.gold { background: linear-gradient(90deg, #a3820f, var(--accent)); }
+.bar-fill.ember { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.green { background: linear-gradient(90deg, #1e8449, var(--green)); }
+.bar-fill.red { background: linear-gradient(90deg, #c0392b, var(--red)); }
+.bar-fill.blue { background: linear-gradient(90deg, #1e3a5c, var(--blue)); }
+.bar-fill.dark { background: linear-gradient(90deg, #000, #333); }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+.pill.seo { background: #E8F5E9; color: #1B5E20; }
+.pill.paid { background: #E3F2FD; color: #0D47A1; }
+.pill.google { background: #FFF3E0; color: #B45309; }
+.pill.creative { background: #F3E5F5; color: #6A1B9A; }
+.pill.red { background: #FFEBEE; color: var(--red); }
+.pill.green { background: #E8F5E9; color: var(--green); }
+.pill.gold { background: #FBF3DE; color: #8a6d13; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+.four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+.channel-card { background: var(--light-bg); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.channel-card h3 { margin: 8px 0 10px; }
+.channel-card ul { list-style: none; padding: 0; }
+.channel-card ul li { position: relative; padding-left: 15px; margin-bottom: 6px; font-size: 12.5px; line-height: 1.5; }
+.channel-card ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+.timeline { display: flex; gap: 0; margin: 10px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 16px 18px; }
+.timeline-phase:first-child { border-radius: 10px 0 0 10px; }
+.timeline-phase:last-child { border-radius: 0 10px 10px 0; }
+.phase-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 4px; }
+.timeline-phase h4 { margin-bottom: 8px; }
+.timeline-phase ul { list-style: none; padding: 0; }
+.timeline-phase ul li { position: relative; padding-left: 13px; margin-bottom: 5px; font-size: 12px; line-height: 1.4; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.phase-cost { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-top: 10px; }
+.slide.dark .phase-cost { color: var(--accent); }
+
+.quote-block { background: var(--light-bg); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 13.5px; line-height: 1.5; font-style: italic; margin: 8px 0; }
+.quote-block cite { display: block; margin-top: 6px; font-size: 11px; font-style: normal; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-8 { margin-bottom: 8px; } .mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.text-center { text-align: center; }
+.red { color: var(--red); } .green { color: var(--green); } .gold { color: var(--accent); } .ember { color: var(--ember-red); }
+
+.logo-row { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.12); }
+.logo-ember { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.logo-date { font-size: 11px; color: var(--text-light); }
+.slide.dark .logo-date { color: rgba(255,255,255,0.4); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--accent)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 20px; right: 28px; display: flex; align-items: center; gap: 10px; z-index: 100; }
+.nav button { width: 36px; height: 36px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.45); color: white; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.nav button:hover { background: rgba(0,0,0,0.65); }
+.counter { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); background: rgba(0,0,0,0.35); padding: 5px 12px; border-radius: 6px; }
+
+@media (max-width: 1024px) {
+  .slide { padding: 28px 32px; }
+  h1 { font-size: 32px; } h2 { font-size: 24px; }
+  .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Omnichannel Growth Strategy</p>
+      <h1>Stickmadly</h1>
+      <p class="subtitle">You've engineered something nobody else can replicate. This is the plan to fix what's capping its reach on Meta, rebuild a Google Ads channel that actually earns its keep, and turn the SEO groundwork already underway into real rankings.</p>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-value gold">0.84x</div><div class="stat-label">Blended Meta ROAS, last 3 months</div></div>
+        <div class="stat-card"><div class="stat-value red">$13,306</div><div class="stat-label">Meta spend, Jun&ndash;Aug 2026</div></div>
+        <div class="stat-card"><div class="stat-value">305</div><div class="stat-label">Purchases in the same window</div></div>
+        <div class="stat-card"><div class="stat-value">~10,200</div><div class="stat-label">Verified sessions per month (GA4, 90-day average)</div></div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for Miguel &Aacute;ngel Cubias, Vicky Rivas, Mario Cubias &amp; Luis Armando &middot; September 3, 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHERE YOU ARE TODAY -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">Current State</p>
+    <h2>Where you are today, channel by channel</h2>
+    <p class="subtitle">Meta is live and carrying the whole budget. Google Ads is paused. SEO work has started but hasn't shown up in rankings yet. Organic social is early.</p>
+    <table>
+      <thead><tr><th>Channel</th><th>Status</th><th>What we found</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Meta Ads</td><td><span class="pill paid">Active</span></td><td>~$3,000/mo, run in-house by Vicky. 305 purchases in 90 days at 0.84x blended ROAS. Full audit on the next slides.</td></tr>
+        <tr><td class="bold">Google Ads</td><td><span class="pill red">Paused</span></td><td>Ran several months ago, paused after weak SEO made clicks expensive with no sales. No live account to audit yet, access requested.</td></tr>
+        <tr><td class="bold">SEO</td><td><span class="pill gold">In progress</span></td><td>License-specific landing pages and blogs underway. Independent tooling doesn't yet show that translating into rankings, more on that ahead.</td></tr>
+        <tr><td class="bold">Organic social</td><td><span class="pill red">Early</span></td><td>Under 1,000 Instagram followers. Team is testing more personal, face-of-the-brand content.</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col flex-grow mt-16">
+      <div>
+        <h3 class="green">What's working</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; line-height:1.6;">
+          <li>&middot; A genuinely differentiated product. Fused, engineered 3D texture, not printed. There's nothing like it in this category.</li>
+          <li>&middot; Video creative is the strongest format in the Meta account and already gets 60% of spend.</li>
+          <li>&middot; Pricing has found its sweet spot. No complaints, no returns.</li>
+          <li>&middot; A real second-purchase habit (self-reported 9&ndash;11%, to be confirmed against hard data).</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="red">What's capping growth</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; line-height:1.6;">
+          <li>&middot; A fragmented Meta account (42 campaigns, 103 ad sets) that keeps resetting its own learning phase.</li>
+          <li>&middot; No live Google Ads channel at all right now.</li>
+          <li>&middot; SEO effort that hasn't yet built independent authority or rankings.</li>
+          <li>&middot; A traffic ceiling. ~10,200 monthly sessions (verified in GA4) is the real bottleneck behind both the ROAS problem and the awareness problem.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 3: GA4 ANALYTICS HEALTH -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Analytics &middot; What We Verified</p>
+    <h2>We pulled your GA4 directly. Two things need fixing before any revenue number, ours or yours, can be fully trusted.</h2>
+    <p class="subtitle">Live pull, 90-day window (Jun 5&ndash;Sep 2, 2026). This is what independent verification looks like, and it's the same standard we'll hold every number in this deck to.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">~10,200</div><div class="stat-label">Verified sessions/month (30,745 over 90 days), higher than the self-reported ~8,000</div></div>
+      <div class="stat-card"><div class="stat-value red">$0.00</div><div class="stat-label">Purchase revenue tracked in GA4, on every channel, every item, every order</div></div>
+      <div class="stat-card"><div class="stat-value">332</div><div class="stat-label">Real purchasers GA4 does track correctly, the event fires, the value doesn't</div></div>
+      <div class="stat-card"><div class="stat-value red">44%</div><div class="stat-label">of sessions fall into "Unassigned," attribution breaks for almost half your traffic</div></div>
+    </div>
+    <div class="annotation danger mt-16">
+      <strong>Revenue tracking is broken, not missing.</strong> The purchase event fires correctly (332 purchasers, 343 purchases over 90 days), but purchase value, item data, and coupon revenue all read $0.00 across the board. GA4 cannot currently confirm your real AOV, LTV, or per-channel ROAS, which means the AOV question from the Meta section (self-reported low $30s vs. Meta's attributed $36.48) still can't be independently settled. This is almost always a missing "value" and "items" parameter on the purchase event in the Shopify/GTM setup, a fast fix, and it should happen before any paid channel scales further.
+    </div>
+    <div class="annotation gold">
+      <strong>Half your traffic is invisible to channel reporting.</strong> 13,532 of 30,745 sessions (44%), carrying 171 of your 343 tracked purchases, land in GA4's "Unassigned" bucket instead of a real channel. Likely causes: stripped UTM parameters somewhere in the ad-to-site path, or a tracking gap between the main site and Shopify checkout. Worth fixing alongside the revenue issue, both are attribution problems, not traffic problems.
+    </div>
+    <p class="mt-8" style="font-size:12.5px; color:var(--text-light);">One thing this confirms independently: none of the top 10 landing pages by traffic are blog or SEO content, they're all paid-traffic collection pages (Army, Air Force, FC Barcelona, Flags). The license-specific SEO pages aren't pulling meaningful traffic yet, consistent with the SEO diagnostic ahead.</p>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 4: META PERFORMANCE -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Meta Ads &middot; Performance</p>
+    <h2>Spend is shrinking. CTR is improving. That's a scale problem, not a quality problem.</h2>
+    <p class="subtitle">Full 3-month account pull, June 1 to August 31, 2026.</p>
+    <table>
+      <thead><tr><th>Month</th><th>Spend</th><th>Purchases</th><th>Revenue</th><th>AOV</th><th>ROAS</th><th>CPA</th><th>CTR</th><th>CPM</th></tr></thead>
+      <tbody>
+        <tr><td>June</td><td>$5,125</td><td>107</td><td>$4,388</td><td>$41.01</td><td>0.86</td><td>$47.90</td><td>1.63%</td><td>$14.15</td></tr>
+        <tr><td>July</td><td>$4,330</td><td>115</td><td>$3,732</td><td>$32.45</td><td>0.86</td><td>$37.65</td><td>1.68%</td><td>$14.11</td></tr>
+        <tr><td>August</td><td>$3,850</td><td>83</td><td>$3,006</td><td>$36.22</td><td>0.78</td><td>$46.39</td><td>2.32%</td><td>$17.00</td></tr>
+        <tr style="font-weight:700; border-top:2px solid var(--border);"><td>3-month total</td><td>$13,306</td><td>305</td><td>$11,127</td><td>$36.48</td><td>0.84</td><td>$43.62</td><td>1.82%</td><td>&ndash;</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation gold mt-16">
+      <strong>We checked GA4 directly, and found something more important than an AOV mismatch.</strong> The account self-reports CAC around $36 and AOV in the low $30s. Meta's own attributed numbers put blended CPA at $43.62 and AOV at $36.48 over the same window. GA4 can't settle which is closer to reality right now, because purchase revenue isn't tracking there at all (see the Analytics slide). Until that's fixed, Meta's own attributed numbers are the most reliable figures available.
+    </div>
+    <div class="annotation danger mt-8">
+      <strong>90% of spend ($11,743) sits in the Sales objective, correctly.</strong> The remaining $1,562 (11.7%) sits in Engagement, Traffic, and Awareness objectives and generated roughly $18 in tracked revenue combined. That's the single easiest reclaim in this account.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 4: META FUNNEL + AUDIENCES -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Meta Ads &middot; Where the Budget Leaks</p>
+    <h2>1 in 53 clicks becomes a sale. Here's where the rest go.</h2>
+    <div class="bar-chart">
+      <div class="bar-row"><span class="bar-label">Link Clicks</span><div class="bar-track"><div class="bar-fill dark" style="width:100%;">16,293 &middot; 100%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Landing Page Views</span><div class="bar-track"><div class="bar-fill dark" style="width:76%;">75.9%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Content Views</span><div class="bar-track"><div class="bar-fill dark" style="width:51%;">51.5%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Add to Cart</span><div class="bar-track"><div class="bar-fill red" style="width:15%;">15.1%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Checkout Initiated</span><div class="bar-track"><div class="bar-fill red" style="width:4%;">3.8%</div></div></div>
+      <div class="bar-row"><span class="bar-label">Purchases</span><div class="bar-track"><div class="bar-fill gold" style="width:2%;">1.9%</div></div></div>
+    </div>
+    <div class="annotation danger">
+      <strong>75% of carts never reach checkout.</strong> That's the clearest, most actionable leak in the funnel, most likely a product-page or cart-flow issue rather than a traffic-quality one.
+    </div>
+    <h3 class="mt-16">The audience segments are quietly working against each other</h3>
+    <table>
+      <thead><tr><th>Segment</th><th>Spend</th><th>% of budget</th><th>ROAS</th><th>CPA</th></tr></thead>
+      <tbody>
+        <tr><td>Prospecting</td><td>$10,971</td><td>82.5%</td><td class="bold">0.96</td><td>$38.23</td></tr>
+        <tr><td>Existing customers</td><td>$748</td><td>5.6%</td><td class="red bold">0.78</td><td class="red">$44.02</td></tr>
+        <tr><td>Engaged (non-buyers)</td><td>$22</td><td>0.2%</td><td class="red bold">0.00</td><td>&ndash;</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>"Existing customers" underperforms cold prospecting.</strong> That's backwards from normal retargeting economics, and it's a definition bug, not a targeting failure: 4 of the 5 data sources feeding that audience are the same add-to-cart and checkout signals used to define "Engaged." Only one source is an actual purchase signal. Fix the definitions before adding budget to either.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 5: META ARCHITECTURE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Meta Ads &middot; Why Performance Is Capped</p>
+    <h2>42 campaigns and 103 ad sets are fighting each other for the same audience</h2>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value red">56%</div><div class="stat-label">of ad sets never crossed $50 in lifetime spend</div></div>
+      <div class="stat-card"><div class="stat-value red">75%</div><div class="stat-label">of the 232 unique ads that ran, appeared in only one month</div></div>
+      <div class="stat-card"><div class="stat-value red">$5,317</div><div class="stat-label">spent on ads that were profitable and unfatigued, killed anyway</div></div>
+      <div class="stat-card"><div class="stat-value">40%</div><div class="stat-label">of 3-month spend, that's what the number above represents</div></div>
+    </div>
+    <p class="subtitle mt-8">The account duplicates by vertical instead of consolidating. Six separate campaigns run broad prospecting. FC Barcelona alone has six campaigns for one product line. Retargeting is split across four overlapping structures.</p>
+    <div class="annotation danger">
+      <strong>The account is paying for its own learning phase, over and over.</strong> A Meta ad set needs roughly 50 optimization events within 7 days to exit the learning phase. With most ad sets never reaching $50 in three months, most spend has likely never left it. Median ad spend collapsed from $6.99 in June to $1.04 in August, a pattern of launching many creatives and killing most before the data matures. Example: "A250 &middot; Advantage" ran 3 months, spent $861, held a 1.75 ROAS, frequency never exceeded 1.34, and was still killed.
+    </div>
+    <div class="annotation gold">
+      <strong>Creative judgment is already good.</strong> Video carries 60% of spend and is the best-performing format (0.94 ROAS, cheapest CPA). This isn't a creative problem. It's a structural one.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 6: META FIX PRIORITY LIST -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Meta Ads &middot; The Fix, In Order</p>
+    <h2>Nine changes, ranked by how fast they pay back</h2>
+    <table>
+      <thead><tr><th style="width:34px;">#</th><th>Fix</th><th>Why it's ranked here</th></tr></thead>
+      <tbody>
+        <tr><td class="bold gold">1</td><td class="bold">Reclaim the $1,562 in non-Sales spend</td><td>Easiest, most certain win in the account. Zero downside.</td></tr>
+        <tr><td class="bold gold">2</td><td class="bold">Fix the audience definitions</td><td>Existing becomes purchase-only, Engaged excludes buyers. Do this before adding budget to either.</td></tr>
+        <tr><td class="bold gold">3</td><td class="bold">Consolidate to vertical CBO campaigns</td><td>One campaign per vertical (Military, A250, FC Barcelona, Anime, Flags), plus one catch-all and one retargeting campaign, replacing 42 campaigns and 103 ad sets.</td></tr>
+        <tr><td class="bold gold">4</td><td class="bold">Stop killing ads before they clear learning phase</td><td>Currently costing 40% of spend in prematurely-cut winners.</td></tr>
+        <tr><td>5</td><td>Shift remaining static budget to video</td><td>The one format lever already proven to work.</td></tr>
+        <tr><td>6</td><td>Fix the cart-to-checkout leak</td><td>75% of carts never reach checkout, product-page and cart-flow review.</td></tr>
+        <tr><td>7</td><td>Audit the $3,142 in "not-delivering" status</td><td>Some of it is profitable and may just be delivery-restricted, not intentionally paused.</td></tr>
+        <tr><td>8</td><td>Review "Marketer &middot; Master Campaign" specifically</td><td>Almost 20% of total budget at less than half the account's average ROAS.</td></tr>
+        <tr><td>9</td><td>Standardize naming</td><td>So this list stays visible going forward without a manual pull each time.</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16"><strong>This is week one.</strong> None of it requires new budget. It requires fixing the structure the current spend is already running through.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 7: SEO DIAGNOSTIC -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">SEO &middot; Independent Diagnostic</p>
+    <h2>The landing-page and blog work is the right instinct. It hasn't shown up in rankings yet.</h2>
+    <p class="subtitle">Pulled independently against stickmadly.com, not from anything your team supplied.</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value red">12.4M</div><div class="stat-label">Semrush Rank (lower is better, this is negligible authority)</div></div>
+      <div class="stat-card"><div class="stat-value">53</div><div class="stat-label">Ranking organic keywords, total</div></div>
+      <div class="stat-card"><div class="stat-value red">0%</div><div class="stat-label">of organic traffic is branded search</div></div>
+      <div class="stat-card"><div class="stat-value">128</div><div class="stat-label">Total backlinks, 62 referring domains</div></div>
+    </div>
+    <p class="mt-8" style="font-size:13px;">Top-ranking keywords right now aren't product terms: <span class="mono">pencil back</span>, <span class="mono">2d rocket</span>, <span class="mono">ball is life logo</span>. Nothing tied to Army, Navy, Air Force, FC Barcelona, or the anime licenses is ranking yet.</p>
+    <div class="annotation danger mt-8">
+      <strong>One thing worth fixing before any new SEO work starts:</strong> 18 of the 128 backlinks (15 referring domains) come from a purchased link package, the anchor text is literally "buy backlinks online cheap... PBN network." Domains like ecomscout.com and shopiscout.com are low-quality link farms, not real mentions. This should be disavowed, not built on top of.
+    </div>
+    <div class="annotation success">
+      <strong>One real, earned link worth building on:</strong> two backlinks from the Navy SEAL Museum's Muster event pages. If that's an active sponsorship relationship, it's worth more of that.
+    </div>
+    <div class="annotation gold">
+      <strong>Why this isn't a contradiction of what your team reported:</strong> new landing pages and blog content typically take a few months to accumulate authority and start ranking, especially without a clean backlink foundation. This confirms there's real runway here, not that the current approach has already worked.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 8: SEO PLAN -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">SEO &middot; The Plan</p>
+    <h2>Clean up the foundation, then build on the instinct you already had right</h2>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <span class="pill red">Foundation</span>
+        <h3>Clean up first</h3>
+        <ul>
+          <li>Disavow the 15 spammy PBN domains before any new link work</li>
+          <li>Technical audit: indexation, sitemap, mobile, site speed</li>
+          <li>Confirm Search Console access so we can see what Google actually sees</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <span class="pill seo">Content</span>
+        <h3>Build on what's started</h3>
+        <ul>
+          <li>Keep the license-specific landing page approach, structure it around real search demand per vertical (Army, Navy, Air Force, FC Barcelona, Real Madrid, anime)</li>
+          <li>Internal linking plan tying blog content to the collections it should support</li>
+          <li>Target commercial and transactional intent, not just informational content</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <span class="pill gold">Authority</span>
+        <h3>Earn real links</h3>
+        <ul>
+          <li>Lean into the Navy SEAL Museum relationship if it's ongoing</li>
+          <li>Military, veteran, and collector community outreach, a natural fit for this product</li>
+          <li>Licensed-partner co-promotion where FC Barcelona, Real Madrid, or anime licensors allow it</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info mt-16"><strong>Why this matters for Google Ads too:</strong> the last Google Ads run failed in part because thin landing pages made clicks expensive with nothing to show for them. A stronger SEO foundation lowers the cost of every paid click that lands on the same pages.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 9: GOOGLE ADS ACCOUNT STRUCTURE -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Google Ads &middot; Account Structure</p>
+    <h2>Built for a licensed catalog from day one, not retrofitted after the fact</h2>
+    <p class="subtitle">Last time failed because thin landing pages made every click expensive with nothing to convert. This structure protects budget from day one and gives Search the vertical-level signal Performance Max needs to work long term. Andres Morales, who oversees paid strategy at EmberTribe, built this. Exact budgets and keyword volumes get finalized once Google Ads and Search Console access come through.</p>
+    <div class="four-col mt-16">
+      <div class="channel-card">
+        <span class="pill paid">Search</span>
+        <h4 class="mt-8">Brand Search</h4>
+        <ul>
+          <li>Defend "Stickmadly" branded terms from day one</li>
+          <li>Competitors have been known to bid on brand names through Performance Max campaigns, this closes that door before it opens</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <span class="pill paid">Search</span>
+        <h4 class="mt-8">Non-brand Search, by vertical</h4>
+        <ul>
+          <li>Licensed IP ad groups ("fc barcelona sticker")</li>
+          <li>Owned/patriotic ad groups ("us army sticker")</li>
+          <li>Generic ad groups ("3d stickers," "waterproof car decals")</li>
+          <li>Tested live, likely folds into category-level PMax once proven</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <span class="pill gold">Setup</span>
+        <h4 class="mt-8">Negative keywords, day one</h4>
+        <ul>
+          <li><span class="mono">free, printable, download, wallpaper, png, svg</span></li>
+          <li>Specific to this industry, filters out people hunting for free designs before they ever cost you a click</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <span class="pill google">PMax</span>
+        <h4 class="mt-8">Performance Max, by vertical</h4>
+        <ul>
+          <li>Segmented at the campaign or asset-group level</li>
+          <li>This is where most budget should live long term, once Search proves demand per vertical</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation gold mt-16"><strong>On the licensed IP:</strong> expect early ad reviews or blocks on protected terms like Army, Navy, FC Barcelona, and the anime licenses, that's normal. With your licensing paperwork on hand, we can generally clear those reviews, and that clearance becomes a real barrier against unlicensed competitors who can't say the same.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 10: MESSAGING -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Messaging &amp; Creative</p>
+    <h2>The product story is stronger than the marketing is telling it</h2>
+    <div class="two-col">
+      <div>
+        <div class="quote-block">"This is not printed. This is engineered in different layers and then we fuse them together... nobody can replicate what we do."<cite>Mario Cubias, describing the manufacturing process</cite></div>
+        <div class="quote-block">"People need to understand we are not a common sticker, a paper sticker... they have to understand why we are priced at this level."<cite>The Stickmadly team, on the differentiation gap</cite></div>
+      </div>
+      <div>
+        <h3>What this means for creative</h3>
+        <ul style="list-style:none; padding:0; font-size:13px; line-height:1.7;">
+          <li>&middot; Video already earns 65% higher ROAS than static images on Meta (0.94 vs. 0.57). Show the layered, fused process, don't just claim "premium."</li>
+          <li>&middot; The differentiation problem and the price-perception problem are the same problem. Solve it with proof, not adjectives.</li>
+          <li>&middot; Expand the use-case story beyond phones and water bottles: collectors, garages, coolers, display cases. Military and veteran audiences in particular already treat these as keepsakes, not decoration.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 11: AOV & RETENTION -->
+  <div class="slide" data-slide="12">
+    <p class="slide-label">AOV &amp; Retention</p>
+    <h2>You've already found the right lever. Push it further.</h2>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">$36</div><div class="stat-label">Current AOV (Meta-attributed, 3-mo blended)</div></div>
+      <div class="stat-card"><div class="stat-value gold">$60</div><div class="stat-label">Team's own stated AOV target</div></div>
+      <div class="stat-card"><div class="stat-value">9&ndash;11%</div><div class="stat-label">Self-reported second-purchase rate (to be confirmed)</div></div>
+      <div class="stat-card"><div class="stat-value red">0.78x</div><div class="stat-label">ROAS on the "Existing customers" segment, see Meta fix</div></div>
+    </div>
+    <p class="subtitle mt-8">Bundling to lift AOV is already in motion, that's the right instinct. Two things will make it work harder.</p>
+    <div class="two-col flex-grow">
+      <div class="channel-card">
+        <h3>Fix retention measurement first</h3>
+        <ul>
+          <li>The current "Existing customers" Meta audience is diluted with non-buyers, that's why it underperforms cold prospecting. Fixing the audience definition (Meta fix #2) is also a retention fix.</li>
+          <li>GA4 shows only 4 of 332 purchasers in the last 90 days had purchased before, weaker than the self-reported 9&ndash;11%, though the two aren't measuring quite the same thing. A proper cohort pull, once revenue tracking is fixed, will nail this down exactly.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <h3>Grow AOV without overreaching</h3>
+        <ul>
+          <li>A subscription box was raised and set aside for a real reason: limited display surface (phones, laptops, bottles) means most customers hit a ceiling fast.</li>
+          <li>A lighter "collector's club" or early-access model for new license drops fits the audience better than recurring shipments and doesn't fight the space problem.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 12: ROADMAP -->
+  <div class="slide" data-slide="13">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 days, in order</h2>
+    <p class="subtitle">Phase 1 earns Phase 2. We're not asking you to fund the whole plan before any of it proves out.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Days 1&ndash;30</span>
+        <h4>Fix the foundation</h4>
+        <ul>
+          <li>Meta: reclaim the $1,562, fix audience definitions, begin CBO consolidation</li>
+          <li>SEO: disavow spammy backlinks, technical audit</li>
+          <li>Fix GA4 purchase-revenue tracking, add EmberTribe's service account for ongoing reporting; finalize Google Ads and GSC access</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Days 31&ndash;60</span>
+        <h4>Relaunch and build</h4>
+        <ul>
+          <li>Google Ads relaunch: Brand Search, non-brand Search by vertical, negative keyword list live day one</li>
+          <li>SEO content sprint on highest-intent license terms</li>
+          <li>Meta: complete consolidation, retire the kill-and-relaunch habit</li>
+        </ul>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Days 61&ndash;90+</span>
+        <h4>Scale what's proven</h4>
+        <ul>
+          <li>Google Ads: expand Performance Max by vertical as Search proves out demand</li>
+          <li>AOV and retention program, collector's club test</li>
+          <li>Expand video creative testing across all three channels</li>
+        </ul>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 13: INVESTMENT -->
+  <div class="slide" data-slide="14">
+    <p class="slide-label">Investment</p>
+    <h2>Phased, and tied to what's already proven</h2>
+    <p class="subtitle">No fixed retainer pitch. Each phase is scoped to what the previous one earns, and ad spend stays separate from agency fees.</p>
+    <table>
+      <thead><tr><th>Phase</th><th>Agency fee</th><th>Ad spend</th><th>What's included</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Phase 1 &middot; Days 1&ndash;30</td><td>$3,000&ndash;3,500/mo</td><td>Existing $3,000/mo Meta (no new spend)</td><td>Meta audit remediation, SEO cleanup, access setup</td></tr>
+        <tr><td class="bold">Phase 2 &middot; Days 31&ndash;60</td><td>$4,000&ndash;4,500/mo</td><td>+$1,000&ndash;1,500/mo Google Ads (Brand + non-brand Search test)</td><td>Google Ads relaunch, SEO content sprint, Meta consolidation complete</td></tr>
+        <tr><td class="bold">Phase 3 &middot; Days 61&ndash;90+</td><td>$5,000&ndash;6,000/mo</td><td>Scales with proven ROAS</td><td>Full omnichannel scale across Meta, Google, and SEO</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation success mt-16"><strong>What you get from day one:</strong> a named strategist team (Andres Morales overseeing paid strategy, Melissa Cedeno as your account lead), full transparency into every change we make in your accounts, and a Phase 1 built entirely around fixing what's already running, not adding new spend on top of an unfixed foundation.</div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Stickmadly &middot; Growth Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 14: WHY EMBERTRIBE / NEXT STEPS -->
+  <div class="slide dark" data-slide="15">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Why EmberTribe, and What's Next</p>
+      <h1>An agency built for exactly this kind of complexity</h1>
+      <div class="two-col mt-16" style="flex:none;">
+        <div>
+          <h3 style="color:var(--accent);">Why us</h3>
+          <ul style="list-style:none; padding:0; font-size:13.5px; line-height:1.7;">
+            <li>&middot; Founded 2015, paid ads and SEO are our two deepest strengths</li>
+            <li>&middot; Full omnichannel: paid, SEO, CRO, email, organic social, web dev</li>
+            <li>&middot; A remote, senior team built to match the client, not the zip code</li>
+            <li>&middot; Experience with licensed and regulated categories where every asset needs approval before it runs, we know that workflow</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="color:var(--accent);">Next steps</h3>
+          <ul style="list-style:none; padding:0; font-size:13.5px; line-height:1.7;">
+            <li>1. Confirm Phase 1 scope on this call</li>
+            <li>2. Fix GA4 revenue tracking and add EmberTribe's service account; finalize Google Ads and Search Console access this week</li>
+            <li>3. Kickoff call to walk through the Meta consolidation plan in detail</li>
+            <li>4. First reclaim and fix live within the first two weeks</li>
+          </ul>
+        </div>
+      </div>
+      <div class="logo-row" style="width:100%; margin-top:32px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &middot; September 3, 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 15</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active');
+  curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active');
+  nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
