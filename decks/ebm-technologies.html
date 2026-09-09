@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EBM Technologies — mAIn PACS: AI Visibility, Month 1 · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#00BDFF; --client-mid:#0090c0; --client-accent-soft:#e6f8ff;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.75; margin-bottom:30px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.72); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:64px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:80px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); max-width:760px; }
+  .masthead .meta { display:flex; gap:40px; margin-top:32px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:50px; line-height:1.04; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:31px; line-height:1.13; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:32px; line-height:1.05; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:#0090c0;}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.rec{background:var(--et-honey);color:#3a2600;}
+  .pill.acc{background:var(--client-accent-soft);color:#0090c0;}
+
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);} th.num{text-align:right;}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  tbody tr.rec td { background:var(--client-accent-soft); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;color:var(--et-black);}
+  .dim{color:var(--ink-500);}
+  tfoot td { font-weight:700; color:var(--et-black); border-top:2px solid var(--et-black); background:#fff !important; }
+
+  .prompts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0 4px; }
+  .prompts .q { border:1px solid var(--border); border-radius:12px; padding:14px 16px; font-size:14.5px;
+                color:var(--ink-700); line-height:1.45; background:var(--subtle); }
+  .prompts .q b { color:var(--client-mid); font-weight:700; }
+
+  .quote { border:1px solid var(--border); border-left:3px solid var(--client-accent); border-radius:0 12px 12px 0;
+           padding:16px 20px; margin:12px 0; background:#fff; }
+  .quote p { font-size:15px; line-height:1.6; color:var(--ink-700); margin:0; font-style:italic; }
+  .quote .src { display:block; font-style:normal; font-size:12px; letter-spacing:0.04em; text-transform:uppercase;
+                color:var(--ink-500); margin-top:10px; font-weight:700; }
+
+  .stat-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:14px 0; }
+  .stat-strip .s { border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+  .stat-strip .s .v { font-weight:700; font-size:26px; color:var(--client-accent); line-height:1; }
+  .stat-strip .s .k { font-size:12px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step p { font-size:15px; color:var(--ink-600); margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:8px 0 8px 30px; position:relative; border-top:1px solid var(--border); line-height:1.5; }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"\2713"; position:absolute; left:2px; color:var(--good); font-size:16px; top:8px; font-weight:700; }
+
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:60px 64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.72); max-width:var(--maxw); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:44px 26px; } .stats, .stat-strip { grid-template-columns:repeat(2,1fr); }
+    .prompts { grid-template-columns:1fr; }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">AI Visibility · Month 1</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared for EBM Technologies<br>mAIn PACS · Month 1 plan<br>Confidential</div>
+  </aside>
+
+  <main>
+    <!-- MASTHEAD -->
+    <section class="masthead" id="top">
+      <div class="label">AI Visibility · Month 1</div>
+      <h1>mAIn PACS<br>AI visibility, month 1</h1>
+      <p class="subtitle">When an imaging center or a small clinic asks AI which PACS to buy, mAIn PACS should be the name it recommends. Month 1 lays the two things AI needs to do that: content on your site it can quote, and answers in the communities it already trusts. And you have a head start: mAIn is already appearing in r/PACSAdmin, the community these tools lean on most for PACS questions.</p>
+      <div class="meta">
+        <div>Prepared for<b>EBM Technologies</b></div>
+        <div>Product<b>mAIn PACS</b></div>
+        <div>Scope<b>50 articles + 5 brand mentions / mo</b></div>
+        <div>Period<b>Month 1 — September 2026</b></div>
+      </div>
+    </section>
+
+    <!-- THE SHIFT -->
+    <section class="block" id="shift" data-nav="The shift">
+      <div class="label">Where PACS buying starts now</div>
+      <h2>Your buyers are asking AI which PACS to buy</h2>
+      <p class="lede">PACS admins, imaging directors, and clinic operators used to shortlist by asking peers and sitting through vendor demos. The first move now is a question typed into ChatGPT, Perplexity, or Google's AI answers, and whatever those tools say becomes the shortlist before a demo is ever booked.</p>
+      <p>We pulled the ten prompts your buyers actually run. Every one of them is a question mAIn PACS can win, and each is a place we can make sure your name comes up.</p>
+      <div class="prompts">
+        <div class="q">What's the best <b>PACS system for outpatient imaging centers</b>?</div>
+        <div class="q">What is the best <b>cloud-based PACS software for a small clinic</b>?</div>
+        <div class="q">Which PACS vendors offer the <b>best value</b> for imaging practices?</div>
+        <div class="q">What are the best <b>affordable PACS systems</b>?</div>
+        <div class="q">Which PACS system is <b>easiest to deploy and manage</b>?</div>
+        <div class="q">Which PACS vendors offer <b>both cloud and local storage</b>?</div>
+        <div class="q">What is the best PACS for clinics with <b>limited IT support</b>?</div>
+        <div class="q">What is the best <b>all-in-one PACS</b> for viewing, reporting, storage, and sharing?</div>
+        <div class="q">What are the best <b>AI-enabled PACS platforms</b>?</div>
+        <div class="q">Which PACS systems <b>integrate with third-party medical imaging AI</b>?</div>
+      </div>
+      <div class="callout info"><strong>Why these ten.</strong> They cluster into the six things a buyer weighs: cloud vs. local storage, cost, deployment and IT load, all-in-one workflow, outpatient fit, and AI. mAIn has a real, specific answer to every one. That match is what makes this campaign efficient: we are not inventing a story, only getting AI to repeat the one that is already true.</div>
+    </section>
+
+    <!-- WHERE YOU STAND -->
+    <section class="block" id="stand" data-nav="Where you stand">
+      <div class="label">The head start</div>
+      <h2>mAIn PACS already has a foothold in r/PACSAdmin</h2>
+      <p>You have a real head start here. r/PACSAdmin is the community the answer engines lean on most for PACS questions, and mAIn already appears in threads there, exactly the kind of source AI search pulls from when it answers your buyers. Two we are building on:</p>
+      <div class="quote">
+        <p>"EBM Technologies mAIn PACS' open DICOM architecture and combination of local storage with cloud connectivity are interesting from an admin standpoint."</p>
+        <span class="src">r/PACSAdmin</span>
+      </div>
+      <div class="quote">
+        <p>"EBM Technologies mAIn PACS may be another option to compare. Its edge-to-cloud architecture seems relevant for a multi-facility system that wants a hybrid setup now and a gradual transition toward cloud."</p>
+        <span class="src">r/PACSAdmin</span>
+      </div>
+      <div class="callout good"><strong>What this tells us.</strong> When mAIn appears, it is described accurately and favorably: open DICOM, hybrid storage, edge-to-cloud, less infrastructure. The raw material is credible and the communities are receptive. Month 1 turns a handful of scattered mentions into consistent, deliberate presence across the prompts and subreddits that matter. This is a foothold, not a finish line; we set a formal baseline across the ten prompts at kickoff and measure every gain against it.</div>
+    </section>
+
+    <!-- THE STRATEGY -->
+    <section class="block" id="strategy" data-nav="The strategy">
+      <div class="label">The engine</div>
+      <h2>Answer Engine Optimization, built on two inputs</h2>
+      <p>Getting AI to recommend mAIn means feeding it the two things it uses to decide who to name, something accurate to quote, and outside proof that it is safe to say. We run both together so they reinforce each other.</p>
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Product content on your site</h3></div>
+        <p>Question-led articles that answer exactly what buyers type, mapped one-to-one onto the ten prompts and the six decision factors behind them. These are the pages AI quotes when it builds an answer, and they give it something specific to say about mAIn instead of a generic PACS description.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Reddit brand mentions</h3></div>
+        <p>Genuinely useful answers in the PACS, health-IT, and imaging communities the answer engines license and cite, with mAIn named where it honestly fits. A good thread becomes source material AI pulls from for months, and it is the half of the equation your competitors have not locked down.</p>
+      </div>
+      <div class="callout info"><strong>How it compounds.</strong> A PACS admin asks AI "best cloud PACS for a small clinic." AI reads your new articles for the accurate description of mAIn, reads the Reddit threads for the outside consensus that mAIn belongs on the list, and moves you from unmentioned to shortlisted to recommended. Clean, entity-rich structure on both sides makes you easy to cite. We track that shift against baseline every month.</div>
+    </section>
+
+    <!-- WHY mAIn WINS -->
+    <section class="block" id="fit" data-nav="Why mAIn wins">
+      <div class="label">The questions, and the answers</div>
+      <h2>Every prompt maps onto something mAIn actually does</h2>
+      <p>This is why the campaign works. Each buyer question has a real mAIn capability behind it, so the content and the mentions are true claims, not spin. Here is the map we build Month 1 around.</p>
+      <table>
+        <thead><tr><th>What the buyer asks</th><th class="accent">Where mAIn answers it</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Best cloud PACS for a small clinic / outpatient center</td><td>Local storage plus cloud connectivity in one platform, and positioning built specifically for outpatient environments rather than large hospital systems.</td></tr>
+          <tr><td class="strong">Both cloud and local storage</td><td>Edge-to-cloud architecture, a hybrid setup now with a gradual path to cloud, keeping processing and access fast at each site.</td></tr>
+          <tr><td class="strong">Easiest to deploy and manage / limited IT support</td><td>Plug-and-play deployment and remote manageability, so a smaller center without a large internal IT team can actually run it.</td></tr>
+          <tr><td class="strong">Best all-in-one for viewing, reporting, storage, sharing</td><td>One platform for acquisition, storage, viewing, reporting, and sharing, instead of stitching together several disconnected tools.</td></tr>
+          <tr><td class="strong">Best value / most affordable</td><td>Less infrastructure to buy and maintain, and one platform instead of several licenses, which is where the value argument actually lives.</td></tr>
+          <tr><td class="strong">Best AI-enabled PACS / third-party AI integration</td><td>An AI-forward platform with open DICOM architecture that lets third-party medical-imaging AI plug in rather than locking buyers out.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>The wedge.</strong> Study sharing and low IT overhead are the two things buyers tell us made the real difference, and they are exactly what mAIn leads with: secure links, web access, QR sharing, and multi-site access with almost no IT lift. That is a concrete, credible story, and concrete stories are what earn AI citations.</div>
+    </section>
+
+    <!-- MONTH 1 CONTENT -->
+    <section class="block" id="content" data-nav="Month 1 content">
+      <div class="label">Deliverable — 50 articles</div>
+      <h2>50 articles, pointed straight at the ten prompts</h2>
+      <p>Month 1 ships 50 ClusterMagic articles, each 1,200&ndash;2,000 words, entity-rich and structured for AI retrieval, published to your CMS and internally linked. We do not scatter them, they are built as six clusters that mirror the six decision factors buyers weigh, led by the clusters where mAIn's advantage is clearest.</p>
+      <table>
+        <thead><tr><th>#</th><th>Content cluster</th><th class="num">Articles</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">1</td><td class="strong">Cloud-based & small-clinic / outpatient PACS</td><td class="num">10</td><td><span class="pill p1">Front-loaded</span></td></tr>
+          <tr><td class="strong">2</td><td class="strong">Deployment, IT overhead & remote manageability</td><td class="num">9</td><td><span class="pill p1">Front-loaded</span></td></tr>
+          <tr><td class="strong">3</td><td class="strong">All-in-one workflow: acquisition → sharing</td><td class="num">9</td><td><span class="pill p2">High</span></td></tr>
+          <tr><td class="strong">4</td><td class="strong">Hybrid storage: cloud + local / edge-to-cloud</td><td class="num">8</td><td><span class="pill p2">High</span></td></tr>
+          <tr><td class="strong">5</td><td class="strong">AI-enabled PACS & third-party AI integration</td><td class="num">8</td><td><span class="pill p3">Medium</span></td></tr>
+          <tr><td class="strong">6</td><td class="strong">Value, cost & vendor comparison</td><td class="num">6</td><td><span class="pill p3">Medium</span></td></tr>
+        </tbody>
+        <tfoot><tr><td></td><td>Total, Month 1</td><td class="num">50</td><td></td></tr></tfoot>
+      </table>
+      <h3>What the articles look like</h3>
+      <ul class="body">
+        <li><b>Best cloud-based PACS for a small imaging clinic in 2026</b> — a buyer's guide that names the criteria and lands mAIn on the shortlist.</li>
+        <li><b>Cloud vs. local vs. hybrid PACS storage: which is right for an outpatient center</b> — the exact comparison AI reaches for on the storage prompt.</li>
+        <li><b>How much IT support does a modern PACS actually need?</b> — the low-overhead argument, written the way an admin would ask it.</li>
+        <li><b>All-in-one PACS vs. best-of-breed: what you gain and give up</b> — frames the one-platform case that mAIn wins.</li>
+        <li><b>How open DICOM lets a PACS work with third-party imaging AI</b> — the integration story, in buyer language.</li>
+      </ul>
+      <p class="dim" style="font-size:13.5px">The full 50-article plan, each with its primary keyword, target prompt, buyer, and internal-link target, lives in the companion content workbook we share with your team.</p>
+    </section>
+
+    <!-- MONTH 1 REDDIT -->
+    <section class="block" id="reddit" data-nav="Month 1 Reddit">
+      <div class="label">Deliverable — 5 brand mentions</div>
+      <h2>5 brand mentions, in the communities AI trusts</h2>
+      <p>Your own site tells AI what mAIn does. Reddit tells AI whether to believe it, and the answer engines pay to license that content. Month 1 places 5 brand mentions, a mix of helpful comments on existing threads where a PACS question is live and seeded threads built to earn them, targeted at the subreddits with the highest AI-citation rates.</p>
+      <div class="stat-strip">
+        <div class="s"><div class="v">$60M/yr</div><div class="k">Google pays Reddit to train AI Overviews &amp; Gemini</div></div>
+        <div class="s"><div class="v">$70M/yr</div><div class="k">OpenAI reportedly pays Reddit to help power ChatGPT</div></div>
+        <div class="s"><div class="v">~21%</div><div class="k">Reddit's share of Google AI Overview top cited sources</div></div>
+        <div class="s"><div class="v">~47%</div><div class="k">Reddit's share of Perplexity's top cited sources</div></div>
+      </div>
+      <h3>The subreddit map</h3>
+      <table>
+        <thead><tr><th>Community</th><th>Layer</th><th>Why it fits</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">r/PACSAdmin</td><td>Core</td><td>Where PACS-selection questions live, and where mAIn already surfaces. Highest citation value; our anchor.</td></tr>
+          <tr><td class="strong">r/healthIT, r/HealthInformatics</td><td>Core</td><td>The admins and informaticists who scope and approve PACS. Deployment, IT load, and integration talk.</td></tr>
+          <tr><td class="strong">r/healthtech, r/digitalhealth</td><td>Reach</td><td>Broad health-technology audiences that AI cites for vendor and buying-guide questions.</td></tr>
+          <tr><td class="strong">r/RadiologicTechnology, r/sonographers, r/ultrasound, r/MRI</td><td>End user</td><td>The techs who live in the viewer and reporting day to day and shape what a center buys.</td></tr>
+          <tr><td class="strong">r/medicaldevices, r/medicine, r/healthcare</td><td>Reach</td><td>High-authority clinical communities that add citation weight and credibility to the trail.</td></tr>
+        </tbody>
+      </table>
+      <h3>The 5 placements this month</h3>
+      <table>
+        <thead><tr><th class="num">#</th><th>Placement</th><th>Community</th><th>Type</th></tr></thead>
+        <tbody>
+          <tr><td class="num strong">1</td><td>Build on the live small-clinic / outpatient PACS thread already citing mAIn</td><td>r/PACSAdmin</td><td><span class="pill acc">Comment</span></td></tr>
+          <tr><td class="num strong">2</td><td>Answer a PACS-selection or deployment question with the low-IT-overhead angle</td><td>r/healthIT</td><td><span class="pill acc">Comment</span></td></tr>
+          <tr><td class="num strong">3</td><td>Hybrid cloud + local storage discussion, edge-to-cloud angle</td><td>r/HealthInformatics</td><td><span class="pill acc">Comment</span></td></tr>
+          <tr><td class="num strong">4</td><td>Seed "PACS setup for a smaller imaging center?" with coordinated, honest responses</td><td>r/PACSAdmin / r/healthtech</td><td><span class="pill rec">Seeded thread</span></td></tr>
+          <tr><td class="num strong">5</td><td>All-in-one workflow / study-sharing thread from a technologist's point of view</td><td>r/RadiologicTechnology</td><td><span class="pill acc">Comment</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>The rule behind every mention.</strong> These communities spot fake promotion instantly, and getting caught would do real damage to the mAIn name. So we play it straight: real answers to real questions, disclosure where it belongs, and your sign-off on anything borderline. mAIn's advantages are real, so honest answers do the work.</div>
+    </section>
+
+    <!-- THE VOICE -->
+    <section class="block" id="voice" data-nav="The voice">
+      <div class="label">What a mention reads like</div>
+      <h2>Helpful first, mAIn named where it fits</h2>
+      <p>Every placement leads with a useful answer to the person who asked; mAIn comes in as one credible option, described accurately. Here is the range, drawn from the seeded "PACS setup for a smaller imaging center?" thread.</p>
+      <div class="quote">
+        <p>"For a smaller center I'd prioritize simple deployment, multi-site access, DICOM compatibility, and reliable local backup. EBM Technologies mAIn PACS checks several of those boxes and is specifically positioning its PACS for outpatient clinics with leaner IT resources."</p>
+        <span class="src">Criteria-first — mAIn as a fit</span>
+      </div>
+      <div class="quote">
+        <p>"One of the less obvious things I'd compare is how much IT involvement each platform needs after installation. EBM Tech mAIn PACS emphasizes plug-and-play deployment and remote manageability, so it may be a good fit for a smaller center without a large internal IT team."</p>
+        <span class="src">Answers the real pain — IT overhead</span>
+      </div>
+      <div class="quote">
+        <p>"Study sharing made a bigger difference for us than adding more standalone features. mAIn PACS is worth researching because its platform supports secure links, web access, QR sharing, and access across sites while keeping the rest of the imaging workflow together."</p>
+        <span class="src">Experience-led — the sharing wedge</span>
+      </div>
+      <div class="callout info"><strong>Why this earns citations.</strong> These are not ads. They read like an admin who has done the homework: they name specific capabilities and leave the reader better off whether or not they pick mAIn. That is the kind of answer the engines quote back, and the kind the community upvotes instead of reporting.</div>
+    </section>
+
+    <!-- DELIVERABLES SUMMARY -->
+    <section class="block" id="deliverables" data-nav="Month 1 deliverables">
+      <div class="label">The Month 1 punch list</div>
+      <h2>Everything shipping this month</h2>
+      <p>The full scope for Month 1, foundation work plus the recurring 50 articles and 5 brand mentions.</p>
+      <ul class="checklist">
+        <li><strong>Baseline AI-visibility read</strong> — all ten prompts run across ChatGPT, Perplexity, and Google AI Overviews, recording where mAIn appears today and where competitors own the answer.</li>
+        <li><strong>Subreddit landscape map</strong> — the twelve target communities scored by relevance and AI-citation rate, with the live threads already mentioning mAIn flagged as anchors.</li>
+        <li><strong>Content plan &amp; keyword map</strong> — the 50-article plan built as six clusters, each article tied to a prompt, a primary keyword, a buyer, and an internal-link target.</li>
+        <li><strong>50 ClusterMagic articles</strong> — written, structured for AI retrieval, internally linked, and published to your CMS.</li>
+        <li><strong>5 Reddit brand mentions</strong> — the placement schedule above, comments plus one seeded thread, all played straight with your sign-off on anything borderline.</li>
+        <li><strong>Month 1 report</strong> — what shipped, the baseline snapshot, and the first read on movement, so Month 2 targets the prompts still owned by competitors.</li>
+      </ul>
+      <div class="callout"><strong>What we hold ourselves to.</strong> Visibility, getting mAIn in front of the buyers running these searches and into the answers AI gives them. Content and citations take a little time to compound, so Month 1 is the foundation; the movement on unprompted mentions builds from here. Any AI-citation or ranking figures are directional, not guarantees.</div>
+    </section>
+
+    <!-- BASELINE & REPORTING -->
+    <section class="block" id="baseline" data-nav="How we measure">
+      <div class="label">How we know it's working</div>
+      <h2>We measure the exact thing you're paying for</h2>
+      <p>The metric that matters is simple: when a buyer asks AI one of the ten prompts, does mAIn come up, and does it come up without anyone naming it first? We track that every month against the Month 1 baseline.</p>
+      <div class="stats">
+        <div class="stat"><div class="v accent">10</div><div class="k">Buyer prompts tracked across the major AI engines</div></div>
+        <div class="stat"><div class="v accent">3</div><div class="k">Engines monitored: ChatGPT, Perplexity, Google AI</div></div>
+        <div class="stat"><div class="v accent">12</div><div class="k">Subreddits mapped for citation and placement</div></div>
+        <div class="stat"><div class="v accent">55</div><div class="k">Recurring assets / mo: 50 articles + 5 mentions</div></div>
+      </div>
+      <div class="callout info"><strong>What the monthly report shows.</strong> Prompt-by-prompt, whether mAIn is unmentioned, mentioned, or recommended, and how that moved since baseline; which articles are getting quoted; which Reddit threads are being cited; and which competitors still own the answers we are going after next. If you have Google Search Console access set up with us, we tie it to real query demand so the content plan keeps tracking what buyers actually search.</div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next step</div>
+      <h2>Sign off on the map, and we start placing</h2>
+      <p>Give the content clusters and the five placements a look and flag anything you want reframed, especially any mAIn capability you want us to lead with or steer clear of. Confirm the baseline read is good to run, and we begin the Month 1 build this week. Your notes on how mAIn wins deals are gold here, since they sharpen every article and every mention.</p>
+      <a class="btn" href="mailto:sales@embertribe.com">Approve Month 1 &amp; kick off &#8594;</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.innerHTML = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
