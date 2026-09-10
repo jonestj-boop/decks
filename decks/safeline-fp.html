@@ -1,517 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="robots" content="noindex, nofollow" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AEO + Content Strategy: SafeLine FP</title>
-  <style>
-    /* EmberTribe brand type — Quatro, served from decks/fonts/ (flat deck path). */
-    @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
-    @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
-    @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeLine FP: AEO + Content Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
 
-    :root {
-      --brand: #2FB81A;
-      --brand-light: #52D93A;
-      --brand-dim: rgba(82,217,58,0.13);
-      --brand-border: rgba(82,217,58,0.32);
-      --dark: #0e120f;
-      --dark-2: #12160f;
-      --dark-3: #171c17;
-      --dark-4: #1f261e;
-      --border: rgba(255,255,255,0.07);
-      --text: #e7ede7;
-      --muted: #97a096;
-      --white: #fff;
-      --amber: #e0a53c;
-      --red: #e2564f;
-      --green: #6fbf8b;
-      --ember-red: #FF333C;
-    }
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2FB81A; --client-accent-soft:#e9f7e4;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
 
-    body {
-      font-family: "Quatro", "Calibri", "Segoe UI", system-ui, sans-serif;
-      background: var(--dark);
-      color: var(--text);
-      line-height: 1.6;
-    }
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.75; margin-bottom:30px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.72); line-height:1.6; }
 
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(14,18,15,0.94);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 40px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 60px;
-    }
-    nav .logo { font-weight: 700; font-size: 15px; color: var(--white); letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
-    nav .logo .pill { background: var(--brand-dim); border: 1px solid var(--brand-border); color: var(--brand-light); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
-    nav ul { list-style: none; display: flex; gap: 22px; }
-    nav ul a { color: var(--muted); text-decoration: none; font-size: 13px; }
-    nav ul a:hover { color: var(--white); }
-    @media(max-width: 980px){ nav ul { display: none; } }
+  main { padding:0; }
+  .block { padding:64px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
 
-    .hero { padding: 84px 40px 54px; max-width: 1000px; margin: 0 auto; text-align: center; }
-    .hero .badge { display: inline-block; background: var(--brand-dim); border: 1px solid var(--brand-border); color: var(--brand-light); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 24px; }
-    .hero h1 { font-size: clamp(31px, 5vw, 50px); font-weight: 700; line-height: 1.13; letter-spacing: -1.3px; color: var(--white); margin-bottom: 18px; }
-    .hero h1 span { color: var(--brand-light); }
-    .hero p { font-size: 17px; color: var(--muted); max-width: 720px; margin: 0 auto 16px; }
-    .hero .sub-tagline { font-size: 13px; color: var(--brand-light); font-style: italic; margin-bottom: 8px; opacity: 0.95; }
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:80px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); max-width:760px; }
+  .masthead .meta { display:flex; gap:40px; margin-top:32px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
 
-    .proof-bar { background: var(--dark-3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 40px; display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
-    .proof-item { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--muted); }
-    .proof-item .icon { display: flex; color: var(--brand-light); }
-    .proof-item .icon svg { width: 16px; height: 16px; }
-    .proof-item strong { color: var(--text); font-weight: 600; }
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:50px; line-height:1.04; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:31px; line-height:1.13; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
 
-    section { padding: 60px 40px; max-width: 1120px; margin: 0 auto; }
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-light); margin-bottom: 12px; }
-    h2 { font-size: clamp(24px, 3vw, 33px); font-weight: 700; letter-spacing: -0.7px; color: var(--white); margin-bottom: 12px; }
-    h3.block { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 14px; }
-    .section-intro { font-size: 15.5px; color: var(--muted); max-width: 770px; margin-bottom: 38px; }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 0 40px; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:32px; line-height:1.05; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
 
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 38px; }
-    .metric-card { background: var(--dark-3); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
-    .metric-card .label { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 8px; }
-    .metric-card .value { font-size: 23px; font-weight: 700; color: var(--white); line-height: 1.1; margin-bottom: 4px; }
-    .metric-card .value span { color: var(--brand-light); }
-    .metric-card .sub { font-size: 11.5px; color: var(--muted); }
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:#1f7a12;}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+  .callout .mono { font-family:"SF Mono","Consolas",monospace; font-size:13px; color:var(--et-black); word-break:break-all; line-height:1.8; display:block; margin-top:8px; }
 
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: start; }
-    @media(max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+  .pill.rec{background:var(--et-honey);color:#3a2600;}
 
-    .insight-box { background: var(--dark-3); border: 1px solid var(--brand-border); border-left: 3px solid var(--brand); border-radius: 12px; padding: 22px 26px; }
-    .danger-box { background: rgba(226,86,79,0.08); border: 1px solid rgba(226,86,79,0.35); border-left: 3px solid var(--red); border-radius: 12px; padding: 22px 26px; }
-    .danger-box strong { color: #ff8a84; }
-    .amber-box { background: rgba(224,165,60,0.08); border: 1px solid rgba(224,165,60,0.3); border-left: 3px solid var(--amber); border-radius: 12px; padding: 20px 24px; }
-    .green-box { background: rgba(111,191,139,0.08); border: 1px solid rgba(111,191,139,0.3); border-left: 3px solid var(--green); border-radius: 12px; padding: 20px 24px; }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);} th.num{text-align:right;}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  tbody tr.rec td { background:var(--client-accent-soft); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;color:var(--et-black);}
+  .dim{color:var(--ink-500);}
 
-    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 16px; }
-    .stat-card { background: var(--dark-3); border: 1px solid var(--border); border-radius: 12px; padding: 22px 18px; text-align: center; }
-    .stat-card .big { font-size: 29px; font-weight: 700; color: var(--brand-light); line-height: 1; margin-bottom: 6px; }
-    .stat-card .desc { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .stat-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:14px 0; }
+  .stat-strip .s { border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+  .stat-strip .s .v { font-weight:700; font-size:26px; color:var(--client-accent); line-height:1; }
+  .stat-strip .s .k { font-size:12px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
 
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
-    .feature-card { background: var(--dark-3); border: 1px solid var(--border); border-radius: 14px; padding: 26px 22px; }
-    .feature-card .icon { width: 38px; height: 38px; border-radius: 10px; background: var(--brand-dim); color: var(--brand-light); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
-    .feature-card .icon svg { width: 20px; height: 20px; }
-    .feature-card h4 { font-size: 14.5px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-    .feature-card p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step p { font-size:15px; color:var(--ink-600); margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"\2610"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
 
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
-    .step { padding: 28px 24px; border: 1px solid var(--border); background: var(--dark-3); }
-    .step:first-child { border-radius: 14px 0 0 14px; }
-    .step:last-child { border-radius: 0 14px 14px 0; }
-    .step + .step { border-left: none; }
-    @media(max-width: 760px) { .steps { grid-template-columns: 1fr; } .step { border-radius: 0 !important; } .step + .step { border-left: 1px solid var(--border); border-top: none; } }
-    .step-number { font-size: 11px; font-weight: 700; color: var(--brand-light); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
-    .step h4 { font-size: 14.5px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-    .step ul { list-style: none; }
-    .step ul li { font-size: 12.5px; color: var(--muted); padding: 3px 0 3px 14px; position: relative; }
-    .step ul li::before { content: '\2192'; position: absolute; left: 0; color: var(--brand-light); font-size: 11px; }
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:60px 64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.72); max-width:var(--maxw); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
 
-    .thread-card { background: var(--dark-3); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 22px; }
-    .thread-card .thread-title { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-    .thread-card .thread-body { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; font-style: italic; }
-    .comments-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media(max-width: 620px) { .comments-row { grid-template-columns: 1fr; } }
-    .comment-card { background: var(--dark-4); border: 1px solid var(--border); border-left: 3px solid var(--brand-border); border-radius: 10px; padding: 15px; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
-    .comment-card strong { color: var(--brand-light); font-weight: 600; }
-
-    .tier-grid { display: grid; grid-template-columns: 1fr 1.05fr 1.15fr; gap: 16px; }
-    @media(max-width: 900px) { .tier-grid { grid-template-columns: 1fr; } }
-    .tier-card { border-radius: 12px; border: 1px solid var(--border); background: var(--dark-3); overflow: hidden; }
-    .tier-card .tier-head { padding: 10px 16px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #0d1509; }
-    .tier-card .tier-body { padding: 16px; }
-    .tier-card .tier-kw { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-    .tier-t1 .tier-head { background: var(--brand-light); }
-    .tier-t2 .tier-head { background: #8fd97e; }
-    .tier-t3 .tier-head { background: var(--amber); }
-    .tier-card ul { list-style: none; padding: 0; }
-    .tier-card ul li { position: relative; padding-left: 14px; font-size: 12px; line-height: 1.55; margin-bottom: 5px; color: var(--muted); }
-    .tier-card ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--brand-light); }
-
-    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0; }
-    th { background: var(--dark-3); font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; color: var(--muted); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); }
-    td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text); }
-    td.bold, .bold { font-weight: 700; color: var(--white); }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-    .center { text-align: center; }
-    .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-    .pill.high { background: rgba(226,86,79,0.15); color: #ff8a84; }
-    .pill.medium { background: rgba(224,165,60,0.15); color: var(--amber); }
-    .pill.critical { background: rgba(82,217,58,0.18); color: var(--brand-light); }
-    .pill.low { background: rgba(157,144,131,0.16); color: var(--muted); }
-    .table-wrap { overflow-x: auto; }
-
-    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    @media(max-width: 900px) { .timeline { grid-template-columns: 1fr 1fr; } }
-    @media(max-width: 560px) { .timeline { grid-template-columns: 1fr; } }
-    .timeline-item { background: var(--dark-3); border: 1px solid var(--border); border-radius: 12px; padding: 22px; }
-    .timeline-item .month { font-size: 11px; font-weight: 700; color: var(--brand-light); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
-    .timeline-item .milestone { font-size: 13.5px; font-weight: 600; color: var(--white); line-height: 1.4; }
-
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .plan-card { background: var(--dark-3); border: 1px solid var(--border); border-radius: 16px; padding: 30px 26px; display: flex; flex-direction: column; }
-    .plan-card.featured { border-color: var(--brand); background: linear-gradient(135deg, var(--brand-dim), var(--dark-3)); }
-    .plan-name { font-size: 12.5px; font-weight: 700; color: var(--brand-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-    .plan-price { font-size: 32px; font-weight: 700; color: var(--white); letter-spacing: -1px; margin-bottom: 4px; }
-    .plan-price span { font-size: 15px; font-weight: 400; color: var(--muted); }
-    .plan-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 4px; }
-    .plan-features { list-style: none; margin: 18px 0 8px; flex: 1; }
-    .plan-features li { font-size: 13px; color: var(--text); padding: 7px 0; border-bottom: 1px solid var(--border); display: flex; gap: 9px; align-items: flex-start; }
-    .plan-features li:last-child { border-bottom: none; }
-    .plan-features li::before { content: '\2713'; color: var(--brand-light); font-weight: 700; flex-shrink: 0; }
-
-    .cta-section { background: linear-gradient(135deg, var(--brand-dim), rgba(82,217,58,0.04)); border: 1px solid var(--brand-border); border-radius: 20px; padding: 54px 44px; text-align: center; margin: 0 40px 70px; }
-    .cta-section h2 { margin-bottom: 12px; }
-    .cta-section p { color: var(--muted); font-size: 15px; margin-bottom: 8px; max-width: 700px; margin-left:auto;margin-right:auto; }
-
-    footer { border-top: 1px solid var(--border); padding: 28px 40px; text-align: center; font-size: 12.5px; color: var(--muted); }
-    footer strong { color: var(--text); }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--dark); }
-    ::-webkit-scrollbar-thumb { background: #2c352a; border-radius: 3px; }
-  </style>
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:44px 26px; } .stats, .stat-strip { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
 </head>
 <body>
+<div class="shell">
 
-<nav>
-  <div class="logo">SafeLine FP &times; EmberTribe <span class="pill">Revised after our Sept 9 call</span></div>
-  <ul>
-    <li><a href="#goal">The Goal</a></li>
-    <li><a href="#aeo">The AEO Gap</a></li>
-    <li><a href="#buyer">Buyer &amp; Verticals</a></li>
-    <li><a href="#competitors">Competitors</a></li>
-    <li><a href="#strategy">Strategy</a></li>
-    <li><a href="#content">Content</a></li>
-    <li><a href="#reddit">Reddit</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#pricing">Investment</a></li>
-  </ul>
-</nav>
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">AEO + Content Strategy</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared for SafeLine FP<br>Revised after the Sept 9, 2026 call<br>Confidential</div>
+  </aside>
 
-<div class="hero">
-  <div class="badge">AEO + Content Strategy &middot; Prepared for Ted &amp; Jerry &middot; Revised after our Sept 9 call</div>
-  <h1>When a buyer asks AI who to call for safety netting or a custom-fabricated system,<br/><span>be the name it recommends</span></h1>
-  <p>You already saw it happen: someone typed "safety equipment" into AI, SafeLine came up first, and they picked up the phone. You want that on purpose, not by accident. Right now the answer engines don't have enough about SafeLine to recommend you, so they default to Eagle, US Cargo Control, and the catalog sites. This plan fixes that, and it's built to help move you from $1.5&ndash;2.5M toward the $10M you're aiming at.</p>
-  <p class="sub-tagline">In-house manufacturing + full fabrication shop &middot; safety &amp; debris netting, rack systems, mobile fall protection, custom builds &middot; general industry + construction &middot; nationwide</p>
+  <main>
+    <!-- MASTHEAD -->
+    <section class="masthead" id="top">
+      <div class="label">AEO + Content Strategy</div>
+      <h1>SafeLine FP<br>AEO + content strategy</h1>
+      <p class="subtitle">When a buyer asks AI who to call for safety netting or a custom-fabricated system, be the name it recommends. This plan gets SafeLine into those searches, those trade conversations, and those AI answers, and it is built to help move you from $1.5&ndash;2.5M toward the $10M you are aiming at.</p>
+      <div class="meta">
+        <div>Prepared for<b>Ted Wilkinson &amp; Jerry (Jay Lawton)</b></div>
+        <div>Date<b>September 2026</b></div>
+        <div>Basis<b>Revised after our Sept 9 call</b></div>
+      </div>
+    </section>
+
+    <!-- GOAL -->
+    <section class="block" id="goal" data-nav="The goal">
+      <div class="label">What we heard on the call</div>
+      <h2>The goal is $10M. The job is to make the phone ring.</h2>
+      <p class="lede">You have run $1.5&ndash;2.5M for 11 years on almost no marketing, mostly word of mouth, repeat business, and Jerry working his book. With Jerry on board and new product coming online, the pieces to scale are coming together. What is missing is a repeatable way to reach buyers before they call a competitor. That gap is the piece we own.</p>
+      <div class="stats">
+        <div class="stat"><div class="v">$1.5&ndash;2.5M</div><div class="k">Revenue today, 11 years in</div></div>
+        <div class="stat"><div class="v accent">$10M</div><div class="k">Target in 2&ndash;3 years ($5M is the inflection)</div></div>
+        <div class="stat"><div class="v red">~99%</div><div class="k">Of leads are referral or repeat today</div></div>
+        <div class="stat"><div class="v">$30&ndash;50K</div><div class="k">Average ticket (range $5K&ndash;$400K)</div></div>
+      </div>
+      <div class="callout info"><strong>What EmberTribe owns.</strong> Visibility. Getting SafeLine in front of the right buyers and getting the phone to ring, through content that AI reads and third-party mentions that AI trusts. That is the whole scope, and we hold ourselves to it.</div>
+      <div class="callout"><strong>What you and Jerry own.</strong> Closing. Jerry took K-Strong from zero to $10M and grew Web Devices from about $6&ndash;7M to $25M. Our job is to feed that machine; his team does the closing. Even one new lead a day, at your average $30&ndash;50K ticket, is the arithmetic behind the $10M goal.</div>
+    </section>
+
+    <!-- AEO GAP -->
+    <section class="block" id="aeo" data-nav="The AEO gap">
+      <div class="label">What we saw live on the call</div>
+      <h2>AI will not recommend you yet, and we can show you exactly why</h2>
+      <p>On the call we ran your buyers' real searches through AI. It took two tries and an explicit prompt of your company name before SafeLine surfaced at all. Unprompted, it recommended Eagle Industries, US Cargo Control, and generic debris mesh. None of that reflects your product, which is more sophisticated than most of what it named. It is a data problem, and it has two halves.</p>
+      <div class="callout"><strong>Half one: your own content.</strong> AI answers by scraping your site. It found your product pages and your blog, but the blog covers safety culture and leadership instead of the products. It has almost nothing to quote on "personnel safety netting systems" or "debris netting," so it cannot confidently put you forward.</div>
+      <div class="callout"><strong>Half two: third-party proof.</strong> When AI decides who to recommend, it leans on what other sites say: Reddit threads, industry roundups, "best safety netting supplier" listicles. Your competitors show up in those; you do not. Without that outside consensus, AI has no reason to name you over the sites it already trusts.</div>
+      <div class="callout good"><strong>The good news.</strong> When we did name SafeLine, AI described you accurately. It pulled your PSN, W1050, and DS1320 systems straight from your site and put you on the shortlist for "true construction safety netting rather than generic debris mesh." The raw material is there. It just is not loud enough, or backed by enough outside sources, for AI to volunteer you. These read-outs are directional, from live prompts on the call; we confirm search demand against your Google Search Console at kickoff.</div>
+    </section>
+
+    <!-- BUYER & VERTICALS -->
+    <section class="block" id="buyer" data-nav="Buyer &amp; verticals">
+      <div class="label">Who we are selling to</div>
+      <h2>Niche buyers, broad industries, and fabrication is the prize</h2>
+      <p>You corrected us on the call, and it changes the plan: you are a general-industry manufacturer at least as much as a construction one. Netting skews construction, but general industry spends more on safety equipment, and it is where most of your other products live. Underneath all of it, custom fabrication is where the real margin is, and it is the least visible thing you do.</p>
+      <table>
+        <thead><tr><th>Segment</th><th>What they buy</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Custom fabrication</td><td>Engineered structures &amp; one-off builds</td><td>The profit engine: power plants, aerospace and helicopter platforms, conveyor safety systems, jobs like the Knoxville Zoo build. Nearly invisible online today.</td></tr>
+          <tr><td class="strong">Safety &amp; debris netting</td><td>Personnel &amp; debris netting (PSN, W1050, DS1320)</td><td>Your highest-volume searches, and where buyers already sometimes find you.</td></tr>
+          <tr><td class="strong">Rack &amp; materials handling</td><td>Pallet-rack &amp; warehouse netting</td><td>Audit-driven, recurring, multi-site buyer.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info"><strong>The account approach.</strong> The audience is niche but spread across industries, so we do not spray. We pick the verticals you win in (power, aerospace, fabrication, material handling, plus construction for netting) and build content and mentions around the exact problems those buyers describe. When you and Jerry name a target-account list, the content doubles as air cover for his outreach: he calls, and the AI answer and the search result both back him up.</div>
+    </section>
+
+    <!-- COMPETITORS -->
+    <section class="block" id="competitors" data-nav="Competitors">
+      <div class="label">Competitive landscape</div>
+      <h2>Your competitors educate the buyer. None of them own the AI answer yet.</h2>
+      <p>You named the field on the call, and we looked at each one. The pattern is clear: everyone runs a blog and an FAQ to educate buyers, but thinly, one or two posts a month, and no one has locked up the AI recommendation. That is the opening. We reverse-engineer what is working for them and insert SafeLine into the same answers, with more volume and better third-party proof.</p>
+      <table>
+        <thead><tr><th>Competitor</th><th>What they are</th><th>Where you beat them</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">FallProof Systems</td><td>Trenton NJ, since 1996. Turnkey fall protection + safety netting, assessment through certification.</td><td>In-house fabrication and turnaround speed on custom structures</td></tr>
+          <tr><td class="strong">Strongman</td><td>Since 1974. Big player in construction debris containment &amp; personnel nets.</td><td>You build the engineered structure; they supply the net</td></tr>
+          <tr><td class="strong">Trio Nets</td><td>Houston TX. Manufactures safety, debris &amp; personnel netting, with install services.</td><td>Broader product range and general-industry fabrication</td></tr>
+          <tr><td class="strong">US Netting / Eagle / US Cargo</td><td>The catalog and distributor names AI surfaces by default today, organically or through ads.</td><td>Real engineering and custom work over off-the-shelf catalog</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>The wedge:</strong> the thing none of them lead with is that SafeLine fabricates the structure in-house and turns custom work around in days, as the Knoxville job showed. That story is one the market and the AI do not know yet, and it is exactly the kind of specific, credible claim that earns citations and recommendations.</div>
+    </section>
+
+    <!-- THE ENGINE -->
+    <section class="block" id="strategy" data-nav="The engine">
+      <div class="label">The engine</div>
+      <h2>Answer Engine Optimization, built on three inputs</h2>
+      <p>AEO is the crux of this proposal, exactly the outcome you described: be the answer AI gives. Getting there means feeding the answer engines the three things they use to decide who to recommend. We run all three together so they reinforce each other.</p>
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Product content on your site</h3></div>
+        <p>Product- and question-led articles that answer what your sales team hears and disambiguate the three different products the market calls "safety netting." These are the pages AI quotes when it answers.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Reddit mentions</h3></div>
+        <p>Real, genuinely useful answers in trade and industry subreddits, with SafeLine named where it fits. Reddit is licensed by the answer engines, so a good thread becomes source material AI cites back for months.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Listicle &amp; roundup placements</h3></div>
+        <p>We pursue spots on the "best supplier" lists, comparison pages, and directories that AI pulls its shortlist from. Outside proof that SafeLine belongs in the answer.</p>
+      </div>
+      <div class="callout info"><strong>How it compounds:</strong> your product pages give AI something accurate to quote, Reddit and listicles give it the outside consensus it needs to feel safe recommending you, and clean structure (schema, entity-rich copy) makes you easy to cite. A buyer searches "personnel safety netting systems," AI reads all three, and SafeLine moves from unmentioned to shortlisted to recommended. We track that shift every month.</div>
+    </section>
+
+    <!-- CONTENT PLAN -->
+    <section class="block" id="content" data-nav="Content plan">
+      <div class="label">The content plan</div>
+      <h2>10x the blog, and point it at the products</h2>
+      <p>On the call we agreed the current blog is the wrong shape: articles about safety culture and leadership do not get you into meetings. The fix is volume and focus, roughly 40&ndash;50 articles a month, each one built around a product you sell and a question a real buyer asks. It is how you give AI enough to quote, and how you out-publish competitors running one or two posts a month.</p>
+      <table>
+        <thead><tr><th>Tier</th><th>Role</th><th>Length</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Pillar</td><td>Product &amp; vertical hubs, built first</td><td>2,000&ndash;3,500 wds</td><td>Personnel Safety Netting Systems: An Engineer's Guide</td></tr>
+          <tr><td class="strong">Cluster</td><td>Comparisons &amp; applications</td><td>1,200&ndash;2,000 wds</td><td>Debris vs. Personnel vs. Scaffold Mesh</td></tr>
+          <tr><td class="strong">Question</td><td>The sales team's real questions</td><td>800&ndash;1,400 wds</td><td>How Fast Can a Custom Structure Ship?</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>The core of it, in your words:</strong> you and Jerry are on the sales calls, so you already know the questions buyers actually ask. Those questions are the content plan. Each answer becomes a page AI can quote, which is how you get ChatGPT to frame you the way Jerry would.</div>
+      <h3>Five clusters, led by netting and fabrication</h3>
+      <table>
+        <thead><tr><th>#</th><th>Cluster</th><th class="num">Pages</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">1</td><td class="strong">Safety &amp; Debris Netting Systems</td><td class="num">19</td><td><span class="pill p1">Front-loaded</span></td></tr>
+          <tr><td class="strong">2</td><td class="strong">Custom Fabrication &amp; Engineered Structures</td><td class="num">16</td><td><span class="pill p2">High</span></td></tr>
+          <tr><td class="strong">3</td><td class="strong">Rack &amp; Materials-Handling Safety</td><td class="num">13</td><td><span class="pill p2">High</span></td></tr>
+          <tr><td class="strong">4</td><td class="strong">Mobile Fall Protection &amp; Industrial Applications</td><td class="num">13</td><td><span class="pill p3">Medium</span></td></tr>
+          <tr><td class="strong">5</td><td class="strong">Compliance &amp; Buyer Questions</td><td class="num">13</td><td><span class="pill p3">Medium</span></td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13.5px">Cluster 1 is built first: it targets the exact terms you told us buyers type ("safety netting systems," "debris netting system," "personnel safety netting systems"). The full 74-page map, with a primary keyword, intent, buyer, and internal-link target for every article, lives in the companion keyword workbook.</p>
+    </section>
+
+    <!-- REDDIT & LISTICLES -->
+    <section class="block" id="reddit" data-nav="Reddit &amp; listicles">
+      <div class="label">The third-party proof</div>
+      <h2>Reddit and listicles are what AI trusts about you</h2>
+      <p>Your own site tells AI what you sell. Reddit threads and industry roundups tell AI whether to believe you, and the answer engines pay to license that content. This is the half your competitors have not locked down.</p>
+      <div class="stat-strip">
+        <div class="s"><div class="v">$60M/yr</div><div class="k">Google pays Reddit to train AI Overviews &amp; Gemini</div></div>
+        <div class="s"><div class="v">$70M/yr</div><div class="k">OpenAI reportedly pays Reddit to help power ChatGPT</div></div>
+        <div class="s"><div class="v">~21%</div><div class="k">Reddit's share of Google AI Overview top cited sources</div></div>
+        <div class="s"><div class="v">~47%</div><div class="k">Reddit's share of Perplexity's top cited sources</div></div>
+      </div>
+      <table>
+        <thead><tr><th>Community</th><th>Segment</th><th>Why it fits</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">r/Construction, r/SafetyProfessionals</td><td>Core</td><td>Jobsite safety, netting, and supplier talk, with heavy AI citation</td></tr>
+          <tr><td class="strong">r/Manufacturing, r/Welding, r/Machinists</td><td>General industry / fab</td><td>Your real base: fabrication, custom builds, industrial safety</td></tr>
+          <tr><td class="strong">r/OSHA, r/AskEngineers</td><td>Compliance / spec</td><td>Requirement and specification questions AI leans on</td></tr>
+          <tr><td class="strong">r/warehouse, r/logistics</td><td>Materials handling</td><td>Rack safety, audit fixes, falling-product prevention</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>The rule behind every mention:</strong> trade communities spot fake promotion instantly, and getting caught would do real damage to your name. So we play it straight: real answers, credentials disclosed, your sign-off on anything borderline. Your track record is genuine, so honest answers do the work.</div>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="block" id="roadmap" data-nav="Roadmap">
+      <div class="label">What to expect</div>
+      <h2>Results on a 90 to 180 day horizon</h2>
+      <p>You asked for a clear read on what comes back and when. Content and citations take a little time to move, so here is the honest timeline. These are directional projections, and the scope of work spells out the deliverables behind them.</p>
+      <table>
+        <thead><tr><th>When</th><th>Milestone</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Month 1</td><td>Search Console + keyword validation, competitor teardown (FallProof, Strongman, Trio). Netting &amp; fabrication pillars built first. First Reddit answers and a baseline AI-visibility read.</td></tr>
+          <tr><td class="strong">Month 2</td><td>Content volume ramps toward 40&ndash;50/mo across netting, fabrication and rack. First listicle and directory outreach. Reddit expands into manufacturing &amp; industry subs.</td></tr>
+          <tr><td class="strong">Day 90</td><td>Early lift on "safety netting / debris netting" terms and first AI mentions without prompting your name. Product models start showing up in answers.</td></tr>
+          <tr><td class="strong">Day 180</td><td>Impact report: content library live, ranking &amp; AI-citation trajectory vs. baseline, and a read on which vertical is converting to calls fastest.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- INVESTMENT -->
+    <section class="block" id="pricing" data-nav="Investment">
+      <div class="label">Investment</div>
+      <h2>Content + AEO, built for your $3&ndash;5K budget</h2>
+      <p>EmberTribe's AI Visibility packages pair the AEO placements (the Reddit and answer-engine work) with a heavy ClusterMagic content allotment. We have tailored them for SafeLine: content-weighted, so the budget goes to the articles that feed AI. For a compliance- and spec-driven manufacturer like you, we would start on the AI Growth Engine tier.</p>
+      <table>
+        <thead><tr><th>Package</th><th class="num">Monthly</th><th class="num">AEO placements</th><th class="num">ClusterMagic articles</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">AI Visibility Starter</td><td class="num">$1,750</td><td class="num">5 / mo</td><td class="num">10 / mo</td></tr>
+          <tr class="rec"><td class="strong">AI Growth Engine <span class="pill rec">Recommended</span></td><td class="num strong">$3,150</td><td class="num">8 / mo</td><td class="num">50 / mo</td></tr>
+          <tr><td class="strong">AI Authority Accelerator</td><td class="num">$4,400</td><td class="num">12 / mo</td><td class="num">100 / mo</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>Recommended: AI Growth Engine at $3,150.</strong> It sits on the low end of your $3&ndash;5K and already includes the 50 articles a month we discussed, plus 8 AEO placements. When you are ready to out-publish the field, the Authority tier takes you to 100 articles a month, or add ClusterMagic below for volume in between.</div>
+
+      <h3>Add-on: ClusterMagic content velocity</h3>
+      <p>Article volume scales separately on the ladder below and stacks onto any package. Add volume when you want to out-publish the field faster; a 3-month commitment lowers the effective rate.</p>
+      <table>
+        <thead><tr><th>ClusterMagic articles / mo</th><th class="num">Monthly</th><th class="num">Per article</th><th class="num">3-month commitment (effective / mo)</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">25 (minimum)</td><td class="num">$1,000</td><td class="num">$40.00</td><td class="num">$883</td></tr>
+          <tr><td class="strong">40</td><td class="num">$1,500</td><td class="num">$37.50</td><td class="num">$1,300</td></tr>
+          <tr><td class="strong">50</td><td class="num">$1,750</td><td class="num">$35.00</td><td class="num">$1,533</td></tr>
+          <tr><td class="strong">100</td><td class="num">$3,000</td><td class="num">$30.00</td><td class="num">$2,633</td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">These packages are tailored for SafeLine: content-weighted, so the spend goes to the articles that feed AI. The ClusterMagic add-on scales article volume further. Content and AEO placement rates come from EmberTribe's standard rate card. No six-figure upfront and no long lock-in; month-to-month stays on the table. No performance guarantees; ranking, traffic, and AI-citation figures in this deck are directional projections, not guarantees. A statement of work follows after we review your Search Console data.</p>
+    </section>
+
+    <!-- ACCESS -->
+    <section class="block" id="access" data-nav="Search Console access">
+      <div class="label">Before the call</div>
+      <h2>Grant Search Console access, and we come in with your real data</h2>
+      <p>Two minutes in Google Search Console lets us validate every number in this plan against your actual search data before we build a thing. Add both addresses below at Full permission.</p>
+      <div class="step">
+        <div class="sh"><span class="sn">&#8250;</span><h3>Grant access in seven steps</h3></div>
+        <ul class="checklist">
+          <li>Open Google Search Console and select the SafeLine FP property.</li>
+          <li>Click <strong>Settings</strong> in the left sidebar.</li>
+          <li>Click <strong>Users and permissions</strong>.</li>
+          <li>Click <strong>Add user</strong>.</li>
+          <li>Enter both email addresses in the callout below.</li>
+          <li>Set the permission level to <strong>Full</strong>.</li>
+          <li>Click <strong>Add</strong> to save.</li>
+        </ul>
+      </div>
+      <div class="callout info"><strong>Add these two users, permission: Full</strong>
+        <span class="mono">embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com<br>access@embertribe.com</span>
+      </div>
+      <p class="dim" style="font-size:13.5px">The first is our reporting service account; the second is our team address. Full permission lets us pull impressions, clicks, and the exact queries your buyers use, so the content plan targets real demand instead of guesses.</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next step</div>
+      <h2>Let's get Jerry on the call and pressure-test this</h2>
+      <p>Read this before we meet, mark what you like and what you do not, and bring Jerry: his objections from the sales calls are the backbone of the whole content plan. Send over Search Console access and a first cut of your target verticals or accounts, and we will walk the plan and the scope of work together tomorrow morning.</p>
+      <a class="btn" href="mailto:sales@embertribe.com">Walk the plan tomorrow &#8594;</a>
+    </section>
+  </main>
 </div>
 
-<div class="proof-bar">
-  <div class="proof-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l6-4v17"/><path d="M11 21V10l8 4v7"/><path d="M15 11v0M15 15v0"/></svg></span><span><strong>11 years</strong>, everything built in-house</span></div>
-  <div class="proof-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span><span><strong>USA steel</strong>, full fabrication shop</span></div>
-  <div class="proof-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg></span><span><strong>General industry</strong> + construction, nationwide</span></div>
-  <div class="proof-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><span><strong>1 week</strong> on a custom build others quoted at 14&ndash;16</span></div>
-  <div class="proof-item"><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/></svg></span><span><strong>New</strong> mobile fall-protection system</span></div>
-</div>
-
-<hr class="divider" />
-
-<!-- THE GOAL -->
-<section id="goal">
-  <div class="section-label">What We Heard On The Call</div>
-  <h2>The goal is $10M. The job is to make the phone ring.</h2>
-  <p class="section-intro">You've built the product and the shop over 11 years and run $1.5&ndash;2.5M on almost no marketing, basically word of mouth, repeat customers, and Jerry working his book. With Jerry on board and new product coming online, the pieces to scale are finally coming together, and you believe once you clear $5M it takes off. What's missing is a repeatable way to get in front of buyers before they call a competitor. That's the piece we own.</p>
-
-  <div class="metrics-grid">
-    <div class="metric-card"><div class="label">Revenue today</div><div class="value"><span>$1.5&ndash;2.5M</span></div><div class="sub">11 years in, almost entirely word of mouth &amp; repeat business</div></div>
-    <div class="metric-card"><div class="label">Target</div><div class="value"><span>$10M</span> in 2&ndash;3 yrs</div><div class="sub">With $5M as the inflection where it starts to compound</div></div>
-    <div class="metric-card"><div class="label">Lead source today</div><div class="value"><span>~99%</span> referral</div><div class="sub">Someone tells someone, or Jerry knocks on a known door</div></div>
-    <div class="metric-card"><div class="label">Average ticket</div><div class="value"><span>$30&ndash;50K</span></div><div class="sub">Range runs $5K to $400K depending on the job</div></div>
-  </div>
-
-  <div class="two-col">
-    <div class="green-box">
-      <strong style="color:var(--green)">What EmberTribe owns.</strong> Visibility. Getting SafeLine in front of the right buyers and getting the phone to ring, through content that AI reads and third-party mentions that AI trusts. That's the whole scope, and we'll hold ourselves to it.
-    </div>
-    <div class="amber-box">
-      <strong style="color:var(--amber)">What you and Jerry own.</strong> Closing. You said it plainly: Jerry closes the deals. He took K-Strong from zero to $10M and grew Web Devices from ~$6M to $25M. Our job is to feed that machine; his team does the closing. A steady lead a day, turned into the $30&ndash;50K jobs that are your average, is how the $10M math builds.
-    </div>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- THE AEO GAP -->
-<section id="aeo">
-  <div class="section-label">What We Saw Live On The Call</div>
-  <h2>AI won't recommend you yet, and we can show you exactly why</h2>
-  <p class="section-intro">On the call we ran your buyers' real searches through AI. It took two tries and an explicit prompt of your company name before SafeLine surfaced at all. Unprompted, it recommended Eagle Industries, US Cargo Control, and generic debris mesh. That's not a reflection of your product, which is more sophisticated than most of what it named. It's a data problem, and it has two halves.</p>
-
-  <div class="two-col" style="margin-bottom:34px;">
-    <div class="danger-box">
-      <strong>Half one: your own content.</strong> AI answers by scraping your site. It found your product pages and your blog, but the blog is writing about safety culture and leadership instead of the products. It has almost nothing to quote on "personnel safety netting systems" or "debris netting," so it can't confidently put you forward.
-    </div>
-    <div class="danger-box">
-      <strong>Half two: third-party proof.</strong> When AI decides who to recommend, it leans on what other sites say, Reddit threads, industry roundups, "best safety netting supplier" listicles. Your competitors show up in those; you don't. Without that outside consensus, AI has no reason to name you over the sites it already trusts.
-    </div>
-  </div>
-
-  <div class="insight-box">
-    <p style="font-size:14.5px;color:var(--text);line-height:1.65;margin-bottom:10px;">The good news, and the reason this is worth doing: when we did name SafeLine, AI already described you accurately. It pulled your PSN, W1050, and DS1320 systems straight from your site and put you on the shortlist for "true construction safety netting rather than generic debris mesh." The raw material is there. It just isn't loud enough or backed by enough outside sources for AI to volunteer you.</p>
-    <p style="font-size:13px;color:var(--muted);">Fix both halves, your content and your citations, and you go from "only found when someone types your exact name" to "recommended when they describe the problem." These read-outs are directional, from live prompts on the call; we confirm search demand against your Google Search Console at kickoff.</p>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- BUYER & VERTICALS -->
-<section id="buyer">
-  <div class="section-label">Who We're Actually Selling To</div>
-  <h2>Niche buyers, broad industries, and fabrication is the prize</h2>
-  <p class="section-intro">You corrected us on the call, and it changes the plan: you're a general-industry manufacturer at least as much as a construction one. Netting skews construction, but general industry spends more on safety equipment, and it's where most of your other products live. Underneath all of it, custom fabrication is where the real margin is, and it's the least visible thing you do.</p>
-
-  <div class="feature-grid" style="margin-bottom:32px;">
-    <div class="feature-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5.4 5.4l-7 7a2.8 2.8 0 0 1-4-4l7-7z"/><path d="m9 9-6 6"/></svg></div><h4>Custom fabrication (the profit engine)</h4><p>Power plants, nitrogen towers, conveyor guarding, aerospace and helicopter platforms, one-off structures like the Knoxville Zoo build. High margin, high differentiation, and almost invisible online today.</p></div>
-    <div class="feature-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20"/><path d="M4 18v-3a8 8 0 0 1 16 0v3"/><path d="M10 8V4h4v4"/></svg></div><h4>Safety &amp; debris netting</h4><p>Personnel and debris netting for construction and industrial sites, your PSN / W1050 / DS1320 systems. The highest-volume searches you have, and where buyers already sometimes find you.</p></div>
-    <div class="feature-card"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M3 14h18M9 4v16M15 4v16"/></svg></div><h4>Rack &amp; materials-handling safety</h4><p>Pallet-rack systems and materials-handling safety for warehouses and distribution, an audit-driven, recurring, multi-site buyer.</p></div>
-  </div>
-
-  <div class="insight-box">
-    <p style="font-size:14px;color:var(--text);line-height:1.65;"><strong style="color:var(--brand-light)">The account approach.</strong> Because the audience is niche but spread across industries, we don't spray. We pick the verticals you win in, power, aerospace/aviation, fabrication, material handling, plus construction for netting, and build content and mentions around the exact problems those buyers describe. When you and Jerry name a target-account list, the content doubles as air cover for his outreach: he calls, and the AI answer and the search result both back him up.</p>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- COMPETITORS -->
-<section id="competitors">
-  <div class="section-label">The Competitive Landscape</div>
-  <h2>Your competitors educate the buyer. None of them own the AI answer yet.</h2>
-  <p class="section-intro">You named the field on the call, and we looked at each one. The pattern is clear: everyone runs a blog and an FAQ to educate buyers, but thinly, one or two posts a month, and no one has locked up the AI recommendation. That's the opening. We reverse-engineer what's working for them and insert SafeLine into the same answers, with more volume and better third-party proof.</p>
-
-  <div class="table-wrap">
-  <table>
-    <thead><tr><th>Competitor</th><th>What they are</th><th>Where you beat them</th></tr></thead>
-    <tbody>
-      <tr><td class="bold">FallProof Systems</td><td>Trenton NJ, since 1996. Turnkey fall protection + safety netting, assessment through certification. Direct competitor.</td><td>Your in-house fabrication and turnaround speed on custom structures</td></tr>
-      <tr><td class="bold">Strongman</td><td>Since 1974. Big player in construction debris containment &amp; personnel nets. Netting-first.</td><td>You build the engineered structure; they supply the net</td></tr>
-      <tr><td class="bold">Trio Nets</td><td>Houston TX. Manufactures safety, debris &amp; personnel netting, with install services. Direct competitor.</td><td>Broader product range and general-industry fabrication</td></tr>
-      <tr><td class="bold">US Netting / Eagle / US Cargo</td><td>The catalog and distributor names AI surfaces by default today, organically or through ads.</td><td>Real engineering and custom work vs. off-the-shelf catalog</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div class="insight-box" style="margin-top:16px;"><strong style="color:var(--brand-light)">The wedge:</strong> the thing none of them lead with is that SafeLine fabricates the structure in-house and turns custom work around in days, as the Knoxville job showed. That story is one the market and the AI don't know yet, and it's exactly the kind of specific, credible claim that earns citations and recommendations. We make it impossible to miss.</div>
-</section>
-
-<hr class="divider" />
-
-<!-- STRATEGY -->
-<section id="strategy">
-  <div class="section-label">The Engine</div>
-  <h2>Answer Engine Optimization, built on three inputs</h2>
-  <p class="section-intro">AEO is the crux of this proposal, exactly the outcome you described: be the answer AI gives. Getting there means feeding the answer engines the three things they use to decide who to recommend. We run all three together so they reinforce each other.</p>
-
-  <div class="steps" style="margin-bottom:36px;">
-    <div class="step"><div class="step-number">Input 01</div><h4>Product content on your site</h4><ul><li>Product- and question-led articles</li><li>Answers the questions your sales team hears</li><li>Disambiguates the three "safety nettings"</li><li>The pages AI quotes when it answers</li></ul></div>
-    <div class="step"><div class="step-number">Input 02</div><h4>Reddit mentions</h4><ul><li>Real answers in trade &amp; industry subs</li><li>SafeLine named where it genuinely fits</li><li>Reddit is licensed by the answer engines</li><li>The third-party voice AI weighs heavily</li></ul></div>
-    <div class="step"><div class="step-number">Input 03</div><h4>Listicle &amp; roundup placements</h4><ul><li>Pursue spots on "best supplier" lists</li><li>The roundups AI pulls its shortlist from</li><li>Industry directories &amp; comparison pages</li><li>Outside proof that you belong in the answer</li></ul></div>
-  </div>
-
-  <div class="insight-box"><strong style="color:var(--brand-light)">How it compounds:</strong> your product pages give AI something accurate to quote, Reddit and listicles give it the outside consensus it needs to feel safe recommending you, and clean structure (schema, entity-rich copy) makes you easy to cite. A buyer searches "personnel safety netting systems," AI reads all three, and SafeLine moves from unmentioned to shortlisted to recommended. We track that shift every month.</div>
-</section>
-
-<hr class="divider" />
-
-<!-- CONTENT -->
-<section id="content">
-  <div class="section-label">The Content Plan</div>
-  <h2>10x the blog, and point it at the products</h2>
-  <p class="section-intro">On the call we agreed the current blog is the wrong shape: articles about safety culture and leadership don't get you into meetings. The fix is volume and focus, roughly 40&ndash;50 articles a month, each one built around a product you sell and a question a real buyer asks. That's how you give AI enough to quote, and how you out-publish competitors running one or two posts a month.</p>
-
-  <div class="tier-grid" style="margin-bottom:20px;">
-    <div class="tier-card tier-t1">
-      <div class="tier-head">Tier 1 &middot; Pillar Pages</div>
-      <div class="tier-body">
-        <div class="tier-kw">Built first &middot; rank-and-convert</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">One hub per product line and per priority vertical. These earn the citations and convert the buyer.</p>
-        <ul><li>Netting, fabrication, rack, mobile</li><li>2,000&ndash;3,500 word pages</li><li>Product spec + application depth</li><li>Primary conversion + link target</li></ul>
-        <div style="margin-top:12px;padding:8px 12px;background:var(--brand-dim);border-radius:8px;font-size:11.5px;font-style:italic;color:var(--brand-light);">Example: "Personnel Safety Netting Systems: An Engineer's Guide"</div>
-      </div>
-    </div>
-    <div class="tier-card tier-t2">
-      <div class="tier-head">Tier 2 &middot; Cluster Pages</div>
-      <div class="tier-body">
-        <div class="tier-kw">Topical authority</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">Comparisons and application pages that build depth and disambiguate your category.</p>
-        <ul><li>Product &amp; use-case comparisons</li><li>1,200&ndash;2,000 words each</li><li>By industry: power, aerospace, warehouse</li><li>CTA to a quote / spec conversation</li></ul>
-        <div style="margin-top:12px;padding:8px 12px;background:rgba(143,217,126,0.14);border-radius:8px;font-size:11.5px;font-style:italic;color:#bfe6b0;">Example: "Debris Netting vs. Personnel Netting vs. Scaffold Mesh"</div>
-      </div>
-    </div>
-    <div class="tier-card tier-t3">
-      <div class="tier-head">Tier 3 &middot; Question Posts</div>
-      <div class="tier-body">
-        <div class="tier-kw">The Q&amp;A layer</div>
-        <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">The sales team's real questions, answered. Fast to publish, ideal for AI answers.</p>
-        <ul><li>The bulk of the 40&ndash;50 / month</li><li>800&ndash;1,400 words each</li><li>FAQ schema for AI capture</li><li>Straight from Jerry's call objections</li></ul>
-        <div style="margin-top:12px;padding:8px 12px;background:rgba(224,165,60,0.12);border-radius:8px;font-size:11.5px;font-style:italic;color:var(--amber);">Example: "How Fast Can a Custom Fall-Protection Structure Ship?"</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="insight-box" style="margin-bottom:34px;"><strong style="color:var(--brand-light)">The core of it, in your words:</strong> you and Jerry are on the sales calls, so you already know the questions buyers actually ask. Those questions are the content plan. Each answer becomes a page AI can quote, which is how you get ChatGPT to frame you the way Jerry would.</div>
-
-  <div class="section-label">Clusters</div>
-  <h2>Five clusters, led by netting and fabrication</h2>
-  <p class="section-intro">Cluster 1 is built first: it targets the exact terms you told us buyers type, and it's where you already occasionally surface. Fabrication is cluster 2 because it's the margin and the least-visible story. Final page-by-page mapping is confirmed against Search Console at kickoff and delivered in a companion workbook.</p>
-
-  <div class="table-wrap">
-  <table>
-    <thead><tr><th>#</th><th>Cluster</th><th>Tier 1 Pillar</th><th class="center">T2</th><th class="center">T3</th><th>Buyer</th><th>Priority</th></tr></thead>
-    <tbody>
-      <tr><td class="bold">1</td><td class="bold">Safety &amp; Debris Netting Systems</td><td>Personnel Safety Netting Systems: Complete Guide</td><td class="center">6</td><td class="center">12</td><td>Construction + industrial</td><td><span class="pill critical">FRONT-LOADED</span></td></tr>
-      <tr><td class="bold">2</td><td class="bold">Custom Fabrication &amp; Engineered Structures</td><td>Custom Fall-Protection Fabrication: What We Build</td><td class="center">5</td><td class="center">10</td><td>General industry</td><td><span class="pill high">HIGH</span></td></tr>
-      <tr><td class="bold">3</td><td class="bold">Rack &amp; Materials-Handling Safety</td><td>Pallet Rack &amp; Warehouse Safety Systems</td><td class="center">4</td><td class="center">8</td><td>Warehouse / distribution</td><td><span class="pill high">HIGH</span></td></tr>
-      <tr><td class="bold">4</td><td class="bold">Mobile Fall Protection &amp; Industrial Applications</td><td>Mobile Fall-Protection Systems for General Industry</td><td class="center">4</td><td class="center">8</td><td>Power, aerospace, conveyor</td><td><span class="pill medium">MEDIUM</span></td></tr>
-      <tr><td class="bold">5</td><td class="bold">Compliance &amp; Buyer Questions</td><td>OSHA &amp; ANSI Netting Requirements, Explained</td><td class="center">4</td><td class="center">8</td><td>All segments</td><td><span class="pill medium">MEDIUM</span></td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <h3 class="block" style="margin-top:26px;">Cluster 1 sample keywords <span class="pill critical" style="margin-left:6px;">Built first</span></h3>
-  <div class="table-wrap">
-  <table>
-    <thead><tr><th>Page</th><th>Tier</th><th>Target Query (your buyers' words)</th><th>Intent</th></tr></thead>
-    <tbody>
-      <tr><td>Personnel safety netting systems: complete guide</td><td>Pillar</td><td>personnel safety netting systems</td><td>Solution</td></tr>
-      <tr><td>Safety net systems for large industrial jobs</td><td>T2</td><td>safety net systems</td><td>Solution</td></tr>
-      <tr><td>Debris netting systems: specs &amp; when to use</td><td>T2</td><td>debris netting system</td><td>Solution</td></tr>
-      <tr><td>Debris netting vs. personnel netting vs. scaffold mesh</td><td>T2</td><td>types of safety netting</td><td>Decision</td></tr>
-      <tr><td>SafeLine PSN, W1050 &amp; DS1320 systems compared</td><td>T2</td><td>construction safety netting system</td><td>Product</td></tr>
-      <tr><td>Safety netting for bridges, conveyors &amp; towers</td><td>T3</td><td>industrial safety netting</td><td>Application</td></tr>
-      <tr><td>What does a safety netting system cost?</td><td>T3</td><td>safety netting cost</td><td>Commercial</td></tr>
-      <tr><td>Vertical debris netting for scaffolding</td><td>T3</td><td>vertical debris netting</td><td>Application</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p style="font-size:12.5px;color:var(--muted);margin-top:16px;font-style:italic;">Clusters 2&ndash;5 follow the same shape, custom fabrication capabilities and speed, rack safety and audit prep, mobile and general-industry applications, and the OSHA/ANSI compliance questions your sales team fields daily. Full page-by-page keyword mapping lives in the companion workbook.</p>
-</section>
-
-<hr class="divider" />
-
-<!-- REDDIT + LISTICLES -->
-<section id="reddit">
-  <div class="section-label">The Third-Party Proof</div>
-  <h2>Reddit and listicles are what AI trusts about you</h2>
-  <p class="section-intro">Your own site tells AI what you sell. Reddit threads and industry roundups tell AI whether to believe you, and the answer engines pay to license that content. This is the half your competitors haven't locked down, and it's how the recommendation actually tips in your favor.</p>
-
-  <div class="stat-row" style="margin-bottom:34px;">
-    <div class="stat-card"><div class="big">$60M<span style="font-size:16px;">/yr</span></div><div class="desc">Google pays Reddit to train AI Overviews &amp; Gemini</div></div>
-    <div class="stat-card"><div class="big">$70M<span style="font-size:16px;">/yr</span></div><div class="desc">OpenAI pays Reddit to help power ChatGPT</div></div>
-    <div class="stat-card"><div class="big">~21%</div><div class="desc">Reddit's share of Google AI Overview citations</div></div>
-    <div class="stat-card"><div class="big">~47%</div><div class="desc">Perplexity's cited sources that come from Reddit</div></div>
-  </div>
-
-  <div class="steps" style="margin-bottom:34px;">
-    <div class="step"><div class="step-number">Step 01</div><h4>Map communities</h4><ul><li>Construction &amp; safety subs</li><li>Manufacturing &amp; fabrication subs</li><li>Warehouse &amp; industry subs</li><li>High AI-citation threads</li></ul></div>
-    <div class="step"><div class="step-number">Step 02</div><h4>Find the threads</h4><ul><li>Ranking on Google already</li><li>Cited by AI already</li><li>"What netting do you use?"</li><li>Supplier &amp; spec questions</li></ul></div>
-    <div class="step"><div class="step-number">Step 03</div><h4>Answer for real</h4><ul><li>Genuine expert answers</li><li>Credentials disclosed</li><li>No fake accounts or shilling</li><li>Your sign-off on gray areas</li></ul></div>
-    <div class="step"><div class="step-number">Step 04</div><h4>Pursue listicle spots</h4><ul><li>"Best safety netting supplier" lists</li><li>Industry roundups &amp; directories</li><li>Comparison pages AI reads</li><li>Tracked in your dashboard</li></ul></div>
-  </div>
-
-  <div class="table-wrap">
-  <table>
-    <thead><tr><th>Community</th><th>Segment</th><th>Why it fits</th></tr></thead>
-    <tbody>
-      <tr><td class="bold">r/Construction, r/SafetyProfessionals</td><td>Core</td><td>Jobsite safety, netting, and supplier talk, with heavy AI citation</td></tr>
-      <tr><td class="bold">r/Manufacturing, r/Welding, r/Machinists</td><td>General industry / fab</td><td>Your real base: fabrication, custom builds, industrial safety</td></tr>
-      <tr><td class="bold">r/OSHA, r/AskEngineers</td><td>Compliance / spec</td><td>Requirement and specification questions AI leans on</td></tr>
-      <tr><td class="bold">r/warehouse, r/logistics</td><td>Materials handling</td><td>Rack safety, audit fixes, falling-product prevention</td></tr>
-      <tr><td class="bold">r/electricians, r/IWCF trades</td><td>Adjacent trades</td><td>Crews working at height who spec tie-off and netting</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div class="green-box" style="margin-top:20px;">
-    <strong style="color:var(--green)">The rule behind every mention:</strong> trade communities spot fake promotion instantly, and getting caught would do real damage to your name. So we play it straight, real answers, credentials disclosed, your sign-off on anything borderline. Your track record is genuine, so honest answers do the work.
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- ROADMAP -->
-<section id="roadmap">
-  <div class="section-label">What To Expect</div>
-  <h2>Results on a 90 to 180 day horizon</h2>
-  <p class="section-intro">You asked for a clear read on what comes back and when. Content and citations take a little time to move, so here's the honest timeline. These are directional projections, and the scope of work spells out the deliverables behind them.</p>
-
-  <div class="timeline">
-    <div class="timeline-item"><div class="month">Month 1</div><div class="milestone">Search Console + keyword validation, competitor teardown (FallProof, Strongman, Trio). Netting &amp; fabrication pillars built first. First Reddit answers and a baseline AI-visibility read.</div></div>
-    <div class="timeline-item"><div class="month">Month 2</div><div class="milestone">Content volume ramps toward 40&ndash;50/mo across netting, fabrication and rack. First listicle and directory outreach. Reddit expands into manufacturing &amp; industry subs.</div></div>
-    <div class="timeline-item"><div class="month">Day 90</div><div class="milestone">Early lift on "safety netting / debris netting" terms and first AI mentions without prompting your name. Product models start showing up in answers.</div></div>
-    <div class="timeline-item"><div class="month">Day 180</div><div class="milestone">Impact report: content library live, ranking &amp; AI-citation trajectory vs. baseline, and a read on which vertical is converting to calls fastest.</div></div>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="section-label">Investment</div>
-  <h2>Content + AEO, built for your $3&ndash;5K budget</h2>
-  <p class="section-intro">You said $3&ndash;5K, likely starting on the 3K side, and that's the right range for a content-led AEO push. The recommended start delivers the content volume we discussed plus the third-party placements that tip the AI answer, and it lands on the low end of your budget. Priced per EmberTribe's standard rate card.</p>
-
-  <div class="pricing-grid">
-    <div class="plan-card">
-      <div class="plan-name">Content Core</div>
-      <div class="plan-price">$1,750<span>/mo</span></div>
-      <div class="plan-sub">Start here if you want content first</div>
-      <ul class="plan-features">
-        <li>50 ClusterMagic articles / mo</li>
-        <li>Product- and question-led articles</li>
-        <li>Entity-rich, FAQ schema for AI capture</li>
-        <li>Published to your site</li>
-        <li>Monthly ranking + visibility report</li>
-      </ul>
-    </div>
-    <div class="plan-card featured">
-      <div class="plan-name" style="display:flex;align-items:center;gap:8px;">Content + AEO <span style="background:var(--brand-light);color:#0d1509;font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:2px 7px;border-radius:20px;">Recommended</span></div>
-      <div class="plan-price">$3,150<span>/mo</span></div>
-      <div class="plan-sub">On the 3K side of your budget &middot; best fit</div>
-      <ul class="plan-features">
-        <li>50 ClusterMagic articles / mo</li>
-        <li>Monthly Reddit AEO placements + listicle outreach</li>
-        <li>Targets the sources AI actually cites</li>
-        <li>Monthly AI-visibility scorecard</li>
-        <li>You work directly with T.J. and team</li>
-      </ul>
-    </div>
-    <div class="plan-card">
-      <div class="plan-name">Scale (when ready)</div>
-      <div class="plan-price">$3,450&ndash;5,250<span>/mo</span></div>
-      <div class="plan-sub">Bundled AI Visibility tiers, adds backlinks</div>
-      <ul class="plan-features">
-        <li>Growth Engine: 25 articles + 8 placements + 2 DA40 links</li>
-        <li>Authority Accelerator: 40 articles + 12 placements + 2 DA50 links</li>
-        <li>Editorial backlinks bundled in</li>
-        <li>Step up as revenue grows toward $5M</li>
-      </ul>
-    </div>
-  </div>
-
-  <div style="margin-top:24px;" class="amber-box">
-    <strong style="color:var(--amber)">Crawl, walk, run.</strong> We'd start on Content + AEO at $3,150 to prove the model, then add editorial backlinks or move into a bundled AI Visibility tier as the calls start coming in. Those bundled tiers trade a little article volume for backlinks and extra placements that matter more once you're ranking. Committed monthly output is the articles plus the Reddit placements; listicle and roundup spots we actively pursue, since their editors control inclusion. No six-figure upfront, and no long lock-in, month-to-month stays on the table. The scope of work will show exactly what ships each month and the results expected across the first 90 to 180 days.
-  </div>
-
-  <p style="font-size:12px;color:var(--muted);margin-top:16px;font-style:italic;">All pricing per EmberTribe's standard rate card. No performance guarantees. Ranking, traffic, and AI-citation figures in this deck are directional projections, not guarantees. A formal statement of work follows after we review your Search Console data.</p>
-</section>
-
-<div class="cta-section">
-  <div class="section-label" style="margin-bottom:14px;">Next Step</div>
-  <h2>Let's get Jerry on the call and pressure-test this</h2>
-  <p>Read this before we meet, mark what you like and what you don't, and bring Jerry, his objections from the sales calls are the backbone of the whole content plan. Send over Google Search Console access and a first cut of your target verticals or accounts, and we'll walk the plan and the scope of work together tomorrow morning.</p>
-</div>
-
-<footer>
-  AEO + content strategy prepared for <strong>Ted Wilkinson</strong> and <strong>Jerry (Jay Lawton)</strong>, SafeLine FP (safelinefp.com), by <strong>EmberTribe</strong> &middot; Revised after the Sept 9, 2026 call &middot; Confidential
-</footer>
-
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.innerHTML = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
 </body>
 </html>
