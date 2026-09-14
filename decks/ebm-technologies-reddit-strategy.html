@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EBM Technologies — Reddit Strategy · EmberTribe</title>
+<style>
+/* EmberTribe brand type — Quatro, served from decks/fonts/ (flat deck → "fonts/...") */
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  /* EmberTribe frame — canonical tokens */
+  --ember-red:#FF333C;      /* Candy Apple Red */
+  --ember-dark:#e62831;     /* red hover/press */
+  --ember-yellow:#FFB000;   /* Honey Yellow accent */
+  --et-black:#000000;
+
+  /* EBM client accent — single accent only, never the theme */
+  --accent:#00BDFF;
+  --accent-mid:#0090c0;
+  --accent-soft:#e6f8ff;
+
+  /* Universal palette */
+  --text:#232323;
+  --text-light:#6b6b6b;
+  --light-bg:#f7f7f7;
+  --card-bg:#ffffff;
+  --border:#e7e7e7;
+  --green:#2FC171;
+  --yellow:#FFB000;
+  --red:#FF333C;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif;
+  background:var(--ember-red);
+  overflow:hidden; height:100vh; width:100vw;
+  color:var(--text); line-height:1.6;
+}
+
+.deck { width:100vw; height:100vh; position:relative; }
+
+.slide {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:none; flex-direction:column; padding:48px 64px;
+  overflow-y:auto; background:var(--card-bg);
+}
+.slide.active { display:flex; }
+
+/* Red cover slides — solid Candy Apple Red field, white headline, black labels */
+.slide.dark {
+  background:linear-gradient(135deg, var(--ember-red) 0%, var(--ember-dark) 100%);
+  color:#ffffff;
+}
+.slide.dark .subtitle { color:rgba(255,255,255,0.9); }
+.slide.dark .slide-label { color:var(--et-black); }
+.slide.dark .stat-card { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.28); }
+.slide.dark .stat-label { color:rgba(255,255,255,0.85); }
+.slide.dark .logo-ember { color:#ffffff; }
+.slide.dark .logo-date { color:rgba(255,255,255,0.6); }
+.slide.dark .logo-row { border-top-color:rgba(255,255,255,0.25); }
+
+/* Typography */
+h1 { font-size:52px; font-weight:700; letter-spacing:-1px; line-height:1.05; margin-bottom:14px; }
+h2 { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1.15; margin-bottom:8px; color:var(--et-black); }
+h3 { font-size:20px; font-weight:700; margin-bottom:8px; color:var(--et-black); }
+h4 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--et-black); }
+
+.subtitle { font-size:19px; font-weight:400; color:var(--text-light); max-width:820px; margin-bottom:22px; line-height:1.5; }
+.slide-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--ember-red); margin-bottom:10px; }
+
+/* Stat cards */
+.stats-row { display:flex; gap:16px; margin:16px 0; flex-wrap:wrap; }
+.stat-card { flex:1; min-width:150px; background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:20px 24px; }
+.stat-value { font-size:38px; font-weight:700; line-height:1.05; margin-bottom:4px; }
+.stat-value.white { color:#fff; }
+.stat-value.accent { color:var(--accent); }
+.stat-label { font-size:13px; font-weight:500; color:var(--text-light); }
+
+/* Annotations */
+.annotation { background:#fff5f5; border-left:3px solid var(--ember-red); border-radius:0 8px 8px 0; padding:13px 18px; font-size:14.5px; margin:14px 0; line-height:1.55; }
+.annotation strong { color:var(--ember-dark); }
+.annotation.info { background:var(--accent-soft); border-left-color:var(--accent); }
+.annotation.info strong { color:var(--accent-mid); }
+.annotation.success { background:#e9f9f0; border-left-color:var(--green); }
+.annotation.success strong { color:#1f8a4c; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+th.accent { background:var(--accent); }
+td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+tbody tr:nth-child(even) td { background:var(--light-bg); }
+.center { text-align:center; }
+.check { color:var(--green); font-weight:700; }
+
+/* Columns */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; flex:1; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
+
+/* Channel / strategy cards */
+.channel-card { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.channel-card .channel-icon { font-size:26px; margin-bottom:8px; }
+.channel-card h3 { margin-bottom:12px; }
+.channel-card ul { list-style:none; padding:0; }
+.channel-card ul li { position:relative; padding-left:18px; margin-bottom:7px; font-size:14px; line-height:1.5; }
+.channel-card ul li::before { content:"—"; position:absolute; left:0; top:0; color:var(--accent); font-weight:700; }
+.channel-card .sub-list li::before { color:var(--ember-red); }
+
+/* Body bullet lists */
+ul.body { list-style:none; padding:0; margin:6px 0; }
+ul.body li { position:relative; padding-left:20px; margin-bottom:8px; font-size:16px; line-height:1.55; }
+ul.body li::before { content:"—"; position:absolute; left:0; color:var(--ember-red); font-weight:700; }
+
+/* Prompt grid */
+.prompt-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin:14px 0; }
+.prompt-grid .q { border:1px solid var(--border); border-radius:12px; padding:13px 16px; font-size:14.5px; color:var(--text); line-height:1.45; background:var(--light-bg); }
+.prompt-grid .q b { color:var(--accent-mid); font-weight:700; }
+.prompt-grid .q .qp { display:block; font-size:9.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-light); font-weight:700; margin-top:7px; }
+
+/* Quotes */
+.quote { border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:15px 20px; margin:11px 0; background:#fff; }
+.quote p { font-size:15px; line-height:1.6; color:var(--text); margin:0; font-style:italic; }
+.quote .src { display:block; font-style:normal; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-light); margin-top:10px; font-weight:700; }
+
+/* Thread card */
+.thread { border:1px solid var(--border); border-radius:12px; padding:18px 22px; background:var(--light-bg); margin-bottom:14px; }
+.thread .th-tag { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent-mid); margin-bottom:6px; }
+.thread .th-title { font-size:17px; font-weight:700; color:var(--et-black); margin-bottom:6px; }
+.thread .th-body { font-size:14px; color:var(--text-light); line-height:1.55; }
+
+/* Timeline */
+.timeline { display:flex; gap:0; margin:16px 0; flex:1; }
+.timeline-phase { flex:1; border:1px solid var(--border); padding:22px; }
+.timeline-phase:first-child { border-radius:12px 0 0 12px; }
+.timeline-phase:last-child { border-radius:0 12px 12px 0; }
+.phase-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--accent); margin-bottom:6px; }
+.timeline-phase h4 { margin-bottom:12px; }
+.timeline-phase ul { list-style:none; padding:0; }
+.timeline-phase ul li { position:relative; padding-left:16px; margin-bottom:7px; font-size:13.5px; line-height:1.45; }
+.timeline-phase ul li::before { content:"—"; position:absolute; left:0; color:var(--ember-red); font-weight:700; }
+.phase-cost { font-size:15px; font-weight:700; color:var(--accent-mid); margin-top:14px; }
+
+/* Pills */
+.pill { display:inline-block; padding:3px 11px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+.pill.acc { background:var(--accent-soft); color:var(--accent-mid); }
+.pill.rec { background:var(--ember-yellow); color:#3a2600; }
+
+/* Stat strip */
+.stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0; }
+.stat-strip .s { border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+.stat-strip .s .v { font-weight:700; font-size:30px; color:var(--accent); line-height:1; }
+.stat-strip .s .k { font-size:12.5px; color:var(--text-light); margin-top:8px; line-height:1.4; }
+
+/* Utility */
+.flex-grow { flex:1; }
+.mt-16 { margin-top:16px; }
+.accent { color:var(--accent-mid); }
+
+/* Logo row */
+.logo-row { margin-top:auto; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.logo-ember { font-size:14px; font-weight:700; letter-spacing:2px; color:var(--ember-red); }
+.logo-date { font-size:12px; color:var(--text-light); font-style:italic; }
+
+/* Progress bar */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg, var(--ember-red), var(--accent)); z-index:100; transition:width 0.3s ease; }
+
+/* Navigation */
+.nav { position:fixed; bottom:24px; right:32px; display:flex; align-items:center; gap:12px; z-index:100; }
+.nav button { width:40px; height:40px; border-radius:8px; border:1px solid rgba(0,0,0,0.15); background:rgba(0,0,0,0.55); color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.nav button:hover { background:rgba(0,0,0,0.75); transform:scale(1.05); }
+.counter { font-size:13px; font-weight:600; color:#fff; background:rgba(0,0,0,0.45); padding:6px 14px; border-radius:6px; }
+
+@media (max-width:1024px) {
+  .slide { padding:32px 40px; }
+  h1 { font-size:38px; } h2 { font-size:28px; }
+  .two-col, .three-col, .prompt-grid { grid-template-columns:1fr; }
+  .timeline { flex-direction:column; }
+  .timeline-phase { border-radius:0; }
+  .timeline-phase:first-child { border-radius:12px 12px 0 0; }
+  .timeline-phase:last-child { border-radius:0 0 12px 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Red cover) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">Reddit Strategy · AI Visibility</p>
+      <h1>Own the AI answer for<br>outpatient PACS</h1>
+      <p class="subtitle">When a clinic asks ChatGPT, Perplexity, or Google's AI which PACS to buy, the answer is built from Reddit. This is how we make mAIn PACS part of it.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value white">5</div>
+          <div class="stat-label">Content pillars mirrored on Reddit</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">12</div>
+          <div class="stat-label">Subreddits where PACS buyers live</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">2</div>
+          <div class="stat-label">Threads already citing mAIn PACS in AI answers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">5<span style="font-size:20px;">/mo</span></div>
+          <div class="stat-label">Brand mentions in your current scope</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for the EBM Technologies team &mdash; Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHY REDDIT -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Shift</p>
+    <h2>Buyers ask AI. AI reads Reddit.</h2>
+    <p class="subtitle">Research for a PACS platform now starts with an AI assistant, not a Google search page. And when those engines answer, they lean on Reddit harder than almost any other source they trust.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>What changed</h3>
+        <ul class="body">
+          <li>Buyers skip the ten blue links and ask an assistant to just tell them the shortlist.</li>
+          <li>AI engines cite Reddit constantly — real practitioners, not vendor marketing.</li>
+          <li>One well-placed thread can feed dozens of AI answers for months.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Why it lands for mAIn PACS</h3>
+        <ul class="body">
+          <li>PACS buyers are technical. They trust an admin's take over a product page.</li>
+          <li>The niche is small — a handful of good threads can own the whole category.</li>
+          <li>mAIn PACS is already getting pulled into answers. We're building on a live signal, not from zero.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The goal:</strong> ask any AI which PACS fits a small outpatient center, and mAIn PACS is in the answer — by name, with the right reasons.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 3: TARGET PROMPTS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Target Prompts</p>
+    <h2>The questions we want to win</h2>
+    <p class="subtitle">Broadened to mirror the five content pillars — not just outpatient PACS. Every seeded thread aims at the same buying queries your articles target, so Reddit and search reinforce each other.</p>
+    <div class="prompt-grid">
+      <div class="q">Best PACS for <b>outpatient imaging centers</b>?<span class="qp">PACS Platform &amp; Deployment</span></div>
+      <div class="q">Best <b>cloud-based PACS</b> for a <b>small clinic</b> with limited IT?<span class="qp">PACS Platform &amp; Deployment</span></div>
+      <div class="q">Best <b>vendor neutral archive (VNA)</b> vendors?<span class="qp">Standards &amp; Interoperability</span></div>
+      <div class="q">Which vendor has the best <b>PACS for teleradiology</b>?<span class="qp">DICOM Viewers &amp; Image Access</span></div>
+      <div class="q">Best <b>zero-footprint / cloud DICOM viewer</b>?<span class="qp">DICOM Viewers &amp; Image Access</span></div>
+      <div class="q">Best <b>medical image sharing</b> companies?<span class="qp">DICOM Viewers &amp; Image Access</span></div>
+      <div class="q">Best <b>AI-enabled PACS</b> / AI medical imaging platforms?<span class="qp">Cloud, AI &amp; Compliance</span></div>
+      <div class="q">Best <b>RIS vendors</b> for imaging practices?<span class="qp">Standards &amp; Interoperability</span></div>
+      <div class="q">Best <b>cloud PACS for OEM / VAR partners</b>?<span class="qp">PACS Platform &amp; Deployment</span></div>
+      <div class="q">Best <b>all-in-one platform</b> for viewing, reporting, storage, sharing?<span class="qp">PACS Platform &amp; Deployment</span></div>
+    </div>
+    <div class="annotation info">
+      <strong>Why it's paired:</strong> when AI answers "best VNA vendors" or "PACS for teleradiology," it can now find a cited Reddit thread <em>and</em> the matching EBM article saying the same thing — two sources, one story.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 4: SUBREDDITS -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Where We Show Up</p>
+    <h2>Twelve subreddits, three circles of buyers</h2>
+    <p class="subtitle">We work outward from the people who choose the PACS, to the people who use it every day, to the broad rooms that add reach and reinforce the signal.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🖥️</div>
+        <h3>Admins &amp; IT</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">The decision-makers</p>
+        <ul>
+          <li>r/PACSAdmin</li>
+          <li>r/healthIT</li>
+          <li>r/HealthInformatics</li>
+          <li>r/healthtech</li>
+          <li>r/digitalhealth</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🩻</div>
+        <h3>Techs &amp; modalities</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">The daily users and influencers</p>
+        <ul>
+          <li>r/RadiologicTechnology</li>
+          <li>r/sonographers</li>
+          <li>r/ultrasound</li>
+          <li>r/MRI</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🏥</div>
+        <h3>Broad healthcare</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Reach and reinforcement</p>
+        <ul>
+          <li>r/medicaldevices</li>
+          <li>r/medicine</li>
+          <li>r/healthcare</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The beachhead:</strong> r/PACSAdmin is the smallest and most on-topic room — and it's already where AI is citing mAIn PACS. We win there first, then widen.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 5: PROOF -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Already Working</p>
+    <h2>mAIn PACS is already in the answer</h2>
+    <p class="subtitle">Two r/PACSAdmin threads are already being cited by AI search for our target prompts — the mentions below are the exact language getting pulled into recommendations.</p>
+    <div class="stat-strip">
+      <div class="s"><div class="v">2</div><div class="k">Threads already cited by AI</div></div>
+      <div class="s"><div class="v">6</div><div class="k">mAIn PACS mentions being surfaced</div></div>
+      <div class="s"><div class="v">r/PACSAdmin</div><div class="k">Where it's happening today</div></div>
+    </div>
+    <div class="quote">
+      <p>"mAIn PACS' open DICOM architecture and combination of local storage with cloud connectivity are interesting from an admin standpoint."</p>
+      <span class="src">Cited by AI search &mdash; r/PACSAdmin</span>
+    </div>
+    <div class="quote">
+      <p>"Its edge-to-cloud architecture seems relevant for a multi-facility system that wants a hybrid setup now and a gradual transition toward cloud."</p>
+      <span class="src">Cited by AI search &mdash; r/PACSAdmin</span>
+    </div>
+    <div class="quote">
+      <p>"If cost is making some of the larger vendors difficult to justify, mAIn PACS could be worth putting through the demo process."</p>
+      <span class="src">Cited by AI search &mdash; r/PACSAdmin</span>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 6: PLAYBOOK -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">The Playbook</p>
+    <h2>How we build the presence</h2>
+    <p class="subtitle">Three moves, run every month. Helpful first, brand second — that's the only way it survives Reddit and earns an AI citation.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">🎧</div>
+        <h3>Listen</h3>
+        <ul>
+          <li>Monitor the 12 subreddits for live PACS-buying threads.</li>
+          <li>Track which AI answers already cite Reddit for our prompts.</li>
+          <li>Spot the gaps where mAIn PACS should be — and isn't yet.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">💬</div>
+        <h3>Contribute</h3>
+        <ul>
+          <li>Add genuinely useful replies to existing threads.</li>
+          <li>Name mAIn PACS only where it honestly fits the question.</li>
+          <li>Lead with the buyer's problem, not the pitch.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">🌱</div>
+        <h3>Seed</h3>
+        <ul>
+          <li>Plant net-new threads that pose the buying question.</li>
+          <li>Give AI a clean, on-topic source to cite.</li>
+          <li>Refresh the threads AI is already pulling from.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>The line we hold:</strong> no fake accounts, no spam, no dumping links. Real, on-topic help that happens to mention the right product — that's what Reddit rewards and what AI repeats.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 7: GUARDRAILS -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Guardrails</p>
+    <h2>The rules every mention follows</h2>
+    <p class="subtitle">The same claims discipline that governs the article program. A mention that breaks one of these does more damage than the citation is worth — so they're non-negotiable for anyone posting.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>The rule</th>
+          <th>What it means on Reddit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>No pricing, ever</strong></td>
+          <td>Frame cost only in comparison to traditional PACS. Never attach a dollar figure to EBM.</td>
+        </tr>
+        <tr>
+          <td><strong>"HIPAA-compliant by design"</strong></td>
+          <td>The only approved wording. No "HIPAA-certified," SOC&nbsp;2, HITRUST, or ISO claims.</td>
+        </tr>
+        <tr>
+          <td><strong>No HL7 / FHIR capability claims</strong></td>
+          <td>Not named on the live site. Discuss the standards as category education, never as an EBM feature.</td>
+        </tr>
+        <tr>
+          <td><strong>FDA Class II = UDE workstation only</strong></td>
+          <td>Never imply the whole platform is FDA-cleared — the clearance is the workstation alone.</td>
+        </tr>
+        <tr>
+          <td><strong>Unconfirmed verticals stay unnamed</strong></td>
+          <td>Don't claim a specialty EBM hasn't named publicly until appetite is confirmed.</td>
+        </tr>
+        <tr>
+          <td><strong>Help first, brand second</strong></td>
+          <td>On-topic value in every post. No fake accounts, no link dumps, no astroturfing.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Why it matters:</strong> these mirror the writer guardrails in the content plan, so a Reddit reply and the EBM article on the same topic never contradict each other — and nothing overclaims.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 8: IN PRACTICE -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">In Practice</p>
+    <h2>What a real mention looks like</h2>
+    <p class="subtitle">A live example: a buyer's question, and two replies we'd contribute. Notice the mention only shows up after the advice earns its place.</p>
+    <div class="thread">
+      <div class="th-tag">The thread &mdash; r/PACSAdmin</div>
+      <div class="th-title">PACS setup for a smaller imaging center?</div>
+      <div class="th-body">"We're reviewing how our imaging workflow is set up and trying to understand what smaller outpatient centers are using now. The current process feels more complicated than it needs to be, especially when studies need to be accessed or shared from different locations. What features have actually made a difference for your team?"</div>
+    </div>
+    <div class="quote">
+      <p>"For a smaller center I'd prioritize simple deployment, multi-site access, DICOM compatibility, and reliable local backup. mAIn PACS checks several of those boxes and is specifically built for outpatient clinics with leaner IT."</p>
+      <span class="src">Contributed reply</span>
+    </div>
+    <div class="quote">
+      <p>"Study sharing made a bigger difference for us than piling on standalone features. mAIn PACS supports secure links, web access, and QR sharing across sites while keeping the rest of the workflow together."</p>
+      <span class="src">Contributed reply</span>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 9: CADENCE -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Cadence</p>
+    <h2>Reddit follows the content calendar</h2>
+    <p class="subtitle">Five brand mentions a month — the count already in your scope — sequenced to the same pillars the articles cover that month, so thread and article land together.</p>
+    <div class="timeline flex-grow">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 · Foundations</span>
+        <h4>PACS platform &amp; DICOM</h4>
+        <ul>
+          <li>Mirrors Month-1 content: PACS, cloud PACS, DICOM viewers.</li>
+          <li>Contribute in r/PACSAdmin + r/healthIT, highest-intent first.</li>
+          <li>Baseline the AI answer across the buying-query set.</li>
+        </ul>
+        <div class="phase-cost">5 mentions</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 · Access &amp; archive</span>
+        <h4>VNA, sharing, viewers</h4>
+        <ul>
+          <li>Follows Month-2 content: VNA, image sharing, zero-footprint viewers.</li>
+          <li>Widen into modality subs; seed 2 net-new question threads.</li>
+          <li>Track which mentions AI starts citing.</li>
+        </ul>
+        <div class="phase-cost">5 mentions</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 · Teleradiology &amp; vendors</span>
+        <h4>Teleradiology, RIS, "best vendor"</h4>
+        <ul>
+          <li>Matches Month-3 content: teleradiology PACS, RIS, vendor comparisons.</li>
+          <li>Double down on the threads AI is already pulling from.</li>
+          <li>Refresh older threads so they stay current.</li>
+        </ul>
+        <div class="phase-cost">5 mentions</div>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>How we score it:</strong> not upvotes — <em>prompt coverage</em>, tracked against the same buying queries the articles target. Months 4–5 carry into the HL7 / interoperability cluster as the content calendar does.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 10: SCOPE -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Scope</p>
+    <h2>Where this fits in your plan</h2>
+    <p class="subtitle">Reddit isn't a new invoice. It's how we run the brand-mention half of your existing AI Visibility retainer — sharpened around the prompts that sell PACS.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Workstream</th>
+          <th class="center">Cadence</th>
+          <th class="center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Reddit brand mentions</strong> — contributed replies + seeded threads</td>
+          <td class="center">5 / month</td>
+          <td class="center"><span class="check">&#10003;</span> Current scope</td>
+        </tr>
+        <tr>
+          <td>Thread monitoring &amp; AI-answer tracking</td>
+          <td class="center">Ongoing</td>
+          <td class="center"><span class="check">&#10003;</span> Included</td>
+        </tr>
+        <tr>
+          <td>Net-new seeded question threads</td>
+          <td class="center">As openings surface</td>
+          <td class="center"><span class="check">&#10003;</span> Included</td>
+        </tr>
+        <tr>
+          <td>SEO content program (running in parallel)</td>
+          <td class="center">50 articles / month</td>
+          <td class="center"><span class="check">&#10003;</span> Current scope</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="annotation success">
+      <strong>No added cost:</strong> this focuses the five monthly brand mentions you're already running onto the highest-intent PACS prompts on Reddit.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">EBM Technologies &mdash; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 11: NEXT STEPS (Red cover) -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's own the answer</h1>
+      <p class="subtitle" style="text-align:center;">Sign off on the prompt list and the target subreddits, and the first five mentions go live within two weeks — starting in r/PACSAdmin, where AI is already listening.</p>
+      <div class="mt-16">
+        <p style="font-size:18px; font-weight:700;">Approve the prompt + subreddit list to kick off Month 1</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.7); margin-top:8px;">EmberTribe · AI Visibility team</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential &mdash; Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active'); curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active'); nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
