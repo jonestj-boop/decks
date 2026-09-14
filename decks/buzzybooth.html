@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuzzyBooth — EmberTribe AI Visibility Strategy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* =============================================================
+   EmberTribe brand frame — red / black / white
+   BuzzyBooth accent = azure blue (single accent, used sparingly)
+   ============================================================= */
+:root {
+  --ember-red: #FF333C;
+  --ember-dark: #D4202A;
+
+  --ink: #1a1b1f;
+  --ink-soft: #2d2e33;
+
+  --buzzy: #1CA5DC;        /* BuzzyBooth azure — single client accent */
+  --buzzy-dark: #1785B4;
+
+  --text: #1a1b1f;
+  --text-light: #6b7094;
+  --text-muted: #9CA3AF;
+  --light-bg: #F8F9FB;
+  --card-bg: #ffffff;
+  --border: #E5E7EB;
+
+  --green: #10B981;
+  --amber: #F59E0B;
+  --red: #E74C3C;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--ink);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.deck { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  padding: 48px 64px;
+  overflow-y: auto;
+  background: var(--card-bg);
+}
+.slide.active { display: flex; }
+
+/* Dark section slides (near-black) */
+.slide.dark {
+  background: linear-gradient(150deg, var(--ink) 0%, var(--ink-soft) 100%);
+  color: #ffffff;
+}
+.slide.dark .subtitle,
+.slide.dark .stat-label { color: rgba(255,255,255,0.6); }
+.slide.dark .stat-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+.slide.dark table th { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.slide.dark table td { border-color: rgba(255,255,255,0.08); }
+
+/* Red cover slide */
+.slide.cover {
+  background: var(--ember-red);
+  color: #ffffff;
+}
+.slide.cover .stat-card {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.22);
+}
+.slide.cover .stat-label { color: rgba(255,255,255,0.82); }
+
+h1 { font-family: 'Space Grotesk'; font-size: 52px; font-weight: 700; letter-spacing: -1px; line-height: 1.08; margin-bottom: 14px; }
+h2 { font-family: 'Space Grotesk'; font-size: 34px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; }
+h3 { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+
+.subtitle { font-size: 19px; font-weight: 400; color: var(--text-light); max-width: 820px; margin-bottom: 22px; }
+
+.slide-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px;
+  color: var(--ember-red); margin-bottom: 10px;
+}
+.slide.dark .slide-label { color: var(--buzzy); }
+.slide.cover .slide-label { color: #1a1b1f; }
+
+.stats-row { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+.stat-card { flex: 1; min-width: 150px; background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; }
+.stat-value { font-family: 'Space Grotesk'; font-size: 34px; font-weight: 700; line-height: 1.1; margin-bottom: 4px; }
+.stat-label { font-size: 13px; font-weight: 500; color: var(--text-light); }
+
+.annotation {
+  background: #FFF4F5; border-left: 3px solid var(--ember-red); border-radius: 0 8px 8px 0;
+  padding: 12px 16px; font-size: 14px; margin: 12px 0; line-height: 1.55;
+}
+.annotation strong { color: var(--ember-dark); }
+.annotation.info { background: #EAF7FC; border-left-color: var(--buzzy); }
+.annotation.info strong { color: var(--buzzy-dark); }
+.annotation.success { background: #E8F8F1; border-left-color: var(--green); }
+.annotation.success strong { color: #0f7a56; }
+.annotation.warn { background: #FEF6E7; border-left-color: var(--amber); }
+.annotation.warn strong { color: #b9770a; }
+
+table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+th {
+  background: var(--ink); color: #fff; font-weight: 600; text-transform: uppercase;
+  font-size: 11px; letter-spacing: 0.5px; text-align: left; padding: 11px 14px;
+}
+th:first-child { border-radius: 8px 0 0 0; }
+th:last-child { border-radius: 0 8px 0 0; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: rgba(0,0,0,0.025); }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+.price { font-family: 'Space Grotesk'; font-weight: 700; color: var(--ember-red); white-space: nowrap; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+.bar-row { display: flex; align-items: center; gap: 12px; }
+.bar-label { width: 210px; text-align: right; font-size: 13px; font-weight: 500; flex-shrink: 0; color: var(--text-light); }
+.bar-track { flex: 1; height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; }
+.bar-fill {
+  height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 10px; font-size: 12px; font-weight: 700; color: white; transition: width 0.8s ease; white-space: nowrap;
+}
+.bar-fill.ember { background: linear-gradient(90deg, var(--ember-dark), var(--ember-red)); }
+.bar-fill.azure { background: linear-gradient(90deg, var(--buzzy-dark), var(--buzzy)); }
+.bar-fill.azure2 { background: linear-gradient(90deg, #1785B4, #5cc4ec); }
+.bar-fill.grey { background: #cbd2d9; color: #55606b; }
+
+.pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.pill.red { background: #FFE7E9; color: var(--ember-dark); }
+.pill.azure { background: #E1F3FB; color: var(--buzzy-dark); }
+.pill.green { background: #E3F6EE; color: #0f7a56; }
+.pill.amber { background: #FDF0D9; color: #b9770a; }
+.pill.grey { background: #EEF1F4; color: #55606b; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; flex: 1; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.four-col { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+.card {
+  background: var(--light-bg); border: 1px solid var(--border); border-radius: 12px; padding: 22px;
+}
+.card ul { list-style: none; padding: 0; margin-top: 8px; }
+.card ul li { position: relative; padding-left: 16px; margin-bottom: 6px; font-size: 13.5px; line-height: 1.5; }
+.card ul li::before { content: ''; position: absolute; left: 0; top: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--buzzy); }
+.card.accent-top { border-top: 3px solid var(--buzzy); }
+.card.accent-red { border-top: 3px solid var(--ember-red); }
+
+/* Tier / pricing cards */
+.tier-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 12px; }
+.tier-card { border: 1px solid var(--border); border-radius: 14px; padding: 26px; background: var(--card-bg); position: relative; }
+.tier-card.featured { border-color: var(--ember-red); box-shadow: 0 0 0 1px var(--ember-red); }
+.tier-card .tier-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 4px; }
+.tier-card .tier-name { font-family: 'Space Grotesk'; font-weight: 700; font-size: 19px; margin-bottom: 8px; }
+.tier-card .tier-price { font-family: 'Space Grotesk'; font-weight: 700; font-size: 30px; color: var(--ember-red); margin-bottom: 16px; }
+.tier-card .tier-price span { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+.tier-card ul { list-style: none; padding: 0; }
+.tier-card li { font-size: 13.5px; color: var(--text-light); padding: 5px 0 5px 22px; position: relative; }
+.tier-card li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.popular-badge {
+  position: absolute; top: -11px; right: 18px; background: var(--ember-red); color: #fff;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 4px 11px; border-radius: 10px;
+}
+
+.timeline { display: flex; gap: 0; margin: 16px 0; }
+.timeline-phase { flex: 1; border: 1px solid var(--border); padding: 20px; }
+.timeline-phase:first-child { border-radius: 12px 0 0 12px; }
+.timeline-phase:last-child { border-radius: 0 12px 12px 0; }
+.phase-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--buzzy-dark); margin-bottom: 6px; }
+.timeline-phase ul { list-style: none; padding: 0; margin-top: 6px; }
+.timeline-phase ul li { position: relative; padding-left: 14px; margin-bottom: 5px; font-size: 13px; line-height: 1.45; }
+.timeline-phase ul li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--buzzy); }
+.phase-cost { font-family: 'Space Grotesk'; font-size: 18px; font-weight: 700; color: var(--ember-red); margin-top: 12px; }
+
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; }
+.mb-16 { margin-bottom: 16px; }
+.flex-grow { flex: 1; }
+.green { color: var(--green); } .ember { color: var(--ember-red); } .azure { color: var(--buzzy-dark); }
+
+.logo-row { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.slide.dark .logo-row { border-top-color: rgba(255,255,255,0.12); }
+.slide.cover .logo-row { border-top-color: rgba(255,255,255,0.3); }
+.logo-ember { font-family: 'Space Grotesk'; font-size: 14px; font-weight: 700; letter-spacing: 2px; color: var(--ember-red); }
+.slide.dark .logo-ember { color: #fff; }
+.logo-chip { background: #fff; border-radius: 8px; padding: 7px 12px; display: inline-block; }
+.logo-chip .logo-ember { color: var(--ink); }
+.logo-chip .logo-ember span { color: var(--ember-red); }
+.logo-date { font-size: 12px; color: var(--text-muted); font-style: italic; }
+.slide.dark .logo-date, .slide.cover .logo-date { color: rgba(255,255,255,0.55); }
+
+.progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--ember-red), var(--buzzy)); z-index: 100; transition: width 0.3s ease; }
+
+.nav { position: fixed; bottom: 24px; right: 32px; display: flex; align-items: center; gap: 12px; z-index: 100; }
+.nav button { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.15); background: rgba(255,255,255,0.9); color: var(--ink); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+.nav button:hover { transform: scale(1.05); }
+.counter { font-size: 13px; font-weight: 500; color: #55606b; background: rgba(255,255,255,0.9); padding: 6px 14px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+
+@media (max-width: 1024px) {
+  .slide { padding: 32px 36px; }
+  h1 { font-size: 38px; } h2 { font-size: 27px; }
+  .two-col, .three-col, .tier-grid, .four-col { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline-phase { border-radius: 0; }
+  .bar-label { width: 130px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1 — COVER (red) -->
+  <div class="slide cover active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AI Visibility Strategy — Discovery</p>
+      <h1>BuzzyBooth</h1>
+      <p class="subtitle" style="color:rgba(255,255,255,0.92);">Your buyers are asking ChatGPT, Perplexity, and Google's AI Overviews "what's the best photo booth to get more reviews for my restaurant?" — and getting answers that don't mention BuzzyBooth. This is the plan to become the brand the AI recommends.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" style="color:#fff;">5</div>
+          <div class="stat-label">Verticals to own in AI search — restaurants, bars, dental/ortho, beauty/retail, hotels</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#fff;">3</div>
+          <div class="stat-label">Engines working together — AEO placements, ClusterMagic content, authority links</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:#fff;">60%+</div>
+          <div class="stat-label">Of AI answers cite Reddit + editorial sources you're not in yet</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-chip"><span class="logo-ember">EMBER<span>TRIBE</span></span></span>
+        <span class="logo-date">Prepared for BuzzyBooth — September 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — THE SHIFT -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Shift</p>
+    <h2>Search Moved. Buying Decisions Followed.</h2>
+    <p class="subtitle">A restaurant owner or practice manager evaluating a marketing tool no longer scrolls ten blue links. They ask an AI assistant — and act on the two or three brands it names.</p>
+
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <div class="card accent-red mb-16">
+          <h3>The old path</h3>
+          <ul>
+            <li>Buyer Googles "photo booth marketing for restaurants"</li>
+            <li>Compares a page of results, clicks a few</li>
+            <li>BuzzyBooth competes on ads + rankings</li>
+          </ul>
+        </div>
+        <div class="card accent-top">
+          <h3 class="azure">The new path</h3>
+          <ul>
+            <li>Buyer asks ChatGPT / Perplexity / Google AI "best way to get more Google reviews at my dental office"</li>
+            <li>AI returns a short list of named brands with reasons</li>
+            <li>If BuzzyBooth isn't cited, it's not in the room</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="annotation info">
+          <strong>Why this matters for BuzzyBooth specifically:</strong> your category — "marketing automation," "review generation," "experiential photo booth" — is exactly the kind of consideration-stage question people now delegate to AI. The decision is made <em>before</em> they ever hit your site.
+        </div>
+        <div class="annotation">
+          <strong>AI engines don't invent their answers.</strong> They synthesize from sources they trust: Reddit threads, editorial articles with clear entities, and structured content. Visibility is now a function of <em>being cited</em>, not just ranking.
+        </div>
+        <div class="annotation success">
+          <strong>The opening:</strong> AI Visibility is early. The brands that seed these sources now become the "default answer" for years — before the category gets crowded.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — WHERE BUZZYBOOTH STANDS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Current State</p>
+    <h2>Where BuzzyBooth Stands Today</h2>
+    <p class="subtitle">Strong product, clear positioning, and vertical pages already built. The gap is the off-site footprint AI engines actually read.</p>
+
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h3 class="green">What's working ✓</h3>
+        <ul style="list-style:none;padding:0;margin-top:12px;">
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">✓</span> Sharp, ownable value prop — "turn customers into brand advocates," review generation, lead capture</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">✓</span> Dedicated vertical pages already live (hotels, dental/ortho, restaurants & bars, beauty/retail) — a natural cluster map</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">✓</span> Concrete, quotable outcomes (reviews, repeat visits, engagement) — ideal fuel for entity-rich content</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--green);">✓</span> Hardware + software story is differentiated and easy for AI to summarize</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="ember">What's holding you back ✗</h3>
+        <ul style="list-style:none;padding:0;margin-top:12px;">
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--ember-red);">✗</span> Almost no presence in the Reddit + community threads AI engines cite for "best tool for X"</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--ember-red);">✗</span> Vertical pages are sales pages, not the entity-rich, question-shaped content AI retrieves</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--ember-red);">✗</span> Thin coverage of the real buyer questions — "how do I get more reviews," "does experiential marketing work," ROI comparisons</li>
+          <li style="padding-left:22px;position:relative;margin-bottom:9px;font-size:14px;"><span style="position:absolute;left:0;color:var(--ember-red);">✗</span> Few authority backlinks signaling BuzzyBooth as a category reference</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation warn mt-8">
+      <strong>Reading this as directional:</strong> the strengths and gaps above are from a review of your public site and category, not a full data pull. We calibrate against your real Search Console + analytics before finalizing any scope.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — THE METHOD (dark) -->
+  <div class="slide dark" data-slide="4">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <p class="slide-label">The Method</p>
+      <h2>Three Engines, One Outcome: Get Cited</h2>
+      <p class="subtitle" style="max-width:860px;">AI Visibility isn't a single tactic. It's three coordinated engines that feed the exact sources large language models pull from when they answer a buying question.</p>
+
+      <div class="three-col mt-16" style="flex:1;">
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:26px;border-top:3px solid var(--buzzy);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--buzzy);margin-bottom:8px;">Engine 1</div>
+          <h3 style="color:#fff;">AEO Placements</h3>
+          <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.6;margin-top:8px;">Brand mentions inside the Reddit threads and communities AI engines cite most. We map subreddits with high AI-citation rates, join real conversations, and seed new threads with coordinated, credible responses.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:26px;border-top:3px solid var(--ember-red);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--ember-red);margin-bottom:8px;">Engine 2</div>
+          <h3 style="color:#fff;">ClusterMagic Content</h3>
+          <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.6;margin-top:8px;">Entity-rich, structured articles (1,200–2,000 words) built the way AI retrieves — clear questions, clear answers, internal linking. Published to your CMS and mapped to every vertical and buyer question.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:26px;border-top:3px solid #fff;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#fff;margin-bottom:8px;">Engine 3</div>
+          <h3 style="color:#fff;">Authority Backlinks</h3>
+          <p style="font-size:14px;color:rgba(255,255,255,0.7);line-height:1.6;margin-top:8px;">Contextual editorial links from DA40+/DA50+ sites. They tell both Google and AI models that BuzzyBooth is a source worth trusting — the credibility layer under the other two engines.</p>
+        </div>
+      </div>
+
+      <div class="annotation info mt-16" style="background:rgba(28,165,220,0.1);border-left-color:var(--buzzy);">
+        <strong style="color:var(--buzzy);">How they compound:</strong> <span style="color:rgba(255,255,255,0.8);">AEO gets you into the conversation. Content gives the AI something authoritative to cite. Links make the whole footprint trustworthy. Run together, they move you from "not mentioned" to "the recommended answer."</span>
+      </div>
+
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — CLUSTER ARCHITECTURE -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">ClusterMagic Architecture</p>
+    <h2>The Content Map Built for BuzzyBooth</h2>
+    <p class="subtitle">Two axes: your verticals (where buyers self-identify) and the jobs-to-be-done (what they're actually trying to fix). Every cell is a cluster — a pillar page plus supporting articles, fully interlinked.</p>
+
+    <div class="four-col flex-grow mt-8">
+      <div class="card accent-top">
+        <span class="pill azure">Vertical Clusters</span>
+        <h4 class="mt-8">By industry</h4>
+        <ul>
+          <li>Restaurants &amp; bars</li>
+          <li>Dental &amp; orthodontics</li>
+          <li>Beauty &amp; retail</li>
+          <li>Hotels &amp; hospitality</li>
+          <li>Events &amp; experiential</li>
+        </ul>
+      </div>
+      <div class="card accent-top">
+        <span class="pill azure">Reviews &amp; Reputation</span>
+        <h4 class="mt-8">Highest intent</h4>
+        <ul>
+          <li>"How to get more Google reviews at [business]"</li>
+          <li>"Automated review requests"</li>
+          <li>"Increase online reputation"</li>
+          <li>Review-gen ROI</li>
+        </ul>
+      </div>
+      <div class="card accent-top">
+        <span class="pill azure">Marketing Automation</span>
+        <h4 class="mt-8">Lead capture</h4>
+        <ul>
+          <li>"Capture customer emails in-store"</li>
+          <li>"SMS + email campaigns for [vertical]"</li>
+          <li>"Bring customers back"</li>
+          <li>First-party data plays</li>
+        </ul>
+      </div>
+      <div class="card accent-top">
+        <span class="pill azure">Buyer &amp; ROI</span>
+        <h4 class="mt-8">Bottom of funnel</h4>
+        <ul>
+          <li>"Does experiential marketing work?"</li>
+          <li>"Photo booth marketing ROI"</li>
+          <li>"BuzzyBooth vs. alternatives"</li>
+          <li>Pricing &amp; buyer guides</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="annotation success mt-8">
+      <strong>Why this wins:</strong> a restaurant owner searching "how do I get more reviews" and a hotel GM searching "experiential marketing for hotels" are different people with the same solution. This map intercepts both — and every AI answer in between — then routes them to the right BuzzyBooth vertical page.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — AEO / REDDIT -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Engine 1 — AEO Placements</p>
+    <h2>Getting BuzzyBooth Into the Sources AI Trusts</h2>
+    <p class="subtitle">AI Overviews and ChatGPT lean heavily on Reddit and community discussion for "what should I actually use" questions. That's where BuzzyBooth needs credible, non-spammy presence.</p>
+
+    <div class="two-col flex-grow mt-8">
+      <div>
+        <h4>Where the conversations live</h4>
+        <ul style="list-style:none;padding:0;margin-top:8px;">
+          <li style="padding-left:18px;position:relative;margin-bottom:7px;font-size:14px;"><span style="position:absolute;left:0;color:var(--buzzy);">▹</span> r/restaurateur, r/bartenders, r/smallbusiness</li>
+          <li style="padding-left:18px;position:relative;margin-bottom:7px;font-size:14px;"><span style="position:absolute;left:0;color:var(--buzzy);">▹</span> r/Dentistry, r/orthodontics, r/dentaloffice</li>
+          <li style="padding-left:18px;position:relative;margin-bottom:7px;font-size:14px;"><span style="position:absolute;left:0;color:var(--buzzy);">▹</span> r/hotelmanagement, r/hospitality</li>
+          <li style="padding-left:18px;position:relative;margin-bottom:7px;font-size:14px;"><span style="position:absolute;left:0;color:var(--buzzy);">▹</span> r/marketing, r/Entrepreneur, r/EntrepreneurRideAlong</li>
+          <li style="padding-left:18px;position:relative;margin-bottom:7px;font-size:14px;"><span style="position:absolute;left:0;color:var(--buzzy);">▹</span> Beauty/retail + local-business communities</li>
+        </ul>
+        <div class="annotation info mt-8">
+          <strong>Subreddits are chosen by AI-citation rate,</strong> not just size — we prioritize the threads that actually surface in AI answers for your buyer questions.
+        </div>
+      </div>
+      <div>
+        <h4>What an AEO placement is</h4>
+        <div class="card mt-8">
+          <ul>
+            <li>Subreddit landscape mapping for your verticals</li>
+            <li>Thread discovery + analysis (live buyer questions)</li>
+            <li>Comment strategy &amp; fulfillment — credible brand mentions in existing threads</li>
+            <li>Thread seeding — new posts with coordinated, authentic responses</li>
+          </ul>
+        </div>
+        <div class="annotation">
+          <strong>Definition (so scope is clear):</strong> one AEO placement = one Reddit thread interaction — a comment on an existing thread, or one seeded thread with coordinated responses.
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — AI VISIBILITY PACKAGES -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Packages</p>
+    <h2>AI Visibility Packages</h2>
+    <p class="subtitle">AEO + ClusterMagic content + authority backlinks, in one managed program. Fixed monthly pricing — pick the pace that matches how fast you want to own the category.</p>
+
+    <div class="tier-grid mt-8">
+      <div class="tier-card">
+        <div class="tier-label">Tier 1</div>
+        <div class="tier-name">AI Visibility Starter</div>
+        <div class="tier-price">$1,750<span>/mo</span></div>
+        <ul>
+          <li>5 AEO placements / mo</li>
+          <li>10 ClusterMagic articles / mo</li>
+          <li>No backlinks included</li>
+          <li>Cluster strategy + monthly reporting</li>
+        </ul>
+      </div>
+      <div class="tier-card featured">
+        <div class="popular-badge">Most Popular</div>
+        <div class="tier-label">Tier 2</div>
+        <div class="tier-name">AI Growth Engine</div>
+        <div class="tier-price">$3,450<span>/mo</span></div>
+        <ul>
+          <li>8 AEO placements / mo</li>
+          <li>25 ClusterMagic articles / mo</li>
+          <li>2 DA40+ backlinks / mo</li>
+          <li>Full vertical cluster build-out</li>
+        </ul>
+      </div>
+      <div class="tier-card">
+        <div class="tier-label">Tier 3</div>
+        <div class="tier-name">AI Authority Accelerator</div>
+        <div class="tier-price">$5,250<span>/mo</span></div>
+        <ul>
+          <li>12 AEO placements / mo</li>
+          <li>40 ClusterMagic articles / mo</li>
+          <li>2 DA50+ backlinks / mo</li>
+          <li>Fastest path to category ownership</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="two-col mt-16" style="gap:24px;">
+      <div class="annotation success" style="margin:0;">
+        <strong>Recommendation for BuzzyBooth:</strong> start on <strong>Tier 2 — AI Growth Engine</strong>. 25 articles/mo covers all four vertical clusters plus the reviews and ROI questions, and the DA40+ links build the authority layer from day one.
+      </div>
+      <div class="annotation info" style="margin:0;">
+        <strong>Standalone add-on:</strong> want AEO only, outside a full package? Reddit seeding runs <strong>$1,400/mo</strong> for AEO placements alone.
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — CLUSTERMAGIC STANDALONE PRICING -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Standalone Pricing</p>
+    <h2>ClusterMagic Content — On Its Own</h2>
+    <p class="subtitle">Prefer to run content volume separately from the AEO program? ClusterMagic is available standalone, volume-tiered. 25 articles/mo minimum.</p>
+
+    <div class="two-col flex-grow mt-8" style="align-items:start;">
+      <div>
+        <h4>Monthly rate</h4>
+        <table>
+          <thead><tr><th>Articles / mo</th><th>Monthly Price</th></tr></thead>
+          <tbody>
+            <tr><td class="bold">25 <span class="pill grey">minimum</span></td><td class="price">$1,000</td></tr>
+            <tr><td class="bold">40</td><td class="price">$1,500</td></tr>
+            <tr><td class="bold">50</td><td class="price">$1,750</td></tr>
+            <tr><td class="bold">100</td><td class="price">$3,000</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info mt-16">
+          <strong>What one article is:</strong> a 1,200–2,000 word SEO post, entity-rich and structured for AI retrieval, internally linked, and published to your CMS (Shopify, WordPress, Webflow, or Duda).
+        </div>
+      </div>
+      <div>
+        <h4>3-month commitment — locks the rate, adds savings</h4>
+        <table>
+          <thead><tr><th>Articles / mo</th><th>3-Mo Total</th><th>Effective</th><th>You Save</th></tr></thead>
+          <tbody>
+            <tr><td class="bold">25</td><td class="price">$2,650</td><td>$883/mo</td><td class="green bold">$350</td></tr>
+            <tr><td class="bold">40</td><td class="price">$3,900</td><td>$1,300/mo</td><td class="green bold">$600</td></tr>
+            <tr style="background:#FFF4F5;"><td class="bold ember">50 ⭐</td><td class="price">$4,600</td><td>$1,533/mo</td><td class="green bold">$650</td></tr>
+            <tr><td class="bold">100</td><td class="price">$7,900</td><td>$2,633/mo</td><td class="green bold">$1,100</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation mt-16">
+          <strong>When standalone makes sense:</strong> you already run your own community/Reddit motion and just need the content engine. Most BuzzyBooth-stage brands do better bundling both in a Tier 2 package — but the option is here.
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — 90-DAY ROADMAP -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Roadmap</p>
+    <h2>First 90 Days</h2>
+    <p class="subtitle">Build the foundation, fill the highest-intent clusters first, then scale AEO and authority. Early AI citations typically start showing in weeks 8–12.</p>
+
+    <div class="timeline flex-grow mt-16">
+      <div class="timeline-phase">
+        <span class="phase-label">Month 1 — Foundation</span>
+        <h4>Map &amp; instrument</h4>
+        <ul>
+          <li>GSC + analytics baseline; AI-citation audit (what AI says about you today)</li>
+          <li>Full cluster map across 5 verticals + 3 job-to-be-done themes</li>
+          <li>Subreddit landscape mapping + thread targeting plan</li>
+          <li>First ClusterMagic pillars: Reviews &amp; Reputation, plus top vertical</li>
+        </ul>
+        <div class="phase-cost">Tier 2 — $3,450/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 2 — Build</span>
+        <h4>Fill the money clusters</h4>
+        <ul>
+          <li>Vertical pillars live: restaurants, dental/ortho, hotels, beauty/retail</li>
+          <li>Supporting articles for reviews + marketing-automation questions</li>
+          <li>AEO placements ramp across mapped subreddits</li>
+          <li>First DA40+ authority links pointed at pillars</li>
+        </ul>
+        <div class="phase-cost">Tier 2 — $3,450/mo</div>
+      </div>
+      <div class="timeline-phase">
+        <span class="phase-label">Month 3 — Scale</span>
+        <h4>Authority &amp; ROI layer</h4>
+        <ul>
+          <li>ROI + buyer-comparison clusters ("does experiential marketing work," pricing guides)</li>
+          <li>Thread seeding on high-citation buyer questions</li>
+          <li>Second wave of authority links</li>
+          <li>Citation tracking + 90-day review, Q4 roadmap</li>
+        </ul>
+        <div class="phase-cost">Tier 2 — $3,450/mo</div>
+      </div>
+    </div>
+
+    <div class="annotation info mt-16">
+      <strong>Day 90 milestone:</strong> all four vertical clusters live and interlinked, BuzzyBooth appearing in AI answers for a first set of buyer questions, and an authority-link base established. We recalibrate targets against real data at the review.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 — OUTCOMES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">What Growth Looks Like</p>
+    <h2>Projected Trajectory</h2>
+    <p class="subtitle">Directional projections based on consistent execution of the Tier 2 program. We replace these with real baselines once Search Console and analytics access is in.</p>
+
+    <div class="stats-row mt-8">
+      <div class="stat-card"><div class="stat-value azure">Wks 8–12</div><div class="stat-label">First AI citations for target buyer questions</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--ember-red);">4</div><div class="stat-label">Vertical clusters owned &amp; interlinked by Day 90</div></div>
+      <div class="stat-card"><div class="stat-value azure">+40–60%</div><div class="stat-label">Organic sessions by Month 6 vs. baseline (est.)</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--ember-red);">Category</div><div class="stat-label">"Default answer" positioning at full execution</div></div>
+    </div>
+
+    <div class="bar-chart flex-grow mt-24" style="max-width:720px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text-light);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;">Illustrative AI-citation + organic momentum</div>
+      <div class="bar-row"><span class="bar-label">Today (baseline)</span><div class="bar-track"><div class="bar-fill grey" style="width:16%;">Near zero AI citations</div></div></div>
+      <div class="bar-row"><span class="bar-label">Month 3</span><div class="bar-track"><div class="bar-fill azure2" style="width:34%;">First citations + clusters live</div></div></div>
+      <div class="bar-row"><span class="bar-label">Month 6</span><div class="bar-track"><div class="bar-fill azure" style="width:60%;">Multi-vertical presence</div></div></div>
+      <div class="bar-row"><span class="bar-label">Month 12</span><div class="bar-track"><div class="bar-fill ember" style="width:92%;">Recommended-brand status</div></div></div>
+    </div>
+
+    <div class="annotation warn mt-16">
+      <strong>These are planning estimates, not guarantees.</strong> AI Visibility outcomes depend on category competition and execution volume. Grant GSC access to <code>embertribe-content-tools@embertribe-content-tools.iam.gserviceaccount.com</code> and we'll pull real numbers before finalizing the engagement.
+    </div>
+
+    <div class="logo-row">
+      <span class="logo-ember">EMBERTRIBE</span>
+      <span class="logo-date">BuzzyBooth — AI Visibility Strategy</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 11 — NEXT STEPS (dark) -->
+  <div class="slide dark" data-slide="11">
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Become the Brand<br>the AI Recommends.</h1>
+      <p class="subtitle" style="text-align:center;max-width:660px;">BuzzyBooth has the product, the proof, and the verticals. The missing piece is a coordinated footprint in the sources AI actually cites — and a content map that answers every buyer question along the way.</p>
+
+      <div class="three-col mt-24" style="max-width:760px;text-align:left;">
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:20px;">
+          <div style="font-size:22px;margin-bottom:8px;">1</div>
+          <h4 style="color:#fff;">Grant data access</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);">Add our service account to Search Console so we baseline real numbers and your current AI citations.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:20px;">
+          <div style="font-size:22px;margin-bottom:8px;">2</div>
+          <h4 style="color:#fff;">Confirm tier &amp; clusters</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);">Lock Tier 2 (or your pick), and prioritize which verticals lead the Month 1 build.</p>
+        </div>
+        <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:20px;">
+          <div style="font-size:22px;margin-bottom:8px;">3</div>
+          <h4 style="color:#fff;">Kickoff</h4>
+          <p style="font-size:13px;color:rgba(255,255,255,0.6);">Full cluster architecture doc + first content briefs and subreddit plan within 5 business days.</p>
+        </div>
+      </div>
+
+      <div class="mt-24">
+        <p style="font-size:20px;font-weight:700;color:var(--buzzy);">Let's map your first 90 days →</p>
+        <p style="font-size:16px;color:rgba(255,255,255,0.5);margin-top:8px;">tj@embertribe.com &nbsp;·&nbsp; embertribe.com</p>
+      </div>
+
+      <div class="logo-row" style="width:100%;margin-top:32px;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential — Prepared for BuzzyBooth, September 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active'); curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active'); nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
