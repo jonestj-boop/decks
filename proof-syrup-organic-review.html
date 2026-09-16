@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proof Syrup — Organic Review</title>
+<style>
+  :root{
+    --ember-red:#FF333C; --ink:#111114; --paper:#ffffff; --mut:#6b6b73;
+    --line:#e7e7ea; --wash:#f7f7f8; --good:#1f9d55; --warn:#c9791a; --bad:#d23b3b;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#ececed;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px 80px}
+  a{color:var(--ember-red)}
+  /* header */
+  header.top{background:var(--ink);color:#fff;margin:0 calc(50% - 50vw);padding:34px calc(50vw - 50% + 20px) 30px}
+  .kicker{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:#fff;background:var(--ember-red);padding:4px 9px;border-radius:3px;font-weight:700}
+  header.top h1{font-size:30px;line-height:1.15;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em}
+  header.top .sub{color:#c7c7cf;font-size:13.5px}
+  header.top .meta{color:#8b8b95;font-size:12px;margin-top:10px}
+  /* sections */
+  section{background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:24px 26px;margin-top:22px}
+  h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ember-red);
+    margin:0 0 4px;font-weight:800}
+  h2 + .h{font-size:21px;font-weight:800;margin:0 0 14px;letter-spacing:-.01em;line-height:1.2}
+  h3{font-size:15px;font-weight:700;margin:22px 0 8px}
+  p{margin:10px 0}
+  .mut{color:var(--mut)}
+  .small{font-size:13px}
+  /* TL;DR */
+  .tldr{background:var(--ink);color:#f4f4f6;border:none}
+  .tldr h2{color:#ff6169}
+  .tldr .h{color:#fff}
+  .tldr p{color:#d5d5db}
+  .tldr strong{color:#fff}
+  .verdict-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .vpill{flex:1;min-width:210px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;padding:14px 15px}
+  .vpill .lab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+  .vpill.hold .lab{color:#ff8a90}
+  .vpill.fair .lab{color:#ffcf8a}
+  .vpill.na .lab{color:#9fbfff}
+  .vpill p{margin:0;font-size:13px;color:#e2e2e8;line-height:1.45}
+  /* claim box */
+  .claim{background:var(--wash);border-left:3px solid var(--mut);border-radius:6px;
+    padding:12px 15px;margin:12px 0;font-size:14px}
+  .claim em{color:var(--ink);font-style:italic}
+  /* stat grid */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 4px}
+  .stat{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .stat .n{font-size:23px;font-weight:800;letter-spacing:-.02em}
+  .stat .l{font-size:11.5px;color:var(--mut);margin-top:2px;line-height:1.3}
+  .stat.red .n{color:var(--ember-red)}
+  /* tables */
+  .tbl-wrap{overflow-x:auto;margin:14px 0}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+  th,td{text-align:right;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;white-space:normal}
+  thead th{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);font-weight:700;
+    border-bottom:2px solid var(--line)}
+  tbody tr:hover{background:var(--wash)}
+  tr.hl td{background:#fff2f2}
+  tr.total td{font-weight:800;border-top:2px solid var(--ink);border-bottom:none}
+  .num{font-variant-numeric:tabular-nums}
+  .pos{color:var(--good);font-weight:700}
+  .neg{color:var(--bad);font-weight:700}
+  .flat{color:var(--mut)}
+  /* bar chart */
+  .bars{margin:16px 0 6px}
+  .bar-row{display:grid;grid-template-columns:130px 1fr 92px;align-items:center;gap:10px;margin:7px 0;font-size:12.5px}
+  .bar-row .lb{color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-track{background:var(--wash);border-radius:5px;height:20px;overflow:hidden;position:relative}
+  .bar-fill{height:100%;border-radius:5px}
+  .bar-row .vl{text-align:right;color:var(--mut);font-variant-numeric:tabular-nums}
+  .lgnd{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:8px}
+  .lgnd span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+  /* dual bars (sessions vs revenue share) */
+  .note{font-size:12.5px;color:var(--mut);margin-top:6px}
+  ul.tight{margin:10px 0;padding-left:20px}
+  ul.tight li{margin:6px 0}
+  .foot{margin-top:26px;font-size:12px;color:var(--mut);text-align:center}
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.03em}
+  .tag.zero{background:#fdeaea;color:var(--bad)}
+  .tag.conv{background:#e8f6ee;color:var(--good)}
+  @media(max-width:640px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    header.top h1{font-size:24px}
+    .bar-row{grid-template-columns:96px 1fr 68px}
+  }
+  @media print{body{background:#fff}section{break-inside:avoid;border-color:#ddd}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <span class="kicker">Internal · Not for client distribution</span>
+  <h1>Proof Syrup — Organic Search Performance Review</h1>
+  <div class="sub">A fact-based read of the GA4 data behind the client's SEO / content dispute</div>
+  <div class="meta">Source: GA4 property 342068490 · Window: Mar 1, 2025 – Sep 16, 2026 · Prepared Sep 16, 2026 · EmberTribe</div>
+</header>
+
+<!-- CONTEXT -->
+<section>
+  <h2>Why this exists</h2>
+  <div class="h">The client is disputing the SEO &amp; content work</div>
+  <p>Cloud Earl raised three claims. This report checks each against GA4, states plainly where the data agrees with him, where it doesn't, and where GA4 simply can't answer.</p>
+  <div class="claim"><em>"Basically everything we spent failed epically to produce anything resembling a profit on the SEO work."</em></div>
+  <div class="claim"><em>"All of the organic traffic converts … about 90% less than other traffic."</em></div>
+  <div class="claim"><em>"Massive amounts of errors and incorrect links scattered through nearly all of it."</em></div>
+  <p class="small mut">Prepared as an internal basis for deciding how to respond — not written to defend a position. If the numbers favor the client, they say so.</p>
+</section>
+
+<!-- TL;DR -->
+<section class="tldr">
+  <h2>Bottom line</h2>
+  <div class="h">The content program built traffic but not revenue. His core complaint holds.</div>
+  <p>Since revenue tracking began (Mar 2025), the <strong>blog/content</strong> pages drew <strong>67,824 organic sessions</strong> and produced <strong>$864 in tracked revenue</strong> — a <strong>0.03% conversion rate</strong>. Nearly all organic revenue came from <strong>branded/commercial</strong> pages (homepage, collections, products) that convert at <strong>3.22%</strong> and would largely exist without the content. Assisted (first-touch) attribution doesn't rescue it: organic introduces only ~7% more revenue than it closes.</p>
+  <div class="verdict-row">
+    <div class="vpill hold"><div class="lab">Holds up</div><p>The SEO content did not produce meaningful direct revenue. "Converts ~90% less" is directionally right — the blog converts ~99% below commercial organic.</p></div>
+    <div class="vpill fair"><div class="lab">Needs nuance</div><p>The content <em>did</em> rank and drive 68k sessions of real visibility. Branded organic is healthy and on par with paid social/direct.</p></div>
+    <div class="vpill na"><div class="lab">Can't confirm here</div><p>The "errors &amp; broken links" claim isn't a GA4 question. It needs a site crawl / GSC coverage report. Pre-Mar-2025 ROI is unmeasurable.</p></div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section>
+  <h2>Method &amp; limitations — read first</h2>
+  <div class="h">What this data can and can't say</div>
+  <ul class="tight small">
+    <li><strong>Revenue tracking started March 2025.</strong> Before that, GA4 recorded sessions but $0 revenue / 0 transactions — ecommerce tracking wasn't configured. Any content or spend <em>before</em> Mar 2025 cannot be assessed for ROI from this data (neither to blame nor to credit).</li>
+    <li><strong>Attribution is last-click (session-based) unless noted.</strong> The assisted-conversion section below uses first-touch attribution to test for hidden top-of-funnel value.</li>
+    <li><strong>"Blog/content" = organic sessions landing on <span class="num">/blogs/</span> URLs</strong>; "commercial" = all other organic (homepage, collections, products, store locator).</li>
+    <li><strong>Broken links / technical errors are out of scope for GA4.</strong> Verifying that claim requires a crawl (Screaming Frog) or Search Console coverage data — flagged as a follow-up.</li>
+  </ul>
+</section>
+
+<!-- FINDING 1: TWO-SPEED ORGANIC -->
+<section>
+  <h2>Finding 1 — The headline</h2>
+  <div class="h">Two-speed organic: high-traffic content, near-zero conversion</div>
+  <p>Splitting organic search into content (blog) vs commercial pages exposes the whole story in one table.</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Organic segment</th><th>Sessions</th><th>Transactions</th><th>Revenue</th><th>Conv. rate</th><th>Rev / session</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td><strong>Blog / content</strong><br><span class="small mut">the SEO content work</span></td><td class="num">67,824</td><td class="num">17</td><td class="num">$864</td><td class="num neg">0.03%</td><td class="num">$0.01</td></tr>
+      <tr><td><strong>Commercial</strong><br><span class="small mut">homepage, collections, products</span></td><td class="num">39,235</td><td class="num">1,262</td><td class="num">$100,317</td><td class="num pos">3.22%</td><td class="num">$2.56</td></tr>
+      <tr class="total"><td>All organic search</td><td class="num">107,059</td><td class="num">1,279</td><td class="num">$101,180</td><td class="num">1.20%</td><td class="num">$0.95</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="stats">
+    <div class="stat red"><div class="n">63.4%</div><div class="l">of organic sessions came from blog content</div></div>
+    <div class="stat red"><div class="n">0.9%</div><div class="l">of organic revenue came from blog content</div></div>
+    <div class="stat"><div class="n">17</div><div class="l">total blog transactions in 18 months</div></div>
+    <div class="stat"><div class="n">$864</div><div class="l">total blog revenue in 18 months</div></div>
+  </div>
+  <div class="bars">
+    <div class="bar-row"><span class="lb">Blog content</span><div class="bar-track"><div class="bar-fill" style="width:63.4%;background:var(--ember-red)"></div></div><span class="vl">63.4% sess</span></div>
+    <div class="bar-row"><span class="lb">Blog content</span><div class="bar-track"><div class="bar-fill" style="width:0.9%;background:var(--ink)"></div></div><span class="vl">0.9% rev</span></div>
+    <div class="bar-row"><span class="lb">Commercial</span><div class="bar-track"><div class="bar-fill" style="width:36.6%;background:var(--ember-red)"></div></div><span class="vl">36.6% sess</span></div>
+    <div class="bar-row"><span class="lb">Commercial</span><div class="bar-track"><div class="bar-fill" style="width:99.1%;background:var(--ink)"></div></div><span class="vl">99.1% rev</span></div>
+    <div class="lgnd"><span><span class="sw" style="background:var(--ember-red)"></span>Share of organic sessions</span><span><span class="sw" style="background:var(--ink)"></span>Share of organic revenue</span></div>
+  </div>
+  <p class="note">The content work captured most of the traffic and almost none of the revenue. That gap <em>is</em> the dispute.</p>
+</section>
+
+<!-- FINDING 2: CHANNEL CONTEXT -->
+<section>
+  <h2>Finding 2 — Context</h2>
+  <div class="h">Where organic sits among all channels</div>
+  <p>The "converts 90% less than other traffic" claim is worth testing directly. At the <em>channel</em> level, all organic converts at 1.20% — roughly on par with Direct and Paid Social, and far below Email/Paid Search (both warm, largely returning-customer traffic). The 90%+ gap is real, but it lives <em>inside</em> organic — the blog vs everything else — not organic vs the rest of the site.</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Channel</th><th>Sessions</th><th>Conv. rate</th><th>Rev / session</th><th>Revenue</th><th>Rev share</th></tr></thead>
+    <tbody>
+      <tr><td>Email <span class="small mut">(warm list)</span></td><td class="num">70,725</td><td class="num pos">6.30%</td><td class="num">$4.55</td><td class="num">$322,137</td><td class="num">46.2%</td></tr>
+      <tr class="hl"><td><strong>Organic Search</strong></td><td class="num">106,597</td><td class="num">1.20%</td><td class="num">$0.95</td><td class="num">$101,180</td><td class="num">14.5%</td></tr>
+      <tr><td>Direct</td><td class="num">103,505</td><td class="num">1.26%</td><td class="num">$0.89</td><td class="num">$92,148</td><td class="num">13.2%</td></tr>
+      <tr><td>Paid Social</td><td class="num">92,945</td><td class="num">1.40%</td><td class="num">$0.74</td><td class="num">$68,951</td><td class="num">9.9%</td></tr>
+      <tr><td>Paid Search <span class="small mut">(mostly branded)</span></td><td class="num">10,721</td><td class="num pos">6.30%</td><td class="num">$4.60</td><td class="num">$49,326</td><td class="num">7.1%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">Organic is the site's #2 revenue channel — but that revenue rides on branded/commercial organic, not the content program (see Finding 1). Total tracked revenue in window: <strong>$697,019</strong>.</p>
+</section>
+
+<!-- FINDING 3: THE CONTENT PROGRAM -->
+<section>
+  <h2>Finding 3 — The content program up close</h2>
+  <div class="h">Traffic scaled ~5×; conversion collapsed toward zero</div>
+  <p>Blog organic sessions grew from ~750/mo (early 2025) to a peak of <strong>11,703 in Apr 2026</strong> as content ramped. Revenue never followed — most months the content pages generated <strong>$0</strong>.</p>
+  <div class="bars">
+    <div class="bar-row"><span class="lb">Mar '25</span><div class="bar-track"><div class="bar-fill" style="width:6%;background:#c9c9cf"></div></div><span class="vl">745</span></div>
+    <div class="bar-row"><span class="lb">Jun '25</span><div class="bar-track"><div class="bar-fill" style="width:8%;background:#c9c9cf"></div></div><span class="vl">906</span></div>
+    <div class="bar-row"><span class="lb">Sep '25</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:#c9c9cf"></div></div><span class="vl">373</span></div>
+    <div class="bar-row"><span class="lb">Dec '25</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:#9a9aa2"></div></div><span class="vl">3,013</span></div>
+    <div class="bar-row"><span class="lb">Mar '26</span><div class="bar-track"><div class="bar-fill" style="width:72%;background:var(--ember-red)"></div></div><span class="vl">8,483</span></div>
+    <div class="bar-row"><span class="lb">Apr '26</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--ember-red)"></div></div><span class="vl">11,703</span></div>
+    <div class="bar-row"><span class="lb">Jul '26</span><div class="bar-track"><div class="bar-fill" style="width:86%;background:var(--ember-red)"></div></div><span class="vl">10,012</span></div>
+    <div class="note">Blog organic sessions / month. Revenue across these same months: near $0 throughout.</div>
+  </div>
+
+  <h3>The traffic is informational — recipe &amp; "substitute for" queries, not buyers</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Top organic landing pages</th><th>Sessions</th><th>Txn</th><th>Revenue</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>/blogs/recipes/the-best-jungle-juice-recipe…</td><td class="num">4,832</td><td class="num">0</td><td class="num">$0</td><td><span class="tag zero">0.00%</span></td></tr>
+      <tr><td>/blogs/news/substitute-for-simple-syrup</td><td class="num">2,526</td><td class="num">0</td><td class="num">$0</td><td><span class="tag zero">0.00%</span></td></tr>
+      <tr><td>/blogs/recipes/types-of-alcohol-shots…</td><td class="num">2,104</td><td class="num">0</td><td class="num">$0</td><td><span class="tag zero">0.00%</span></td></tr>
+      <tr><td>/blogs/recipes/fun-drinks-for-kids-at-parties…</td><td class="num">751</td><td class="num">0</td><td class="num">$0</td><td><span class="tag zero">0.00%</span></td></tr>
+      <tr><td>/blogs/recipes/sugar-free-mocktails…</td><td class="num">664</td><td class="num">0</td><td class="num">$0</td><td><span class="tag zero">0.00%</span></td></tr>
+      <tr style="border-top:2px solid var(--line)"><td><strong>/ (homepage — branded organic)</strong></td><td class="num">7,241</td><td class="num">418</td><td class="num">$35,321</td><td><span class="tag conv">5.77%</span></td></tr>
+      <tr><td>/collections/old-fashioned-syrups</td><td class="num">3,438</td><td class="num">147</td><td class="num">$10,151</td><td><span class="tag conv">4.28%</span></td></tr>
+      <tr><td>/collections/proof-syrups</td><td class="num">802</td><td class="num">45</td><td class="num">$3,990</td><td><span class="tag conv">5.61%</span></td></tr>
+      <tr><td>/products/traditional-proof-syrup</td><td class="num">882</td><td class="num">44</td><td class="num">$3,231</td><td><span class="tag conv">4.99%</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">The pages that convert are brand and product pages. The content pages that pull the most traffic — party recipes, ingredient substitutes — attract readers with no purchase intent.</p>
+</section>
+
+<!-- FINDING 4: ASSISTED CONVERSIONS -->
+<section>
+  <h2>Finding 4 — The fairest counter-argument, tested</h2>
+  <div class="h">Do assisted conversions rescue the content? No — not materially.</div>
+  <p>Last-click undercounts top-of-funnel content: a reader could return later and buy through another channel. To test that, we compared <strong>first-touch</strong> (introducer) against <strong>last-touch</strong> (closer) attribution for organic.</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Channel</th><th>First-touch rev</th><th>Last-touch rev</th><th>Introducer premium</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td><strong>Organic Search</strong></td><td class="num">$108,305</td><td class="num">$101,180</td><td class="num flat">+$7,124 (+7%)</td></tr>
+      <tr><td>Direct <span class="small mut">(for contrast)</span></td><td class="num">$129,291</td><td class="num">$92,148</td><td class="num pos">+$37,143 (+40%)</td></tr>
+      <tr><td>Email <span class="small mut">(a closer)</span></td><td class="num">$290,809</td><td class="num">$322,137</td><td class="num neg">−$31,328</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Organic introduces only <strong>~7% more revenue than it closes</strong> (~101 extra transactions over 18 months). And that entire premium is dominated by <em>branded</em> organic, not the blog. Since the whole channel's introducer premium is just ~$7k, that is the ceiling on any blog assist effect — the 67,824 blog sessions cannot be hiding meaningful assisted revenue, or organic's first-touch total would dwarf its last-touch total. It doesn't.</p>
+  <p class="note"><strong>Caveat:</strong> isolating assisted revenue to specific blog <em>pages</em> exactly needs GA4 Explore path analysis or BigQuery event-level data — the Data API can't tie a landing page to a later purchase. The channel-level ceiling above already bounds it, but a BigQuery pull can confirm to the dollar if the client presses.</p>
+</section>
+
+<!-- VERDICT -->
+<section>
+  <h2>Verdict &amp; recommended posture</h2>
+  <div class="h">How to respond to Cloud Earl</div>
+  <h3>What his claim gets right</h3>
+  <ul class="tight">
+    <li>The SEO content did <strong>not</strong> produce meaningful direct revenue: $864 on 67,824 sessions (0.03%).</li>
+    <li>"Organic converts ~90% less" is directionally correct — understated, even. The blog converts ~99% below commercial organic.</li>
+    <li>Assisted/brand-halo value, the usual defense, is small here (~7% introducer premium, mostly branded).</li>
+  </ul>
+  <h3>What the record should also show</h3>
+  <ul class="tight">
+    <li>The content <strong>did</strong> rank and build 68k sessions of visibility — the execution worked; the <em>targeting</em> (informational recipe queries over commercial/buyer queries) is what didn't pay back.</li>
+    <li>The brand's <strong>commercial organic is healthy</strong> (3.22% CVR, ~$100k) and is the #2 revenue channel — organic as a business asset is not broken.</li>
+    <li><strong>Revenue tracking only began Mar 2025</strong>, so any earlier work can't be judged either way from GA4.</li>
+  </ul>
+  <h3>What we still owe before a final reply</h3>
+  <ul class="tight">
+    <li><strong>The "errors &amp; broken links" claim is unverified.</strong> Run a crawl (Screaming Frog) + pull GSC coverage/index data. That needs the client to grant our service account access to their Search Console, or to share their own export.</li>
+    <li>Optional: BigQuery pull to state blog-assisted revenue to the dollar, if the conversation gets adversarial.</li>
+  </ul>
+  <p class="small mut">Suggested tone: acknowledge the direct-revenue shortfall honestly, reframe it as a fixable targeting problem (commercial-intent content + on-page conversion paths) rather than a failure of SEO as a channel, and separate the unverified technical-errors claim until we've actually crawled the site.</p>
+</section>
+
+<div class="foot">EmberTribe · Internal analysis · GA4 property 342068490 · Figures cover Mar 1, 2025 – Sep 16, 2026 (revenue-tracked window). Not for client distribution as-is.</div>
+
+</div>
+</body>
+</html>

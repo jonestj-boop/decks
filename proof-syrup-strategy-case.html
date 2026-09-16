@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proof Syrup — Strategy Case</title>
+<style>
+  :root{
+    --ember-red:#FF333C; --ink:#111114; --paper:#ffffff; --mut:#6b6b73;
+    --line:#e7e7ea; --wash:#f7f7f8; --good:#1f9d55; --warn:#c9791a; --bad:#d23b3b;
+    --meta:#1877f2; --maxw:900px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#ececed;color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55;font-size:15px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px 80px}
+  a{color:var(--ember-red)}
+  header.top{background:var(--ink);color:#fff;margin:0 calc(50% - 50vw);padding:34px calc(50vw - 50% + 20px) 30px}
+  .kicker{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:#fff;background:var(--ember-red);padding:4px 9px;border-radius:3px;font-weight:700}
+  header.top h1{font-size:30px;line-height:1.15;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em}
+  header.top .sub{color:#c7c7cf;font-size:13.5px;max-width:660px}
+  header.top .meta{color:#8b8b95;font-size:12px;margin-top:10px}
+  section{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px 26px;margin-top:22px}
+  h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ember-red);margin:0 0 4px;font-weight:800}
+  h2 + .h{font-size:21px;font-weight:800;margin:0 0 14px;letter-spacing:-.01em;line-height:1.2}
+  h3{font-size:15px;font-weight:700;margin:22px 0 8px}
+  p{margin:10px 0}
+  .mut{color:var(--mut)} .small{font-size:13px}
+  /* funnel diagram */
+  .funnel{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:18px 0 6px}
+  .fstep{flex:1;min-width:150px;background:var(--wash);border:1px solid var(--line);padding:14px 15px;position:relative}
+  .fstep:first-child{border-radius:10px 0 0 10px}
+  .fstep:last-child{border-radius:0 10px 10px 0}
+  .fstep .fn{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:700}
+  .fstep .ft{font-size:15px;font-weight:800;margin:5px 0 3px}
+  .fstep .fd{font-size:12.5px;color:var(--mut);line-height:1.4}
+  .fstep.on{background:#fff;border-color:var(--good);border-width:1.5px}
+  .fstep.on .fn{color:var(--good)}
+  .fstep.gap{background:#fff7ed;border-color:var(--warn);border-width:1.5px}
+  .fstep.gap .fn{color:var(--warn)}
+  .farrow{display:flex;align-items:center;color:var(--mut);font-size:20px;padding:0 2px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 4px}
+  .stat{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .stat .n{font-size:23px;font-weight:800;letter-spacing:-.02em}
+  .stat .l{font-size:11.5px;color:var(--mut);margin-top:2px;line-height:1.3}
+  .stat.red .n{color:var(--ember-red)} .stat.good .n{color:var(--good)} .stat.warn .n{color:var(--warn)} .stat.meta .n{color:var(--meta)}
+  .call{border-left:3px solid var(--ember-red);background:var(--wash);border-radius:6px;padding:14px 16px;margin:14px 0}
+  .call.warn{border-color:var(--warn);background:#fff7ed}
+  .call.good{border-color:var(--good);background:#eefaf1}
+  .call.key{border-color:var(--ink);background:#f2f2f4}
+  .call strong{color:var(--ink)}
+  .tbl-wrap{overflow-x:auto;margin:14px 0}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+  th,td{text-align:right;padding:9px 11px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;white-space:normal}
+  thead th{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);font-weight:700;border-bottom:2px solid var(--line)}
+  tbody tr:hover{background:var(--wash)}
+  tr.hl td{background:#eefaf1}
+  tr.warn-row td{background:#fff7ed}
+  tr.total td{font-weight:800;border-top:2px solid var(--ink);border-bottom:none}
+  .num{font-variant-numeric:tabular-nums}
+  .pos{color:var(--good);font-weight:700} .neg{color:var(--bad);font-weight:700} .flat{color:var(--mut)}
+  .phase{margin:16px 0 6px}
+  .phase-row{display:grid;grid-template-columns:64px 1fr 1fr;gap:8px;align-items:center;margin:5px 0;font-size:12px}
+  .phase-row .m{color:var(--mut);font-weight:600}
+  .ptrack{background:var(--wash);border-radius:4px;height:16px;overflow:hidden}
+  .pfill{height:100%;border-radius:4px}
+  .phdr{display:grid;grid-template-columns:64px 1fr 1fr;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;color:var(--mut);margin-bottom:6px}
+  ul.tight{margin:10px 0;padding-left:20px} ul.tight li{margin:7px 0}
+  .foot{margin-top:26px;font-size:12px;color:var(--mut);text-align:center}
+  .src{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:20px;background:#e7f0fe;color:var(--meta);margin-left:6px;vertical-align:middle}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}header.top h1{font-size:24px}
+    .funnel{flex-direction:column}.fstep,.fstep:first-child,.fstep:last-child{border-radius:10px}.farrow{transform:rotate(90deg);padding:2px 0}}
+  @media print{body{background:#fff}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <span class="kicker">Internal · Strategy defense</span>
+  <h1>The case for the funnel: TOF content → Meta retargeting</h1>
+  <div class="sub">The content investment was Stage 1 of a two-stage funnel. The client's own Meta ad data now proves the model works — and shows the funnel was under-executed, not disproven.</div>
+  <div class="meta">GA4 property 342068490 + Meta Ads export · Mar 1, 2025 – Sep 16, 2026 · EmberTribe</div>
+</header>
+
+<!-- THE STRATEGY -->
+<section>
+  <h2>The strategy, restated</h2>
+  <div class="h">Content was never meant to convert on click one</div>
+  <p>The plan was a standard, sound DTC funnel: use organic content to win <strong>net-new, top-of-funnel reach</strong> at low, compounding cost — then <strong>retarget those visitors with Meta ads</strong> to convert them once they're in the pool. In that model the blog's job is <em>audience</em>, not <em>checkout</em>. Meta closes.</p>
+  <div class="funnel">
+    <div class="fstep on"><div class="fn">Stage 1 ✓ delivered</div><div class="ft">Organic content</div><div class="fd">Ranks &amp; pulls cold, net-new visitors</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep on"><div class="fn">Asset ✓ built</div><div class="ft">Retargeting pool</div><div class="fd">60,866 net-new, pixel-addressable readers</div></div>
+    <div class="farrow">→</div>
+    <div class="fstep gap"><div class="fn">Stage 2 — under-run</div><div class="ft">Meta retargeting</div><div class="fd">Works at 2.2× ROAS — but got 23% of budget &amp; is now off</div></div>
+  </div>
+  <p class="small mut">Judging Stage 1 by last-click blog purchases is a category error — it measures the top of the funnel against the bottom of the funnel's job. That reframe is the spine of this whole dispute.</p>
+</section>
+
+<!-- STAGE 1 DELIVERED -->
+<section>
+  <h2>Stage 1 — the evidence it worked</h2>
+  <div class="h">The content delivered exactly what a TOF engine should</div>
+  <p>On its actual mandate — cheap, net-new, compounding reach — the content performed. This is the raw material the retargeting strategy was designed to monetize.</p>
+  <div class="stats">
+    <div class="stat good"><div class="n">60,866</div><div class="l">net-new users from blog content (90%+ first-time)</div></div>
+    <div class="stat"><div class="n">67,824</div><div class="l">organic sessions into the retargeting pool</div></div>
+    <div class="stat red"><div class="n">~5×</div><div class="l">growth in monthly blog traffic (Mar '25 → Apr '26)</div></div>
+    <div class="stat"><div class="n">$0</div><div class="l">marginal cost per additional visit — a durable asset</div></div>
+  </div>
+  <div class="call good"><strong>The pool is real.</strong> 60,866 brand-new visitors is a large, low-cost custom-audience feedstock that compounds at near-zero marginal cost — the opposite of rented paid traffic that stops the moment spend stops. On the terms of the strategy, Stage 1 succeeded.</div>
+</section>
+
+<!-- STAGE 2: META DATA -->
+<section>
+  <h2>Stage 2 — what the Meta data proves <span class="src">Meta Ads</span></h2>
+  <div class="h">Retargeting is the cheapest, most profitable spend in the account</div>
+  <p>The client's own Meta export ($144,736 spent, Mar 2025–Sep 2026) settles the mechanism question. Split by funnel stage, retargeting converts <strong>38% cheaper than cold prospecting and at ~60% higher ROAS</strong> — precisely the efficiency the strategy was built to capture.</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Meta spend by funnel stage</th><th>Spend</th><th>% budget</th><th>Purchases</th><th>Cost / purch.</th><th>ROAS*</th></tr></thead>
+    <tbody>
+      <tr class="warn-row"><td>Cold prospecting</td><td class="num">$111,620</td><td class="num">77%</td><td class="num">2,194</td><td class="num neg">$50.90</td><td class="num">1.37×</td></tr>
+      <tr><td>Retargeting — warm site visitors</td><td class="num">$18,046</td><td class="num">12%</td><td class="num">501</td><td class="num">$36.00</td><td class="num">1.93×</td></tr>
+      <tr><td>Retargeting — existing customers</td><td class="num">$15,070</td><td class="num">10%</td><td class="num">550</td><td class="num pos">$27.40</td><td class="num">2.54×</td></tr>
+      <tr class="hl"><td><strong>All retargeting</strong></td><td class="num">$33,116</td><td class="num">23%</td><td class="num">1,051</td><td class="num pos">$31.50</td><td class="num pos">2.21×</td></tr>
+      <tr class="total"><td>Total Meta</td><td class="num">$144,736</td><td class="num">100%</td><td class="num">3,245</td><td class="num">$44.60</td><td class="num">1.56×</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small mut">*ROAS = Meta-reported purchases × $69.60 GA4 AOV ÷ spend. Revenue-ROAS, not margin-ROAS — see the profitability note below.</p>
+
+  <h3>And GA4 was undercounting Meta by 2.5× — the "it didn't convert" verdict is partly a measurement artifact</h3>
+  <div class="stats">
+    <div class="stat meta"><div class="n">3,245</div><div class="l">purchases Meta credits its ads (7-day click)</div></div>
+    <div class="stat"><div class="n">1,301</div><div class="l">purchases GA4 last-click gave Paid Social</div></div>
+    <div class="stat red"><div class="n">2.5×</div><div class="l">Meta-reported vs GA4 last-click — the attribution gap</div></div>
+    <div class="stat"><div class="n">0.48× → 1.56×</div><div class="l">channel ROAS: GA4 last-click vs Meta 7-day</div></div>
+  </div>
+  <p>Post-iOS/ATT signal loss and view-through conversions mean GA4 last-click structurally undercounts Meta. The true contribution sits between GA4's 0.48× and Meta's (self-reported, generous) 1.56×. Either way, the channel is materially more productive than the last-click view the client is reacting to.</p>
+</section>
+
+<!-- THE HONEST GAP -->
+<section>
+  <h2>Stage 2 — the honest gap</h2>
+  <div class="h">The proven-efficient leg was starved and is now switched off</div>
+  <p>A credible case names its weak points. The Meta data exposes three, and they're all about <em>execution</em>, not the idea:</p>
+  <ul class="tight">
+    <li><strong>77% of budget went to cold prospecting</strong> at 1.37× ROAS, while the 2.2× retargeting leg got just 23%. The money was concentrated in the least efficient stage.</li>
+    <li><strong>The blog pool was never the retargeting target at scale.</strong> Only ~$18k (12%) hit warm <em>site-visitor</em> audiences — much of it product/DPA viewers — and $15k went to <em>existing customers</em> (retention, not blog-sourced net-new). The specific blog→retarget loop was never funded.</li>
+    <li><strong>Retargeting is off right now.</strong> The dedicated RT ad sets (MOF, REPEAT) started Jul 2025 and read "not delivering"; DPA and MEGA Retargeting are inactive — even as the blog pool sits at its largest.</li>
+  </ul>
+  <p>The two halves also ran out of phase — Meta was wound down as the content pool filled:</p>
+  <div class="phase">
+    <div class="phdr"><span></span><span>Blog audience (pool filling) →</span><span>Meta / Paid Social (harvest engine) →</span></div>
+    <div class="phase-row"><span class="m">Mar '25</span><div class="ptrack"><div class="pfill" style="width:6%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:100%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Jun '25</span><div class="ptrack"><div class="pfill" style="width:8%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:57%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Sep '25</span><div class="ptrack"><div class="pfill" style="width:3%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:30%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Dec '25</span><div class="ptrack"><div class="pfill" style="width:26%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:25%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Mar '26</span><div class="ptrack"><div class="pfill" style="width:72%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:1%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Apr '26</span><div class="ptrack"><div class="pfill" style="width:100%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:32%;background:var(--meta)"></div></div></div>
+    <div class="phase-row"><span class="m">Jul '26</span><div class="ptrack"><div class="pfill" style="width:86%;background:var(--ember-red)"></div></div><div class="ptrack"><div class="pfill" style="width:13%;background:var(--meta)"></div></div></div>
+  </div>
+  <p class="small mut">Left: blog organic sessions (pool). Right: Paid Social sessions (harvest). They move in opposite directions — the funnel was never run with both stages firing at once.</p>
+  <div class="call warn"><strong>Profitability caveat, stated plainly:</strong> even on Meta's generous attribution, blended 1.56× revenue-ROAS on a ~$70 AOV syrup is likely underwater after COGS and shipping. The profit lives in retargeting (2.2×) — the smallest, now-dormant slice. So the client's "no profit" instinct isn't baseless at the <em>blended</em> level; the point is that the profitable stage was the one that got defunded.</div>
+</section>
+
+<!-- WHAT PROVES IT -->
+<section>
+  <h2>The fix — and how to prove it forward</h2>
+  <div class="h">Complete the loop the data says is efficient</div>
+  <p>The strategy doesn't need a new thesis; it needs to be run as designed. Every lever points the same way:</p>
+  <ul class="tight">
+    <li><strong>Rebalance budget toward retargeting.</strong> It already delivers 32% of purchases on 23% of spend at 2.2× ROAS. Shift dollars out of 1.37× cold prospecting into the warm leg.</li>
+    <li><strong>Build blog / site-visitor custom audiences and turn retargeting back on.</strong> 60,866 net-new readers are sitting un-harvested. Point warm ads at them specifically — not just product-viewers and existing customers.</li>
+    <li><strong>Run both stages in phase</strong> — sustained content + funded retargeting against that pool — for 60–90 days.</li>
+    <li><strong>Measure with a geo or audience holdout</strong> so the incremental read is clean and neither side has to argue attribution again.</li>
+    <li><strong>Report on margin-ROAS, not revenue-ROAS.</strong> Bring COGS in so "profit" is measured on contribution, not top-line.</li>
+  </ul>
+  <div class="call good">The one handoff already working: organic-introduced buyers closed <strong>$10,226 via email</strong> (133 orders). The pool converts when it's worked — email is quietly doing at small scale what funded Meta retargeting is built to do at large scale.</div>
+</section>
+
+<!-- BOTTOM LINE -->
+<section>
+  <h2>The argument, in one paragraph</h2>
+  <div class="h">How to make the case without overreaching</div>
+  <div class="call key">The content investment did its job as the top of a funnel — <strong>60,866 net-new, low-cost, compounding visitors</strong> — and grading that on last-click blog sales is a category error. The client's own Meta data proves the second stage's mechanism: <strong>retargeting converts at 2.2× ROAS and $31 per purchase, versus 1.37× and $51 for cold prospecting</strong>, and GA4 was undercounting Meta by <strong>2.5×</strong>, so the "it didn't convert" verdict is partly a measurement artifact. What went wrong is execution, not strategy: <strong>77% of budget went to cold prospecting, the blog pool was never retargeted at scale, and the profitable retargeting leg is now switched off.</strong> The honest ask isn't "trust that it worked" — it's "the efficient half of this funnel was defunded; let's rebalance into it, retarget the audience the content built, and measure on margin with a holdout."</div>
+  <p class="small mut">This concedes the thin blended economics, reframes the KPI correctly, and grounds every claim in the client's own GA4 and Meta data — a position that strengthens under scrutiny rather than collapsing.</p>
+</section>
+
+<div class="foot">EmberTribe · Internal strategy defense · GA4 property 342068490 + Meta Ads export · Mar 1, 2025 – Sep 16, 2026 · ROAS figures use Meta-reported (7-day-click) purchases × $69.60 AOV; Meta self-attribution is generous and revenue-ROAS overstates profit before COGS. Not for client distribution as-is.</div>
+
+</div>
+</body>
+</html>
