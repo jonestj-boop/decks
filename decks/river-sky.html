@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River+Sky: The AEO Opportunity · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2C7FA6; --client-accent-soft:#e9f3f8;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.75; margin-bottom:30px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.72); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:64px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:80px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); max-width:760px; }
+  .masthead .meta { display:flex; gap:40px; margin-top:32px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:50px; line-height:1.04; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:31px; line-height:1.13; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:32px; line-height:1.05; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:#1c5f7f;}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  .aio { border:1px solid var(--border); border-radius:16px; padding:0; margin:20px 0; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+  .aio .aio-head { display:flex; align-items:center; gap:10px; padding:14px 20px; background:var(--ink-50); border-bottom:1px solid var(--border); font-size:12px; letter-spacing:0.1em; text-transform:uppercase; font-weight:700; color:var(--ink-500); }
+  .aio .aio-head .dot { width:16px; height:16px; border-radius:50%; background:conic-gradient(from 180deg,#4285F4,#9b72cb,#d96570,#4285F4); flex:none; }
+  .aio .aio-body { padding:20px 24px; }
+  .aio .aio-summary { font-size:15.5px; color:var(--ink-700); margin-bottom:14px; }
+  .aio .aio-sub { font-size:12px; letter-spacing:0.08em; text-transform:uppercase; font-weight:700; color:var(--ink-500); margin:6px 0 10px; }
+  .aio ul { list-style:none; margin:0; padding:0; }
+  .aio ul li { font-size:15px; line-height:1.6; padding:9px 0 9px 20px; position:relative; border-top:1px solid var(--border); }
+  .aio ul li:first-child { border-top:none; }
+  .aio ul li::before { content:"•"; position:absolute; left:2px; color:var(--client-accent); font-weight:700; }
+  .aio ul li b { color:var(--et-black); }
+  .aio .aio-foot { padding:12px 24px; background:#fff5f5; border-top:1px solid var(--border); font-size:13.5px; color:var(--et-red-deep); }
+  .aio .aio-foot b { color:var(--et-red-deep); }
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.rec{background:var(--et-honey);color:#3a2600;}
+
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);} th.num{text-align:right;}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  tbody tr.rec td { background:var(--client-accent-soft); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;color:var(--et-black);}
+  .dim{color:var(--ink-500);}
+
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step.a .sn { background:var(--client-accent); }
+  .step h3 { margin:0; }
+  .step p { font-size:15px; color:var(--ink-600); margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"\2610"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:60px 64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.72); max-width:var(--maxw); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:44px 26px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">AEO Opportunity Brief</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared for River+Sky<br>For our discovery call<br>Confidential</div>
+  </aside>
+
+  <main>
+    <!-- MASTHEAD -->
+    <section class="masthead" id="top">
+      <div class="label">AEO Opportunity Brief</div>
+      <h1>River+Sky<br>and the answer AI gives</h1>
+      <p class="subtitle">When a shopper asks AI where to buy a sustainable, made-in-USA tie-dye dress, a brand gets named. Today it is not you, even though the description AI gives is you almost word for word. This brief shows who is winning that answer, why, and the three-part plan to make it River+Sky.</p>
+      <div class="meta">
+        <div>Prepared for<b>Michael Keefer, River+Sky</b></div>
+        <div>Date<b>September 2026</b></div>
+        <div>Purpose<b>Talking points for our discovery call</b></div>
+      </div>
+    </section>
+
+    <!-- WHAT WE HEARD -->
+    <section class="block" id="heard" data-nav="What we heard">
+      <div class="label">From your note</div>
+      <h2>A small, loyal brand that wants to scale without getting lost</h2>
+      <p class="lede">You told us River+Sky is niche, with a very loyal and expanding base, and that the brand resonates when it reaches the right audience. Meta is your main channel at about $35K a month, and you want to scale that up with a partner who gets the right content in front of the right people efficiently, and who is not a big agency where you are one more logo.</p>
+      <div class="stats">
+        <div class="stat"><div class="v accent">$35K/mo</div><div class="k">Current Meta spend, your main channel</div></div>
+        <div class="stat"><div class="v">2017</div><div class="k">Founded in California, eco-friendly fabrics from day one</div></div>
+        <div class="stat"><div class="v red">1,290+</div><div class="k">Customer reviews on site, real proof going unused</div></div>
+        <div class="stat"><div class="v">100s</div><div class="k">Local boutiques already carrying R+S</div></div>
+      </div>
+      <div class="callout info"><strong>The efficiency you asked about has an answer.</strong> The cheapest audience to reach is the one already asking for exactly what you sell. Right now, when they ask, a competitor gets the recommendation and you pay to interrupt them on Meta instead. Closing that gap is the single biggest efficiency lever we see, and it is what this brief is about.</div>
+    </section>
+
+    <!-- THE PROOF -->
+    <section class="block" id="proof" data-nav="The live proof">
+      <div class="label">We ran your buyer's search live</div>
+      <h2>A shopper searches your exact product. AI names someone else.</h2>
+      <p>We searched a query a River+Sky customer would actually type: <strong>&ldquo;best sustainable tie dye maxi dresses made in usa.&rdquo;</strong> Google's AI answer described the perfect brand for the job, then handed the recommendation to three others. Every word of its description fits River+Sky. Your name is not in it.</p>
+
+      <div class="aio">
+        <div class="aio-head"><span class="dot"></span>Google AI Overview, captured live Sept 2026</div>
+        <div class="aio-body">
+          <p class="aio-summary">&ldquo;The best sustainable, USA-made tie dye maxi dresses blend eco-conscious practices like low-impact or natural plant dyes with local ethical production, offering unique, free-flowing silhouettes.&rdquo;</p>
+          <div class="aio-sub">Top Options &amp; Brands</div>
+          <ul>
+            <li><b>MATE the Label:</b> Los Angeles, climate-neutral, 100% organic cotton and non-toxic low-impact dyes, cut, sewn and dyed locally in the USA.</li>
+            <li><b>Harvest &amp; Mill:</b> Oakland, California, organic cotton grown, milled, designed and sewn in the US, with natural plant dyes.</li>
+            <li><b>Independent Artisan Shops:</b> Etsy and regional boutiques offering hand-dyed, organic-cotton maxi dresses.</li>
+          </ul>
+        </div>
+        <div class="aio-foot"><b>River+Sky is not mentioned.</b> California-made, eco-friendly, artisan tie-dye, sold in hundreds of boutiques. A textbook match for the answer AI just gave, and left out of it.</div>
+      </div>
+
+      <div class="callout warn"><strong>Here is the part that should sting.</strong> On that same results page, River+Sky <em>does</em> appear, in the paid &ldquo;Sponsored&rdquo; row, the Juniper Dress at $174. So you are already paying to sit next to this search, while the free, more-trusted spot right below it (the AI answer and the organic list) goes to MATE the Label and Harvest&nbsp;&amp;&nbsp;Mill. You are renting the visibility your competitors are earning.</div>
+
+      <h3>And it is not one unlucky query</h3>
+      <p>We asked AI three different buying questions, one for each side of your catalog. Same result every time: it names a small brand a lot like yours, and it is not you.</p>
+      <table>
+        <thead><tr><th>What she asks AI</th><th>Who AI recommends</th><th class="num">River+Sky</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">&ldquo;best sustainable tie dye maxi dresses made in usa&rdquo;</td><td>MATE the Label, Harvest &amp; Mill</td><td class="num"><span class="pill p1">Not named</span></td></tr>
+          <tr><td class="strong">&ldquo;best made in usa boho maxi dress brands&rdquo;</td><td>Christy Dawn, Reformation, Surrealist USA</td><td class="num"><span class="pill p1">Not named</span></td></tr>
+          <tr><td class="strong">&ldquo;best handmade sterling silver boho jewelry brands made in usa&rdquo;</td><td>Ananda Khalsa, HappyGoLicky, MIMOSA</td><td class="num"><span class="pill p1">Not named</span></td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>The tell is in the citations.</strong> To build those answers, AI leaned on Vogue, The Good Trade, and artisan Etsy listings, the roundups and threads River+Sky is not part of. The brands it named are. That is the gap, in one line: they are in the sources AI trusts, and you are not.</div>
+      <p class="dim" style="font-size:13.5px">These are live reads from a few queries on the day we wrote this. AI answers vary by person and change over time, so treat this as directional, not a ranking report. At kickoff we check it against your real Google Search Console and analytics data.</p>
+    </section>
+
+    <!-- WHY NOW -->
+    <section class="block" id="why" data-nav="Why AEO now">
+      <div class="label">The shift</div>
+      <h2>Your buyer increasingly asks AI before she asks Google</h2>
+      <p>Answer Engine Optimization (AEO) is the work of being the brand AI names when someone asks a buying question. It matters now for a very specific reason: more of your customers start with ChatGPT, Google's AI Overviews, Gemini and Perplexity, and those tools do not return ten blue links. They return a short list of names. If you are not on the list, you are not in the consideration set at all. There is no page two.</p>
+      <ul class="body">
+        <li>AI does not pick the brand with the biggest ad budget. It picks the brand it has the most trustworthy, consistent evidence about, drawn from the brand's own site and, more importantly, from what others say about it.</li>
+        <li>That makes AEO the opposite of Meta in one crucial way: it is an owned, compounding asset. Meta visibility stops the day you stop paying. An AI recommendation you earn keeps working while you sleep.</li>
+        <li>For a niche, high-quality brand like yours it is the great leveler. You do not need to outspend anyone; you need to be the most clearly, credibly documented answer to a specific question.</li>
+      </ul>
+    </section>
+
+    <!-- THE ENGINE -->
+    <section class="block" id="engine" data-nav="The three-part engine">
+      <div class="label">The plan</div>
+      <h2>Three inputs, run together: content, Reddit, ads</h2>
+      <p>Getting River+Sky into that answer, and turning the attention into sales, takes three things working as one system. Any one alone underperforms. Together they compound.</p>
+      <div class="step a">
+        <div class="sh"><span class="sn">1</span><h3>Content: give AI something to quote</h3></div>
+        <p>The story that wins this category (California-made, eco-friendly fabric, hand-dyed by artisans, the &ldquo;back to our roots&rdquo; origin) barely exists on your site as text AI can read. We build the product and editorial pages that state it plainly, so the answer engines have River+Sky evidence to cite.</p>
+      </div>
+      <div class="step a">
+        <div class="sh"><span class="sn">2</span><h3>Reddit &amp; third-party mentions: earn the trust</h3></div>
+        <p>AI decides who to recommend based on outside consensus: Reddit threads, &ldquo;best sustainable tie-dye brands&rdquo; roundups, boutique and press mentions. MATE the Label lives in those. River+Sky does not, yet. We change that with genuine, useful placements the answer engines already license and cite.</p>
+      </div>
+      <div class="step a">
+        <div class="sh"><span class="sn">3</span><h3>Ads: capture and scale the demand</h3></div>
+        <p>Your $35K on Meta stays the engine for demand and retargeting, and we add search/shopping capture for the exact buying queries above. Ads reach her now; content and Reddit make every ad dollar convert better because she also sees you in the answer, the roundup and the thread.</p>
+      </div>
+      <div class="callout info"><strong>How it compounds.</strong> Content gives AI accurate River+Sky facts to quote. Reddit and roundups give it the outside proof it needs to feel safe naming you. Ads put you in front of the buyer today and feed better landing pages and audiences back into the machine. She asks AI, reads a thread, sees a roundup, then gets your ad, and every touch says the same thing. That is when a niche brand scales without just spending more.</div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="block" id="content" data-nav="Content">
+      <div class="label">Input one: content</div>
+      <h2>Tell AI the story your reviews already tell each other</h2>
+      <p>Your 1,290+ reviews are full of the exact language buyers use: &ldquo;buttery soft,&rdquo; &ldquo;figure-flattering,&rdquo; &ldquo;beyond a sweatshirt,&rdquo; the Brooklyn and Shanti dresses by name. That is a goldmine of intent and proof that today lives in a widget AI cannot easily read. We turn it into pages it can.</p>
+      <table>
+        <thead><tr><th>Content type</th><th>Job</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Brand-story pages</td><td>State the entity clearly for AI</td><td>&ldquo;Made in California: How River+Sky Hand-Dyes Every Dress&rdquo;</td></tr>
+          <tr><td class="strong">Comparison &amp; guide posts</td><td>Win the buying question</td><td>&ldquo;Best Sustainable Tie-Dye Maxi Dresses Made in the USA&rdquo;</td></tr>
+          <tr><td class="strong">Product &amp; use-case posts</td><td>Match how she shops and wears it</td><td>&ldquo;What to Wear Paddleboarding to Dinner: The Brooklyn Dress&rdquo;</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info"><strong>The point isn't traffic for its own sake.</strong> Each page is structured, entity-rich, and written for how AI reads trust, so when a shopper asks the question, River+Sky is quotable. The same pages give your Meta ads stronger, on-message landing spots, which lifts conversion on the spend you already run.</div>
+    </section>
+
+    <!-- REDDIT -->
+    <section class="block" id="reddit" data-nav="Reddit &amp; roundups">
+      <div class="label">Input two: the trust layer</div>
+      <h2>What others say about you is what AI believes</h2>
+      <p>Your own site tells AI what you sell. Reddit threads and &ldquo;best of&rdquo; roundups tell it whether to believe you, and the answer engines pay to license that content. This is the half your competitors quietly locked down and you have not, and it is the single biggest reason AI named MATE the Label and not you.</p>
+      <div class="stats">
+        <div class="stat"><div class="v accent">~21%</div><div class="k">Reddit's share of Google AI Overview's top cited sources</div></div>
+        <div class="stat"><div class="v accent">~47%</div><div class="k">Reddit's share of Perplexity's top cited sources</div></div>
+        <div class="stat"><div class="v">$60M+</div><div class="k">Google's reported annual pay to license Reddit for AI</div></div>
+        <div class="stat"><div class="v">0</div><div class="k">&ldquo;Best sustainable tie-dye&rdquo; roundups River+Sky is in today</div></div>
+      </div>
+      <table>
+        <thead><tr><th>Placement</th><th>Where</th><th>Why it fits River+Sky</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Community answers</td><td>r/femalefashionadvice, r/sustainablefashion, r/BuyItForLife</td><td>&ldquo;Where do you buy ethical / made-in-USA dresses?&rdquo; is asked constantly, and AI cites the replies</td></tr>
+          <tr><td class="strong">&ldquo;Best of&rdquo; roundups</td><td>The Good Trade, sustainable-fashion blogs, boutique gift guides</td><td>The exact lists AI pulled MATE &amp; Harvest&nbsp;&amp;&nbsp;Mill from; we earn River+Sky into them</td></tr>
+          <tr><td class="strong">Editorial mentions</td><td>DR 30&ndash;60 lifestyle &amp; fashion sites</td><td>Outside validation the answer engines weigh as real-entity trust</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>Played straight, always.</strong> Reddit spots fake promotion instantly and it would hurt your name, so every placement is a genuinely useful answer with the relationship disclosed. Your made-in-USA, artisan story is real, so honest mentions do the work.</div>
+    </section>
+
+    <!-- ADS -->
+    <section class="block" id="ads" data-nav="Ads">
+      <div class="label">Input three: ads</div>
+      <h2>Keep the Meta engine, and stop leaving the free spot on the table</h2>
+      <p>None of this replaces paid. It makes paid work harder. Your $35K on Meta is how you create and capture demand at scale today, and we would run it as the performance engine it is. Two additions close the loops this brief exposes.</p>
+      <ul class="body">
+        <li><strong>Search &amp; shopping capture.</strong> On the query we tested, you already show in the paid row while the organic and AI spots go to competitors. We make sure the paid capture is deliberate and efficient for the high-intent buying terms, while content earns the free spots underneath so you stop paying full freight for every visit.</li>
+        <li><strong>Content-fed Meta.</strong> The brand-story and review-driven pages become better landing pages, retargeting hooks and creative angles. Same $35K, more of it converting, because the message is consistent from ad to answer to thread.</li>
+        <li><strong>De-risk the dependency.</strong> A brand living almost entirely on Meta is one CAC spike from a hard quarter. Earned AI and organic visibility is the owned asset that lowers blended acquisition cost over time.</li>
+      </ul>
+    </section>
+
+    <!-- ROADMAP -->
+    <section class="block" id="roadmap" data-nav="Roadmap">
+      <div class="label">What to expect</div>
+      <h2>A realistic 90-to-180-day arc</h2>
+      <p>Content and citations take a little time to move, so here is the honest shape of it. These are directional, not guarantees.</p>
+      <table>
+        <thead><tr><th>When</th><th>Milestone</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Month 1</td><td>Baseline AI-visibility read across your buying queries, Search Console + analytics validation, competitor teardown (MATE, Harvest&nbsp;&amp;&nbsp;Mill). First brand-story pages and first Reddit answers live.</td></tr>
+          <tr><td class="strong">Month 2</td><td>Content volume ramps across guides and product stories. First roundup and editorial outreach. Meta gets content-fed landing pages and retargeting angles.</td></tr>
+          <tr><td class="strong">Day 90</td><td>River+Sky starts surfacing in AI answers and roundups for niche queries without being prompted by name. Early lift on organic buying terms.</td></tr>
+          <tr><td class="strong">Day 180</td><td>Impact report: AI-citation trajectory vs. baseline, organic capture on buying queries, and blended CAC read on the Meta program with the earned layer in place.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FOR THE CALL -->
+    <section class="block" id="call" data-nav="For our call">
+      <div class="label">For our call</div>
+      <h2>What we want to learn, and what we would want to see</h2>
+      <p>Alongside the paid-media discovery, these are the AEO-specific questions and inputs that let us come back with a real plan instead of a guess.</p>
+      <h3>Questions we will ask</h3>
+      <ul class="body">
+        <li>Which products and margins do you most want to scale: dresses, the SUNDoWN loungewear line, or jewelry?</li>
+        <li>Who is the core customer in her own words, and which competitors do you lose her to?</li>
+        <li>What is your current blended CAC and AOV on Meta, and what does &ldquo;scale&rdquo; look like in a number?</li>
+        <li>Appetite and bandwidth for content: is investing beyond ads into owned, compounding visibility on the table?</li>
+      </ul>
+      <h3>Inputs that sharpen the plan</h3>
+      <ul class="body">
+        <li>Google Search Console and GA4 access, to validate real demand and the queries buyers already use.</li>
+        <li>A read on the Meta account: spend, CAC, top creatives and audiences.</li>
+        <li>Your Shopify catalog and the review export, the raw material for content and AEO.</li>
+      </ul>
+      <div class="callout info"><strong>The one decision this brief is really asking.</strong> You already own the ads. The question for the call is whether you are ready to also invest in the content and third-party proof that turn AI's recommendation from a competitor's name into yours, the piece that makes the whole $35K work harder.</div>
+    </section>
+
+    <!-- INVESTMENT -->
+    <section class="block" id="investment" data-nav="Where this goes">
+      <div class="label">Where this goes</div>
+      <h2>How EmberTribe packages the AEO work</h2>
+      <p>For context, not a quote: our AI Visibility packages bundle the three inputs into one monthly program, AEO placements (the Reddit and third-party work), ClusterMagic content (the pages AI quotes), and editorial backlinks. We would right-size the tier to River+Sky after we see your data; paid media is scoped alongside.</p>
+      <table>
+        <thead><tr><th>Package</th><th class="num">Monthly</th><th class="num">AEO placements</th><th class="num">Articles</th><th class="num">Backlinks</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">AI Visibility Starter</td><td class="num">$1,750</td><td class="num">5 / mo</td><td class="num">10 / mo</td><td class="num">none</td></tr>
+          <tr class="rec"><td class="strong">AI Growth Engine <span class="pill rec">Most Popular</span></td><td class="num strong">$3,450</td><td class="num">8 / mo</td><td class="num">25 / mo</td><td class="num">2 DA40+</td></tr>
+          <tr><td class="strong">AI Authority Accelerator</td><td class="num">$5,250</td><td class="num">12 / mo</td><td class="num">40 / mo</td><td class="num">2 DA50+</td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">Directional context only. Final scope and pricing, including how the AEO program sits alongside your Meta spend, land in a proposal after our call and a look at your data. No performance guarantees; the AI-visibility examples in this brief are live, directional reads, not rankings.</p>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next step</div>
+      <h2>Let's make River+Sky the answer</h2>
+      <p>Bring this to our call. We will run more of your real buying queries together live, walk the three-part plan against your goals, and agree on what a first 90 days looks like. If you can send Search Console and a peek at the Meta account beforehand, we come back with numbers, not guesses.</p>
+      <a class="btn" href="mailto:sales@embertribe.com">Walk the plan on our call &#8594;</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.innerHTML = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
