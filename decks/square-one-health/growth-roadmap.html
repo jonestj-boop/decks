@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — SEO GROWTH ROADMAP · MACHINE TEMPLATE
+     Filled by scripts/roadmap/build_deck.py — never hand-edit tokens here.
+     Visual canon: embertribe-design (growth-roadmap-deck.html) — red cover +
+     divider with the "e" watermark, body slides black-on-white, Quatro,
+     headers Sentence case, labels ALL CAPS, honey accents, single client
+     accent color. Content-structure canon: the coastal-crate-pet-co dial-in
+     (14 slides, no CTA slide — the call is the CTA; case study never dropped).
+     Deploys one level under decks/ → ../fonts and ../images resolve.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Square One Health · SEO Growth Roadmap · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2F6B7C; --client-accent-soft:#eaf0f2;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#2F6B7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:34px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+  code { font-family:"SF Mono","Fira Code",monospace; background:var(--ink-50); padding:2px 6px; border-radius:4px; font-size:11.5px; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.cover .stat { background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.2); }
+  .slide.cover .stat .v, .slide.cover .stat .v.accent, .slide.cover .stat .v.good { color:var(--et-white); }
+  .slide.cover .stat .v.honey { color:var(--et-honey); }
+  .slide.cover .stat .k { color:rgba(255,255,255,0.8); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .good{color:var(--good);} .warn-t{color:#e0930a;} .bad{color:var(--bad);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS + CHIPS ─────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .chart-cap { font-size:12px; color:var(--ink-500); margin-bottom:8px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .chart-cap span { font-weight:400; text-transform:none; letter-spacing:0; }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLAR CARDS (engine slide) ───────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; flex:1; min-width:0; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .titles-note { font-size:12.5px; font-style:italic; color:var(--ink-600); background:var(--subtle);
+    border-left:3px solid var(--et-honey); padding:9px 13px; border-radius:0 8px 8px 0; margin:2px 0 10px; max-width:960px; line-height:1.5; }
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 12px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  .month-head { display:flex; gap:26px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-500); margin-bottom:8px; }
+  .month-head strong { color:var(--et-black); }
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+  .art-note { font-size:10.5px; color:var(--ink-500); font-style:italic; margin-top:2px; }
+
+  /* ── WHY-THIS-PLAN ─────────────────────────────────────────────────── */
+  .strategy-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+  .strategy-card { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; }
+  .strategy-card h4 { font-size:13.5px; margin-bottom:5px; }
+  .strategy-card p { font-size:12px; color:var(--ink-500); line-height:1.55; }
+  .x-list { list-style:none; padding:0; margin:6px 0 0 0; font-size:12.5px; line-height:1.65; }
+  .x-list li { padding-left:20px; position:relative; margin-bottom:6px; }
+  .x-list li::before { content:"×"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .strategy-timeline { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0; }
+  .ts-step { background:var(--subtle); padding:10px 8px; border-radius:8px; text-align:center; border-top:3px solid var(--client-accent); }
+  .ts-step .ts-when { font-size:10px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .ts-step .ts-what { font-size:12px; font-weight:600; line-height:1.35; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:flex!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active">
+  <div>
+    <img class="client-logo" src="" alt="" onerror="this.style.display='none'" style="max-height:48px;max-width:210px;margin-bottom:28px;object-fit:contain;">
+    <div class="accent-rule"></div>
+    <div class="label">SEO Growth Roadmap · Prepared by EmberTribe</div>
+    <h1>Square One Health</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">An SEO growth roadmap for your Fort Collins practice, built from your own Google Analytics and Search Console data.</p>
+    <div class="stats" style="margin-top:30px;max-width:1100px;">
+      <div class="stat"><div class="v good">739</div><div class="k">Verified monthly organic visits (GA4, August 2026)</div></div>
+      <div class="stat"><div class="v accent">5,862</div><div class="k">Monthly local searches you appear in but do not win</div></div>
+      <div class="stat"><div class="v accent">1,300</div><div class="k">Month 12 organic target</div></div>
+      <div class="stat"><div class="v ">4+</div><div class="k">Years running this content engine</div></div>
+    </div>
+    <div class="meta">
+      <div>Date<b>September 2026</b></div>
+      <div>Engine<b>ClusterMagic</b></div>
+      <div>Deliverables<b>This roadmap + keyword research workbook</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE OPPORTUNITY ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The opportunity</div>
+    <h2>You are already in front of these searches. You are just not on page one.</h2>
+    <p class="subtitle">Searches where Google already shows your site. The position is why nobody clicks. Rows ending in “near me” are location-aware, so Google serves them by the searcher's own location.</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="red">Local search</th><th class="red num">Your impressions / mo</th><th class="red">Where you show up</th><th class="red num">Pos.</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">chiropractor fort collins</td><td class="num">618</td><td>Page 2</td><td class="num strong warn-t">12</td></tr>
+          <tr><td class="strong">hormone replacement therapy near me</td><td class="num">266</td><td>Page 6</td><td class="num strong bad">53</td></tr>
+          <tr><td class="strong">hormone therapy near me</td><td class="num">236</td><td>Page 7</td><td class="num strong bad">69</td></tr>
+          <tr><td class="strong">testosterone replacement therapy fort collins</td><td class="num">215</td><td>Page 2</td><td class="num strong warn-t">16</td></tr>
+          <tr><td class="strong">bioidentical hormone replacement therapy near me</td><td class="num">207</td><td>Page 8</td><td class="num strong bad">74</td></tr>
+          <tr><td class="strong">hormone therapy fort collins</td><td class="num">203</td><td>Page 2</td><td class="num strong warn-t">13</td></tr>
+          <tr><td class="strong">joint injections near me</td><td class="num">184</td><td>Page 7</td><td class="num strong bad">61</td></tr>
+          <tr><td class="strong">fort collins chiropractor</td><td class="num">177</td><td>Page 2</td><td class="num strong warn-t">13</td></tr>
+          <tr><td class="strong">hormone replacement therapy fort collins</td><td class="num">164</td><td>Page 2</td><td class="num strong warn-t">15</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px;">If you ranked in the top 5 for these…</h3>
+      <div class="stats" style="flex-direction:column;gap:10px;">
+      <div class="stat"><div class="v accent">2,270</div><div class="k">Monthly searches these nine queries put you in front of</div></div>
+      <div class="stat"><div class="v ">2</div><div class="k">Clicks a month you currently get from them</div></div>
+      <div class="stat"><div class="v good">340</div><div class="k">Estimated monthly clicks at position 5 (15% CTR)</div></div>
+      </div>
+      <div class="callout info mt">
+<strong>2,270 searches a month, two clicks.</strong> These nine put your practice in front of someone 2,270 times a month and you receive two clicks between them. At position five the same nine are worth roughly 340 clicks. One caveat worth saying out loud: Search Console does not break impressions down by city, so for the four “near me” rows we cannot prove every impression was a Northern Colorado searcher. The five that name Fort Collins we can.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · STRIKING DISTANCE ═════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Striking distance</div>
+    <h2>325 local searches are sitting just off page one</h2>
+    <p class="subtitle">Positions 11 to 30, measured in your Search Console rather than estimated by a keyword tool.</p>
+  </div>
+  <table>
+    <thead><tr><th class="accent">Keyword</th><th class="accent num">Current position</th><th class="accent num">Impressions / mo</th><th class="accent num">Clicks/mo now</th><th class="accent num">Clicks/mo at pos 5</th><th class="accent num">Gap</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">chiropractor fort collins</td><td class="num strong warn-t">12</td><td class="num">618</td><td class="num dim">2</td><td class="num strong">93</td><td class="num up">+91</td></tr>
+      <tr><td class="strong">testosterone replacement therapy fort collins</td><td class="num strong warn-t">16</td><td class="num">215</td><td class="num dim">0</td><td class="num strong">32</td><td class="num up">+32</td></tr>
+      <tr><td class="strong">hormone therapy fort collins</td><td class="num strong warn-t">13</td><td class="num">203</td><td class="num dim">0</td><td class="num strong">30</td><td class="num up">+30</td></tr>
+      <tr><td class="strong">fort collins chiropractor</td><td class="num strong warn-t">13</td><td class="num">177</td><td class="num dim">1</td><td class="num strong">27</td><td class="num up">+26</td></tr>
+      <tr><td class="strong">hormone replacement therapy fort collins</td><td class="num strong warn-t">15</td><td class="num">164</td><td class="num dim">0</td><td class="num strong">25</td><td class="num up">+25</td></tr>
+      <tr><td class="strong">womens hormone therapy fort collins</td><td class="num strong warn-t">20</td><td class="num">120</td><td class="num dim">0</td><td class="num strong">18</td><td class="num up">+18</td></tr>
+      <tr><td class="strong">fort collins chiropractic</td><td class="num strong warn-t">20</td><td class="num">105</td><td class="num dim">0</td><td class="num strong">16</td><td class="num up">+16</td></tr>
+      <tr><td class="strong">chiropractor in fort collins</td><td class="num strong warn-t">15</td><td class="num">102</td><td class="num dim">0</td><td class="num strong">15</td><td class="num up">+15</td></tr>
+    </tbody>
+  </table>
+  <div class="two-col" style="margin-top:12px;">
+    <div class="callout good" style="margin:0;">
+<strong>From your verified Search Console data:</strong> 325 local searches are in striking distance right now, carrying 5,862 impressions a month. Across your whole site it is 2,977 queries. Every figure in this table is a measured impression count from your own data, not a keyword-tool estimate, which is why the column says impressions rather than volume.
+    </div>
+    <div class="callout info" style="margin:0;">
+<strong>Five of the eight are hormone therapy.</strong> That is one page trying to serve 254 separate hormone searches on its own, and it sits at an impression-weighted position of 42. Splitting it into three pages, one hub plus one for men and one for women, is the first thing your plan does.
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · WHERE YOU STAND ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Where you stand · Verified data</div>
+    <h2>What your own data says</h2>
+    <p class="subtitle">Google Analytics and Search Console, read together.</p>
+  </div>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="stats" style="margin-bottom:12px;">
+        <div class="stat"><div class="v accent">739</div><div class="k">Monthly organic visits (verified GA4)</div></div>
+        <div class="stat"><div class="v accent">62%</div><div class="k">Non-branded share of organic</div></div>
+      </div>
+      <div class="bars" style="margin:0 0 12px;">
+<div class="bar"><div class="bl">Non-branded: 62% of your clicks come from searches that are not your name</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">62</div></div>
+<div class="bar"><div class="bl">Branded: 38% come from people already searching for Square One Health or a clinician by name</div><div class="bt"><div class="bf honey" style="width:61.3%"></div></div><div class="bv">38</div></div>
+      </div>
+      <table style="font-size:12px;">
+        <thead><tr><th class="accent">Top non-branded GSC query</th><th class="accent num">Clicks / 3.5 mo</th><th class="accent num">Pos.</th></tr></thead>
+        <tbody>
+          <tr><td class="kw"><code>magnesium for back pain</code></td><td class="num strong">21</td><td class="num strong good">5.8</td></tr>
+          <tr><td class="kw"><code>chiropractor for tinnitus</code></td><td class="num strong">12</td><td class="num strong good">5.6</td></tr>
+          <tr><td class="kw"><code>what is the best magnesium for back pain</code></td><td class="num strong">12</td><td class="num strong good">3.3</td></tr>
+          <tr><td class="kw"><code>magnesium glycinate for back pain</code></td><td class="num strong">9</td><td class="num strong good">4.6</td></tr>
+          <tr><td class="kw"><code>chiropractor fort collins</code></td><td class="num strong">6</td><td class="num strong warn-t">10.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Organic sessions · 6-month trend <span>· GA4 · organic sessions</span></div>
+        <svg viewBox="0 -12 310 160" style="width:100%;display:block;" xmlns="http://www.w3.org/2000/svg">
+<line x1="38" y1="10" x2="300" y2="10" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="14" text-anchor="end" font-size="9" fill="#9aa0a6">1.2K</text>
+<line x1="38" y1="44" x2="300" y2="44" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="48" text-anchor="end" font-size="9" fill="#9aa0a6">800</text>
+<line x1="38" y1="78" x2="300" y2="78" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="82" text-anchor="end" font-size="9" fill="#9aa0a6">400</text>
+<line x1="38" y1="112" x2="300" y2="112" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="116" text-anchor="end" font-size="9" fill="#9aa0a6">0</text>
+<polyline points="55,36 103,52 151,53 199,52 247,46 295,49" fill="none" stroke="var(--client-accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="55" cy="36" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="55" y="29" text-anchor="middle" font-size="8" fill="#6b6b6b">897</text>
+<text x="55" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Mar &#x27;26</text>
+<circle cx="103" cy="52" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="103" y="45" text-anchor="middle" font-size="8" fill="#6b6b6b">710</text>
+<text x="103" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Apr &#x27;26</text>
+<circle cx="151" cy="53" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="151" y="46" text-anchor="middle" font-size="8" fill="#6b6b6b">694</text>
+<text x="151" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">May &#x27;26</text>
+<circle cx="199" cy="52" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="199" y="45" text-anchor="middle" font-size="8" fill="#6b6b6b">701</text>
+<text x="199" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jun &#x27;26</text>
+<circle cx="247" cy="46" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="247" y="39" text-anchor="middle" font-size="8" fill="#6b6b6b">771</text>
+<text x="247" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jul &#x27;26</text>
+<circle cx="295" cy="49" r="5" fill="var(--client-accent)" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="295" y="42" text-anchor="middle" font-size="8" fill="#6b6b6b" font-weight="700">739</text>
+<text x="295" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Aug &#x27;26</text>
+<rect x="216" y="134" width="90" height="16" rx="8" fill="#e9f9f0"/><text x="261" y="145" text-anchor="middle" font-size="9" fill="#2FC171" font-weight="700">Flat for 11 months</text>
+</svg>
+      </div>
+      <div class="callout good" style="font-size:12.5px;">
+<strong>Your organic traffic has been flat since October 2025.</strong> For the twelve months before that it ran between 4,300 and 6,700 sessions a month. The fall happened inside two weeks in September 2025 and it has not moved since.
+</div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>Look at what those clicks are.</strong> Your four best non-branded searches are magnesium supplements and tinnitus. They are good articles, and they are not Fort Collins patients looking for a chiropractor. The fifth row is the one that matters: your city's main search, ranking just off page one, worth six clicks. That is the whole roadmap in one line.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5 · AI SEARCH PRESENCE ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">AI search presence</div>
+    <h2>How often does AI recommend your brand?</h2>
+    <p class="subtitle">AI engines are reading your site constantly. They almost never say your name.</p>
+  </div>
+  <div class="callout info" style="margin:0 0 16px;">
+<strong>Quick primer:</strong> SEMrush samples thousands of buyer-style questions in your category and runs them through ChatGPT, Google AI Overview, Google AI Mode, and Gemini. Then it counts how often your brand is <em>named</em> in the answer (mentions) and how often your pages are <em>cited as the source</em> (cited pages).
+  </div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div class="stat" style="padding:18px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+<svg viewBox="0 0 80 50" style="width:104px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg"><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--ink-100)" stroke-width="9" stroke-linecap="round"/><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--et-honey)" stroke-width="9" stroke-linecap="round" stroke-dasharray="14.1 100.5"/><text x="40" y="40" text-anchor="middle" font-size="20" font-weight="800" fill="var(--et-black)">14</text></svg>
+        <div>
+          <div class="k" style="margin-top:0;">AI Visibility Score</div>
+          <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.4;">A 0–100 index. The higher, the more often AI engines surface your brand in category answers.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--ink-100) 0%,var(--ink-100) 25%,#fff3d1 25%,#fff3d1 60%,#dcf5e6 60%,#dcf5e6 100%);">
+          <div style="position:absolute;left:14%;top:-3px;width:2px;height:14px;background:var(--et-black);"></div>
+          <div style="position:absolute;left:14%;top:-18px;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--et-black);white-space:nowrap;">You · 14</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-500);margin-top:6px;font-weight:600;">
+          <span>0 · Invisible</span>
+          <span style="margin-left:5%;">25 · Emerging</span>
+          <span>60 · Established</span>
+          <span>100 · Dominant</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Brand mentions</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">1</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Times “Square One Health” was <strong>named in the answer text</strong> across all four AI engines in the last reporting window.</div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Pages cited as sources</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">165</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Unique URLs from squareonehealth.com that AI engines linked to <strong>as the source</strong> of an answer.</div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:8px;">Where you show up, by AI engine</h3>
+      <table style="font-size:13px;">
+        <thead><tr><th class="accent">Engine</th><th class="accent num">Mentions</th><th class="accent num">Cited pages</th><th class="accent num">% of mentions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Google AI Overview</strong><div class="sub-td">the AI box at the top of Google results</div></td><td class="num strong">1</td><td class="num">150</td><td class="num strong good">100%</td></tr>
+          <tr><td><strong>Google AI Mode</strong><div class="sub-td">Google&#x27;s full conversational search mode</div></td><td class="num strong">0</td><td class="num">11</td><td class="num strong bad">0%</td></tr>
+          <tr><td><strong>ChatGPT</strong><div class="sub-td">where a lot of health questions now start</div></td><td class="num strong">0</td><td class="num">6</td><td class="num strong bad">0%</td></tr>
+          <tr><td><strong>Gemini</strong><div class="sub-td">Google&#x27;s assistant, built into Android and Workspace</div></td><td class="num strong">0</td><td class="num">4</td><td class="num strong bad">0%</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="font-size:12.5px;">
+<strong>Reading the table:</strong> when cited pages are far higher than mentions, AI is using your content to answer the question and crediting someone else. Across all four engines 165 distinct pages of yours have been cited as sources, and your practice was named once.
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:8px;">What this means for Square One</h3>
+      <div class="callout " style="font-size:12.5px;">
+<strong>A score of 14 out of 100.</strong> That puts you in the band where a brand is effectively invisible in AI answers, which is where most independent clinics sit today. It is an early market.
+</div>
+      <div class="callout good" style="font-size:12.5px;">
+<strong>The reading is not that AI ignores you.</strong> It is the opposite. 165 of your pages have been good enough to cite. Your pages do identify the clinic, the address and the town, so the entity is there. What is missing is the layer that ties a specific answer to you: question and answer markup on the pages being cited, and a named clinician attached to the claim.
+</div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>What changes it.</strong> FAQ markup on the pages that already answer questions, a named practitioner with real credentials on each clinical page, and internal links that put a Fort Collins treatment page one click from every cited article. Your business schema is already in good shape, on 83 of the 100 pages we checked, so this is an addition rather than a rebuild.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · TECH ROADBLOCKS ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Tech roadblocks</div>
+    <h2>What is holding the site back</h2>
+    <p class="subtitle">Every issue below was confirmed on your live pages, not inferred from a crawl.</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="accent">Priority</th><th class="accent">Issue</th><th class="accent num">Scope</th><th class="accent">Unlocks</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p1">P1</span></td><td><strong>Your Google Business Profile link is indexed as a second homepage</strong><div class="sub-td">The UTM-tagged URL from your Business Profile ranks as its own page and competes with your real homepage. On “chiropractor in fort collins” the tagged URL sits at 4.1 and the homepage at 11.4. A self-referencing canonical is already in place and Google ranks the tagged URL anyway, which is what makes this worth raising.</div></td><td class="num strong">113 queries</td><td>Point the Business Profile at a clean URL so the signals stop splitting</td></tr>
+          <tr><td><span class="pill p1">P1</span></td><td><strong>51 old blog URLs return 404 with the content still live elsewhere</strong><div class="sub-td">When the blog moved to /blog/ in September 2025, 51 addresses that had earned 30,960 visits in the prior year were left returning errors. The articles themselves are fine and sitting at the new addresses.</div></td><td class="num strong">51 URLs</td><td>A one-to-one redirect map, 51 rows, reconnects the history</td></tr>
+          <tr><td><span class="pill p1">P1</span></td><td><strong>Your structured data publishes a different phone number than your site</strong><div class="sub-td">The code Google reads carries 970-698-7639. The header call button and the page that lists your service area both show 970-207-4463. Google is being handed a different number from the one most of your site gives patients.</div></td><td class="num strong">Site-wide</td><td>Consistent contact details across your profile, site and markup</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Five of your own pages compete for “chiropractor fort collins”</strong><div class="sub-td">On that one search your homepage sits at 8.4, the tagged Business Profile URL at 12.2, your chiropractic care page at 60, plus a new patient offer page and an old http version. 188 local searches have this problem. The Business Profile row higher up quotes different numbers because it is a different search.</div></td><td class="num strong">188 queries</td><td>Deciding which page owns which search is the single cheapest win in the plan</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>No FAQ markup anywhere on the site</strong><div class="sub-td">Several of your pages carry visible FAQ sections, including the homepage, but not one page marks them up so a search engine or an AI assistant can read them as questions and answers. Your business schema itself is in good shape, on 83 of the 100 pages we checked.</div></td><td class="num strong">0 of 100 pages have it</td><td>The most direct fix for the AI attribution gap two slides back</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="score-cards" style="margin-bottom:14px;">
+        <div class="score-card"><div class="sc-cap">Mobile</div><div class="sc-v warn">66</div><div class="sc-l">PageSpeed performance</div></div>
+        <div class="score-card"><div class="sc-cap">Desktop</div><div class="sc-v warn">76</div><div class="sc-l">PageSpeed performance</div></div>
+      </div>
+      <table style="font-size:12.5px;">
+        <thead><tr><th>Core Web Vital</th><th class="num">Mobile</th><th class="num">Desktop</th></tr></thead>
+        <tbody>
+          <tr><td>LCP <span class="sub-td">(target &lt; 2.5s)</span></td><td class="num strong good">2.4s</td><td class="num strong good">0.6s</td></tr>
+          <tr><td>TBT <span class="sub-td">(target &lt; 200ms)</span></td><td class="num strong bad">1,530ms</td><td class="num strong bad">490ms</td></tr>
+          <tr><td>CLS <span class="sub-td">(target &lt; 0.1)</span></td><td class="num strong good">0</td><td class="num strong good">0</td></tr>
+        </tbody>
+      </table>
+      <div class="callout " style="font-size:12px;margin-top:10px;">
+These are homepage lab scores measured on 2026-09-17, the worst of the three pages we tested. Your content pages score 70 to 72 on mobile but load slower, around 7 seconds. Google has not published real-user speed data for your site because it does not yet have the traffic, so we are raising speed as a question for the call rather than putting it on the list above.
+</div>
+      <div class="callout warn mt">
+<strong>Two of these were only visible once Search Console was connected.</strong> The tracking-parameter URL and the true scale of the page conflict cannot be seen from the outside. Three other candidate findings were dropped because they did not survive a live check, which is why this list is short. We would rather hand you five issues that hold up than ten that do not.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7 · THE COMPETITOR GAP ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The competitor gap</div>
+    <h2>Where you sit against Fort Collins</h2>
+    <p class="subtitle">Your real local rivals, each one confirmed by opening their site and checking the city.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th class="red">Square One</th>
+            <th>Spine Correction Center</th>
+            <th>Impact Chiropractic</th>
+            <th>Elevate to Life</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="strong">Authority Score</td><td class="num strong" style="color:var(--et-red);">20</td><td class="num">32</td><td class="num">24</td><td class="num">21</td></tr>
+          <tr><td class="strong">Monthly organic traffic</td><td class="num strong" style="color:var(--et-red);">725</td><td class="num">2,100</td><td class="num">3,300</td><td class="num">1,000</td></tr>
+          <tr><td class="strong">Ranking keywords</td><td class="num strong" style="color:var(--et-red);">928</td><td class="num">3,800</td><td class="num">1,100</td><td class="num">417</td></tr>
+          <tr><td class="strong">Referring domains</td><td class="num strong" style="color:var(--et-red);">394</td><td class="num">663</td><td class="num">403</td><td class="num">402</td></tr>
+          <tr><td class="strong">Non-branded share (SEMrush est.)</td><td class="num strong" style="color:var(--et-red);">64%</td><td class="num">98%</td><td class="num">41%</td><td class="num">100%</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good mt">
+<strong>Your link foundation is already competitive.</strong> 394 referring domains puts you level with Impact Chiropractic at 403 and Elevate to Life at 402, and both of them pull more organic traffic than you do. You are not short of authority. The non-branded share in this table is SEMrush's estimate, which is why it reads slightly higher than the 62% measured in your own Search Console on slide 4. You are short of pages pointed at the right searches.
+      </div>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Monthly organic traffic <span>· SEMrush · US, September 2026</span></div>
+        <div class="bars" style="margin:0;">
+<div class="bar"><div class="bl">Impact Chiropractic</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">3,300</div></div>
+<div class="bar"><div class="bl">Spine Correction Center</div><div class="bt"><div class="bf" style="width:63.6%"></div></div><div class="bv">2,100</div></div>
+<div class="bar"><div class="bl">Elevate to Life</div><div class="bt"><div class="bf" style="width:30.3%"></div></div><div class="bv">1,000</div></div>
+<div class="bar"><div class="bl">Square One Health</div><div class="bt"><div class="bf red" style="width:22.0%"></div></div><div class="bv">725</div></div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="margin-top:14px;">
+        <div class="chart-cap">Ranking keywords <span>· SEMrush · US, September 2026</span></div>
+        <div class="bars" style="margin:0;">
+<div class="bar"><div class="bl">Spine Correction Center</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">3,800</div></div>
+<div class="bar"><div class="bl">Impact Chiropractic</div><div class="bt"><div class="bf" style="width:28.9%"></div></div><div class="bv">1,100</div></div>
+<div class="bar"><div class="bl">Square One Health</div><div class="bt"><div class="bf red" style="width:24.4%"></div></div><div class="bv">928</div></div>
+<div class="bar"><div class="bl">Elevate to Life</div><div class="bt"><div class="bf" style="width:11.0%"></div></div><div class="bv">417</div></div>
+        </div>
+      </div>
+      <div class="callout mt">
+<strong>The gap is keyword coverage.</strong> Spine Correction Center holds 3,800 ranking keywords to your 928 on a similar link profile. That is a four-fold gap built from pages, not from links, which is the kind of gap content closes.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · DIVIDER — ClusterMagic ════════════════════════════════════════ -->
+<section class="slide divider">
+  <div style="text-align:left">
+    <div class="label">How we capture it</div>
+    <h1 style="font-size:104px;letter-spacing:-0.03em;margin-bottom:18px">ClusterMagic.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">An AI-powered content engine that builds entity-rich content architectures for compounding authority, the same engine behind 4+ years of zero-penalty growth across our portfolio.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · THE CLUSTERMAGIC ENGINE ═══════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The ClusterMagic engine</div>
+    <h2>Three pillars. Four years. Zero penalties.</h2>
+    <p class="subtitle">The pattern is consistent across every client we run this for. Each pillar reinforces the others, and that is why it compounds instead of plateauing like one-off content.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Pillar 01</div><h4>Entity-rich content</h4><p>Every article is built around the entities Google's index already understands. Structured data, internal linking, and topic clusters tell Google exactly what each page is about. This is what makes the content rank.</p></div>
+      <div class="pillar"><div class="pn">Pillar 02</div><h4>AI-powered execution</h4><p>25 to 100 articles per month at the quality bar of human-written. ClusterMagic codifies your brand voice, sources real citations, builds internal links to your existing pages, and ships to your CMS as drafts for review.</p></div>
+      <div class="pillar"><div class="pn">Pillar 03</div><h4>Compounds for years</h4><p>Random AI content gets caught by the next update. ClusterMagic content gets <em>better</em> with each Google update, because it is built on what Google rewards: real entities, real intent, real authority signals. 4+ years of growth. Zero penalties.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · CASE STUDY (ALWAYS INCLUDED — fixed proof, never dropped) ════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same engine, with 4+ years of zero-penalty results across our portfolio, is what we would run for you.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="../images/casestudy-500k.jpg" alt="SEMrush organic traffic chart: 8,500 to 500K+ monthly organic visits over 12 months">
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px;font-size:12.5px;">
+<strong>“Their site improves with each Google update.”</strong> This client's traffic <em>climbs</em> on update days, the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · CONTENT PLAN OVERVIEW ════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The 90-day content plan</div>
+    <h2>120 pieces of work. 7 pillars. Built around what you already rank for.</h2>
+    <p class="subtitle">120 pieces across three months, weighted towards the searches that bring Northern Colorado patients through the door. Fifty-one of them improve pages you already own.</p>
+  </div>
+  <div class="stats" style="margin-bottom:16px;">
+    <div class="stat"><div class="v bad">120</div><div class="k">Pieces of work planned</div></div>
+    <div class="stat"><div class="v accent">121.9K</div><div class="k">Monthly searches the plan touches</div></div>
+    <div class="stat"><div class="v accent">53</div><div class="k">Easy-win keywords (KD &lt; 30)</div></div>
+    <div class="stat"><div class="v accent">~18</div><div class="k">Average difficulty</div></div>
+  </div>
+  <div class="two-col">
+    <div class="chart-wrap">
+      <div class="chart-cap">Coverage by pillar</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Local Commercial</div><div class="bt"><div class="bf" style="width:100.0%;background:var(--pillar-1)"></div></div><div class="bv">37</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Existing corpus</div><div class="bt"><div class="bf" style="width:94.6%;background:var(--pillar-2)"></div></div><div class="bv">35</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Back, Neck &amp; Nerve Pain</div><div class="bt"><div class="bf" style="width:43.2%;background:var(--pillar-3)"></div></div><div class="bv">16</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Fort Collins Chiropractic Care</div><div class="bt"><div class="bf" style="width:27.0%;background:var(--pillar-4)"></div></div><div class="bv">10</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Scoliosis Care</div><div class="bt"><div class="bf" style="width:27.0%;background:#7A4FA3"></div></div><div class="bv">10</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Spinal Correction &amp; Decompression</div><div class="bt"><div class="bf" style="width:18.9%;background:#3D6B2F"></div></div><div class="bv">7</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Hormone &amp; Regenerative Medicine</div><div class="bt"><div class="bf" style="width:13.5%;background:var(--pillar-1)"></div></div><div class="bv">5</div></div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-cap">Funnel mix</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Top of funnel</div><div class="bt"><div class="bf honey" style="width:100.0%"></div></div><div class="bv">59</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Middle of funnel</div><div class="bt"><div class="bf" style="width:40.7%"></div></div><div class="bv">24</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Bottom of funnel</div><div class="bt"><div class="bf red" style="width:62.7%"></div></div><div class="bv">37</div></div>
+      </div>
+      <div class="callout info" style="margin:14px 0 0;font-size:11.5px;line-height:1.5;">
+<strong>Month one is the revenue layer.</strong> Forty pieces that sit closest to a booking: your hormone pages, the local service pages, the town pages, and the page conflicts costing you positions you already hold. Read the searches-touched figure carefully, because it is not where the value is: 91% of it sits on the 48 new informational articles in months two and three, which exist to make your treatment pages rank rather than to convert on their own. The local commercial work carries under 2,000 monthly searches and almost all of the intent.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · THE ARTICLES (month tabs) ════════════════════════════════════ -->
+<section class="slide">
+  <div class="head" style="margin-bottom:8px;">
+    <div class="label">The 120 pieces</div>
+    <h2 style="margin-bottom:6px;">Mapped, scoped, and ready to ship.</h2>
+    <p class="subtitle" style="font-size:15px;">Every row traces to a search in your own Search Console, a page you already own, or a service on your treatment list.</p>
+  </div>
+  <div class="titles-note">Headlines shown are working titles. The keyword, angle, and funnel stage for each article are locked. Final headlines are SEO-optimized at production, and your input is welcome. On the Volume column: for “near me” rows we show your measured local impressions per month from Search Console, not the national figure keyword tools report, because a single Fort Collins clinic cannot capture national demand. Where that column is blank, the term has fewer than 30 local impressions in 90 days and we are not claiming a number for it.</div>
+  <div class="mtabs">
+    <button class="mtab is-active" data-mtarget="1"><span class="mt-n">Month 1</span><span class="mt-c">40 · Near-final</span></button>
+    <button class="mtab" data-mtarget="2"><span class="mt-n">Month 2</span><span class="mt-c">40 · Best current targets</span></button>
+    <button class="mtab" data-mtarget="3"><span class="mt-n">Month 3</span><span class="mt-c">40 · Best current targets</span></button>
+  </div>
+  <div class="month-block is-active" data-month="1">
+    <div class="month-head"><span><strong>40</strong> pieces</span><span><strong>2,489</strong> total monthly searches</span><span>Avg KD <strong>11</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">1</td><td><div class="strong">Your First Chiropractic Visit in Fort Collins, Step by Step</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractic care fort collins</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">2</td><td><div class="strong">Tinnitus and the Upper Neck: When to Ask a Chiropractor</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>tinnitus chiropractor near me</code></td><td class="num">17</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">3</td><td><div class="strong">Hormone Replacement Therapy in Fort Collins: What Treatment Involves</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>bioidentical hormone therapy fort collins</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">4</td><td><div class="strong">Chiropractor in Wellington, CO: Care for Wellington and Waverly Patients</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>wellington chiropractor</code></td><td class="num">79</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">5</td><td><div class="strong">Medical Weight Loss in Fort Collins: How the Program Is Structured</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>fort collins weight loss</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">6</td><td><div class="strong">Personal Injury Care in Fort Collins: Documentation, Insurance and Treatment</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>personal injury doctors near me</code></td><td class="num"></td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">7</td><td><div class="strong">Chiropractor in Loveland, CO: Care for Loveland and Berthoud Patients</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractor loveland colorado</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">8</td><td><div class="strong">Knee Pain Relief in Fort Collins: Non-Surgical Options and When to Use Them</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>knee pain relief fort collins</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">9</td><td><div class="strong">Shoulder Pain Relief in Fort Collins: Rotator Cuff, Posture and Nerve Causes</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>shoulder pain relief fort collins</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">10</td><td><div class="strong">Back Pain Relief in Fort Collins: Treatment Paths Compared</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>back pain relief fort collins</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">11</td><td><div class="strong">PRP and Joint Injections in Fort Collins: What the Procedure Involves</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>prp fort collins</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">12</td><td><div class="strong">Choosing a Scoliosis Provider in Northern Colorado: Questions Worth Asking</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>adult scoliosis treatment near me</code></td><td class="num"></td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">13</td><td><div class="strong">Back Pain in Fort Collins: Finding the Cause Before Treating the Symptom</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>back pain fort collins</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">14</td><td><div class="strong">Is Spinal Decompression Right for Your Disc Injury?</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>disc injury treatment fort collins</code></td><td class="num">19</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">15</td><td><div class="strong">Chiropractor in Windsor, CO: Care for Windsor and Severance Patients</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>windsor chiropractors</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">16</td><td><div class="strong">Chiropractic Care for Timnath, CO: Scheduling Around the Commute</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractor timnath colorado</code></td><td class="num"></td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">17</td><td><div class="strong">Exploring The Scoliosis Degrees Of Curvature Chart</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>scoliosis degrees of curvature chart</code></td><td class="num">320</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">18</td><td><div class="strong">Ice or Heat for Back Pain?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>which is better for back pain ice or heat</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">19</td><td><div class="strong">Reversal of Peripheral Neuropathy in Patients with Diabetes</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>can you reverse neuropathy diabetes</code></td><td class="num">260</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">52</td><td><div class="strong">Scoliosis Specialist in Fort Collins: Diagnosis, Bracing and ScoliBalance</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>scoliosis specialist near me</code></td><td class="num"></td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">53</td><td><div class="strong">Neuropathy Treatment in Fort Collins: Options Beyond Medication</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>neuropathy treatment near me</code></td><td class="num">84</td><td class="num"><span class="kd-pill ve">4</span></td></tr>
+        <tr><td class="dim">54</td><td><div class="strong">Sciatica Treatment in Fort Collins: Which Specialist to See First</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>sciatica doctor near me</code></td><td class="num"></td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">55</td><td><div class="strong">Herniated Disc Treatment in Fort Collins Without Surgery</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>herniated disc treatment near me</code></td><td class="num"></td><td class="num"><span class="kd-pill ve">2</span></td></tr>
+        <tr><td class="dim">56</td><td><div class="strong">Back Pain That Keeps Coming Back: Where Northern Colorado Patients Start</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>back pain relief near me</code></td><td class="num"></td><td class="num"><span class="kd-pill e">29</span></td></tr>
+        <tr><td class="dim">57</td><td><div class="strong">Neck Pain Treatment in Fort Collins: Causes We Look For First</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>neck therapy near me</code></td><td class="num"></td><td class="num"><span class="kd-pill ve">2</span></td></tr>
+        <tr><td class="dim">58</td><td><div class="strong">Joint Injections in Fort Collins: Knees, Hips and the Sacroiliac Joint</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>joint injections near me</code></td><td class="num">180</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">59</td><td><div class="strong">Spinal Traction in Fort Collins: Decompression Without Surgery</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>traction therapy near me</code></td><td class="num"></td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">60</td><td><div class="strong">Shockwave Therapy in Fort Collins: What ESWT Treats</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>eswt near me</code></td><td class="num"></td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">61</td><td><div class="strong">Regenerative Medicine in Fort Collins: PRP and What It Is Used For</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>regenerative therapy near me</code></td><td class="num"></td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">62</td><td><div class="strong">Correcting a Rounded Upper Back in Fort Collins</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>kyphosis treatment near me</code></td><td class="num"></td><td class="num"><span class="kd-pill ve">4</span></td></tr>
+        <tr><td class="dim">63</td><td><div class="strong">What Parents Should Expect From Pediatric Chiropractic</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>pediatric chiropractor fort collins</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">64</td><td><div class="strong">Sports Injury Care: Return-to-Play Without Guesswork</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>sports injuries fort collins</code></td><td class="num">50</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">65</td><td><div class="strong">Pain Management Without Opioids: What Northern Colorado Patients Can Try First</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>pain management fort collins</code></td><td class="num">90</td><td class="num"><span class="kd-pill e">27</span></td></tr>
+        <tr><td class="dim">66</td><td><div class="strong">TMJ and Jaw Pain: The Neck Connection Most Patients Miss</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>tmj specialist fort collins</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">67</td><td><div class="strong">Back Pain Relief for Loveland Patients</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>back pain relief loveland</code></td><td class="num">50</td><td class="num"><span class="kd-pill ve">1</span></td></tr>
+        <tr><td class="dim">68</td><td><div class="strong">Neck Pain and Headaches in Loveland</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>neck pain relief loveland</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">69</td><td><div class="strong">Shoulder Pain Care, Loveland CO</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>shoulder pain relief loveland</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">70</td><td><div class="strong">Knee Pain in Loveland: When the Problem Is Not the Knee</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>knee pain relief loveland</code></td><td class="num">40</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">71</td><td><div class="strong">Testosterone Replacement Therapy in Fort Collins: TRT for Men</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>testosterone replacement therapy fort collins</code></td><td class="num">260</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">72</td><td><div class="strong">Women&#x27;s Hormone Therapy in Fort Collins: Perimenopause and Menopause</div><span class="chip pillar" style="background:var(--pillar-1)">Local Commercial</span><span class="chip funnel">Bot</span><span class="chip intent">Info</span></td><td class="kw"><code>womens hormone therapy fort collins</code></td><td class="num">110</td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="2">
+    <div class="month-head"><span><strong>40</strong> pieces</span><span><strong>41,520</strong> total monthly searches</span><span>Avg KD <strong>21</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">20</td><td><div class="strong">Chiropractic Care for Back Pain Relief - How Chiropractors Can Help</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractor back pain relief</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">21</td><td><div class="strong">Risser Sign In The General Diagnosis Of Scoliosis</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>risser stage 0</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">22</td><td><div class="strong">The Best Exercises For Scoliosis</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>scoliosis physical exercise</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">23</td><td><div class="strong">Can Scoliosis Be Fixed Without Surgery?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>scoliosis treatment without surgery</code></td><td class="num">210</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">24</td><td><div class="strong">Scoliosis in adults is common, progressive &amp; typically incorrectly diagnosed</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>how common is scoliosis</code></td><td class="num">2,400</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">25</td><td><div class="strong">The Connection Between Posture, Hyperkyphosis, And Spinal Health</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>hyperkyphotic posture</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">26</td><td><div class="strong">Understanding Scoliosis: Can It Be Cured?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>can scoliosis be cured</code></td><td class="num">1,000</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">27</td><td><div class="strong">TMJ Pain: Discover the Effectiveness of Chiropractic Services</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>tmj pain and chiropractic</code></td><td class="num">480</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">28</td><td><div class="strong">Does Magnesium Help With Low Back Pain?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>magnesium glycinate for back pain</code></td><td class="num">320</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">29</td><td><div class="strong">Are Chiropractic X-Rays Necessary?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>do all chiropractors take x rays</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">30</td><td><div class="strong">Checking For Scoliosis: Signs And Symptoms</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>how to check if you have scoliosis</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">31</td><td><div class="strong">What You Should Know About Scoliosis In Teenagers</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>signs and symptoms of scoliosis in teenager</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">32</td><td><div class="strong">Chiropractic BioPhysics: Advanced Techniques</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractic biophysics</code></td><td class="num">880</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">33</td><td><div class="strong">The Role of Chiropractic Care in Managing Stress and Anxiety</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>stress and chiropractic care</code></td><td class="num">90</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">34</td><td><div class="strong">Schroth Method: How Is It Used For Treating Scoliosis?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>rotational angular breathing</code></td><td class="num">90</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">35</td><td><div class="strong">Non-Structural And Structural Scoliosis: What’s The Difference?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>structural scoliosis</code></td><td class="num">210</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">36</td><td><div class="strong">Can Chiropractic Care Improve Athletic Performance? The Role of Chiropractic Care in Sports</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractic for athletes</code></td><td class="num">210</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">37</td><td><div class="strong">Meet the Team</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>six one clinic</code></td><td class="num">110</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">38</td><td><div class="strong">When Does Scoliosis Develop?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>can you grow out of scoliosis</code></td><td class="num">90</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">39</td><td><div class="strong">Reduced Immune Function Caused By Chronic Stress, Chronic Pain &amp; Inflammation: Why Good Spinal Health Is Key</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>inflammation and cortisol</code></td><td class="num">90</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">40</td><td><div class="strong">The Benefits Of Regular Chiropractic Adjustments For Managing Neck And Shoulder Pain</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>neck shoulder cramp</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">41</td><td><div class="strong">7 Keys to Living Pain Free</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>pain free for life</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">42</td><td><div class="strong">Effective Chiropractic Care for Sports Injuries</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractic care for sports injuries</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">43</td><td><div class="strong">NSAIDS: No Benefits, But Ample Harm: What Everyone Needs To Know</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>no nsaids</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">44</td><td><div class="strong">Benefits Of Spinal Decompression For Sciatica Treatment</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>sciatic decompression</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">45</td><td><div class="strong">Understand How Poor Posture Weakens and Damages Your Muscles</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>which of the following muscles will become long and weakened</code></td><td class="num">210</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">46</td><td><div class="strong">Can a Chiropractor Help a Pinched Nerve in the Neck?</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>chiropractor trapped nerve neck</code></td><td class="num">70</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">47</td><td><div class="strong">Chiropractic Care After Personal Injury</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>personal injury chiropractic treatment</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">48</td><td><div class="strong">Corrective Movement Therapy in Fort Collins</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>corrective movement therapy</code></td><td class="num">140</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">49</td><td><div class="strong">Ultimate Guide to Choosing the Right Chiropractor</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>choosing chiropractor</code></td><td class="num">50</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">50</td><td><div class="strong">First Visit to a Chiropractor</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>what to expect visiting chiropractor</code></td><td class="num">40</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">51</td><td><div class="strong">Treatments</div><span class="chip pillar" style="background:var(--pillar-2)">Existing corpus</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>square care medical group</code></td><td class="num">170</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">73</td><td><div class="strong">Does Sciatica Go Away on Its Own? What the Timeline Usually Looks Like</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>does sciatica go away</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">74</td><td><div class="strong">How to Sleep With Sciatica: Positions That Take Pressure Off the Nerve</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to sleep with sciatica</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">75</td><td><div class="strong">Can a Herniated Disc Heal on Its Own?</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>can disc herniation heal</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">76</td><td><div class="strong">How Slipped Disc Symptoms Differ From Ordinary Back Pain</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>slipped disc symptoms</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">77</td><td><div class="strong">What Causes Lower Back Pain? The Usual Suspects, Ranked</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>what causes lower back pain</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill m">33</span></td></tr>
+        <tr><td class="dim">78</td><td><div class="strong">Lower Back Pain in Women: Causes That Get Missed</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>sore lower back female</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill ve">4</span></td></tr>
+        <tr><td class="dim">79</td><td><div class="strong">Why You Wake Up With Neck Pain</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>neck ache when sleeping</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">80</td><td><div class="strong">Bulging Disc vs Herniated Disc, and Why the Difference Changes Treatment</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>bulged disk vs herniated</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">27</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="3">
+    <div class="month-head"><span><strong>40</strong> pieces</span><span><strong>77,870</strong> total monthly searches</span><span>Avg KD <strong>20</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">81</td><td><div class="strong">Head and Neck Strain: Where Tension Headaches Begin</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>head and neck strain</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">82</td><td><div class="strong">Disc Protrusion Explained, and When It Needs Treating</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>disc protrusion</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">83</td><td><div class="strong">Lower Back Tightness: Muscle or Joint?</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>lower back tightness</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">84</td><td><div class="strong">What Sharp Lower Back Pain Is Telling You</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>sharp lower back pain</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">85</td><td><div class="strong">Sciatica Pain in the Buttock: Piriformis or Disc?</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>what causes sciatica buttock pain</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">86</td><td><div class="strong">Early Signs of Neuropathy in the Feet</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>what is neuropathy of the feet</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">87</td><td><div class="strong">Pinched Nerve in the Upper Back: Symptoms and Relief</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>pinched nerve in upper back</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">88</td><td><div class="strong">Signs a Bulging Disc Is Getting Worse</div><span class="chip pillar" style="background:var(--pillar-3)">Back, Neck &amp; Nerve Pain</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>signs bulging disc getting worse</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">89</td><td><div class="strong">Prenatal Chiropractic: What It Helps With During Pregnancy</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>prenatal chiropractor</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">90</td><td><div class="strong">Are Chiropractors Safe? The Risks, Plainly</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>are chiropractors safe</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">91</td><td><div class="strong">What Does a Chiropractor Actually Do?</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>what does a chiropractor do</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">92</td><td><div class="strong">Do Chiropractors Take Insurance? How Coverage Usually Works</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>do chiropractors take insurance</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">2</span></td></tr>
+        <tr><td class="dim">93</td><td><div class="strong">When to See a Chiropractor, and When to See Someone Else</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>when to see a chiropractor</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">94</td><td><div class="strong">Sciatica During Pregnancy: Why It Happens and What Is Safe</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>sciatica during pregnancy</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">34</span></td></tr>
+        <tr><td class="dim">95</td><td><div class="strong">Can Chiropractors Prescribe Medication?</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>can chiropractors prescribe medicine</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">96</td><td><div class="strong">Warning Signs After a Chiropractic Adjustment</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>warning signs after chiropractor</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">4</span></td></tr>
+        <tr><td class="dim">97</td><td><div class="strong">Can an X-Ray Show a Bulging Disc?</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>can x ray show bulging disc</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">98</td><td><div class="strong">Can a Chiropractor Help With Vertigo?</div><span class="chip pillar" style="background:var(--pillar-4)">Fort Collins Chiropractic Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>can a chiropractor help with vertigo</code></td><td class="num">880</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">99</td><td><div class="strong">Why the Type of Scoliosis Changes the Treatment Plan</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>types of scoliosis</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">100</td><td><div class="strong">What Counts as Severe Scoliosis</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>severe scoliosis</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">101</td><td><div class="strong">Levoscoliosis of the Lumbar Spine: What a Left-Curving Lumbar Spine Means</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>levoscoliosis of the lumbar spine</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">102</td><td><div class="strong">Is Scoliosis Hereditary?</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>is scoliosis hereditary</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">103</td><td><div class="strong">Thoracolumbar Scoliosis, the Curve That Crosses the Mid-Back</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>thoracolumbar scoliosis</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">104</td><td><div class="strong">The Cobb Angle: How a Scoliosis Curve Is Measured</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>cobb angle scoliosis</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">105</td><td><div class="strong">Congenital Scoliosis, Present From Birth</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>congenital scoliosis</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill m">35</span></td></tr>
+        <tr><td class="dim">106</td><td><div class="strong">Can You Develop Scoliosis as an Adult?</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>can you develop scoliosis as an adult</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">107</td><td><div class="strong">Levoscoliosis vs Dextroscoliosis: Which Way the Curve Turns</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>levoscoliosis vs dextroscoliosis</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">108</td><td><div class="strong">Degenerative Scoliosis After 50</div><span class="chip pillar" style="background:#7A4FA3">Scoliosis Care</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>scoliosis in adults over 50</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">109</td><td><div class="strong">How to Decompress Your Spine, and the Limits of Doing It Yourself</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to decompress spine</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">110</td><td><div class="strong">Vertebral Decompression Therapy: How the Traction Works</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>vertebral decompression therapy</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">111</td><td><div class="strong">Spinal Alignment: What It Means on an X-Ray</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>spinal alignment</code></td><td class="num">880</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">112</td><td><div class="strong">Where Spinal Traction Fits in a Treatment Plan</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>traction therapy</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">113</td><td><div class="strong">Correcting Forward Head Posture</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>how to correct forward head posture</code></td><td class="num">480</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">114</td><td><div class="strong">How Long Does It Take to Fix Your Posture?</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how long does it take to fix posture</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">115</td><td><div class="strong">Relieving Pressure in the Neck With Cervical Decompression</div><span class="chip pillar" style="background:#3D6B2F">Spinal Correction &amp; Decompression</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>decompression of neck</code></td><td class="num">480</td><td class="num"><span class="kd-pill ve">12</span></td></tr>
+        <tr><td class="dim">116</td><td><div class="strong">The Four Stages of Osteoarthritis</div><span class="chip pillar" style="background:var(--pillar-1)">Hormone &amp; Regenerative Medicine</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>what are the 4 stages of osteoarthritis</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">117</td><td><div class="strong">Cervical Spondylosis, or Osteoarthritis in the Neck</div><span class="chip pillar" style="background:var(--pillar-1)">Hormone &amp; Regenerative Medicine</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>osteoarthritis neck</code></td><td class="num">480</td><td class="num"><span class="kd-pill m">38</span></td></tr>
+        <tr><td class="dim">118</td><td><div class="strong">PRP for Joint Pain: How Far the Evidence Goes</div><span class="chip pillar" style="background:var(--pillar-1)">Hormone &amp; Regenerative Medicine</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>regenerative medicine for joint pain</code></td><td class="num">170</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">119</td><td><div class="strong">How Do You Know If You Need Hormone Replacement Therapy?</div><span class="chip pillar" style="background:var(--pillar-1)">Hormone &amp; Regenerative Medicine</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>how do you know if you need hormone replacement therapy</code></td><td class="num">110</td><td class="num"><span class="kd-pill e">25</span></td></tr>
+        <tr><td class="dim">120</td><td><div class="strong">Chiropractic Care for Osteoarthritis</div><span class="chip pillar" style="background:var(--pillar-1)">Hormone &amp; Regenerative Medicine</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>osteoarthritis and chiropractic care</code></td><td class="num">110</td><td class="num"><span class="kd-pill ve">2</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · WHY THIS PLAN ════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Why this plan</div>
+    <h2>Why this plan and not a bigger one</h2>
+    <p class="subtitle">What we chose, what we left out, and the reasoning behind both.</p>
+  </div>
+  <h3 style="font-size:14px;color:var(--client-accent);margin-top:6px;">The pillars</h3>
+  <div class="strategy-grid">
+    <div class="strategy-card" style="border-left-color:var(--pillar-1);"><h4>Local Commercial · 37 pieces</h4><p>The pages that convert. Your hormone therapy work splits into three, your treatment pages get rewritten for the searches they were built for, and Loveland gets the attention its 486 monthly Search Console impressions across 66 queries deserve.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-2);"><h4>Your existing corpus · 35 refreshes</h4><p>Your best-read articles get a Fort Collins block, a call to action and a link to the matching treatment page. Light work, and it converts readers you are already earning.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-3);"><h4>Back, neck and nerve pain · 16 articles</h4><p>The largest cluster of questions patients ask before they book, anchored to your back pain, neck pain, sciatica and disc pages.</p></div>
+    <div class="strategy-card" style="border-left-color:#7A4FA3;"><h4>Scoliosis care · 10 articles</h4><p>You already rank for 189 scoliosis searches. This deepens a genuine specialty rather than starting one, and points it at Northern Colorado.</p></div>
+  </div>
+  <div class="two-col" style="margin-top:16px;">
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What we deliberately excluded</h3>
+      <ul class="x-list">
+        <li><strong>Massage, 5,800 monthly searches</strong>. Your site has no massage service page and it is not in your navigation. Large, tempting, and not something you sell. Worth a conversation if that is wrong.</li>
+        <li><strong>Schroth method, 1,920 monthly searches</strong>. Two very easy keywords wanted us to present you as a Schroth provider. Emma Silke holds ScoliBalance Level 1 and 2, which is a different program. We are not claiming a certification you do not hold.</li>
+        <li><strong>National head terms, roughly 5 million searches</strong>. Terms like neuropathy at 301,000 a month. This is the content that made up 96% of your traffic and produced inquiries at 0.23%. We cut the head terms. We did keep 48 mid-tail question articles, and the reason is on the right.</li>
+        <li><strong>Rival clinic names and out-of-area towns</strong>. 158 keywords, including competitor brands and Denver-area suburbs. Real volume, no patients in it for you.</li>
+      </ul>
+      <div class="callout info" style="margin-top:12px;font-size:12px;">
+<strong>The raw research offered 5.45 million monthly searches. The net-new local demand underneath it is roughly two thousand a month.</strong> Both numbers are real and they measure different things. That is also why this is 120 pieces of work rather than 120 new articles: on a market this size, writing that many brand-new pages would mean padding. Fifty-one of the 120 improve pages you already own, which is where your fastest movement is, and the rest are aimed at demand we can evidence.
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What to expect, month by month</h3>
+      <div class="strategy-timeline">
+        <div class="ts-step" style="border-top-color:var(--pillar-1);"><div class="ts-when">M1</div><div class="ts-what">Page conflicts resolved, hormone cluster and local pages live</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-2);"><div class="ts-when">M2–3</div><div class="ts-what">First movement on searches you already rank 11 to 30 for</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-3);"><div class="ts-when">M4–6</div><div class="ts-what">Local pages reach page one and start producing inquiries</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-4);"><div class="ts-when">M6–12</div><div class="ts-what">Supporting depth compounds; head terms become defensible</div></div>
+      </div>
+      <h3 style="font-size:14px;color:var(--client-accent);margin-top:12px;">How each article is built</h3>
+      <p style="font-size:12.5px;line-height:1.6;">Each piece starts from a search in your Search Console, gets checked against your live site so nothing claims a service or credential you do not offer, and is written to point at the treatment page that earns the inquiry. Refreshes keep their existing address so the history and links stay intact. On the 48 informational articles in months two and three: these are deliberately not the national head terms we cut. They are the questions a patient asks in the week before they book, they each carry a Fort Collins call to action and a link to the treatment page that converts, and their job is to make those treatment pages rank. That link is the thing your current blog is missing, which is why 58,540 visits produced 135 inquiries.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14 · PROJECTED TRAJECTORY — the closing slide ═════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Your projected trajectory</div>
+    <h2>Where this gets you</h2>
+    <p class="subtitle">From 739 verified organic sessions a month, on a conservative model.</p>
+  </div>
+  <div class="fill">
+    <div class="chart-wrap">
+<svg viewBox="0 0 900 260" width="100%" style="display:block">
+<g stroke="rgba(0,0,0,0.08)" stroke-width="1"><line x1="60" y1="30" x2="880" y2="30"/><line x1="60" y1="110" x2="880" y2="110"/><line x1="60" y1="190" x2="880" y2="190"/></g>
+<g fill="#6b6b6b" font-size="11" text-anchor="end"><text x="52" y="194">0</text><text x="52" y="114">800</text><text x="52" y="34">1.6K</text></g>
+<polyline fill="none" stroke="var(--client-accent)" stroke-width="3.5" stroke-dasharray="8,4" points="80,116 340,108 560,92 880,60"/>
+<rect x="72" y="116" width="8" height="74" rx="1" fill="rgba(47,193,113,0.4)"/>
+<circle cx="80" cy="116" r="6" fill="var(--good)"/>
+<circle cx="340" cy="108" r="5" fill="var(--client-accent)"/>
+<circle cx="560" cy="92" r="5" fill="var(--client-accent)"/>
+<circle cx="880" cy="60" r="6.5" fill="var(--et-honey)"/>
+<g font-weight="700"><text x="80" y="106" text-anchor="middle" fill="var(--good)" font-size="13">739</text>
+<text x="340" y="97" text-anchor="middle" fill="#6b6b6b" font-size="12">~820</text>
+<text x="560" y="81" text-anchor="middle" fill="#6b6b6b" font-size="12">~980</text>
+<text x="880" y="49" text-anchor="end" fill="#e0930a" font-size="15">~1,300</text>
+</g>
+<g fill="#6b6b6b" font-size="11" text-anchor="middle"><text x="80" y="215">Aug &#x27;26</text>
+<text x="340" y="215">Month 3</text>
+<text x="560" y="215">Month 6</text>
+<text text-anchor="end" x="898" y="215">Month 12</text>
+</g>
+<g font-size="10" text-anchor="middle" font-weight="600"><text x="80" y="230" fill="var(--good)">Confirmed (GA4)</text>
+<text x="340" y="230" fill="#6b6b6b">+11%</text>
+<text x="560" y="230" fill="#6b6b6b">+33%</text>
+<text text-anchor="end" x="898" y="230" fill="#e0930a">+76%</text>
+</g></svg>
+      <div class="legend"><span><i style="background:var(--good)"></i>Confirmed (GA4)</span><span><i style="background:var(--client-accent)"></i>Projected</span></div>
+    </div>
+    <div class="callout mt">
+<strong>Directional, not guaranteed.</strong> These are modelled from your current baseline on conservative assumptions, and they deliberately do not assume the national blog traffic comes back. That traffic converted at 0.23%. The growth here is local, which is worth more per visit than the number suggests.
+    </div>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Square One Health · SEO Growth Roadmap</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  const storeKey = 'et-deck-' + location.pathname;
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem(storeKey, i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button') || e.target.closest('.mtab')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  document.querySelectorAll('.mtab').forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.stopPropagation();
+      const target = tab.getAttribute('data-mtarget');
+      const slide = tab.closest('.slide');
+      slide.querySelectorAll('.mtab').forEach(t => t.classList.toggle('is-active', t === tab));
+      slide.querySelectorAll('.month-block').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-month') === target));
+    });
+  });
+  go(0);
+</script>
+</body>
+</html>
