@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Square One Health · AEO Strategy · EmberTribe</title>
+<style>
+/* EmberTribe brand type — Quatro, served from decks/fonts/ (flat deck → "fonts/...") */
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  /* EmberTribe frame — canonical tokens */
+  --ember-red:#FF333C;      /* Candy Apple Red */
+  --ember-dark:#e62831;     /* red hover/press */
+  --ember-yellow:#FFB000;   /* Honey Yellow accent */
+  --et-black:#000000;
+
+  /* Square One Health accent — single accent only, never the theme */
+  --accent:#2F6B7C;
+  --accent-mid:#255663;
+  --accent-soft:#eaf0f2;
+
+  /* Universal palette */
+  --text:#232323;
+  --text-light:#6b6b6b;
+  --light-bg:#f7f7f7;
+  --card-bg:#ffffff;
+  --border:#e7e7e7;
+  --green:#2FC171;
+  --yellow:#FFB000;
+  --red:#FF333C;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif;
+  background:var(--ember-red);
+  overflow:hidden; height:100vh; width:100vw;
+  color:var(--text); line-height:1.6;
+}
+
+.deck { width:100vw; height:100vh; position:relative; }
+
+.slide {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:none; flex-direction:column; padding:48px 64px;
+  overflow-y:auto; background:var(--card-bg);
+}
+.slide.active { display:flex; }
+
+/* Red cover slides — solid Candy Apple Red field, white headline, black labels */
+.slide.dark {
+  background:var(--ember-red);
+  color:#ffffff;
+}
+.slide.dark .subtitle { color:rgba(255,255,255,0.9); }
+.slide.dark .slide-label { color:var(--et-black); }
+.slide.dark .stat-card { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.28); }
+.slide.dark .stat-label { color:rgba(255,255,255,0.85); }
+.slide.dark .logo-ember { color:#ffffff; }
+.slide.dark .logo-date { color:rgba(255,255,255,0.6); }
+.slide.dark .logo-row { border-top-color:rgba(255,255,255,0.25); }
+
+/* Typography */
+h1 { font-size:52px; font-weight:700; letter-spacing:-1px; line-height:1.05; margin-bottom:14px; }
+h2 { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1.15; margin-bottom:8px; color:var(--et-black); }
+h3 { font-size:20px; font-weight:700; margin-bottom:8px; color:var(--et-black); }
+h4 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--et-black); }
+
+.subtitle { font-size:19px; font-weight:400; color:var(--text-light); max-width:860px; margin-bottom:22px; line-height:1.5; }
+.slide-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--ember-red); margin-bottom:10px; }
+
+/* Stat cards */
+.stats-row { display:flex; gap:16px; margin:16px 0; flex-wrap:wrap; }
+.stat-card { flex:1; min-width:150px; background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:20px 24px; }
+.stat-value { font-size:38px; font-weight:700; line-height:1.05; margin-bottom:4px; }
+.stat-value.white { color:#fff; }
+.stat-value.accent { color:var(--accent); }
+.stat-label { font-size:13px; font-weight:500; color:var(--text-light); }
+
+/* Annotations */
+.annotation { background:#fff5f5; border-left:3px solid var(--ember-red); border-radius:0 8px 8px 0; padding:13px 18px; font-size:14.5px; margin:14px 0; line-height:1.55; }
+.annotation strong { color:var(--ember-dark); }
+.annotation.info { background:var(--accent-soft); border-left-color:var(--accent); }
+.annotation.info strong { color:var(--accent-mid); }
+.annotation.success { background:#e9f9f0; border-left-color:var(--green); }
+.annotation.success strong { color:#1f8a4c; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+th.accent { background:var(--accent); }
+td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+tbody tr:nth-child(even) td { background:var(--light-bg); }
+.center { text-align:center; }
+.check { color:var(--green); font-weight:700; }
+
+/* Columns */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; flex:1; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
+
+/* Channel / strategy cards */
+.channel-card { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.channel-card .channel-icon { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:9px; background:var(--ember-red); color:#fff; font-size:16px; font-weight:700; margin-bottom:10px; }
+.channel-card h3 { margin-bottom:12px; }
+.channel-card ul { list-style:none; padding:0; }
+.channel-card ul li { position:relative; padding-left:18px; margin-bottom:7px; font-size:14px; line-height:1.5; }
+.channel-card ul li::before { content:"—"; position:absolute; left:0; top:0; color:var(--accent); font-weight:700; }
+.channel-card .sub-list li::before { color:var(--ember-red); }
+
+/* Body bullet lists */
+ul.body { list-style:none; padding:0; margin:6px 0; }
+ul.body li { position:relative; padding-left:20px; margin-bottom:8px; font-size:16px; line-height:1.55; }
+ul.body li::before { content:"—"; position:absolute; left:0; color:var(--ember-red); font-weight:700; }
+
+/* Prompt grid */
+.prompt-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin:14px 0; }
+.prompt-grid .q { border:1px solid var(--border); border-radius:12px; padding:13px 16px; font-size:14.5px; color:var(--text); line-height:1.45; background:var(--light-bg); }
+.prompt-grid .q b { color:var(--accent-mid); font-weight:700; }
+.prompt-grid .q .qp { display:block; font-size:9.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-light); font-weight:700; margin-top:7px; }
+
+/* Quotes */
+.quote { border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:15px 20px; margin:11px 0; background:#fff; }
+.quote p { font-size:15px; line-height:1.6; color:var(--text); margin:0; font-style:italic; }
+.quote .src { display:block; font-style:normal; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-light); margin-top:10px; font-weight:700; }
+
+/* Thread card */
+.thread { border:1px solid var(--border); border-radius:12px; padding:18px 22px; background:var(--light-bg); margin-bottom:14px; }
+.thread .th-tag { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent-mid); margin-bottom:6px; }
+.thread .th-title { font-size:17px; font-weight:700; color:var(--et-black); margin-bottom:6px; }
+.thread .th-body { font-size:14px; color:var(--text-light); line-height:1.55; }
+
+/* Layer rows */
+.layer { display:grid; grid-template-columns:44px 1fr; gap:18px; align-items:start; border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-bottom:14px; background:var(--card-bg); }
+.layer .num { width:44px; height:44px; border-radius:11px; background:var(--accent); color:#fff; font-size:19px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.layer h3 { margin-bottom:4px; }
+.layer p { font-size:14.5px; color:var(--text-light); line-height:1.5; }
+.layer .tag-row { margin-top:9px; display:flex; gap:8px; flex-wrap:wrap; }
+
+/* Pricing tiers */
+.tier-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin:12px 0; flex:1; }
+.tier { border:1px solid var(--border); border-radius:14px; padding:22px 22px 24px; display:flex; flex-direction:column; background:var(--card-bg); position:relative; }
+.tier.featured { border:2px solid var(--accent); box-shadow:0 10px 30px rgba(47,107,124,0.14); }
+.tier .tier-name { font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent-mid); margin-bottom:8px; }
+.tier .tier-price { font-size:34px; font-weight:700; color:var(--et-black); line-height:1; }
+.tier .tier-price span { font-size:15px; font-weight:600; color:var(--text-light); }
+.tier ul { list-style:none; padding:0; margin:16px 0 0; }
+.tier ul li { position:relative; padding-left:20px; margin-bottom:9px; font-size:14px; line-height:1.45; }
+.tier ul li::before { content:"—"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+.tier-flag { position:absolute; top:-11px; right:18px; background:var(--ember-yellow); color:#3a2600; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:4px 11px; border-radius:20px; }
+
+/* Price table (a la carte) */
+.price-table td.p { font-weight:700; color:var(--accent-mid); text-align:right; white-space:nowrap; }
+.price-table th.center, .price-table td.center { text-align:center; }
+
+/* Pills */
+.pill { display:inline-block; padding:3px 11px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+.pill.acc { background:var(--accent-soft); color:var(--accent-mid); }
+.pill.rec { background:var(--ember-yellow); color:#3a2600; }
+
+/* Stat strip */
+.stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0; }
+.stat-strip .s { border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+.stat-strip .s .v { font-weight:700; font-size:30px; color:var(--accent); line-height:1; }
+.stat-strip .s .k { font-size:12.5px; color:var(--text-light); margin-top:8px; line-height:1.4; }
+
+/* Utility */
+.flex-grow { flex:1; }
+.mt-16 { margin-top:16px; }
+.accent { color:var(--accent-mid); }
+
+/* Logo row */
+.logo-row { margin-top:auto; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.logo-ember { font-size:14px; font-weight:700; letter-spacing:2px; color:var(--ember-red); }
+.logo-date { font-size:12px; color:var(--text-light); font-style:italic; }
+
+/* Progress bar */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg, var(--ember-red), var(--accent)); z-index:100; transition:width 0.3s ease; }
+
+/* Navigation */
+.nav { position:fixed; bottom:24px; right:32px; display:flex; align-items:center; gap:12px; z-index:100; }
+.nav button { width:40px; height:40px; border-radius:8px; border:1px solid rgba(0,0,0,0.15); background:rgba(0,0,0,0.55); color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.nav button:hover { background:rgba(0,0,0,0.75); transform:scale(1.05); }
+.counter { font-size:13px; font-weight:600; color:#fff; background:rgba(0,0,0,0.45); padding:6px 14px; border-radius:6px; }
+
+@media (max-width:1024px) {
+  .slide { padding:32px 40px; }
+  h1 { font-size:38px; } h2 { font-size:28px; }
+  .two-col, .three-col, .prompt-grid, .tier-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Red cover) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AEO Strategy · AI Visibility</p>
+      <h1>Own the AI answer for<br>Fort Collins care</h1>
+      <p class="subtitle">When a Northern Colorado patient asks ChatGPT, Google's AI, or Gemini who to see for their back pain or hormone therapy, the answer is being built from content and Reddit right now, and your name is almost never in it. Here is how we change that.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value white">14<span style="font-size:20px;">/100</span></div>
+          <div class="stat-label">Your AI Visibility Score today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">165</div>
+          <div class="stat-label">Of your pages AI cites as a source</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">1</div>
+          <div class="stat-label">Times AI named you in the answer</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">3</div>
+          <div class="stat-label">Layers this plan turns on</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for the Square One Health team · Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: THE SHIFT -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Shift</p>
+    <h2>Patients ask AI. AI answers from sources you don't control yet.</h2>
+    <p class="subtitle">The first search for a chiropractor or a hormone clinic increasingly happens inside an assistant, not on a page of blue links. When those engines answer, they pull from two places: entity-rich content that clearly identifies who does what, and Reddit threads where real people compare providers.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>What changed</h3>
+        <ul class="body">
+          <li>Patients ask an assistant to just name who to see, instead of scrolling a results page.</li>
+          <li>AI engines lean on Reddit and structured, well-attributed pages far more than on marketing copy.</li>
+          <li>One clearly-authored page or well-placed thread can feed dozens of AI answers for months.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Why it lands for Square One</h3>
+        <ul class="body">
+          <li>Your pages are already good enough to cite. What's missing is the layer that ties the answer to your name.</li>
+          <li>Independent clinics are barely visible in AI answers, so this is an early market you can own locally.</li>
+          <li>You already rank just off page one for your city's core searches. The same signals feed AI.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The goal:</strong> ask any assistant "who should I see in Fort Collins for sciatica, scoliosis, or hormone therapy," and Square One Health is in the answer, by name, with the right reasons.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 3: THE DIAGNOSIS -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Where You Stand</p>
+    <h2>AI reads you constantly. It almost never says your name.</h2>
+    <p class="subtitle">SEMrush samples thousands of buyer-style questions in your category and runs them through ChatGPT, Google AI Overview, Google AI Mode, and Gemini, then counts how often your brand is named (mentions) versus how often your pages are quietly used as the source (cited pages). Your reading is the classic attribution gap.</p>
+    <div class="stat-strip">
+      <div class="s"><div class="v">14 / 100</div><div class="k">AI Visibility Score — the "effectively invisible" band</div></div>
+      <div class="s"><div class="v">165</div><div class="k">Unique pages of yours cited as the source of an answer</div></div>
+      <div class="s"><div class="v">1</div><div class="k">Times "Square One Health" was named across all four engines</div></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Where you show up, by engine</th><th class="center">Mentions</th><th class="center">Cited pages</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Google AI Overview <span style="color:var(--text-light);">— the AI box at the top of results</span></td><td class="center">1</td><td class="center">150</td></tr>
+        <tr><td>Google AI Mode <span style="color:var(--text-light);">— the full conversational search mode</span></td><td class="center">0</td><td class="center">11</td></tr>
+        <tr><td>ChatGPT <span style="color:var(--text-light);">— where a lot of health questions now start</span></td><td class="center">0</td><td class="center">6</td></tr>
+        <tr><td>Gemini <span style="color:var(--text-light);">— built into Android and Workspace</span></td><td class="center">0</td><td class="center">4</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Read it this way:</strong> AI is using your content to answer the question and crediting someone else. The fix isn't more pages, it's the attribution layer that turns a cited page into a named recommendation.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 4: TARGET PROMPTS -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">Target Prompts</p>
+    <h2>The questions we want to win</h2>
+    <p class="subtitle">Built from the searches you already appear in on your own Search Console, spread across your service lines. Every prompt is a question a real Northern Colorado patient is asking an assistant right now.</p>
+    <div class="prompt-grid">
+      <div class="q">Best <b>chiropractor in Fort Collins</b>?<span class="qp">Local Commercial · Chiropractic</span></div>
+      <div class="q">Who does <b>hormone replacement therapy near me</b> in Fort Collins?<span class="qp">Hormone &amp; Regenerative</span></div>
+      <div class="q">Where to get <b>bioidentical hormone therapy</b> in Northern Colorado?<span class="qp">Hormone &amp; Regenerative</span></div>
+      <div class="q">Best clinic for <b>testosterone replacement therapy</b> near me?<span class="qp">Hormone &amp; Regenerative</span></div>
+      <div class="q">Who treats <b>scoliosis</b> without surgery in Fort Collins?<span class="qp">Scoliosis Care</span></div>
+      <div class="q">Non-surgical <b>herniated disc / spinal decompression</b> options?<span class="qp">Spinal Correction</span></div>
+      <div class="q">Best <b>neuropathy treatment</b> near me?<span class="qp">Back, Neck &amp; Nerve</span></div>
+      <div class="q">Who to see first for <b>sciatica</b> in Fort Collins?<span class="qp">Back, Neck &amp; Nerve</span></div>
+      <div class="q">Chiropractor for <b>knee or joint injections (PRP)</b> near me?<span class="qp">Regenerative</span></div>
+      <div class="q">Best <b>medical weight loss</b> program in Fort Collins?<span class="qp">Local Commercial</span></div>
+    </div>
+    <div class="annotation info">
+      <strong>Why it's paired:</strong> when AI answers "best chiropractor for sciatica in Fort Collins," it should find a cited page on your site <em>and</em> a matching Reddit thread saying the same thing. Two sources, one story, your name in both.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 5: THE THREE LAYERS -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">The Approach</p>
+    <h2>Three layers turn a cited page into a named answer</h2>
+    <p class="subtitle">AEO isn't one lever. It's an on-site layer that makes AI confident about who you are, a content layer that gives it more to cite, and an off-site layer where patients vouch for you in the rooms AI trusts.</p>
+    <div class="flex-grow">
+      <div class="layer">
+        <div class="num">1</div>
+        <div>
+          <h3>On-site answer layer</h3>
+          <p>Make every page unmistakably attributable: FAQ/Q&amp;A schema on the pages already being cited, a named, credentialed clinician on each clinical page, and consistent contact and location data so the entity is never in doubt.</p>
+          <div class="tag-row"><span class="pill acc">Schema</span><span class="pill acc">Named clinicians</span><span class="pill acc">Entity consistency</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num">2</div>
+        <div>
+          <h3>Entity-rich content — ClusterMagic</h3>
+          <p>The engine that gives AI more of you to cite, built around the entities Google already understands and pointed at the service searches you're closest to winning. This is also how we close the keyword gap on your Fort Collins rivals.</p>
+          <div class="tag-row"><span class="pill acc">Topic clusters</span><span class="pill acc">Internal linking</span><span class="pill acc">Answer-shaped pages</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num">3</div>
+        <div>
+          <h3>Off-site trust — Reddit AEO placements</h3>
+          <p>Helpful, on-topic participation in the local and condition subreddits AI cites for provider questions, so a real recommendation exists outside your own site. Purchasable inside a package or standalone by the mention.</p>
+          <div class="tag-row"><span class="pill acc">Local rooms</span><span class="pill acc">Condition rooms</span><span class="pill acc">Real participation</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 6: LAYER 1 — ON-SITE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Layer 1 · On-Site</p>
+    <h2>Make the answer point at you</h2>
+    <p class="subtitle">This is the cheapest, fastest lift, and it's the direct fix for the attribution gap on slide 3. Three moves on pages you already own.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">1</div>
+        <h3>FAQ / Q&amp;A schema</h3>
+        <ul>
+          <li>Several pages already carry visible FAQs, including the homepage, but none are marked up.</li>
+          <li>Add Q&amp;A schema so engines can read them as answers.</li>
+          <li>Zero of 100 pages have it today, so this is pure upside.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">2</div>
+        <h3>Named clinicians</h3>
+        <ul>
+          <li>Attach a real, credentialed practitioner to each clinical page.</li>
+          <li>Gives AI a person and an authority signal to tie the claim to.</li>
+          <li>The E-E-A-T layer AI leans on hardest for health topics.</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">3</div>
+        <h3>Entity consistency</h3>
+        <ul>
+          <li>One phone number and address everywhere — your markup and site currently disagree.</li>
+          <li>One canonical page per service so signals stop splitting.</li>
+          <li>Internal links putting a Fort Collins treatment page one click from every cited article.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>Already in your favor:</strong> your business schema is in good shape on 83 of the 100 pages we checked, so this is an addition, not a rebuild.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 7: LAYER 2 — CLUSTERMAGIC -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">Layer 2 · Content Engine</p>
+    <h2>ClusterMagic gives AI more of you to cite</h2>
+    <p class="subtitle">An AI-powered content engine that builds entity-rich architectures for compounding authority, the same engine behind 4+ years of zero-penalty growth across our portfolio. It also closes the gap on your Fort Collins rivals: Spine Correction Center holds 3,800 ranking keywords to your 928 on a comparable link profile. That's a gap pages close, not links.</p>
+    <div class="two-col flex-grow" style="grid-template-columns:1.1fr 0.9fr;">
+      <div>
+        <h3>How it works</h3>
+        <ul class="body">
+          <li><strong>Entity-rich</strong> — every article is built around entities Google's index already understands, with structured data and internal links that tell AI exactly what each page is.</li>
+          <li><strong>Answer-shaped</strong> — articles are written to answer the buying questions on slide 4, so they're eligible to be the cited source.</li>
+          <li><strong>Compounds</strong> — content improves with each Google update because it's built on real entities and intent, not prompts.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="channel-card" style="background:var(--accent-soft); border-color:var(--accent);">
+          <p class="slide-label" style="color:var(--accent-mid);">Case Study · Flagship Client</p>
+          <h3 style="font-size:26px;">8,500 → 500,000 monthly visits</h3>
+          <p style="font-size:14px; color:var(--text-light); line-height:1.5; margin-bottom:12px;">Anonymized client under NDA. Twelve months on the same engine took them from 8,500 monthly organic visitors to half a million, still climbing, with zero algorithm penalties in 4+ years.</p>
+          <div class="stat-strip" style="grid-template-columns:1fr 1fr; margin:0;">
+            <div class="s" style="padding:14px;"><div class="v" style="font-size:24px;">~59×</div><div class="k">Growth in 12 months</div></div>
+            <div class="s" style="padding:14px;"><div class="v" style="font-size:24px;">0</div><div class="k">Penalties in 4+ years</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Where it points first:</strong> the hormone and local service searches you already rank just off page one for, so the content compounds on demand you've already proven exists.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 8: LAYER 3 — REDDIT -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">Layer 3 · Off-Site Trust</p>
+    <h2>Where Fort Collins patients ask before they book</h2>
+    <p class="subtitle">AI cites Reddit heavily for "who should I see" questions because it's real people, not marketing. We work three circles of rooms, local first, where a Northern Colorado recommendation carries the most weight.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">1</div>
+        <h3>Local rooms</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Highest intent, highest weight</p>
+        <ul>
+          <li>r/FortCollins</li>
+          <li>r/Colorado</li>
+          <li>r/ColoradoSprings <span style="color:var(--text-light);">(regional reach)</span></li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">2</div>
+        <h3>Condition rooms</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Where searchers compare care</p>
+        <ul>
+          <li>r/Sciatica · r/backpain</li>
+          <li>r/Scoliosis</li>
+          <li>r/PeripheralNeuropathy</li>
+          <li>r/Testosterone · r/Menopause</li>
+        </ul>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">3</div>
+        <h3>Broad wellness</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:10px;">Reach and reinforcement</p>
+        <ul>
+          <li>r/Chiropractic</li>
+          <li>r/ChronicPain</li>
+          <li>r/Supplements <span style="color:var(--text-light);">(you already rank here)</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The beachhead:</strong> r/FortCollins is where "can anyone recommend a chiropractor" threads already happen. We win the local recommendation first, then reinforce it in the condition rooms.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 9: GUARDRAILS -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Guardrails</p>
+    <h2>The rules every placement follows</h2>
+    <p class="subtitle">This is health content in strict rooms. A placement that breaks one of these does more damage than the citation is worth, so they're non-negotiable, and they're the reason we do this instead of buying fake reviews.</p>
+    <table>
+      <thead><tr><th>The rule</th><th>What it means in practice</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Help first, brand second</strong></td><td>On-topic value in every post. No fake accounts, no link dumps, no astroturfing, ever.</td></tr>
+        <tr><td><strong>No medical claims</strong></td><td>Share experience and options, never diagnose or promise outcomes. "Talk to a provider" stays in the answer.</td></tr>
+        <tr><td><strong>Disclose where required</strong></td><td>Respect each subreddit's self-promotion and disclosure rules. Strict medical subs (e.g. r/AskDocs) are read-only for us.</td></tr>
+        <tr><td><strong>Named, real participation</strong></td><td>Recommendations come from genuine local/patient context, not a sockpuppet posing as a stranger.</td></tr>
+        <tr><td><strong>Claims match the site</strong></td><td>Reddit and your service pages never contradict each other. Same scope, same wording, nothing overstated.</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Why it matters:</strong> AI rewards the threads that read as honest, and so does Reddit. The moment a placement looks planted, it's worthless in both. Legitimacy is the strategy, not a constraint on it.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 10: PACKAGES -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Packages · Recommended</p>
+    <h2>AI Visibility packages — all three layers, one retainer</h2>
+    <p class="subtitle">The bundled path. AEO placements, ClusterMagic content, and authority backlinks in one monthly scope, priced flat with no discounting.</p>
+    <div class="tier-grid">
+      <div class="tier">
+        <div class="tier-name">AI Visibility Starter</div>
+        <div class="tier-price">$1,750<span> /mo</span></div>
+        <ul>
+          <li>5 AEO placements / mo</li>
+          <li>10 ClusterMagic articles / mo</li>
+          <li>On-site answer-layer fixes</li>
+          <li>No backlinks</li>
+        </ul>
+      </div>
+      <div class="tier featured">
+        <div class="tier-flag">Most popular</div>
+        <div class="tier-name">AI Growth Engine</div>
+        <div class="tier-price">$3,450<span> /mo</span></div>
+        <ul>
+          <li>8 AEO placements / mo</li>
+          <li>25 ClusterMagic articles / mo</li>
+          <li>2 DA40+ backlinks / mo</li>
+          <li>The volume that closes the keyword gap</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-name">AI Authority Accelerator</div>
+        <div class="tier-price">$5,250<span> /mo</span></div>
+        <ul>
+          <li>12 AEO placements / mo</li>
+          <li>40 ClusterMagic articles / mo</li>
+          <li>2 DA50+ backlinks / mo</li>
+          <li>Fastest path to category ownership</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>Our recommendation:</strong> the <strong>AI Growth Engine at $3,450/mo</strong>. Your rivals hold a 4× keyword lead on a similar link profile, so you need content volume plus the placements and backlinks to convert it, and that's the tier built for it.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 11: A LA CARTE -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Standalone Options</p>
+    <h2>Or build it à la carte</h2>
+    <p class="subtitle">If you'd rather start with one layer, both the content engine and the Reddit placements sell standalone. Mix them to match your budget, then fold into a package as it proves out.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>ClusterMagic content — standalone</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:6px;">Articles only, 25/mo minimum. Longer commitments price lower.</p>
+        <table class="price-table">
+          <thead><tr><th>Articles / mo</th><th class="p" style="color:#fff;">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>25 <span style="color:var(--text-light);">(minimum)</span></td><td class="p">$1,000</td></tr>
+            <tr><td>40</td><td class="p">$1,500</td></tr>
+            <tr><td>50</td><td class="p">$1,750</td></tr>
+            <tr><td>100</td><td class="p">$3,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Reddit mentions — standalone</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:6px;">AEO placements only: contributed replies and seeded threads in the rooms on slide 8.</p>
+        <table class="price-table">
+          <thead><tr><th>Mentions / mo</th><th class="p" style="color:#fff;">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>5 mentions</td><td class="p">$1,200</td></tr>
+            <tr><td>8 mentions</td><td class="p">$1,800</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info" style="margin-top:16px;">
+          <strong>Lightest start:</strong> 5 Reddit mentions at $1,200/mo, or pair with 25 ClusterMagic articles for a two-layer program under the price of the Growth Engine.
+        </div>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">Square One Health · AEO Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 12: NEXT STEPS (Red cover) -->
+  <div class="slide dark" data-slide="12">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's own the answer</h1>
+      <p class="subtitle" style="text-align:center;">Approve the prompt list and the tier, and Month 1 goes live within two weeks: the on-site answer-layer fixes and the first placements start together, aimed at the Fort Collins searches you already rank just off page one for.</p>
+      <div class="mt-16">
+        <p style="font-size:18px; font-weight:700;">Recommended start: AI Growth Engine · $3,450/mo</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.7); margin-top:8px;">EmberTribe · AI Visibility team</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential · Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 12</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active'); curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active'); nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
