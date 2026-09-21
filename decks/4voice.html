@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Voice · AI Visibility &amp; Reddit Strategy · EmberTribe</title>
+<style>
+/* EmberTribe brand type — Quatro, served from decks/fonts/ (flat deck → "fonts/...") */
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+:root {
+  /* EmberTribe frame — canonical tokens */
+  --ember-red:#FF333C;      /* Candy Apple Red */
+  --ember-dark:#e62831;     /* red hover/press */
+  --ember-yellow:#FFB000;   /* Honey Yellow accent */
+  --et-black:#000000;
+
+  /* 4Voice accent — single accent only, never the theme (telecom blue) */
+  --accent:#2456C9;
+  --accent-mid:#1B429C;
+  --accent-soft:#eaf0fb;
+
+  /* Universal palette */
+  --text:#232323;
+  --text-light:#6b6b6b;
+  --light-bg:#f7f7f7;
+  --card-bg:#ffffff;
+  --border:#e7e7e7;
+  --green:#2FC171;
+  --yellow:#FFB000;
+  --red:#FF333C;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif;
+  background:var(--ember-red);
+  overflow:hidden; height:100vh; width:100vw;
+  color:var(--text); line-height:1.6;
+}
+
+.deck { width:100vw; height:100vh; position:relative; }
+
+.slide {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:none; flex-direction:column; padding:48px 64px;
+  overflow-y:auto; background:var(--card-bg);
+}
+.slide.active { display:flex; }
+
+/* Red cover slides — solid Candy Apple Red field, white headline, black labels */
+.slide.dark {
+  background:var(--ember-red);
+  color:#ffffff;
+}
+.slide.dark .subtitle { color:rgba(255,255,255,0.9); }
+.slide.dark .slide-label { color:var(--et-black); }
+.slide.dark .stat-card { background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.28); }
+.slide.dark .stat-label { color:rgba(255,255,255,0.85); }
+.slide.dark .logo-ember { color:#ffffff; }
+.slide.dark .logo-date { color:rgba(255,255,255,0.6); }
+.slide.dark .logo-row { border-top-color:rgba(255,255,255,0.25); }
+
+/* Typography */
+h1 { font-size:52px; font-weight:700; letter-spacing:-1px; line-height:1.05; margin-bottom:14px; }
+h2 { font-size:36px; font-weight:700; letter-spacing:-0.5px; line-height:1.15; margin-bottom:8px; color:var(--et-black); }
+h3 { font-size:20px; font-weight:700; margin-bottom:8px; color:var(--et-black); }
+h4 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--et-black); }
+
+.subtitle { font-size:19px; font-weight:400; color:var(--text-light); max-width:900px; margin-bottom:22px; line-height:1.5; }
+.slide-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--ember-red); margin-bottom:10px; }
+
+/* Stat cards */
+.stats-row { display:flex; gap:16px; margin:16px 0; flex-wrap:wrap; }
+.stat-card { flex:1; min-width:150px; background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:20px 24px; }
+.stat-value { font-size:38px; font-weight:700; line-height:1.05; margin-bottom:4px; }
+.stat-value.white { color:#fff; }
+.stat-value.accent { color:var(--accent); }
+.stat-label { font-size:13px; font-weight:500; color:var(--text-light); }
+
+/* Annotations */
+.annotation { background:#fff5f5; border-left:3px solid var(--ember-red); border-radius:0 8px 8px 0; padding:13px 18px; font-size:14.5px; margin:14px 0; line-height:1.55; }
+.annotation strong { color:var(--ember-dark); }
+.annotation.info { background:var(--accent-soft); border-left-color:var(--accent); }
+.annotation.info strong { color:var(--accent-mid); }
+.annotation.success { background:#e9f9f0; border-left-color:var(--green); }
+.annotation.success strong { color:#1f8a4c; }
+
+/* Tables */
+table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+th.accent { background:var(--accent); }
+td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+tbody tr:nth-child(even) td { background:var(--light-bg); }
+.center { text-align:center; }
+.check { color:var(--green); font-weight:700; }
+
+/* Columns */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; flex:1; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
+
+/* Channel / strategy cards */
+.channel-card { background:var(--light-bg); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.channel-card .channel-icon { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:9px; background:var(--ember-red); color:#fff; font-size:16px; font-weight:700; margin-bottom:10px; }
+.channel-card h3 { margin-bottom:12px; }
+.channel-card ul { list-style:none; padding:0; }
+.channel-card ul li { position:relative; padding-left:18px; margin-bottom:7px; font-size:14px; line-height:1.5; }
+.channel-card ul li::before { content:"—"; position:absolute; left:0; top:0; color:var(--accent); font-weight:700; }
+.channel-card .sub-list li::before { color:var(--ember-red); }
+
+/* Body bullet lists */
+ul.body { list-style:none; padding:0; margin:6px 0; }
+ul.body li { position:relative; padding-left:20px; margin-bottom:8px; font-size:16px; line-height:1.55; }
+ul.body li::before { content:"—"; position:absolute; left:0; color:var(--ember-red); font-weight:700; }
+
+/* Prompt grid */
+.prompt-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin:14px 0; }
+.prompt-grid .q { border:1px solid var(--border); border-radius:12px; padding:13px 16px; font-size:14.5px; color:var(--text); line-height:1.45; background:var(--light-bg); }
+.prompt-grid .q b { color:var(--accent-mid); font-weight:700; }
+.prompt-grid .q .qp { display:block; font-size:9.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-light); font-weight:700; margin-top:7px; }
+
+/* Quotes */
+.quote { border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:15px 20px; margin:11px 0; background:#fff; }
+.quote p { font-size:15px; line-height:1.6; color:var(--text); margin:0; font-style:italic; }
+.quote .src { display:block; font-style:normal; font-size:11.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--text-light); margin-top:10px; font-weight:700; }
+
+/* Thread card */
+.thread { border:1px solid var(--border); border-radius:12px; padding:18px 22px; background:var(--light-bg); margin-bottom:14px; }
+.thread .th-tag { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent-mid); margin-bottom:6px; }
+.thread .th-title { font-size:16px; font-weight:700; color:var(--et-black); margin-bottom:6px; }
+.thread .th-body { font-size:13.5px; color:var(--text-light); line-height:1.5; }
+.thread .th-comment { border-left:3px solid var(--accent); background:#fff; border-radius:0 8px 8px 0; padding:10px 14px; margin-top:10px; font-size:13.5px; line-height:1.5; }
+.thread .th-comment b { color:var(--accent-mid); }
+
+/* Layer rows */
+.layer { display:grid; grid-template-columns:44px 1fr; gap:18px; align-items:start; border:1px solid var(--border); border-radius:12px; padding:20px 22px; margin-bottom:14px; background:var(--card-bg); }
+.layer .num { width:44px; height:44px; border-radius:11px; background:var(--accent); color:#fff; font-size:19px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.layer h3 { margin-bottom:4px; }
+.layer p { font-size:14.5px; color:var(--text-light); line-height:1.5; }
+.layer .tag-row { margin-top:9px; display:flex; gap:8px; flex-wrap:wrap; }
+
+/* Pricing tiers */
+.tier-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin:12px 0; flex:1; }
+.tier { border:1px solid var(--border); border-radius:14px; padding:22px 22px 24px; display:flex; flex-direction:column; background:var(--card-bg); position:relative; }
+.tier.featured { border:2px solid var(--accent); box-shadow:0 10px 30px rgba(36,86,201,0.14); }
+.tier .tier-name { font-size:13px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent-mid); margin-bottom:8px; }
+.tier .tier-price { font-size:34px; font-weight:700; color:var(--et-black); line-height:1; }
+.tier .tier-price span { font-size:15px; font-weight:600; color:var(--text-light); }
+.tier ul { list-style:none; padding:0; margin:16px 0 0; }
+.tier ul li { position:relative; padding-left:20px; margin-bottom:9px; font-size:14px; line-height:1.45; }
+.tier ul li::before { content:"—"; position:absolute; left:0; color:var(--accent); font-weight:700; }
+.tier-flag { position:absolute; top:-11px; right:18px; background:var(--ember-yellow); color:#3a2600; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:4px 11px; border-radius:20px; }
+
+/* Price table (a la carte) */
+.price-table td.p { font-weight:700; color:var(--accent-mid); text-align:right; white-space:nowrap; }
+.price-table th.center, .price-table td.center { text-align:center; }
+
+/* Pills */
+.pill { display:inline-block; padding:3px 11px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+.pill.acc { background:var(--accent-soft); color:var(--accent-mid); }
+.pill.rec { background:var(--ember-yellow); color:#3a2600; }
+
+/* Subreddit tags */
+.sub-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.sub-tags .st { border:1px solid var(--border); background:#fff; border-radius:8px; padding:5px 11px; font-size:13px; font-weight:600; color:var(--accent-mid); }
+
+/* Stat strip */
+.stat-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:16px 0; }
+.stat-strip .s { border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+.stat-strip .s .v { font-weight:700; font-size:30px; color:var(--accent); line-height:1; }
+.stat-strip .s .k { font-size:12.5px; color:var(--text-light); margin-top:8px; line-height:1.4; }
+
+/* Utility */
+.flex-grow { flex:1; }
+.mt-16 { margin-top:16px; }
+.accent { color:var(--accent-mid); }
+
+/* Logo row */
+.logo-row { margin-top:auto; padding-top:16px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.logo-ember { font-size:14px; font-weight:700; letter-spacing:2px; color:var(--ember-red); }
+.logo-date { font-size:12px; color:var(--text-light); font-style:italic; }
+
+/* Progress bar */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg, var(--ember-red), var(--accent)); z-index:100; transition:width 0.3s ease; }
+
+/* Navigation */
+.nav { position:fixed; bottom:24px; right:32px; display:flex; align-items:center; gap:12px; z-index:100; }
+.nav button { width:40px; height:40px; border-radius:8px; border:1px solid rgba(0,0,0,0.15); background:rgba(0,0,0,0.55); color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.nav button:hover { background:rgba(0,0,0,0.75); transform:scale(1.05); }
+.counter { font-size:13px; font-weight:600; color:#fff; background:rgba(0,0,0,0.45); padding:6px 14px; border-radius:6px; }
+
+@media (max-width:1024px) {
+  .slide { padding:32px 40px; }
+  h1 { font-size:38px; } h2 { font-size:28px; }
+  .two-col, .three-col, .prompt-grid, .tier-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- SLIDE 1: TITLE (Red cover) -->
+  <div class="slide dark active" data-slide="1">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+      <p class="slide-label">AI Visibility · Reddit AEO Strategy</p>
+      <h1>Be the phone system<br>AI recommends</h1>
+      <p class="subtitle">When a business owner, IT director, or MSP asks ChatGPT, Google's AI, or Perplexity "who's the best VoIP provider for my team," the answer is being built right now — largely from Reddit. Today those answers cite your own site and rarely a community that vouches for you. Here's how we change that.</p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value white">30<span style="font-size:20px;">/100</span></div>
+          <div class="stat-label">Your AI Visibility Score today</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">33</div>
+          <div class="stat-label">Times AI named 4Voice in an answer</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">113</div>
+          <div class="stat-label">Pages AI cites as a source</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value white">13</div>
+          <div class="stat-label">Subreddits this plan targets</div>
+        </div>
+      </div>
+      <div class="logo-row">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Prepared for the 4Voice team · Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: WHY REDDIT -->
+  <div class="slide" data-slide="2">
+    <p class="slide-label">The Shift</p>
+    <h2>Reddit is now an upstream data source for answer engines</h2>
+    <p class="subtitle">Reddit isn't just another social platform. It's become a primary source modern answer engines pull from, because it carries the three things models retrieve best: first-hand experience, fresh long-tail Q&amp;A, and dense brand-and-category language. Two facts explain why.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>The engines pay for the data</h3>
+        <ul class="body">
+          <li><strong>Google</strong> — a reported ~$60M/yr licensing deal gives Google access to Reddit's real-time content for its AI products. That feeds AI Overviews, AI Mode, and Gemini.</li>
+          <li><strong>OpenAI</strong> — a reported ~$70M/yr agreement gives ChatGPT, the world's largest AI search engine, the same access.</li>
+          <li>If 4Voice is named with positive sentiment across enough threads, these engines read that consensus as fact.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Reddit's share of what AI cites</h3>
+        <div class="stat-strip" style="grid-template-columns:1fr 1fr; margin:0 0 12px;">
+          <div class="s"><div class="v">~21%</div><div class="k">of citations in Google AI Overviews</div></div>
+          <div class="s"><div class="v">~46.7%</div><div class="k">of citations on Perplexity</div></div>
+          <div class="s"><div class="v">~10%+</div><div class="k">of ChatGPT citations, up ~87% recently</div></div>
+          <div class="s"><div class="v">~27%</div><div class="k">of ChatGPT search slots it influences</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The takeaway:</strong> if 10+ Reddit users agree that 4Voice is a strong B2B phone provider, the models recognize that as a signal and start recommending you. That consensus is what we build.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 3: WHERE YOU STAND -->
+  <div class="slide" data-slide="3">
+    <p class="slide-label">Where You Stand</p>
+    <h2>AI already names you — but only cites your own site</h2>
+    <p class="subtitle">SEMrush samples thousands of buyer-style questions in your category and runs them through ChatGPT, Google AI Overview, Google AI Mode, and Gemini, then counts how often 4Voice is named (mentions) and which pages get used as the source (cited pages). You have a real foothold. The gap is <em>whose</em> pages back it up.</p>
+    <div class="stat-strip">
+      <div class="s"><div class="v">30 / 100</div><div class="k">AI Visibility Score — a foothold, not yet ownership</div></div>
+      <div class="s"><div class="v">33</div><div class="k">Times "4Voice" was named across the four engines</div></div>
+      <div class="s"><div class="v">113</div><div class="k">Unique pages cited as the source of an answer</div></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Where you show up, by engine</th><th class="center">Mentions</th><th class="center">Cited pages</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Google AI Overview <span style="color:var(--text-light);">— the AI box at the top of results</span></td><td class="center">13</td><td class="center">85</td></tr>
+        <tr><td>Gemini <span style="color:var(--text-light);">— built into Android and Workspace</span></td><td class="center">8</td><td class="center">21</td></tr>
+        <tr><td>Google AI Mode <span style="color:var(--text-light);">— the full conversational search mode</span></td><td class="center">7</td><td class="center">45</td></tr>
+        <tr><td>ChatGPT <span style="color:var(--text-light);">— where a lot of B2B research now starts</span></td><td class="center">5</td><td class="center">13</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>The concentration problem:</strong> your top cited source is <strong>4voice.net itself (29 mentions)</strong>, then google.com (9) and goodcall.com (8). AI is largely quoting you about you. There's almost no third-party community saying it for you — and that's exactly the signal these engines weight most.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 4: THE OPPORTUNITY -->
+  <div class="slide" data-slide="4">
+    <p class="slide-label">The Opportunity</p>
+    <h2>A strong site with no crowd behind it</h2>
+    <p class="subtitle">You already have the traditional-search foundation most brands are missing. What you don't have yet is the off-site, "real people" layer that tips an AI answer from "here's a vendor's site" to "here's who the community recommends."</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>The foundation is already there</h3>
+        <div class="stat-strip" style="grid-template-columns:1fr 1fr; margin:0 0 10px;">
+          <div class="s"><div class="v">40.7K</div><div class="k">Monthly organic visitors</div></div>
+          <div class="s"><div class="v">14.6K</div><div class="k">Organic keywords (+2.2%)</div></div>
+          <div class="s"><div class="v">37</div><div class="k">Authority Score</div></div>
+          <div class="s"><div class="v">2.2K</div><div class="k">Backlinks / 592 referring domains</div></div>
+        </div>
+        <p style="font-size:14px; color:var(--text-light);">Organic traffic dipped 8.2%, and $0 goes to paid — so every bit of visibility today is earned. That's a solid base to build AI visibility on.</p>
+      </div>
+      <div>
+        <h3>Why Reddit is the missing layer</h3>
+        <ul class="body">
+          <li>Your citations are concentrated on your own domain, not third-party recommendations — the weakest position for AEO.</li>
+          <li>The engines already pull heavily from Reddit for "best VoIP / phone system" questions.</li>
+          <li>Seeding real, credible community threads is the fastest way to convert a foothold into being the recommended answer.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>The goal:</strong> ask any assistant "best business VoIP provider" for a given team, industry, or region, and 4Voice is in the answer — backed by both your own pages <em>and</em> a community that agrees.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 5: TARGET PROMPTS -->
+  <div class="slide" data-slide="5">
+    <p class="slide-label">Target Prompts</p>
+    <h2>The questions we want 4Voice to win</h2>
+    <p class="subtitle">A broad read of the highest-intent questions buyers ask assistants in your category. We can tune the mix toward the services and regions you care about most.</p>
+    <div class="prompt-grid">
+      <div class="q">Best phone system with <b>VoIP texting for retail stores</b>?<span class="qp">Retail · SMS</span></div>
+      <div class="q">Best <b>VoIP PBX phone system for a mid-sized law firm</b>?<span class="qp">Legal · PBX</span></div>
+      <div class="q">Who is the <b>best SIP trunking provider in the US</b>?<span class="qp">SIP Trunking</span></div>
+      <div class="q">Best <b>business VoIP PBX provider in Florida</b>?<span class="qp">Regional · Florida</span></div>
+      <div class="q">Best VoIP for <b>multi-location businesses in the US</b>?<span class="qp">Multi-location</span></div>
+      <div class="q">Best <b>VoIP SMS for real estate brokerages</b> in Boca Raton?<span class="qp">Real Estate · Regional</span></div>
+      <div class="q">Best provider for <b>SIP trunking in finance</b>?<span class="qp">Finance · SIP</span></div>
+      <div class="q">Best <b>virtual number service for tech startups</b>?<span class="qp">Startups · Virtual Numbers</span></div>
+      <div class="q">Best <b>call center solutions for logistics</b> &amp; transport?<span class="qp">Logistics · Call Center</span></div>
+      <div class="q">Best provider for <b>toll-free and virtual numbers</b>?<span class="qp">Toll-Free</span></div>
+      <div class="q">Best <b>medical phone system for healthcare offices</b>?<span class="qp">Healthcare · HIPAA</span></div>
+      <div class="q">Best provider for <b>inbound call center solutions</b>?<span class="qp">Inbound · Call Center</span></div>
+    </div>
+    <div class="annotation info">
+      <strong>Why it's paired:</strong> when AI answers "best VoIP for a mid-sized law firm," it should find a cited page on your site <em>and</em> a matching Reddit thread saying the same thing. Two sources, one story, your name in both.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 6: SUBREDDIT LANDSCAPE -->
+  <div class="slide" data-slide="6">
+    <p class="slide-label">Subreddit Landscape</p>
+    <h2>The rooms AI already pulls from</h2>
+    <p class="subtitle">We map the subreddits 4Voice needs to appear in — the industry, buyer, and regional communities that answer engines cite for provider questions. Thirteen priority rooms, grouped by the intent they carry.</p>
+    <div class="three-col flex-grow">
+      <div class="channel-card">
+        <div class="channel-icon">1</div>
+        <h3>Industry &amp; IT buyers</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">Where purchase decisions get made</p>
+        <div class="sub-tags">
+          <span class="st">r/VOIP</span><span class="st">r/sysadmin</span><span class="st">r/msp</span><span class="st">r/ITManagers</span><span class="st">r/CRM</span>
+        </div>
+        <p style="font-size:12.5px; color:var(--text-light); margin-top:10px;">r/msp is a high-value B2B target if 4Voice has a partner / reseller program.</p>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">2</div>
+        <h3>Business &amp; vertical buyers</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">Owners &amp; operators comparing vendors</p>
+        <div class="sub-tags">
+          <span class="st">r/smallbusiness</span><span class="st">r/Entrepreneur</span><span class="st">r/agency</span><span class="st">r/LawFirm</span><span class="st">r/realtors</span><span class="st">r/healthIT</span><span class="st">r/logistics</span>
+        </div>
+      </div>
+      <div class="channel-card">
+        <div class="channel-icon">3</div>
+        <h3>Regional / local</h3>
+        <p style="font-size:13px; color:var(--text-light); margin-bottom:8px;">Where "who do you use here?" lives</p>
+        <div class="sub-tags">
+          <span class="st">r/Florida</span><span class="st">r/Texas</span><span class="st">r/California</span><span class="st">r/nyc</span><span class="st">r/chicago</span><span class="st">r/Atlanta</span>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>How we prioritize:</strong> we lead in the high-indexing rooms AI cites most (r/VOIP, r/sysadmin, r/msp), reinforce in the vertical communities that match your target prompts, and layer in regional rooms for the geo-specific queries.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 7: THE PROCESS -->
+  <div class="slide" data-slide="7">
+    <p class="slide-label">The Process</p>
+    <h2>How we build the community signal</h2>
+    <p class="subtitle">We find the threads answer engines already read, contribute value where 4Voice fits, and seed new threads where the conversation doesn't exist yet. Four steps, run every month.</p>
+    <div class="flex-grow">
+      <div class="layer">
+        <div class="num">1</div>
+        <div>
+          <h3>Subreddit landscape mapping</h3>
+          <p>Lock the target rooms — industry, buyer, vertical, regional, and the high-indexing subreddits AI cites most — and confirm each room's rules before we post.</p>
+          <div class="tag-row"><span class="pill acc">Industry</span><span class="pill acc">Vertical</span><span class="pill acc">Regional</span><span class="pill acc">High-indexing</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num">2</div>
+        <div>
+          <h3>Thread discovery &amp; analysis</h3>
+          <p>Find live threads that already rank on Google, rank in Reddit search, are cited by AI engines, have high comment velocity, and match your target prompts — the fastest placements to influence.</p>
+          <div class="tag-row"><span class="pill acc">Ranks on Google</span><span class="pill acc">AI-cited</span><span class="pill acc">High velocity</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num">3</div>
+        <div>
+          <h3>Comment strategy &amp; fulfillment</h3>
+          <p>Craft replies that mention 4Voice in a genuinely helpful, non-spammy way — an authentic, conversational tone, formatted so AI is more likely to read and cite it.</p>
+          <div class="tag-row"><span class="pill acc">Helpful</span><span class="pill acc">Conversational</span><span class="pill acc">Citation-shaped</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="num">4</div>
+        <div>
+          <h3>Thread seeding — new posts</h3>
+          <p>Where the thread doesn't exist, we create it: question, comparison, and problem-solving posts built around your target prompts, with credible replies from independent accounts adding the community consensus.</p>
+          <div class="tag-row"><span class="pill acc">Question posts</span><span class="pill acc">Comparisons</span><span class="pill acc">FAQ-style</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 8: EXAMPLE THREAD -->
+  <div class="slide" data-slide="8">
+    <p class="slide-label">What It Looks Like</p>
+    <h2>A seeded thread, done right</h2>
+    <p class="subtitle">Real question framing, a real problem, and brand mentions that read like genuine experience — the shape AI retrieves and synthesizes. Two examples from your category.</p>
+    <div class="two-col flex-grow">
+      <div class="thread">
+        <div class="th-tag">Thread · r/smallbusiness</div>
+        <div class="th-title">Best way to get a real 1-800 number for my startup? Don't want a shady app.</div>
+        <div class="th-body">Remote team, expanding out of our local area, want to look established. Need reliable call forwarding to cells or browsers by shift — the cheap app-based services all get reviews about terrible call quality.</div>
+        <div class="th-comment">"…ended up moving our 800 line over to <b>4Voice</b>. Audio quality is actually solid over cellular and data, and setting up shift-forwarding rules took about 10 minutes."</div>
+      </div>
+      <div class="thread">
+        <div class="th-tag">Thread · r/sysadmin</div>
+        <div class="th-title">Need a new phone system for a 15-person team. Tired of RingCentral's price hikes.</div>
+        <div class="th-body">Bill keeps creeping up, support has gone useless. Half in-office on desk phones, half remote on laptops and cells. Don't need 500 enterprise features — just reliable quality and support that answers.</div>
+        <div class="th-comment">"We moved to <b>4Voice</b> for our office of ~12. Bill stayed consistent, setup was quick, and when we needed to tweak auto-attendant routing, a real tech rep actually picked up and walked us through it."</div>
+      </div>
+    </div>
+    <div class="annotation">
+      <strong>Never fabricated praise:</strong> every mention is on-topic, matches what your service actually delivers, and adds value to the thread first. That's what makes it credible to Reddit's mods <em>and</em> to the models — see the guardrails on the next slide.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 9: CLUSTERMAGIC -->
+  <div class="slide" data-slide="9">
+    <p class="slide-label">Content Engine</p>
+    <h2>ClusterMagic gives AI more of you to cite</h2>
+    <p class="subtitle">Reddit builds the crowd; content builds the source. ClusterMagic is our AI-powered content engine that builds entity-rich page architectures for compounding authority — the same engine behind 4+ years of zero-penalty growth across our portfolio. It gives the engines answer-shaped pages to quote alongside the community threads.</p>
+    <div class="two-col flex-grow" style="grid-template-columns:1.1fr 0.9fr;">
+      <div>
+        <h3>How it works</h3>
+        <ul class="body">
+          <li><strong>Entity-rich</strong> — each article is built around entities Google's index already understands (VoIP, SIP trunking, PBX, toll-free, verticals), with schema and internal links that tell AI exactly what the page is.</li>
+          <li><strong>Answer-shaped</strong> — articles directly answer the buying questions on slide 5, so they're eligible to be the cited source.</li>
+          <li><strong>Compounds</strong> — built on real entities and intent rather than prompts, so it holds up and improves through Google updates.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="channel-card" style="background:var(--accent-soft); border-color:var(--accent);">
+          <p class="slide-label" style="color:var(--accent-mid);">Case Study · Flagship Client</p>
+          <h3 style="font-size:26px;">8,500 → 500,000 monthly visits</h3>
+          <p style="font-size:14px; color:var(--text-light); line-height:1.5; margin-bottom:12px;">Anonymized client under NDA. Twelve months on the same engine took them from 8,500 monthly organic visitors to half a million, still climbing, with zero algorithm penalties in 4+ years.</p>
+          <div class="stat-strip" style="grid-template-columns:1fr 1fr; margin:0;">
+            <div class="s" style="padding:14px;"><div class="v" style="font-size:24px;">~59×</div><div class="k">Growth in 12 months</div></div>
+            <div class="s" style="padding:14px;"><div class="v" style="font-size:24px;">0</div><div class="k">Penalties in 4+ years</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotation info">
+      <strong>Where it points first:</strong> the SIP trunking, PBX, and vertical-specific searches where you already rank — reinforcing your 14.6K keywords and giving each Reddit thread a matching page on your own site to back it up.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 10: GUARDRAILS -->
+  <div class="slide" data-slide="10">
+    <p class="slide-label">Guardrails</p>
+    <h2>The rules every placement follows</h2>
+    <p class="subtitle">Reddit communities are quick to spot and punish astroturfing, and a placement that reads as planted is worthless to the models too. These rules are non-negotiable — legitimacy is the strategy, not a constraint on it.</p>
+    <table>
+      <thead><tr><th>The rule</th><th>What it means in practice</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Help first, brand second</strong></td><td>On-topic value in every post and reply. No link dumps, no drive-by promotion.</td></tr>
+        <tr><td><strong>Claims match reality</strong></td><td>Every mention reflects what 4Voice actually delivers — call quality, forwarding, pricing, support. Nothing overstated.</td></tr>
+        <tr><td><strong>Respect each room's rules</strong></td><td>Follow every subreddit's self-promotion and disclosure norms; some rooms are participate-only, not promote.</td></tr>
+        <tr><td><strong>Credible, varied voices</strong></td><td>Recommendations come from genuine buyer/IT context, not one obvious account repeating itself.</td></tr>
+        <tr><td><strong>Reddit and site align</strong></td><td>Threads and your service pages never contradict each other — same scope, same wording.</td></tr>
+      </tbody>
+    </table>
+    <div class="annotation">
+      <strong>Why it matters:</strong> AI rewards the threads that read as honest, and so does Reddit. The moment a placement looks planted, it's worthless in both — so we build a signal that's durable, not disposable.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 11: PACKAGES -->
+  <div class="slide" data-slide="11">
+    <p class="slide-label">Packages · Recommended</p>
+    <h2>AI Visibility packages — content + Reddit + backlinks</h2>
+    <p class="subtitle">The bundled path. Reddit AEO placements, ClusterMagic content, and authority backlinks in one monthly scope, priced flat with no discounting.</p>
+    <div class="tier-grid">
+      <div class="tier">
+        <div class="tier-name">AI Visibility Starter</div>
+        <div class="tier-price">$1,750<span> /mo</span></div>
+        <ul>
+          <li>5 AEO placements / mo</li>
+          <li>10 ClusterMagic articles / mo</li>
+          <li>On-site answer-layer fixes</li>
+          <li>No backlinks</li>
+        </ul>
+      </div>
+      <div class="tier featured">
+        <div class="tier-flag">Most popular</div>
+        <div class="tier-name">AI Growth Engine</div>
+        <div class="tier-price">$3,450<span> /mo</span></div>
+        <ul>
+          <li>8 AEO placements / mo</li>
+          <li>25 ClusterMagic articles / mo</li>
+          <li>2 DA40+ backlinks / mo</li>
+          <li>The volume that builds real community consensus</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-name">AI Authority Accelerator</div>
+        <div class="tier-price">$5,250<span> /mo</span></div>
+        <ul>
+          <li>12 AEO placements / mo</li>
+          <li>40 ClusterMagic articles / mo</li>
+          <li>2 DA50+ backlinks / mo</li>
+          <li>Fastest path to category ownership</li>
+        </ul>
+      </div>
+    </div>
+    <div class="annotation success">
+      <strong>Our recommendation:</strong> the <strong>AI Growth Engine at $3,450/mo</strong>. You already have the site and the rankings — this tier adds the volume of Reddit placements and content to turn a foothold into being the recommended answer across your priority rooms and prompts.
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 12: A LA CARTE -->
+  <div class="slide" data-slide="12">
+    <p class="slide-label">Standalone Options</p>
+    <h2>Or build it à la carte</h2>
+    <p class="subtitle">If you'd rather start with one layer, both the Reddit placements and the content engine sell standalone. Start with one, then fold into a package as it proves out.</p>
+    <div class="two-col flex-grow">
+      <div>
+        <h3>Reddit AEO — standalone</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:6px;">AEO placements only: contributed replies and seeded threads in the rooms on slide 6, outside a full package.</p>
+        <table class="price-table">
+          <thead><tr><th>Scope</th><th class="p" style="color:#fff;">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>Reddit seeding add-on <span style="color:var(--text-light);">(AEO placements only)</span></td><td class="p">$1,400</td></tr>
+          </tbody>
+        </table>
+        <div class="annotation info" style="margin-top:16px;">
+          <strong>Lightest start:</strong> the Reddit seeding add-on at $1,400/mo gets the community layer live on its own, then pairs with ClusterMagic when you're ready for the full engine.
+        </div>
+      </div>
+      <div>
+        <h3>ClusterMagic content — standalone</h3>
+        <p style="font-size:14px; color:var(--text-light); margin-bottom:6px;">Articles only, 25/mo minimum. 3-month commitments price lower per month.</p>
+        <table class="price-table">
+          <thead><tr><th>Articles / mo</th><th class="p" style="color:#fff;">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td>25 <span style="color:var(--text-light);">(minimum)</span></td><td class="p">$1,000</td></tr>
+            <tr><td>40</td><td class="p">$1,500</td></tr>
+            <tr><td>50</td><td class="p">$1,750</td></tr>
+            <tr><td>100</td><td class="p">$3,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="logo-row"><span class="logo-ember">EMBERTRIBE</span><span class="logo-date">4Voice · AI Visibility &amp; Reddit Strategy</span></div>
+  </div>
+
+  <!-- SLIDE 13: NEXT STEPS (Red cover) -->
+  <div class="slide dark" data-slide="13">
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+      <p class="slide-label">Next Steps</p>
+      <h1>Let's own the answer</h1>
+      <p class="subtitle" style="text-align:center;">Approve the prompt list, the target rooms, and the tier, and Month 1 goes live within two weeks: the first Reddit placements and the ClusterMagic content start together, aimed at the VoIP and vertical searches you already rank for.</p>
+      <div class="mt-16">
+        <p style="font-size:18px; font-weight:700;">Recommended start: AI Growth Engine · $3,450/mo</p>
+        <p style="font-size:15px; color:rgba(255,255,255,0.7); margin-top:8px;">EmberTribe · AI Visibility team</p>
+      </div>
+      <div class="logo-row" style="width:100%;">
+        <span class="logo-ember">EMBERTRIBE</span>
+        <span class="logo-date">Confidential · Sep 2026</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <span class="counter" id="counter">1 / 13</span>
+  <button onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+let current = 1;
+const total = document.querySelectorAll('.slide').length;
+function go(dir) {
+  const next = current + dir;
+  if (next < 1 || next > total) return;
+  const curr = document.querySelector(`.slide[data-slide="${current}"]`);
+  curr.classList.remove('active'); curr.scrollTop = 0;
+  current = next;
+  const nxt = document.querySelector(`.slide[data-slide="${current}"]`);
+  nxt.classList.add('active'); nxt.scrollTop = 0;
+  document.getElementById('counter').textContent = `${current} / ${total}`;
+  document.getElementById('progress').style.width = `${(current / total) * 100}%`;
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+});
+document.getElementById('progress').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
