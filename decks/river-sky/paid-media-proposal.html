@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River + Sky — Paid Media Proposal · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2C7FA6; --client-accent-soft:#e9f3f8;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#2F5D7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+  /* ── PROPOSAL ADDITIONS ────────────────────────────────────────────── */
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); text-transform:uppercase; margin-bottom:6px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:10px; letter-spacing:-0.01em; }
+  .dash { list-style:none; }
+  .dash li { font-size:14px; line-height:1.5; padding-left:20px; position:relative; color:var(--ink-600); margin-bottom:6px; }
+  .dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .price-card { background:var(--et-black); color:#fff; border-radius:18px; padding:30px 32px; }
+  .price-card .pc-l { font-size:12px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-honey); margin-bottom:10px; }
+  .price-card .pc-v { font-weight:700; font-size:64px; line-height:1; letter-spacing:-0.03em; }
+  .price-card .pc-v span { font-size:22px; font-weight:600; color:rgba(255,255,255,0.6); letter-spacing:0; }
+  .price-card .pc-s { font-size:14px; color:rgba(255,255,255,0.7); margin-top:10px; line-height:1.5; }
+  .price-card .dash li { color:rgba(255,255,255,0.85); }
+  tr.current td { background:#fff5f5 !important; font-weight:700; }
+  @media (max-width:900px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .two-col, .three-col { grid-template-columns:1fr !important; }
+    .cover .meta { flex-wrap:wrap; gap:18px; }
+    .price-card .pc-v { font-size:48px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Paid Media Proposal · Prepared by EmberTribe</div>
+    <h1>River + Sky</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">Meta and Google management: what the audit found, what we'd change in the first 90 days, and what it costs.</p>
+    <div class="meta">
+      <div>Prepared for<b>River + Sky</b></div>
+      <div>Date<b>September 2026</b></div>
+      <div>Channels<b>Meta · Google</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE SHORT VERSION ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">What the audit found</div>
+    <h2>Budget isn't the constraint. The account settings are.</h2>
+    <p class="subtitle">We reviewed $145.5K of spend across 8 campaigns (3 Meta, 5 Google) from May 1 to Sep 21. The same pattern shows up on both platforms: the cheapest traffic in the account (brand search, past purchasers, warm visitors) is being throttled by the settings.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="stat"><div class="v red">99%</div><div class="k"><strong>Meta.</strong> Share of spend run through one broad campaign since May. Retargeting only switched on Sep 16.</div></div>
+      <div class="stat"><div class="v red">&lt;10%</div><div class="k"><strong>Google.</strong> Brand Search impression share, down from 85%, because of an 800% ROAS target the campaign can't clear.</div></div>
+      <div class="stat"><div class="v red">+70%</div><div class="k"><strong>Both.</strong> Rise in blended CAC over the summer. Meta went from $59 to $99, Google from $21 to $57.</div></div>
+    </div>
+    <div class="callout info mt"><strong>What that means for you:</strong> the first fixes don't need more budget. They need the existing budget pointed at the right audiences, with bid targets the account can actually hit.</div>
+  </div>
+</section>
+
+<!-- ══ 3 · META TREND ════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">Meta · Month over month</div>
+    <h2>Spend grew 78% into August. CAC nearly doubled.</h2>
+    <p class="subtitle">One broad campaign absorbed all the extra budget. With no retargeting pool to catch warm visitors, each extra dollar went to a colder slice of the same audience.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Meta</th><th class="num">May</th><th class="num">Jun</th><th class="num">Jul</th><th class="num">Aug</th><th class="num">Sep 1–21</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Ad spend</td><td class="num">$20.9K</td><td class="num">$20.4K</td><td class="num">$24.3K</td><td class="num">$37.4K</td><td class="num">$21.9K</td></tr>
+        <tr><td class="strong">CAC</td><td class="num">$58.85</td><td class="num">$88.91</td><td class="num">$66.79</td><td class="num">$88.97</td><td class="num down">$98.91</td></tr>
+        <tr><td class="strong">ROAS (platform-reported)</td><td class="num">3.10×</td><td class="num">2.61×</td><td class="num">2.88×</td><td class="num">2.18×</td><td class="num down">1.93×</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout"><strong>The funnel breaks at add-to-cart.</strong> Landing-page-to-cart fell from 17.6% in May to 10.9% in September. Checkout-to-purchase held at 73–82% every month, so the checkout isn't the problem. Fewer people are engaging with product in the first place, which points to audience fit and creative.</div>
+      <div class="callout warn"><strong>16% of "prospecting" spend reaches existing customers.</strong> $20.3K of $124.8K went to people Meta tags as past buyers. They convert at a $50.60 CPA against $88.05 for genuinely new customers, which makes the blended number look better than true new-customer acquisition is.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · GOOGLE ════════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Google · What's throttling spend</div>
+    <h2>An 800% ROAS target is hiding River + Sky from people searching its name.</h2>
+    <p class="subtitle">Target ROAS bidding pulls back impressions when a campaign can't hit its target. Google spend barely moved over the summer, but ROAS fell from 9.65× to 3.77× and CAC nearly tripled.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Campaign</th><th class="num">ROAS target</th><th class="num">Actual</th><th>What happened</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Search – Brand</td><td class="num">800%</td><td class="num down">343%</td><td>Impression share fell from 85% to under 10%</td></tr>
+        <tr><td class="strong">PMax – Brooklyn Dress</td><td class="num">666%</td><td class="num down">197%</td><td>Spend dropped from $859 to $286/mo</td></tr>
+        <tr><td class="strong">PMax – Catch-All</td><td class="num">555%</td><td class="num up">511%</td><td>Closest to healthy, and delivery holds up</td></tr>
+      </tbody>
+    </table>
+    <div class="callout good mt"><strong>Catch-All proves the fix.</strong> When the target is one the campaign can reach, spend and impression share behave normally. Brand Search and Brooklyn Dress have plenty of budget. The targets are what's holding them back.</div>
+  </div>
+</section>
+
+<!-- ══ 5 · DIVIDER ═══════════════════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="05">
+  <div style="text-align:left">
+    <div class="label">The proposal</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">How we'd run it.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Meta and Google, managed as one account plan, with separate budgets for new customers, warm visitors and past buyers.</p>
+  </div>
+</section>
+
+<!-- ══ 6 · META PLAN ═════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">Meta · The plan</div>
+    <h2>Split the account by funnel stage so each audience gets its own budget.</h2>
+    <p class="subtitle">Your retargeting audiences are already segmented well: leads, engagers and past buyers, with clean exclusions. We keep that work and give it room to run.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Prospecting</div><h4>Net-new customers only</h4><p>Define an engaged audience at the account level and exclude it, along with purchasers, so cold spend stays cold. That gives you a real new-customer CAC to manage against.</p></div>
+      <div class="pillar"><div class="pn">Retargeting</div><h4>Warm visitors who didn't buy</h4><p>Move leads and engagers out of the shared CBO campaign into their own budget. Switch the lifecycle setting off "all audiences" and cap bids so the small pools don't throttle.</p></div>
+      <div class="pillar"><div class="pn">Retention</div><h4>The 40% who buy again</h4><p>Win-back and repeat-purchase get protected budget and their own creative. With a $180–200 AOV and a 40% repeat base, this is the cheapest revenue in the account.</p></div>
+    </div>
+    <div class="callout info mt"><strong>Creative:</strong> the add-to-cart drop tells us the ads need to move people to product faster. We'll build product-first and dynamic (DABA) variations for each stage, including AI-produced video, and test them against the current ads.</div>
+  </div>
+</section>
+
+<!-- ══ 7 · GOOGLE PLAN ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">Google · The plan</div>
+    <h2>Win back your brand searches first, then scale what's working.</h2>
+    <p class="subtitle">Google is under 15% of paid spend today. It should be the cheapest channel you run, because a lot of that demand is people already looking for River + Sky.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Week 1</div><h4>Reset Brand Search</h4><p>Bring the ROAS target down to a number the campaign can clear, or move to impression-share bidding, and get back toward the 85% share you had in May.</p></div>
+      <div class="pillar"><div class="pn">Weeks 2–4</div><h4>Fix the product-line PMax</h4><p>Reset Brooklyn Dress to a realistic target, tighten asset groups and feed titles, and use search-term data to add negatives.</p></div>
+      <div class="pillar"><div class="pn">Month 2+</div><h4>Scale non-brand</h4><p>Catch-All is healthy. Once brand is covered, we add budget there and test non-brand Search on the product terms where it earns its keep.</p></div>
+    </div>
+    <div class="callout mt"><strong>Cleanup:</strong> two paused campaigns (DemandGen Video and Campaign #1) get retired or rebuilt so the account only carries campaigns with a job to do.</div>
+  </div>
+</section>
+
+<!-- ══ 8 · FIRST 90 DAYS ═════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>Quick fixes first, then rebuild, then scale.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="phase"><div class="pn">Month 1</div><h4>Stop the leaks</h4>
+        <ul class="dash">
+          <li>Reset Google bid targets, starting with Brand Search</li>
+          <li>Define the Meta engaged audience and exclusions</li>
+          <li>Separate retargeting and retention budgets</li>
+          <li>Connect GA4 + Shopify for one revenue view</li>
+        </ul></div>
+      <div class="phase"><div class="pn">Month 2</div><h4>Rebuild by stage</h4>
+        <ul class="dash">
+          <li>Launch the funnel-stage Meta structure</li>
+          <li>First round of product-first creative tests</li>
+          <li>Tighten PMax asset groups and negatives</li>
+          <li>Report new-customer CAC apart from repeat buyers</li>
+        </ul></div>
+      <div class="phase"><div class="pn">Month 3</div><h4>Scale what's winning</h4>
+        <ul class="dash">
+          <li>Move budget to the stages hitting target CAC</li>
+          <li>Scale Catch-All PMax and test non-brand Search</li>
+          <li>Second creative round built from what won</li>
+          <li>90-day review and next-quarter plan</li>
+        </ul></div>
+    </div>
+    <div class="callout info mt"><strong>How we'll measure it:</strong> new-customer CAC, retargeting and retention ROAS reported separately, Brand Search impression share, and landing-page-to-cart rate. All reconciled against Shopify, so we aren't stacking two platforms' self-reported revenue.</div>
+  </div>
+</section>
+
+<!-- ══ 9 · PRICING ═══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Investment</div>
+    <h2>One management fee for both channels. Ad spend billed at cost.</h2>
+    <p class="subtitle">Our fee is set by combined monthly ad spend. River + Sky averaged about $31K a month across Meta and Google over the audit window, which puts you in the $21K–$35K tier.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1.15fr;align-items:stretch">
+      <div class="price-card">
+        <div class="pc-l">Meta + Google management</div>
+        <div class="pc-v">$4,500<span>/mo</span></div>
+        <div class="pc-s">$3,500 base at $21K–$35K monthly spend, plus $1,000 for the second channel. Ad spend is paid directly to Meta and Google and is never marked up.</div>
+        <ul class="dash" style="margin-top:16px">
+          <li>Campaign strategy and build</li>
+          <li>Creative development, including AI video</li>
+          <li>Audience targeting and optimization</li>
+          <li>Weekly performance reporting</li>
+          <li>Monthly strategy call</li>
+        </ul>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Combined monthly ad spend</th><th class="num">1 channel</th><th class="num">Meta + Google</th></tr></thead>
+          <tbody>
+            <tr><td>$0 – $20,000</td><td class="num">$2,500</td><td class="num">$3,500</td></tr>
+            <tr class="current"><td>$21,000 – $35,000 · <span style="color:var(--et-red)">current</span></td><td class="num">$3,500</td><td class="num">$4,500</td></tr>
+            <tr><td>$36,000 – $45,000</td><td class="num">$4,500</td><td class="num">$5,500</td></tr>
+          </tbody>
+        </table>
+        <div class="callout mt"><strong>If you scale back toward August levels</strong> (about $40K combined), the fee moves to $5,500/mo. The tier follows actual spend, so the fee only rises when the budget does.</div>
+        <p class="fine mt">3-month initial term. 6- and 12-month terms are available and come with prepay discounts. Landing-page builds, CRM integration and attribution modeling are scoped separately if needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="fill" style="align-items:flex-start">
+    <div class="label">Next steps</div>
+    <h2>Here's how we'd get started.</h2>
+    <div class="cta-box">
+      <ul class="cta-bullets">
+        <li>Sign off on the proposal and the 3-month term</li>
+        <li>Grant access to Meta Business Manager, Google Ads, GA4 and Shopify</li>
+        <li>Week 1: bid-target reset on Google and audience cleanup on Meta</li>
+        <li>Week 2: kickoff call to agree targets for new-customer CAC and ROAS</li>
+      </ul>
+      <a class="btn" href="mailto:sales@embertribe.com?subject=River%20%2B%20Sky%20paid%20media">Approve the proposal →</a>
+    </div>
+    <p class="fine mt">All revenue and ROAS figures are platform-reported (Meta and Google attribution), May 1 – Sep 21, 2026. Questions? sales@embertribe.com</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · River + Sky · Paid Media Proposal</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-riversky-pm-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-riversky-pm-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved) && +saved < slides.length) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
