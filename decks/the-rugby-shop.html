@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Rugby Shop · Growth Plan · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#0078C5; --client-accent-soft:#e6f2fa;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#0078C5; --pillar-3:#FFB000; --pillar-4:#474747; --pillar-5:#2FC171; --pillar-6:#0a2240;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); flex-wrap:wrap; }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:#1f8a4c;}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  th.c, td.c { text-align:center; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+  .yes { color:var(--good); font-weight:700; font-size:16px; }
+  .no { color:var(--ink-300); font-weight:700; }
+  td.us { background:#fff5f5 !important; }
+  td.us .no { color:var(--et-red); }
+
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.cl { color:#fff; }
+
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:820px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.7; padding-left:26px; position:relative; color:var(--ink-700); margin-bottom:6px; }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .answer { background:var(--et-white); border:1px solid var(--border); border-radius:16px; padding:24px 26px; }
+  .answer .q { font-size:13px; color:var(--ink-500); margin-bottom:12px; }
+  .answer .q b { color:var(--et-black); }
+  .answer p { font-size:16px; line-height:1.6; color:var(--ink-700); }
+  .answer mark { -webkit-box-decoration-break:clone; box-decoration-break:clone; background:var(--client-accent-soft); color:var(--client-accent); font-weight:700; padding:0 3px; border-radius:3px; }
+  .opt { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:24px 22px; display:flex; flex-direction:column; }
+  .opt.pick { background:var(--et-white); border:2px solid var(--et-red); }
+  .opt .tag { align-self:flex-start; font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; background:var(--et-red); color:#fff; padding:3px 9px; border-radius:20px; margin-bottom:10px; }
+  .opt .tag.ghost { background:var(--ink-100); color:var(--ink-600); }
+  .opt h4 { font-weight:700; font-size:20px; margin-bottom:4px; }
+  .opt .price { font-weight:700; font-size:40px; letter-spacing:-0.02em; line-height:1.05; margin:8px 0 2px; font-variant-numeric:tabular-nums; }
+  .opt .price small { font-size:15px; font-weight:600; color:var(--ink-500); letter-spacing:0; }
+  .opt .per { font-size:12px; color:var(--ink-500); margin-bottom:10px; }
+  .opt .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .asset { background:var(--subtle); border:1px solid var(--border); border-radius:14px; padding:18px 18px 16px; }
+  .asset .ak { font-weight:700; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--client-accent); margin-bottom:6px; }
+  .asset h4 { font-size:17px; font-weight:700; margin-bottom:5px; }
+  .asset p { font-size:13px; line-height:1.5; color:var(--ink-500); }
+  .srcnote { font-size:11px; color:var(--ink-500); margin-top:12px; }
+  .month-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media (max-width:900px) {
+    :root { --pad-x:16px; }
+    .two-col, .three-col, .case, .month-grid { grid-template-columns:1fr !important; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .divider h1 { font-size:56px !important; }
+    table { font-size:12px; } th, td { padding:8px 9px; }
+    .slide { padding:28px var(--pad-x) 28px; }
+    .dots { display:none; }
+    .scroll-x { overflow-x:auto; }
+  }
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Growth Plan · AI Visibility + Content Engine · Prepared by EmberTribe</div>
+    <h1>The Rugby Shop</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:900px">You have the credentials most rugby retailers would kill for. Search engines and AI assistants don't know about them yet. Here's the six-month plan to change that.</p>
+    <div class="meta">
+      <div>Prepared for<b>The Rugby Shop North America</b></div>
+      <div>Date<b>September 29, 2026</b></div>
+      <div>Site<b>therugbyshop.com</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE SHORT VERSION ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">The short version</div>
+    <h2>Rugby buyers are asking questions every day. Your competitors are the ones answering.</h2>
+    <p class="subtitle">We ran seven buyer-style searches, read your site end to end, and checked what search engines and AI tools can see about The Rugby Shop. Four numbers tell the story.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v bad">0 of 7</div><div class="k">Buyer searches where therugbyshop.com appeared (our spot check, Sept 29)</div></div>
+      <div class="stat"><div class="v accent">5 of 7</div><div class="k">Same searches where World Rugby Shop appeared</div></div>
+      <div class="stat"><div class="v">4</div><div class="k">Blog posts on your site, all partnership news. The newest is from March 2022</div></div>
+      <div class="stat"><div class="v honey">2</div><div class="k">Other stores called "The Rugby Shop" (UK and Australia) that AI tools can confuse you with</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout info"><strong>The plan has two parts.</strong> Part one gets The Rugby Shop named when someone asks ChatGPT, Google's AI Overviews, or Perplexity where to buy rugby gear. Part two builds a content engine that answers the questions your buyers search for and links them to your products.</div>
+      <div class="callout good"><strong>They reinforce each other.</strong> AI tools recommend brands they can read about in many places. The articles from part two become the pages AI tools quote in part one.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · WHAT YOU ALREADY HAVE ═════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">What you already have</div>
+    <h2>The proof points are real. They're just not written down anywhere Google or ChatGPT can find them.</h2>
+    <p class="subtitle">Everything below comes from your own site and public announcements. Most online rugby retailers can't claim half of it.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="asset"><div class="ak">Official partner</div><h4>BC Rugby's merchandising partner</h4><p>A multi-year deal covering the BC Rugby fan store and on-site event retail. Plus the Toronto Arrows extension and the Ravens partnership.</p></div>
+      <div class="asset"><div class="ak">Founder credibility</div><h4>Run by players, coaches, and referees</h4><p>Co-founder Jason "JMac" Macdonald is a former Canada Panel and World Rugby 7s referee. That is the kind of expertise AI tools and Google reward.</p></div>
+      <div class="asset"><div class="ak">Your own gear</div><h4>Tackle Tech, KINETI-CORE, AVANTI, HYDRO-TEK</h4><p>Tackle Tech alone covers contact shields, tackle bags, wedges, post protectors, and eight club bundle packs. Nobody else can write about these with authority.</p></div>
+      <div class="asset"><div class="ak">Team business</div><h4>Build Your Kit + club catalog</h4><p>A three-step kit builder, a club catalog, sponsor cards, and freight for large team orders. Club managers are high-value, repeat buyers.</p></div>
+      <div class="asset"><div class="ak">Catalog depth</div><h4>Boots to whistles</h4><p>Boots, balls, protective gear, training equipment, referee gear, Canterbury teamwear, novelty tees, and XLR8 hydration.</p></div>
+      <div class="asset"><div class="ak">Reach</div><h4>Canada and the US</h4><p>Ships across Canada with standard, expedited, and express options, plus the US. XLR8 already has a US fulfilment partner.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · SEARCH SPOT CHECK ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Where you stand · Search spot check</div>
+    <h2>Seven buyer searches. The Rugby Shop didn't show up once.</h2>
+    <p class="subtitle">We ran each search on September 29, 2026 and recorded which rugby retailers appeared in the top ten results. It's a snapshot, not a ranking report, but the pattern is hard to miss.</p>
+  </div>
+  <div class="fill">
+    <div class="scroll-x">
+    <table>
+      <thead><tr><th>Buyer search</th><th class="red c">The Rugby Shop</th><th class="c">World Rugby Shop</th><th class="c">Rugby Imports</th><th class="c">Rhino Rugby</th><th class="c">Rugbystuff</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">rugby store canada</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="no">·</span></td></tr>
+        <tr><td class="strong">best online rugby store canada rugby boots team kit</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="no">·</span></td></tr>
+        <tr><td class="strong">custom rugby jerseys canada team kit</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="yes">✓</span></td></tr>
+        <tr><td class="strong">best rugby boots for forwards 2026</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="yes">✓</span></td></tr>
+        <tr><td class="strong">rugby tackle bags for club training</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td></tr>
+        <tr><td class="strong">rugby referee equipment whistle kit</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td></tr>
+        <tr><td class="strong">what equipment do you need to start playing rugby</td><td class="c us"><span class="no">✕</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td><td class="c"><span class="yes">✓</span></td><td class="c"><span class="no">·</span></td></tr>
+        <tr><td class="strong">Total</td><td class="c us strong" style="color:var(--et-red)">0 / 7</td><td class="c strong">5 / 7</td><td class="c strong">4 / 7</td><td class="c strong">3 / 7</td><td class="c strong">3 / 7</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="two-col mt">
+      <div class="callout"><strong>Two misses that should sting.</strong> You sell Tackle Tech bags built for clubs, and a World Rugby 7s referee co-founded the company. You still didn't appear for tackle bags or referee equipment.</div>
+      <div class="callout info"><strong>How the others got there:</strong> World Rugby Shop and Rhino both appear for "what equipment do you need to start playing rugby" with a blog guide, not a product page. That is exactly the content part two builds.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 5 · CONTENT GAP ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">The content gap</div>
+    <h2>You're not out-stocked. You're out-published.</h2>
+    <p class="subtitle">Your catalog competes with anyone in North America. What you don't have is pages that answer the questions buyers ask before they're ready to buy.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1.2fr">
+      <div>
+        <h3>Your blog today</h3>
+        <table>
+          <thead><tr><th>Post</th><th>Published</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Ray Barkwill Partnership Announcement</td><td class="dim">Mar 25, 2022</td></tr>
+            <tr><td class="strong">Ravens Partnership announcement</td><td class="dim">Earlier</td></tr>
+            <tr><td class="strong">The Rugby Shop &amp; Arrows extend for 2 more years</td><td class="dim">Earlier</td></tr>
+            <tr><td class="strong">RugbyStrong Front Line winners announced</td><td class="dim">Earlier</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>Good news, wrong format.</strong> Partnership posts help with credibility, but nobody searches for them. None of the four answers a buyer's question.</div>
+      </div>
+      <div>
+        <h3>What buyers search before they buy</h3>
+        <table>
+          <thead><tr><th class="accent">Buyer question</th><th class="accent">Who needs it</th><th class="accent">Page on your site today</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Which boots for my position?</td><td>Players</td><td class="dim">Collection page only</td></tr>
+            <tr><td class="strong">Tackle bag or contact shield first?</td><td>Coaches</td><td class="dim">Product pages only</td></tr>
+            <tr><td class="strong">How do I order kit for 30 players?</td><td>Club managers</td><td class="dim">Kit builder, no guide</td></tr>
+            <tr><td class="strong">What goes in a referee's kit bag?</td><td>Referees</td><td class="dim">None</td></tr>
+            <tr><td class="strong">What does my kid need for rugby?</td><td>Parents</td><td class="dim">None</td></tr>
+            <tr><td class="strong">Headgear and mouthguards: required?</td><td>Parents, players</td><td class="dim">None</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · TECH + ENTITY ROADBLOCKS ══════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">What machines see</div>
+    <h2>Five fixes that tell Google and AI tools who you are.</h2>
+    <p class="subtitle">AI assistants build their answers from structured facts. Right now yours are incomplete, and two unrelated stores share your name. These fixes are small, and they come before any new content.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>What we found</th><th>Where</th><th>Why it matters</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Organization schema has 4 blank social links</strong><div class="sub-td">The sameAs list includes empty entries, and the url field points to whichever page you're on, not the homepage</div></td><td>Every page</td><td>Blurs which "The Rugby Shop" you are</td><td><span class="pill p3">Low</span></td></tr>
+        <tr><td><strong>No About page</strong><div class="sub-td">/pages/about-us returns a 404. Your founding story, BC Rugby partnership, and team live in press posts and a separate founder page</div></td><td>Site-wide</td><td>AI tools look here first for who you are</td><td><span class="pill p3">Low</span></td></tr>
+        <tr><td><strong>FAQ page without FAQ markup</strong><div class="sub-td">Only Organization schema is on the FAQs page</div></td><td>/pages/faqs</td><td>Answers can't be lifted into AI results</td><td><span class="pill p3">Low</span></td></tr>
+        <tr><td><strong>Name collision</strong><div class="sub-td">therugbyshop.co.uk (UK) and therugbyshop.com.au (Darwin) share your name. The UK store has its own Trustpilot and Facebook pages</div></td><td>Off-site</td><td>AI tools can merge you with them</td><td><span class="pill p2">Med</span></td></tr>
+        <tr><td><strong>Blog dormant since March 2022</strong><div class="sub-td">No new pages for crawlers or AI tools to pick up in over three years</div></td><td>/blogs/news</td><td>Signals an inactive site</td><td><span class="pill p2">Med</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout info mt"><strong>We'll finish the audit once we have access.</strong> Search Console and GA4 will show page speed, indexing, and which queries already earn impressions. Everything on this slide was visible from the outside.</div>
+  </div>
+</section>
+
+<!-- ══ 7 · DIVIDER — PART ONE ════════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="07">
+  <div style="text-align:left">
+    <div class="label">Part one</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">AI visibility.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Getting The Rugby Shop named when a player, coach, or parent asks an AI assistant where to buy rugby gear in Canada or the US.</p>
+  </div>
+</section>
+
+<!-- ══ 8 · HOW AI PICKS RETAILERS ════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">How AI tools choose</div>
+    <h2>AI assistants recommend the shops the rest of the web talks about.</h2>
+    <p class="subtitle">ChatGPT, Google's AI Overviews, and Perplexity don't browse your catalog. They summarize what they find about you on your site, in reviews, on Reddit, and in roundup articles. Each tool leans on different sources.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <table>
+        <thead><tr><th class="accent">AI tool</th><th class="accent">Leans heavily on</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Google AI Overviews / AI Mode</strong><div class="sub-td">The AI answer at the top of Google</div></td><td>Your site, schema, product data, reviews</td></tr>
+          <tr><td><strong>ChatGPT</strong><div class="sub-td">Search and shopping answers</div></td><td>Bing's index, Reddit, "best of" roundups</td></tr>
+          <tr><td><strong>Perplexity</strong><div class="sub-td">Cites sources inline</div></td><td>Reddit, forums, recent articles</td></tr>
+          <tr><td><strong>Gemini</strong><div class="sub-td">Android and Google apps</div></td><td>Google's index and Merchant data</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <h3>What that means for The Rugby Shop</h3>
+        <ul class="ul-dash">
+          <li>Your site has to state the facts clearly: who you are, what you sell, where you ship, and why you're credible</li>
+          <li>The same facts need to appear on partner sites, directories, and rugby communities, worded the same way</li>
+          <li>Rugby players already swap gear advice on Reddit and forums. Those threads get quoted in AI answers</li>
+          <li>Fresh, useful articles give AI tools something to cite. A blog last updated in 2022 gives them nothing</li>
+        </ul>
+        <div class="callout warn"><strong>Week one baseline:</strong> we'll test 30 real buyer prompts across all four tools and record who gets named today, so every later report compares against a fixed starting point.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · THE TARGET ANSWER ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">The target answer</div>
+    <h2>The answer we're building toward.</h2>
+    <p class="subtitle">AI tools repeat facts they see stated the same way in many places. We pick the facts, publish them everywhere they belong, and keep testing until the answer matches.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.25fr 1fr">
+      <div class="answer">
+        <div class="q"><b>Prompt:</b> "Where should our club buy tackle bags and team kit in Canada?"</div>
+        <p><mark>The Rugby Shop North America</mark> (therugbyshop.com) is a rugby-only retailer based in British Columbia and the <mark>official merchandising partner of BC Rugby</mark>. It was co-founded by players, coaches, and referees, including <mark>former World Rugby 7s referee Jason Macdonald</mark>. For club training it sells its own <mark>Tackle Tech Club Series</mark> of tackle bags, contact shields, and bundle packs. Teams can design kit with its <mark>Build Your Kit</mark> tool, and it ships across Canada and to the US.</p>
+      </div>
+      <div>
+        <h3>Where each fact has to live</h3>
+        <ul class="ul-dash">
+          <li><b>Name and location:</b> "The Rugby Shop North America", British Columbia, in schema, the About page, and every listing</li>
+          <li><b>BC Rugby partnership:</b> About page, footer, and a matching line on bcrugby.com</li>
+          <li><b>Founders and referees:</b> a team page with JMac's refereeing background, linked from referee articles</li>
+          <li><b>Tackle Tech:</b> buying guides and drill articles from part two, linked to the product pages</li>
+          <li><b>Kit builder and shipping:</b> a club-manager guide and FAQ markup</li>
+        </ul>
+        <p class="srcnote">Every claim here comes from your site or BC Rugby's announcement. We'll confirm the wording with you before anything is published.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · AI VISIBILITY ROADMAP ════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">AI visibility roadmap</div>
+    <h2>Six months from invisible to recommended.</h2>
+    <p class="subtitle">Fix the facts, get talked about in the places AI tools read, then measure against the baseline and double down on what worked.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="phase red">
+        <div class="when">Months 1–2 · Foundation</div>
+        <h4>Get the facts straight</h4>
+        <ul class="ul-dash">
+          <li>30-prompt baseline across ChatGPT, AI Overviews, Gemini, and Perplexity</li>
+          <li>Rebuild Organization schema: homepage URL, filled social links, founders, BC location</li>
+          <li>Publish an About page and team page</li>
+          <li>FAQ markup on the FAQs page and top collections</li>
+          <li>Bing Webmaster Tools and product feed check, since ChatGPT leans on Bing</li>
+        </ul>
+      </div>
+      <div class="phase accent">
+        <div class="when">Months 3–4 · Build on it</div>
+        <h4>Get talked about</h4>
+        <ul class="ul-dash">
+          <li>8 AEO placements a month in rugby subreddits and forums where AI tools pull answers</li>
+          <li>2 DA40+ editorial backlinks a month from rugby and sports sites</li>
+          <li>Matching descriptions on BC Rugby, Toronto Arrows, and other partner pages</li>
+          <li>Articles from part two written answer-first so AI tools can quote them</li>
+        </ul>
+      </div>
+      <div class="phase honey">
+        <div class="when">Months 5–6 · Measure</div>
+        <h4>Get recommended</h4>
+        <ul class="ul-dash">
+          <li>Rerun the 30 prompts and compare to the baseline</li>
+          <li>Track which of your pages AI tools cite</li>
+          <li>Shift placements toward the threads and sites that got quoted</li>
+          <li>Set targets for the next six months</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout mt"><strong>No shortcuts that could backfire.</strong> Placements are real answers to real questions, posted openly as The Rugby Shop. No fake accounts and no posts pretending to be customers. Rugby is a small community and people notice.</div>
+  </div>
+</section>
+
+<!-- ══ 11 · DIVIDER — PART TWO ═══════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="11">
+  <div style="text-align:left">
+    <div class="label">Part two · How we capture it</div>
+    <h1 style="font-size:104px;letter-spacing:-0.03em;margin-bottom:18px">ClusterMagic.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">An AI-powered content engine that builds entity-rich content architectures for compounding authority. The same engine behind 4+ years of zero-penalty growth across our portfolio.</p>
+  </div>
+</section>
+
+<!-- ══ 12 · THE CLUSTERMAGIC ENGINE (verbatim) ═══════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">The ClusterMagic engine</div>
+    <h2>Three pillars. Four years. Zero penalties.</h2>
+    <p class="subtitle">The pattern is consistent across every client we run this for. Each pillar reinforces the others. That's why it compounds instead of plateauing like one-off content.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Pillar 01</div><h4>Entity architecture</h4><p>Topic clusters built around entities Google already understands: hubs and spokes that establish real subject authority.</p></div>
+      <div class="pillar"><div class="pn">Pillar 02</div><h4>Compounding internal links</h4><p>Every new article strengthens the ones before it. Authority flows through the cluster instead of leaking out.</p></div>
+      <div class="pillar"><div class="pn">Pillar 03</div><h4>Expert-cited, human-reviewed</h4><p>Expert-cited drafts, edited and posted to your CMS for approval. Content built on facts, not prompts, which is why it survives updates.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · CASE STUDY (ALWAYS INCLUDED — fixed proof) ═══════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same ClusterMagic engine we'd run for you, with 4+ years of zero-penalty results across our portfolio.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="images/casestudy-500k.jpg" alt="SEMrush organic traffic chart: 8,500 to 500K+ monthly organic visits over 12 months" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="case-img" style="display:none">[ SEMrush organic-traffic chart: casestudy-500k.jpg ]</div>
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised; search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px"><strong>"Their site improves with each Google update."</strong> This client's traffic <em>climbs</em> on update days. That's the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14 · CONTENT ENGINE: THE CLUSTERS ═════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="head">
+    <div class="label">Content engine · The six clusters</div>
+    <h2>75 articles in 90 days, each one pointing at something you sell.</h2>
+    <p class="subtitle">Six topic clusters, one for each type of buyer. Every article links to the collection or product pages it supports, so traffic from questions turns into traffic to the catalog.</p>
+  </div>
+  <div class="fill">
+    <div class="scroll-x">
+    <table>
+      <thead><tr><th>Cluster</th><th class="num">Articles</th><th>Example articles</th><th>Feeds these pages</th></tr></thead>
+      <tbody>
+        <tr><td><span class="chip cl" style="background:var(--pillar-1)">Boots &amp; gear</span><div class="sub-td">Players</div></td><td class="num strong">18</td><td>Rugby boots vs soccer cleats: what's actually different · Best boots for props and locks · Soft ground vs firm ground studs for Canadian pitches</td><td>Rugby boots, protective gear, balls</td></tr>
+        <tr><td><span class="chip cl" style="background:var(--pillar-2)">Club training</span><div class="sub-td">Coaches</div></td><td class="num strong">16</td><td>12 tackle bag drills for club practice · Tackle bag or contact shield: which to buy first · Building a safe contact session for U14s</td><td>Tackle Tech, training equipment, bundle packs</td></tr>
+        <tr><td><span class="chip cl" style="background:var(--pillar-3);color:#000">Team kit</span><div class="sub-td">Club managers</div></td><td class="num strong">14</td><td>How to order team kit: a timeline for club managers · Sublimated vs screen-printed jerseys · Funding club kit with sponsor cards</td><td>Build Your Kit, club catalog, sponsor cards</td></tr>
+        <tr><td><span class="chip cl" style="background:var(--pillar-6)">Getting started</span><div class="sub-td">Parents, new players</div></td><td class="num strong">12</td><td>What your kid needs for their first rugby season · Headgear, mouthguards, and shoulder pads: required or optional · Rugby positions explained</td><td>Protective gear, boots, shorts and socks</td></tr>
+        <tr><td><span class="chip cl" style="background:var(--pillar-4)">Refereeing</span><div class="sub-td">Referees</div></td><td class="num strong">9</td><td>What's in a rugby referee's kit bag · Choosing a rugby whistle · How to start refereeing rugby in Canada</td><td>Referee equipment, whistles</td></tr>
+        <tr><td><span class="chip cl" style="background:var(--pillar-5)">North American rugby</span><div class="sub-td">Fans</div></td><td class="num strong">6</td><td>A fan's guide to the BC rugby season · Following Major League Rugby from Canada</td><td>Fan gear, novelty, partner stores</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout info mt"><strong>Refereeing is your unfair advantage.</strong> Few competitors can have a former World Rugby 7s referee review their referee content. We'd ask JMac for a short review of those nine articles, which gives Google and AI tools a named expert to credit.</div>
+  </div>
+</section>
+
+<!-- ══ 15 · CONTENT ENGINE ROADMAP ═══════════════════════════════════════ -->
+<section class="slide" data-screen-label="15">
+  <div class="head">
+    <div class="label">Content engine roadmap</div>
+    <h2>Quick wins first, then the clusters that sell kit.</h2>
+    <p class="subtitle">Month 1 goes after questions where the answer points to a product you already stock. Later months build out the hubs that compound. Each article runs 1,200 to 2,000 words and goes into Shopify as a draft for your review.</p>
+  </div>
+  <div class="fill">
+    <div class="month-grid">
+      <div class="phase red">
+        <div class="when">Month 1 · 25 articles</div>
+        <h4>Keyword validation and quick wins</h4>
+        <ul class="ul-dash">
+          <li>Pull Search Console and SEMrush data to confirm volumes and pick the final 75</li>
+          <li>Hub pages for boots, club training, and team kit</li>
+          <li>Getting-started guides for parents, timed for spring registration</li>
+          <li>Rewrite intros on the top 10 collection pages with buyer questions answered</li>
+        </ul>
+      </div>
+      <div class="phase accent">
+        <div class="when">Month 2 · 25 articles</div>
+        <h4>Coaches and club managers</h4>
+        <ul class="ul-dash">
+          <li>Tackle Tech drill library and buying guides</li>
+          <li>Team kit ordering guide linked into Build Your Kit</li>
+          <li>Referee cluster, reviewed by JMac</li>
+          <li>Internal links from every article to the matching collection</li>
+        </ul>
+      </div>
+      <div class="phase honey">
+        <div class="when">Month 3 · 25 articles</div>
+        <h4>Fill gaps and compound</h4>
+        <ul class="ul-dash">
+          <li>Position-by-position boot guides and comparisons</li>
+          <li>North American rugby and partner content</li>
+          <li>Refresh Month 1 articles based on early Search Console data</li>
+          <li>Plan the next 90 days from what's ranking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What to expect:</strong> new articles typically index in weeks 2 to 6, and hub pages start pulling traffic around month 6. We'll set traffic targets once we see your GA4 baseline instead of guessing now.</div>
+      <div class="callout warn"><strong>Timing matters.</strong> Content published this fall is indexed and ranking before spring registration and the club season. Starting in spring means catching up during peak buying.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 16 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="16">
+  <div class="head">
+    <div class="label">Investment</div>
+    <h2>One package covers both roadmaps.</h2>
+    <p class="subtitle">Our AI Visibility packages bundle AEO placements, ClusterMagic articles, and backlinks, so part one and part two run as a single program. Fixed pricing from our current rate card.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="align-items:stretch">
+      <div class="opt">
+        <span class="tag ghost">Test the water</span>
+        <h4>AI Visibility Starter</h4>
+        <div class="price">$1,750<small>/mo</small></div>
+        <div class="per">Slower build, no link building</div>
+        <ul class="ul-dash">
+          <li>5 AEO placements a month</li>
+          <li>10 ClusterMagic articles a month</li>
+          <li>No backlinks</li>
+        </ul>
+      </div>
+      <div class="opt pick">
+        <span class="tag">Recommended</span>
+        <h4>AI Growth Engine</h4>
+        <div class="price">$3,450<small>/mo</small></div>
+        <div class="per">The plan in this deck, as written</div>
+        <ul class="ul-dash">
+          <li>8 AEO placements a month</li>
+          <li>25 ClusterMagic articles a month (75 in 90 days)</li>
+          <li>2 DA40+ editorial backlinks a month</li>
+          <li>30-prompt AI baseline and month-6 retest</li>
+        </ul>
+      </div>
+      <div class="opt">
+        <span class="tag ghost">Go faster</span>
+        <h4>AI Authority Accelerator</h4>
+        <div class="price">$5,250<small>/mo</small></div>
+        <div class="per">More coverage before spring</div>
+        <ul class="ul-dash">
+          <li>12 AEO placements a month</li>
+          <li>40 ClusterMagic articles a month</li>
+          <li>2 DA50+ editorial backlinks a month</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Optional one-time Month 1 SEO Foundation ($2,500):</strong> we handle the schema rebuild, About and team pages, FAQ markup, and a full technical audit once we have Search Console access. If your team would rather make those fixes, we'll hand over the spec.</div>
+  </div>
+</section>
+
+<!-- ══ 17 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="17">
+  <div class="fill" style="align-items:flex-start">
+    <div class="label">Next steps</div>
+    <h2>Three things that make this plan sharper.</h2>
+    <div class="cta-box">
+      <p style="color:var(--ink-500);font-size:17px;line-height:1.6">Each takes about five minutes:</p>
+      <ul class="cta-bullets">
+        <li>Add tj@embertribe.com to Search Console and GA4 with read access, so we can replace the spot check with your real query and traffic data</li>
+        <li>Tell us where the money is: which categories, and Canada vs US, drive the most revenue</li>
+        <li>Ask JMac if he's willing to review the referee articles</li>
+      </ul>
+      <p style="color:var(--ink-500);font-size:15px;line-height:1.6;margin-top:16px">Then we'll get back on a call, walk through the validated keyword list, and lock the first month of articles.</p>
+      <a class="btn" href="mailto:tj@embertribe.com?subject=The%20Rugby%20Shop%20growth%20plan">Reply to TJ →</a>
+    </div>
+    <p class="fine mt">Sources: search spot check run September 29, 2026 (top ten web results per query; a snapshot, not a ranking report). Site findings from a review of therugbyshop.com on September 29, 2026, including its blog, FAQs, shipping, Tackle Tech, and Build Your Kit pages. Partnership details from bcrugby.com. Pricing from EmberTribe's current rate card.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · The Rugby Shop Growth Plan</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 17</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-trs-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-trs-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved) && +saved < slides.length) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
