@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>River + Sky · Performance Reconciliation · EmberTribe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+:root {
+  --navy:        #120F0F;
+  --navy-mid:    #1c1414;
+  --navy-card:   #2a1f1f;
+  --blue:        #FF333D;
+  --blue-light:  #ff6b73;
+  --blue-bg:     #fff0f0;
+  --amber:       #FF333D;
+  --amber-bg:    #fff0f0;
+  --green:       #2FC171;
+  --green-bg:    #f0fdf6;
+  --red:         #FF333D;
+  --red-bg:      #fff0f0;
+  --purple:      #9847EE;
+  --purple-bg:   #f5f0ff;
+  --white:       #F7F7F7;
+  --ink:         #120F0F;
+  --ink2:        #1c1414;
+  --ink3:        #5a4848;
+  --ink4:        #9c8888;
+  --border:      #e8e0e0;
+  --border-dark: rgba(255,255,255,0.1);
+  --card-bg:     #F7F7F7;
+  --neutral-bar: #e8e0e0;
+  --px:          clamp(20px, 5vw, 64px);
+  --gap:         clamp(10px, 2vw, 18px);
+  --radius:      14px;
+  --pill:        100px;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+.topnav { position: sticky; top: 0; z-index: 500; background: #120F0F; display: flex; align-items: center; justify-content: space-between; padding: 10px var(--px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+.topnav-brand { font-size: clamp(8px,1.1vw,10px); font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); }
+.topnav-right { display: flex; align-items: center; gap: 10px; }
+.nav-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 200px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.2); border: none; cursor: pointer; padding: 0; transition: background .2s, transform .2s; }
+.dot.active { background: var(--amber); transform: scale(1.25); }
+.nav-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: rgba(255,255,255,.7); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s; line-height: 1; }
+.nav-btn:hover { background: var(--blue); border-color: var(--blue); color: white; }
+.nav-btn:disabled { opacity: .25; cursor: default; }
+.page-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.45); letter-spacing: .08em; min-width: 38px; text-align: center; }
+.pdf-btn { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.15); border-radius: var(--pill); font-family: 'Inter',sans-serif; font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: all .18s; }
+.pdf-btn:hover { background: var(--blue); border-color: var(--blue); color: white; }
+.pdf-btn svg { width: 11px; height: 11px; fill: currentColor; }
+
+.slide { position: relative; display: none; flex-direction: column; min-height: calc(100vh - 52px); padding: 0 var(--px); }
+.slide.active { display: flex; }
+.slide--dark { background: linear-gradient(135deg, #120F0F 0%, #1c1414 60%, #0a0808 100%); color: var(--white); }
+.slide--light { background: #F7F7F7; color: #120F0F; }
+.slide--grey { background: #eeeeee; color: var(--ink); }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: clamp(14px,2.5vh,22px) 0 clamp(12px,2vh,18px); border-bottom: 1px solid var(--border-dark); flex-shrink: 0; gap: 8px; }
+.slide--light .topbar, .slide--grey .topbar { border-bottom-color: var(--border); }
+.topbar-kicker { font-size: clamp(8px,1vw,10px); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; display: flex; align-items: center; flex-wrap: wrap; gap: 2px; line-height: 1.6; }
+.kicker-brand { color: var(--amber); }
+.slide--light .kicker-brand, .slide--grey .kicker-brand { color: var(--blue); }
+.kicker-sep { color: var(--ink4); margin: 0 4px; }
+.kicker-label { color: var(--ink4); }
+.topbar-page { font-size: 10px; font-weight: 600; letter-spacing: .1em; color: var(--ink4); white-space: nowrap; flex-shrink: 0; }
+
+.slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(18px,3vh,32px) 0; gap: var(--gap); }
+.slide-footer { display: flex; align-items: center; justify-content: space-between; padding: clamp(10px,2vh,14px) 0 clamp(14px,2.5vh,20px); border-top: 1px solid var(--border-dark); flex-shrink: 0; margin-top: clamp(10px,2vh,18px); gap: 8px; }
+.slide--light .slide-footer, .slide--grey .slide-footer { border-top-color: var(--border); }
+.footer-brand { font-size: clamp(8px,.85vw,10px); font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink4); }
+
+.eyebrow { font-size: clamp(9px,1.1vw,11px); font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+.slide--light .eyebrow, .slide--grey .eyebrow { color: var(--amber); }
+.hero-h1 { font-size: clamp(32px,5.5vw,66px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; color: var(--white); max-width: 900px; }
+.slide-h1 { font-size: clamp(21px,2.9vw,38px); font-weight: 900; letter-spacing: -.025em; line-height: 1.1; color: var(--ink); max-width: 780px; }
+.slide--dark .slide-h1 { color: var(--white); }
+.slide-sub { font-size: clamp(12px,1.3vw,14px); font-weight: 400; color: var(--ink3); line-height: 1.6; max-width: 640px; margin-top: 6px; }
+.slide--dark .slide-sub { color: rgba(255,255,255,.5); }
+
+.cols-60-40 { display: grid; grid-template-columns: 60% 1fr; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-40-60 { display: grid; grid-template-columns: 1fr 60%; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-50-50 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-2x2 { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: var(--gap); flex: 1; }
+.col { display: flex; flex-direction: column; gap: var(--gap); }
+
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(14px,2vw,22px); }
+.card--flex { display: flex; flex-direction: column; gap: 12px; }
+.card--stretch { flex: 1; }
+.card--dark { background: var(--navy-card); border-color: rgba(255,255,255,.12); }
+.card--blue-tint { background: #fff0f0; border-color: #FF333D; }
+.card--green-tint { background: var(--green-bg); border-color: var(--green); }
+
+.stat-label { font-size: clamp(8px,.9vw,10px); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink4); margin-bottom: 5px; }
+.card--dark .stat-label { color: rgba(255,255,255,.45); }
+.stat-number { font-size: clamp(24px,2.8vw,34px); font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--ink); margin-bottom: 7px; font-variant-numeric: tabular-nums; }
+.card--dark .stat-number { color: var(--white); }
+.stat-note { font-size: clamp(10px,1vw,11px); color: var(--ink4); line-height: 1.45; margin-top: 3px; }
+.card--dark .stat-note { color: rgba(255,255,255,.4); }
+
+.hero-number { font-size: clamp(46px,7vw,84px); font-weight: 900; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+
+.pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: var(--pill); font-size: clamp(10px,1vw,11px); font-weight: 700; letter-spacing: .03em; margin-bottom: 5px; }
+.pill--green  { background: var(--green-bg)  !important; color: var(--green)  !important; }
+.pill--amber  { background: var(--amber-bg)  !important; color: var(--amber)  !important; }
+.pill--blue   { background: var(--blue-bg)   !important; color: var(--blue)   !important; }
+.pill--white  { background: rgba(255,255,255,.12) !important; color: rgba(255,255,255,.8) !important; }
+
+.insight-bar { display: flex; align-items: center; gap: 10px; padding: clamp(11px,1.5vw,14px) clamp(14px,2vw,20px); border-radius: 12px; flex-wrap: wrap; margin-top: auto; }
+.insight-bar--green { background: var(--green-bg); }
+.insight-bar--amber { background: var(--amber-bg); }
+.insight-bar--blue  { background: var(--blue-bg);  }
+.insight-bar--dark  { background: rgba(255,255,255,.06); border: 1px solid var(--border-dark); }
+.insight-tag { font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--pill); white-space: nowrap; flex-shrink: 0; }
+.insight-bar--green .insight-tag { background: var(--green); color: white; }
+.insight-bar--amber .insight-tag { background: var(--amber); color: white; }
+.insight-bar--blue  .insight-tag { background: var(--blue);  color: white; }
+.insight-bar--dark  .insight-tag { background: rgba(255,255,255,.15); color: rgba(255,255,255,.8); }
+.insight-text { font-size: clamp(11px,1.2vw,13px); font-weight: 500; color: var(--ink2); line-height: 1.45; }
+.insight-bar--dark .insight-text { color: rgba(255,255,255,.7); }
+
+.bar-chart { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.bar-chart-inner { display: flex; align-items: flex-end; gap: 8px; flex: 1; min-height: 140px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+.bar-val { font-size: clamp(9px,.9vw,11px); font-weight: 700; color: var(--ink3); font-variant-numeric: tabular-nums; }
+.card--dark .bar-val { color: rgba(255,255,255,.7); }
+.bar { width: 100%; border-radius: 6px 6px 0 0; }
+.bar--navy  { background: var(--navy); }
+.bar--blue  { background: var(--blue); }
+.bar--amber { background: var(--amber); }
+.bar--green { background: var(--green); }
+.bar--grey  { background: var(--neutral-bar); }
+.bar-x { font-size: clamp(8px,.85vw,10px); font-weight: 500; color: var(--ink4); text-align: center; line-height: 1.2; }
+.card--dark .bar-x { color: rgba(255,255,255,.45); }
+
+.accent-line { width: 48px; height: 4px; border-radius: 2px; background: var(--amber); margin-bottom: 12px; }
+.cover-stats-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--gap); margin-top: clamp(10px,2vw,20px); }
+.legend-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: clamp(9px,.9vw,11px); font-weight: 500; color: var(--ink3); }
+.card--dark .legend-item { color: rgba(255,255,255,.6); }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.legend-line { width: 14px; height: 2px; border-radius: 2px; flex-shrink: 0; }
+
+.chart-mini-wrap { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.chart-mini-title { font-size: clamp(10px,1vw,12px); font-weight: 700; color: var(--ink2); }
+.card--dark .chart-mini-title { color: rgba(255,255,255,.8); }
+.chart-svg { width: 100%; height: auto; flex: 1; }
+.chart-point-label { font-size: 9px; font-weight: 700; font-family: 'Inter', sans-serif; }
+.chart-axis-label { font-size: 8px; font-weight: 600; fill: var(--ink4); }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: clamp(10px,1vw,12px); }
+.table-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-scroll .data-table { min-width: 640px; }
+.data-table th { text-align: left; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink4); padding: 8px 10px; border-bottom: 2px solid var(--border); }
+.data-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--ink2); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr.flagged td { background: #fff0f0; }
+.status-dot { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.status-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; }
+.status-dot--live::before { background: var(--green); }
+.status-dot--dead::before { background: var(--ink4); }
+.status-dot--warn::before { background: var(--amber); }
+
+.two-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.two-list li { font-size: clamp(11px,1.1vw,13px); line-height: 1.5; color: var(--ink2); padding-left: 18px; position: relative; }
+.card--dark .two-list li { color: rgba(255,255,255,.75); }
+.two-list li::before { content: '+'; position: absolute; left: 0; font-weight: 800; color: var(--green); }
+.two-list--neg li::before { content: '!'; color: var(--amber); }
+
+@media screen and (max-width: 900px) {
+  .cols-60-40, .cols-40-60, .cols-50-50 { grid-template-columns: 1fr; }
+  .cols-3 { grid-template-columns: 1fr 1fr; }
+  .cols-2x2 { grid-template-columns: 1fr; }
+}
+@media screen and (max-width: 600px) {
+  .cover-stats-3 { grid-template-columns: 1fr; }
+  .cols-3 { grid-template-columns: 1fr; }
+  .topbar-kicker span:not(.kicker-brand) { display: none; }
+  .footer-brand, .pdf-btn { display: none; }
+}
+
+@media print{
+  @page{ size: A4 landscape; margin: 0; }
+  html, body{ width: 297mm; height: auto !important; overflow: visible !important; }
+  .topnav{ display:none !important; }
+  .export-btn{ display:none !important; }
+  .slide{ display:flex !important; flex-direction:column; width: 297mm; min-height: 210mm; height: auto; page-break-after: always; break-after: page; overflow: visible !important; padding: 13mm 15mm 11mm !important; }
+  .slide:last-child{ page-break-after: auto; }
+  .card, .stat-card, [style*="overflow"]{ overflow: visible !important; max-height: none !important; }
+  .table-scroll{ overflow: visible !important; }
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  .card, .stat-card{ page-break-inside: avoid; }
+  table{ page-break-inside: avoid; }
+  .insight-bar{ page-break-inside: avoid; margin-top:12px; }
+  h1{ font-size: 20pt !important; line-height: 1.2 !important; }
+  .subtitle{ font-size: 10.5pt !important; }
+  .eyebrow{ font-size: 8.5pt !important; }
+  .topbar{ font-size: 8pt !important; }
+  .stat-label{ font-size: 7.5pt !important; }
+  .stat-note{ font-size: 7.5pt !important; }
+  thead{ display: table-header-group; }
+  table.table-long{ page-break-inside: auto !important; }
+  table.table-long tr{ page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand">EMBERTRIBE · RIVER + SKY</div>
+  <div class="topnav-right">
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-btn" id="btnPrev" onclick="goSlide(-1)">‹</button>
+    <span class="page-label" id="pageLabel">1 / 10</span>
+    <button class="nav-btn" id="btnNext" onclick="goSlide(1)">›</button>
+    <button class="pdf-btn export-btn" onclick="exportPDF()">
+      <svg viewBox="0 0 16 16"><path d="M4 1h8a1 1 0 011 1v8l-3 3H4a1 1 0 01-1-1V2a1 1 0 011-1zm5 9h3l-3 3V10z"/></svg>
+      Export PDF
+    </button>
+  </div>
+</nav>
+
+<!-- SLIDE 1 — COVER -->
+<section class="slide slide--dark active" id="slide-1">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">1 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">JANUARY 1 – SEPTEMBER 29, 2026</div>
+      <div class="hero-h1">Performance reconciliation and the 90-day path to scale.</div>
+      <div class="slide-sub" style="margin-top:14px;">Nine months of Meta and Google spend, checked directly against Shopify's own order data, with a grounded path forward from here.</div>
+    </div>
+    <div class="cover-stats-3">
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Ad spend reconciled</div>
+        <div class="hero-number" style="color:var(--amber);font-size:clamp(40px,5.5vw,64px);">$250.4K</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">New customers acquired</div>
+        <div class="hero-number" style="color:var(--blue-light);font-size:clamp(34px,4.5vw,52px);">1,956</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Months analyzed</div>
+        <div class="hero-number" style="color:var(--green);font-size:clamp(34px,4.5vw,52px);">9</div>
+        <div class="stat-note">Jan – Sep 2026, against Shopify's own order export</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 2 — METHODOLOGY: HOW TO READ EVERY CAC IN THIS DECK -->
+<section class="slide slide--light" id="slide-2">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">2 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">METHODOLOGY · HOW TO READ EVERY CAC IN THIS DECK</div>
+      <div class="slide-h1">There's more than one way to calculate CAC. Here's what each one means, and why Google's is still an estimate.</div>
+      <div class="slide-sub">Three different formulas appear across this deck. They answer different questions, and they're not interchangeable.</div>
+    </div>
+    <div class="cols-3">
+      <div class="card card--flex">
+        <div class="stat-label">CHANNEL TOTAL CAC</div>
+        <div class="stat-note" style="font-size:clamp(11px,1.1vw,13px);color:var(--ink2);line-height:1.5;">Total ad spend on the channel, divided by total conversions on that channel.</div>
+        <div class="stat-note" style="margin-top:auto;">The blunt version. Mixes retargeting and prospecting spend together, and counts repeat buyers alongside new ones.</div>
+      </div>
+      <div class="card card--flex">
+        <div class="stat-label">CHANNEL NEW-CUSTOMER CAC</div>
+        <div class="stat-note" style="font-size:clamp(11px,1.1vw,13px);color:var(--ink2);line-height:1.5;">Spend on the new-audience segment in that channel, divided by new-customer conversions in that same channel.</div>
+        <div class="stat-note" style="margin-top:auto;">The sharper version. Isolates new-customer efficiency, but only works if the channel can actually tag which spend and which conversions are new-customer.</div>
+      </div>
+      <div class="card card--flex card--blue-tint">
+        <div class="stat-label" style="color:var(--amber);">BLENDED nCAC (THIS DECK'S ESTIMATE)</div>
+        <div class="stat-note" style="font-size:clamp(11px,1.1vw,13px);color:var(--ink2);line-height:1.5;">Meta's new-audience spend plus all of Google's spend, divided by Shopify's actual new customers.</div>
+        <div class="stat-note" style="margin-top:auto;">A workaround, not a clean measurement. Built because Google can't currently isolate new-customer spend or conversions on its own.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">WHY META AND GOOGLE AREN'T APPLES TO APPLES</div>
+      <div class="insight-text">The strictly new-customer version of CAC, attributing spend and conversions to new customers only, is visible on Meta through the prospecting and engaged audience segments used throughout this deck. On Google, that level of tracking effectively stopped after May 5, when the account's campaign types changed, so Google's conversions can no longer be split by new versus existing customer. Google is roughly 20% of total ad spend, this isn't a rounding error, it's a real gap in what the account can currently prove.</div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">WHAT WOULD CLOSE THE GAP</div>
+      <div class="insight-text">The Blended nCAC used throughout this deck approximates the answer despite that gap, it remains an estimate until new campaigns are set up and more data comes in. The real fix is structural: rebuild the campaigns on both platforms so retargeting spend and new-customer spend are cleanly separated. Once that's done, how much is spent on retargeting, how much on new customers, and the CAC and ROAS for each of those two investments, can be reported directly instead of estimated.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 3 — BREAKEVEN nCAC, FIRST-ORDER ONLY -->
+<section class="slide slide--light" id="slide-3">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">3 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">BREAKEVEN nCAC · FIRST ORDER ONLY, NO REPEAT PURCHASES COUNTED</div>
+      <div class="slide-h1">At $190 AOV and 75% product margin, the first-order ceiling is about $140, before shipping and fulfillment.</div>
+      <div class="slide-sub">This is the CAC a new customer needs to clear on their first order alone, without relying on the 40% repeat rate to make them worth acquiring.</div>
+    </div>
+    <div class="cols-3">
+      <div class="card card--flex">
+        <div class="stat-label">AVERAGE ORDER VALUE</div>
+        <div class="stat-number">$190</div>
+        <div class="stat-note" style="margin-top:auto;">As stated for River + Sky.</div>
+      </div>
+      <div class="card card--flex">
+        <div class="stat-label">PRODUCT MARGIN</div>
+        <div class="stat-number">75%</div>
+        <div class="stat-note" style="margin-top:auto;">$190 x 75% = $142.50 gross profit per order.</div>
+      </div>
+      <div class="card card--flex card--blue-tint">
+        <div class="stat-label" style="color:var(--amber);">BREAKEVEN nCAC CEILING</div>
+        <div class="stat-number">~$140</div>
+        <div class="stat-note" style="margin-top:auto;">First-order net, before shipping and fulfillment costs are deducted. The true breakeven number is lower than this by whatever shipping and fulfillment cost per order.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">GAP</div>
+      <div class="insight-text">Shipping and fulfillment cost per order is the one input we don't have yet, and it's the difference between this being a ceiling and being the exact number. Once that figure is shared, this becomes a precise breakeven CAC instead of an upper bound.</div>
+    </div>
+    <table class="data-table">
+      <thead><tr><th>nCAC</th><th>Profit per new customer (vs. $140 ceiling, before shipping/fulfillment)</th></tr></thead>
+      <tbody>
+        <tr><td>$75</td><td>+$65</td></tr>
+        <tr><td>$90</td><td>+$50</td></tr>
+        <tr><td>$120</td><td>+$20</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 2 — CAC, TWO READS -->
+<section class="slide slide--light" id="slide-4">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">4 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">CAC · TWO ESTIMATES, TWO PURPOSES</div>
+      <div class="slide-h1">Two CAC reads: Meta's own new-audience efficiency, and the blended estimate with Google.</div>
+      <div class="slide-sub">Both are estimates, not verified one-to-one new-customer costs. Here's exactly what each one does and doesn't include.</div>
+    </div>
+    <div class="card" style="border-color:var(--amber);background:#fff0f0;padding:12px 18px;">
+      <div class="stat-label" style="color:var(--amber);margin-bottom:4px;">METHODOLOGY NOTE</div>
+      <div class="stat-note" style="font-size:clamp(10px,1vw,11px);color:var(--ink3);line-height:1.5;">Meta new-audience CAC (left) uses only Meta's own reported spend and purchases on the prospecting and engaged segments, no Shopify or Google data involved. Blended nCAC (right) divides that same Meta new-audience spend plus 100% of Google's spend by Shopify's own new-customer count, since Google Ads has no way to separate spend between new and existing customers. Engaged is only tracked as its own Meta segment starting September 2026, before that the new-audience figure is effectively prospecting-only. Neither figure is an exact deduplicated CAC.</div>
+    </div>
+    <div class="cols-50-50">
+      <div class="card card--flex card--stretch">
+        <div class="chart-mini-title">META NEW-AUDIENCE CAC (EST.), REPORTED BY META</div>
+        <svg class="chart-svg" width="480" height="170" viewBox="0 0 480 170">
+          <polyline points="40,92.8 90,129.4 140,122.6 190,36 240,138 290,89.9 340,143 390,97.8 440,95.7" fill="none" stroke="var(--navy)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="92.8" r="4" fill="var(--navy)"/><circle cx="90" cy="129.4" r="4" fill="var(--navy)"/><circle cx="140" cy="122.6" r="4" fill="var(--navy)"/><circle cx="190" cy="36" r="4" fill="var(--navy)"/><circle cx="240" cy="138" r="4" fill="var(--navy)"/><circle cx="290" cy="89.9" r="4" fill="var(--navy)"/><circle cx="340" cy="143" r="4" fill="var(--navy)"/><circle cx="390" cy="97.8" r="4" fill="var(--navy)"/><circle cx="440" cy="95.7" r="4" fill="var(--navy)"/>
+          <text x="40" y="80.8" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$97</text>
+          <text x="90" y="117.4" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$79</text>
+          <text x="140" y="110.6" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$82</text>
+          <text x="190" y="26" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$125</text>
+          <text x="240" y="126" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$75</text>
+          <text x="290" y="77.9" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$98</text>
+          <text x="340" y="131" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$72</text>
+          <text x="390" y="85.8" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$95</text>
+          <text x="440" y="83.7" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$96</text>
+          <text x="40" y="160" class="chart-axis-label" text-anchor="middle">Jan</text><text x="90" y="160" class="chart-axis-label" text-anchor="middle">Feb</text><text x="140" y="160" class="chart-axis-label" text-anchor="middle">Mar</text><text x="190" y="160" class="chart-axis-label" text-anchor="middle">Apr</text><text x="240" y="160" class="chart-axis-label" text-anchor="middle">May</text><text x="290" y="160" class="chart-axis-label" text-anchor="middle">Jun</text><text x="340" y="160" class="chart-axis-label" text-anchor="middle">Jul</text><text x="390" y="160" class="chart-axis-label" text-anchor="middle">Aug</text><text x="440" y="160" class="chart-axis-label" text-anchor="middle">Sep</text>
+        </svg>
+        <div class="stat-note" style="margin-top:auto;">9-month average $91.02, matching the client's own quoted CAC. Uses Meta's own spend and purchase data only, not Shopify.</div>
+      </div>
+      <div class="card card--flex card--stretch">
+        <div class="chart-mini-title">BLENDED nCAC (EST.), VERIFIED AGAINST SHOPIFY</div>
+        <svg class="chart-svg" width="480" height="170" viewBox="0 0 480 170">
+          <polyline points="40,98.5 90,106.4 140,106.2 190,36 240,143 290,77.9 340,140.6 390,112.5 440,90.8" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="98.5" r="4" fill="var(--blue)"/><circle cx="90" cy="106.4" r="4" fill="var(--blue)"/><circle cx="140" cy="106.2" r="4" fill="var(--blue)"/><circle cx="190" cy="36" r="4" fill="var(--blue)"/><circle cx="240" cy="143" r="4" fill="var(--blue)"/><circle cx="290" cy="77.9" r="4" fill="var(--blue)"/><circle cx="340" cy="140.6" r="4" fill="var(--blue)"/><circle cx="390" cy="112.5" r="4" fill="var(--blue)"/><circle cx="440" cy="90.8" r="4" fill="var(--blue)"/>
+          <text x="40" y="86.5" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$111</text>
+          <text x="90" y="94.4" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$107</text>
+          <text x="140" y="94.2" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$107</text>
+          <text x="190" y="26" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$147</text>
+          <text x="240" y="131" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$86</text>
+          <text x="290" y="65.9" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$123</text>
+          <text x="340" y="128.6" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$87</text>
+          <text x="390" y="100.5" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$103</text>
+          <text x="440" y="78.8" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$116</text>
+          <text x="40" y="160" class="chart-axis-label" text-anchor="middle">Jan</text><text x="90" y="160" class="chart-axis-label" text-anchor="middle">Feb</text><text x="140" y="160" class="chart-axis-label" text-anchor="middle">Mar</text><text x="190" y="160" class="chart-axis-label" text-anchor="middle">Apr</text><text x="240" y="160" class="chart-axis-label" text-anchor="middle">May</text><text x="290" y="160" class="chart-axis-label" text-anchor="middle">Jun</text><text x="340" y="160" class="chart-axis-label" text-anchor="middle">Jul</text><text x="390" y="160" class="chart-axis-label" text-anchor="middle">Aug</text><text x="440" y="160" class="chart-axis-label" text-anchor="middle">Sep</text>
+        </svg>
+        <div class="stat-note" style="margin-top:auto;">9-month average $109.74, recent 3-month average $102.13 (-10% vs. first half). Verified against Shopify's own new-customer count.</div>
+        <div class="stat-note">Data used per month: Meta's prospecting + engaged spend (from Meta Ads) plus 100% of Google's spend (from Google Ads), divided by Shopify's new-customer count for that month (from the Shopify new-vs-returning export). See the next slide for the exact monthly figures behind this.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">TREND</div>
+      <div class="insight-text">Both reads point the same direction, efficiency has genuinely improved since the first half of the year. Meta's own new-audience number lines up with the account's historical ~$90 CAC, and the Shopify-verified blended number is trending toward the $88-100 floor already proven in May and July.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 4 — VOLUME VS. SPEND, META AND SHOPIFY SIDE BY SIDE -->
+<section class="slide slide--light" id="slide-5">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">5 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">META VS. SHOPIFY · VOLUME AND SPEND, SIDE BY SIDE</div>
+      <div class="slide-h1">As new-audience spend scales, both Meta's own numbers and Shopify's actual orders move together.</div>
+      <div class="slide-sub">Left axis: new-customer volume. Right axis: Meta ad spend on the prospecting and engaged segments only.</div>
+    </div>
+    <div class="cols-50-50">
+      <div class="card card--flex card--stretch">
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber);opacity:.5;"></div>Spend (right axis)</div>
+          <div class="legend-item"><div class="legend-line" style="background:var(--navy);"></div>Meta-claimed</div>
+          <div class="legend-item"><div class="legend-line" style="background:var(--blue);"></div>Shopify actual</div>
+        </div>
+        <svg class="chart-svg" width="480" height="178" viewBox="0 0 480 178">
+          <rect x="27" y="101.0" width="26" height="42.0" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="77" y="112.5" width="26" height="30.5" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="127" y="85.5" width="26" height="57.5" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="177" y="88.2" width="26" height="54.8" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="227" y="96.8" width="26" height="46.2" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="277" y="95.9" width="26" height="47.1" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="327" y="85.0" width="26" height="58.0" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="377" y="40.0" width="26" height="103.0" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <rect x="427" y="65.0" width="26" height="78.0" fill="var(--amber)" opacity="0.30" rx="3"/>
+          <polyline points="40,135.7 90,143 140,95.4 190,134.8 240,107.8 290,128.8 340,79.9 390,36 440,77.6" fill="none" stroke="var(--navy)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="135.7" r="4" fill="var(--navy)"/><circle cx="90" cy="143" r="4" fill="var(--navy)"/><circle cx="140" cy="95.4" r="4" fill="var(--navy)"/><circle cx="190" cy="134.8" r="4" fill="var(--navy)"/><circle cx="240" cy="107.8" r="4" fill="var(--navy)"/><circle cx="290" cy="128.8" r="4" fill="var(--navy)"/><circle cx="340" cy="79.9" r="4" fill="var(--navy)"/><circle cx="390" cy="36" r="4" fill="var(--navy)"/><circle cx="440" cy="77.6" r="4" fill="var(--navy)"/>
+          <text x="40" y="126.7" class="chart-point-label" fill="var(--navy)" text-anchor="middle">144</text>
+          <text x="90" y="134" class="chart-point-label" fill="var(--navy)" text-anchor="middle">128</text>
+          <text x="140" y="86.4" class="chart-point-label" fill="var(--navy)" text-anchor="middle">232</text>
+          <text x="190" y="125.8" class="chart-point-label" fill="var(--navy)" text-anchor="middle">146</text>
+          <text x="240" y="98.8" class="chart-point-label" fill="var(--navy)" text-anchor="middle">205</text>
+          <text x="290" y="119.8" class="chart-point-label" fill="var(--navy)" text-anchor="middle">159</text>
+          <text x="340" y="70.9" class="chart-point-label" fill="var(--navy)" text-anchor="middle">266</text>
+          <text x="390" y="27" class="chart-point-label" fill="var(--navy)" text-anchor="middle">362</text>
+          <text x="440" y="68.6" class="chart-point-label" fill="var(--navy)" text-anchor="middle">271</text>
+          <polyline points="40,124.3 90,142.1 140,100.0 190,132.5 240,102.8 290,120.1 340,77.6 390,36.5 440,83.5" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="124.3" r="4" fill="var(--blue)"/><circle cx="90" cy="142.1" r="4" fill="var(--blue)"/><circle cx="140" cy="100.0" r="4" fill="var(--blue)"/><circle cx="190" cy="132.5" r="4" fill="var(--blue)"/><circle cx="240" cy="102.8" r="4" fill="var(--blue)"/><circle cx="290" cy="120.1" r="4" fill="var(--blue)"/><circle cx="340" cy="77.6" r="4" fill="var(--blue)"/><circle cx="390" cy="36.5" r="4" fill="var(--blue)"/><circle cx="440" cy="83.5" r="4" fill="var(--blue)"/>
+          <text x="40" y="139.3" class="chart-point-label" fill="var(--blue)" text-anchor="middle">169</text>
+          <text x="90" y="157.1" class="chart-point-label" fill="var(--blue)" text-anchor="middle">130</text>
+          <text x="140" y="115.0" class="chart-point-label" fill="var(--blue)" text-anchor="middle">222</text>
+          <text x="190" y="147.5" class="chart-point-label" fill="var(--blue)" text-anchor="middle">151</text>
+          <text x="240" y="117.8" class="chart-point-label" fill="var(--blue)" text-anchor="middle">216</text>
+          <text x="290" y="135.1" class="chart-point-label" fill="var(--blue)" text-anchor="middle">178</text>
+          <text x="340" y="92.6" class="chart-point-label" fill="var(--blue)" text-anchor="middle">271</text>
+          <text x="390" y="51.5" class="chart-point-label" fill="var(--blue)" text-anchor="middle">361</text>
+          <text x="440" y="98.5" class="chart-point-label" fill="var(--blue)" text-anchor="middle">258</text>
+          <text x="40" y="168" class="chart-axis-label" text-anchor="middle">Jan</text><text x="90" y="168" class="chart-axis-label" text-anchor="middle">Feb</text><text x="140" y="168" class="chart-axis-label" text-anchor="middle">Mar</text><text x="190" y="168" class="chart-axis-label" text-anchor="middle">Apr</text><text x="240" y="168" class="chart-axis-label" text-anchor="middle">May</text><text x="290" y="168" class="chart-axis-label" text-anchor="middle">Jun</text><text x="340" y="168" class="chart-axis-label" text-anchor="middle">Jul</text><text x="390" y="168" class="chart-axis-label" text-anchor="middle">Aug</text><text x="440" y="168" class="chart-axis-label" text-anchor="middle">Sep</text>
+        </svg>
+      </div>
+      <div class="card card--stretch">
+        <div class="table-scroll"><table class="data-table">
+          <thead><tr><th>Month</th><th>Meta-claimed</th><th>Shopify actual</th><th>New-aud. + engaged spend</th><th>nCAC of Meta</th><th>Blended nCAC (only with Meta Ad Spend)</th></tr></thead>
+          <tbody>
+            <tr><td>Jan</td><td>144</td><td>169</td><td>$13,965.65</td><td>$96.98</td><td>$82.64</td></tr>
+            <tr><td>Feb</td><td>128</td><td>130</td><td>$10,128.51</td><td>$79.13</td><td>$77.91</td></tr>
+            <tr><td>Mar</td><td>232</td><td>222</td><td>$19,122.92</td><td>$82.43</td><td>$86.14</td></tr>
+            <tr><td>Apr</td><td>146</td><td>151</td><td>$18,206.23</td><td>$124.70</td><td>$120.57</td></tr>
+            <tr><td>May</td><td>205</td><td>216</td><td>$15,356.51</td><td>$74.91</td><td>$71.09</td></tr>
+            <tr><td>Jun</td><td>159</td><td>178</td><td>$15,648.47</td><td>$98.42</td><td>$87.91</td></tr>
+            <tr><td>Jul</td><td>266</td><td>271</td><td>$19,279.28</td><td>$72.48</td><td>$71.14</td></tr>
+            <tr><td>Aug</td><td>362</td><td>361</td><td>$34,221.89</td><td>$94.54</td><td>$94.80</td></tr>
+            <tr><td>Sep</td><td>271</td><td>258</td><td>$25,904.61</td><td>$95.59</td><td>$100.41</td></tr>
+            <tr style="font-weight:700;"><td>9-mo total / avg</td><td>1,913</td><td>1,956</td><td>$171,834.07</td><td>$91.02</td><td>$88.07</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">CONFIRMED</div>
+      <div class="insight-text">Meta's new-audience purchases track Shopify's actual new-customer count almost one-to-one, 98% overall across nine months, and both rise and fall in the same months as new-audience spend. This is the clearest evidence in the account that the prospecting and engaged audiences are the real acquisition engine.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 4 — RETENTION GAP CONFIRMED -->
+<section class="slide slide--light" id="slide-6">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">6 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">RETENTION · CONFIRMED WITH REAL ORDER DATA</div>
+      <div class="slide-h1">Returning customers are down since real retargeting went dark, and it now shows up in actual orders.</div>
+      <div class="slide-sub">Left: combined spend on Google and Meta's existing-audience segment. Right: Shopify's actual returning-customer count these investments are meant to protect.</div>
+    </div>
+    <div class="cols-50-50">
+      <div class="card card--flex card--stretch">
+        <div class="chart-mini-title">GOOGLE SPEND + META EXISTING-AUDIENCE SPEND (STACKED)</div>
+        <div class="legend-row">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--amber);"></div>Google (all spend)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--navy);"></div>Meta, existing audience only</div>
+        </div>
+        <svg class="chart-svg" width="480" height="170" viewBox="0 0 480 170">
+          <rect x="23" y="99.0" width="34" height="44.0" fill="var(--amber)" rx="2"/><rect x="23" y="56.1" width="34" height="42.9" fill="var(--navy)" rx="2"/>
+          <rect x="73" y="108.9" width="34" height="34.1" fill="var(--amber)" rx="2"/><rect x="73" y="66.2" width="34" height="42.7" fill="var(--navy)" rx="2"/>
+          <rect x="123" y="101.0" width="34" height="42.0" fill="var(--amber)" rx="2"/><rect x="123" y="36.7" width="34" height="64.3" fill="var(--navy)" rx="2"/>
+          <rect x="173" y="106.7" width="34" height="36.3" fill="var(--amber)" rx="2"/><rect x="173" y="36.0" width="34" height="70.7" fill="var(--navy)" rx="2"/>
+          <rect x="223" y="114.0" width="34" height="29.0" fill="var(--amber)" rx="2"/><rect x="223" y="63.3" width="34" height="50.7" fill="var(--navy)" rx="2"/>
+          <rect x="273" y="86.1" width="34" height="56.9" fill="var(--amber)" rx="2"/><rect x="273" y="43.4" width="34" height="42.7" fill="var(--navy)" rx="2"/>
+          <rect x="323" y="103.2" width="34" height="39.8" fill="var(--amber)" rx="2"/><rect x="323" y="57.7" width="34" height="45.6" fill="var(--navy)" rx="2"/>
+          <rect x="373" y="115.1" width="34" height="27.9" fill="var(--amber)" rx="2"/><rect x="373" y="86.6" width="34" height="28.4" fill="var(--navy)" rx="2"/>
+          <rect x="423" y="107.1" width="34" height="35.9" fill="var(--amber)" rx="2"/><rect x="423" y="85.2" width="34" height="21.9" fill="var(--navy)" rx="2"/>
+          <text x="40" y="49.1" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$9.6K</text>
+          <text x="90" y="59.2" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$8.5K</text>
+          <text x="140" y="29.7" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$11.7K</text>
+          <text x="190" y="29.0" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$11.8K</text>
+          <text x="240" y="56.3" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$8.8K</text>
+          <text x="290" y="36.4" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$11.0K</text>
+          <text x="340" y="50.7" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$9.4K</text>
+          <text x="390" y="79.6" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$6.2K</text>
+          <text x="440" y="78.2" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">$6.4K</text>
+          <text x="40" y="160" class="chart-axis-label" text-anchor="middle">Jan</text><text x="90" y="160" class="chart-axis-label" text-anchor="middle">Feb</text><text x="140" y="160" class="chart-axis-label" text-anchor="middle">Mar</text><text x="190" y="160" class="chart-axis-label" text-anchor="middle">Apr</text><text x="240" y="160" class="chart-axis-label" text-anchor="middle">May</text><text x="290" y="160" class="chart-axis-label" text-anchor="middle">Jun</text><text x="340" y="160" class="chart-axis-label" text-anchor="middle">Jul</text><text x="390" y="160" class="chart-axis-label" text-anchor="middle">Aug</text><text x="440" y="160" class="chart-axis-label" text-anchor="middle">Sep</text>
+        </svg>
+        <div class="stat-note" style="margin-top:auto;">9-month total: $83,305 combined. Both components shrank together in Aug-Sep, not just Meta's existing-audience share.</div>
+      </div>
+      <div class="card card--flex card--stretch">
+        <div class="chart-mini-title">RETURNING CUSTOMERS</div>
+        <svg class="chart-svg" width="480" height="170" viewBox="0 0 480 170">
+          <polyline points="40,143 90,127.1 140,82.3 190,120.6 240,36 290,108.3 340,93.8 390,113.4 440,142.3" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="143" r="4" fill="var(--amber)"/><circle cx="90" cy="127.1" r="4" fill="var(--amber)"/><circle cx="140" cy="82.3" r="4" fill="var(--amber)"/><circle cx="190" cy="120.6" r="4" fill="var(--amber)"/><circle cx="240" cy="36" r="4" fill="var(--amber)"/><circle cx="290" cy="108.3" r="4" fill="var(--amber)"/><circle cx="340" cy="93.8" r="4" fill="var(--amber)"/><circle cx="390" cy="113.4" r="4" fill="var(--amber)"/><circle cx="440" cy="142.3" r="4" fill="var(--amber)"/>
+          <text x="40" y="131" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">165</text>
+          <text x="90" y="115.1" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">187</text>
+          <text x="140" y="70.3" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">249</text>
+          <text x="190" y="108.6" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">196</text>
+          <text x="240" y="26" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">313</text>
+          <text x="290" y="96.3" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">213</text>
+          <text x="340" y="81.8" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">233</text>
+          <text x="390" y="101.4" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">206</text>
+          <text x="440" y="130.3" class="chart-point-label" fill="var(--ink2)" text-anchor="middle">166</text>
+          <text x="40" y="160" class="chart-axis-label" text-anchor="middle">Jan</text><text x="90" y="160" class="chart-axis-label" text-anchor="middle">Feb</text><text x="140" y="160" class="chart-axis-label" text-anchor="middle">Mar</text><text x="190" y="160" class="chart-axis-label" text-anchor="middle">Apr</text><text x="240" y="160" class="chart-axis-label" text-anchor="middle">May</text><text x="290" y="160" class="chart-axis-label" text-anchor="middle">Jun</text><text x="340" y="160" class="chart-axis-label" text-anchor="middle">Jul</text><text x="390" y="160" class="chart-axis-label" text-anchor="middle">Aug</text><text x="440" y="160" class="chart-axis-label" text-anchor="middle">Sep</text>
+        </svg>
+        <div class="stat-note" style="margin-top:auto;">Averaging 202/month over Jul-Sep, down from a 220/month baseline in the first half of the year.</div>
+        <div class="stat-note">Meta spend on existing/returning audience: 9-month average $5,019/month, down to $2,415-$3,134/month in Aug-Sep.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">TREND</div>
+      <div class="insight-text">Repeat share of the customer base fell from 55% in the first half of the year to 41% in Jul-Sep, alongside blended MER falling from 3.02 to 2.47. This isn't a demand problem, it's the measurable cost of retargeting having no real, protected budget for most of the year.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 5 — GOOGLE CAPTURES, DOESN'T CREATE -->
+<section class="slide slide--light" id="slide-7">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">7 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">GOOGLE · WHAT THE NUMBERS CAN AND CANNOT CONFIRM</div>
+      <div class="slide-h1">Meta alone claims 85-105% of new customers most months, leaving little room for Google to add its own.</div>
+      <div class="slide-sub">Consistent with the ROAS-target throttling already flagged on Brand Search. Adding both platforms' claimed conversions together overshoots Shopify's actual new-customer count almost every month.</div>
+    </div>
+    <div class="table-scroll"><table class="data-table table-long">
+      <thead><tr><th>Month</th><th>Meta new-audience (claimed)</th><th>Google claimed conv.</th><th>Combined claimed</th><th>New Customers (Shopify)</th><th>Existing Customers (Shopify)</th><th>Total Customers (Shopify)</th><th>% Claim of Meta New Customers</th></tr></thead>
+      <tbody>
+        <tr><td>Jan</td><td>144</td><td>164.3</td><td>308.3</td><td>169</td><td>165</td><td>334</td><td>85.2%</td></tr>
+        <tr><td>Feb</td><td>128</td><td>132.8</td><td>260.8</td><td>130</td><td>187</td><td>317</td><td>98.5%</td></tr>
+        <tr class="flagged"><td>Mar</td><td>232</td><td>564.0</td><td>796.0</td><td>222</td><td>249</td><td>471</td><td>104.5%</td></tr>
+        <tr class="flagged"><td>Apr</td><td>146</td><td>483.7</td><td>629.7</td><td>151</td><td>196</td><td>347</td><td>96.7%</td></tr>
+        <tr><td>May</td><td>205</td><td>155.1</td><td>360.1</td><td>216</td><td>313</td><td>529</td><td>94.9%</td></tr>
+        <tr><td>Jun</td><td>159</td><td>213.1</td><td>372.1</td><td>178</td><td>213</td><td>391</td><td>89.3%</td></tr>
+        <tr><td>Jul</td><td>266</td><td>142.0</td><td>408.0</td><td>271</td><td>233</td><td>504</td><td>98.2%</td></tr>
+        <tr><td>Aug</td><td>362</td><td>80.3</td><td>442.3</td><td>361</td><td>206</td><td>567</td><td>100.3%</td></tr>
+        <tr><td>Sep</td><td>271</td><td>66.5</td><td>337.5</td><td>258</td><td>166</td><td>424</td><td>105.0%</td></tr>
+        <tr style="font-weight:700;"><td>9-mo total / avg</td><td>1,913</td><td>2,001.8</td><td>3,914.8</td><td>1,956</td><td>1,928</td><td>3,884</td><td>97.8%</td></tr>
+      </tbody>
+    </table></div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">FLAG</div>
+      <div class="insight-text">This isn't evidence to cut Google, Brand Search still returns a real ROAS, and the account's own ROAS-target throttling is a more likely explanation than a change in customer behavior. It means the account can't yet confirm whether Google adds new customers or captures demand Meta already created. Fixing the conversion-action definition (see the Mar-Apr flag) is the first step to knowing.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 8 — 100-DAY PATH, BY AUDIENCE AND CHANNEL -->
+<section class="slide slide--light" id="slide-8">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">8 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">THE 90-DAY PATH · BY AUDIENCE AND CHANNEL</div>
+      <div class="slide-h1">Using the data available, here's as accurate a representation as possible of the cost and return at each stage.</div>
+      <div class="slide-sub">Ranges reflect the last four months (Jun-Sep) for Meta's new-customer and existing-customer segments, and for Google overall.</div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">CAVEAT</div>
+      <div class="insight-text">The blended results overall will also vary a lot based on the distribution given to each section of the campaign, new-customer, existing-customer, and Google, read each range on its own, not as a single fixed blended output. Seasonality also affects results across different periods of the year, and results depend on the total budget allocated to each section as well as the account's total budget over the period.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="table-scroll"><table class="data-table">
+          <thead><tr><th>Metric</th><th>Last 30 days</th><th>Average (Jun-Sep)</th><th>Range (Jun-Sep)</th><th>ROAS (Jun-Sep)</th><th>90-day target</th></tr></thead>
+          <tbody>
+            <tr><td>Meta new-customer CAC (prospecting + engaged)</td><td>$95.59</td><td>$89.84</td><td>$72.48-$98.42</td><td>2.22x (2.01x-2.73x)</td><td>~$76</td></tr>
+            <tr><td>Meta existing-customer CAC</td><td>$67.08</td><td>$58.53</td><td>$51.78-$67.21</td><td>3.42x (2.79x-4.02x)</td><td>~$53</td></tr>
+            <tr><td>Google (blended, not yet split by stage)</td><td>$59.52</td><td>$35.25</td><td>$29.42-$59.52</td><td>6.53x (3.62x-8.34x)</td><td>TBD, depending on campaign segments, low budget</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="col">
+        <div class="card card--stretch">
+          <div class="stat-label">HOW WE GET THERE</div>
+          <ul class="two-list">
+            <li>Reset Search-Brand and Brooklyn Dress PMax ROAS targets to levels the account can actually clear</li>
+            <li>Give the retargeting campaign its own protected budget, not a byproduct of the prospecting CBO</li>
+            <li>Split account structure by funnel stage instead of one broad, undifferentiated pool</li>
+            <li>Keep reconciling every month against Shopify, not platform-claimed numbers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">RECOMMENDATION</div>
+      <div class="insight-text">Branded Search stays its own benchmark, it's neither new nor existing by nature. Everything else on Google gets assessed by audience stage once campaigns are restructured, with likely exceptions for broad PMax placements that can't fully separate signal. None of this requires new spend, it requires giving Google the same audience-stage visibility Meta already has.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 8 — APPENDIX A: CUSTOMERS & REVENUE -->
+<section class="slide slide--light" id="slide-9">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">9 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">APPENDIX A · MONTHLY REFERENCE</div>
+      <div class="slide-h1">Customers and revenue, month by month, straight from Shopify's order export.</div>
+      <div class="slide-sub">New and existing (returning) customers, their revenue, and average order value, January through September 2026.</div>
+    </div>
+    <div class="table-scroll"><table class="data-table table-long">
+      <thead><tr><th>Month</th><th>New customers</th><th>Existing customers</th><th>Total customers</th><th>New customer revenue</th><th>Existing customer revenue</th><th>New AOV</th><th>Existing AOV</th></tr></thead>
+      <tbody>
+        <tr><td>Jan</td><td>169</td><td>165</td><td>334</td><td>$31,151.82</td><td>$30,468.89</td><td>$184.33</td><td>$184.66</td></tr>
+        <tr><td>Feb</td><td>130</td><td>187</td><td>317</td><td>$23,235.88</td><td>$41,721.60</td><td>$178.74</td><td>$223.11</td></tr>
+        <tr><td>Mar</td><td>222</td><td>249</td><td>471</td><td>$44,042.35</td><td>$59,542.48</td><td>$198.39</td><td>$239.13</td></tr>
+        <tr><td>Apr</td><td>151</td><td>196</td><td>347</td><td>$30,865.81</td><td>$35,912.20</td><td>$204.41</td><td>$183.23</td></tr>
+        <tr><td>May</td><td>216</td><td>313</td><td>529</td><td>$32,744.87</td><td>$62,868.92</td><td>$151.60</td><td>$200.86</td></tr>
+        <tr><td>Jun</td><td>178</td><td>213</td><td>391</td><td>$37,486.09</td><td>$54,109.18</td><td>$210.60</td><td>$254.03</td></tr>
+        <tr><td>Jul</td><td>271</td><td>233</td><td>504</td><td>$49,289.85</td><td>$44,371.49</td><td>$181.88</td><td>$190.44</td></tr>
+        <tr><td>Aug</td><td>361</td><td>206</td><td>567</td><td>$61,681.43</td><td>$35,841.69</td><td>$170.86</td><td>$173.99</td></tr>
+        <tr><td>Sep</td><td>258</td><td>166</td><td>424</td><td>$46,695.23</td><td>$33,836.82</td><td>$180.99</td><td>$203.84</td></tr>
+        <tr style="font-weight:700;"><td>9-mo total / blended avg</td><td>1,956</td><td>1,928</td><td>3,884</td><td>$357,193.33</td><td>$398,673.27</td><td>$182.61</td><td>$206.78</td></tr>
+      </tbody>
+    </table></div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">SOURCE</div>
+      <div class="insight-text">Every figure on this page is Shopify's own new-vs-returning customer export, September 29, 2025 through September 29, 2026, filtered to the 2026 calendar months. No platform attribution involved.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · RIVER + SKY · PERFORMANCE RECONCILIATION</div></div>
+</section>
+
+<!-- SLIDE 9 — APPENDIX B: META SPEND BY SEGMENT -->
+<section class="slide slide--light" id="slide-10">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">RIVER + SKY</span><span class="kicker-sep">·</span><span class="kicker-label">PERFORMANCE RECONCILIATION</span></div>
+    <div class="topbar-page">10 — 10</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">APPENDIX B · MONTHLY REFERENCE</div>
+      <div class="slide-h1">Meta ad spend by audience segment, verified against the account-level export.</div>
+      <div class="slide-sub">Prospecting, engaged, and existing-customer spend as Meta itself tags it, checked against the account's total reported spend each month.</div>
+    </div>
+    <div class="table-scroll"><table class="data-table table-long">
+      <thead><tr><th>Month</th><th>Prospecting</th><th>Engaged</th><th>Existing</th><th>Meta segment total</th><th>Meta account total</th><th>Google spend</th></tr></thead>
+      <tbody>
+        <tr><td>Jan</td><td>$13,965.65</td><td>$0.00</td><td>$4,723.88</td><td>$18,692.88</td><td>$18,692.88</td><td>$4,850.97</td></tr>
+        <tr><td>Feb</td><td>$10,128.51</td><td>$0.00</td><td>$4,707.82</td><td>$14,842.67</td><td>$14,842.67</td><td>$3,758.17</td></tr>
+        <tr><td>Mar</td><td>$19,122.92</td><td>$0.00</td><td>$7,091.61</td><td>$26,227.04</td><td>$26,227.04</td><td>$4,627.62</td></tr>
+        <tr><td>Apr</td><td>$18,206.23</td><td>$0.00</td><td>$7,787.91</td><td>$26,006.88</td><td>$26,006.88</td><td>$4,003.67</td></tr>
+        <tr><td>May</td><td>$15,356.51</td><td>$0.00</td><td>$5,586.31</td><td>$20,949.48</td><td>$20,949.48</td><td>$3,201.88</td></tr>
+        <tr><td>Jun</td><td>$15,648.47</td><td>$0.00</td><td>$4,704.60</td><td>$20,360.42</td><td>$20,360.42</td><td>$6,269.28</td></tr>
+        <tr><td>Jul</td><td>$19,279.28</td><td>$0.00</td><td>$5,022.22</td><td>$24,310.04</td><td>$24,310.04</td><td>$4,382.83</td></tr>
+        <tr><td>Aug</td><td>$34,221.89</td><td>$0.00</td><td>$3,133.94</td><td>$37,367.11</td><td>$37,367.11</td><td>$3,078.93</td></tr>
+        <tr><td>Sep</td><td>$25,164.38</td><td>$740.24</td><td>$2,415.02</td><td>$28,328.89</td><td>$28,328.89</td><td>$3,958.30</td></tr>
+        <tr style="font-weight:700;"><td>9-mo total</td><td>$171,093.83</td><td>$740.24</td><td>$45,173.32</td><td>$217,085.41</td><td>$217,085.41</td><td>$38,131.65</td></tr>
+      </tbody>
+    </table></div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">SOURCE</div>
+      <div class="insight-text">Meta account total is adjusted for September to use the complete-month figure, the account-level export had been pulled mid-month and only reflected spend through an earlier date, while the segment-level export covers the full period through Sep 29. Every month now reconciles to the cent. "Unknown" segment spend ($3-13/month) is omitted from this table as immaterial, it's included in the segment total but never separately itemized. "Engaged" only exists as its own tracked segment starting September.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<script>
+(function () {
+  const slides  = Array.from(document.querySelectorAll('.slide'));
+  const total   = slides.length;
+  let current   = 0;
+  const dotsEl    = document.getElementById('navDots');
+  const pageLabel = document.getElementById('pageLabel');
+  const btnPrev   = document.getElementById('btnPrev');
+  const btnNext   = document.getElementById('btnNext');
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+  function goTo(idx) {
+    idx = Math.max(0, Math.min(total - 1, idx));
+    slides[current].classList.remove('active');
+    slides[idx].classList.add('active');
+    current = idx;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    pageLabel.textContent = `${idx + 1} / ${total}`;
+    btnPrev.disabled = idx === 0;
+    btnNext.disabled = idx === total - 1;
+  }
+  window.goSlide = dir => goTo(current + dir);
+  btnPrev.disabled = true;
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown','PageDown'].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key))     { e.preventDefault(); goTo(current - 1); }
+  });
+})();
+function exportPDF(){ window.print(); }
+</script>
+</body>
+</html>
