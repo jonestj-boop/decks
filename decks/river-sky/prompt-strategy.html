@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River+Sky · Prompt Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2C7FA6; --client-accent-soft:#e9f3f8;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:14px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.75; margin-bottom:30px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.72); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:60px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:76px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead .subtitle { color:var(--ink-500); max-width:760px; }
+  .masthead .meta { display:flex; gap:40px; margin-top:30px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:46px; line-height:1.05; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:29px; line-height:1.14; letter-spacing:-0.015em; margin-bottom:14px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:18px; margin:24px 0 8px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:18px; }
+  ul.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"\2014"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:14px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);}
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;color:var(--et-black);} .dim{color:var(--ink-500);} .code{font-family:"SF Mono","Consolas",monospace;font-size:12.5px;color:var(--et-black);}
+  td .clus{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:2px 7px;border-radius:20px;background:var(--client-accent-soft);color:#1c5f7f;}
+  .miss{color:var(--bad);font-weight:700;} .hit{color:var(--good);font-weight:700;}
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:15px 19px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:#1c5f7f;}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:#1f8a4c;}
+
+  .step { border:1px solid var(--border); border-radius:14px; padding:20px 22px; margin:12px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+  .step .sn { width:28px; height:28px; flex:none; background:var(--client-accent); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+  .step h3 { margin:0; font-size:16.5px; }
+  .step p { font-size:14.5px; color:var(--ink-600); margin:0; }
+
+  .flow { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:16px 0; }
+  .fcard { border:1px solid var(--border); border-radius:12px; padding:16px 18px; }
+  .fcard .fn { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .fcard h4 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--et-black); }
+  .fcard p { font-size:13.5px; color:var(--ink-500); margin:0; line-height:1.5; }
+
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:56px 64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.72); max-width:var(--maxw); }
+
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr;}
+    aside{position:static;height:auto;flex-direction:row;align-items:center;flex-wrap:wrap;gap:12px;}
+    aside nav{flex-direction:row;flex-wrap:wrap;} aside .foot{display:none;}
+    .block,.masthead,.cta{padding:44px 26px;} .flow{grid-template-columns:1fr;}
+  }
+  @media print{ .shell{grid-template-columns:1fr;} aside{display:none;} .block{page-break-inside:avoid;border-bottom:none;} }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Prompt Strategy · AEO</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared for River+Sky<br>September 2026<br>Confidential</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Prompt Strategy · Answer Engine Optimization</div>
+      <h1>The prompts to win,<br>and how we earn the mention</h1>
+      <p class="subtitle">When a shopper asks AI where to buy a sustainable, made-in-USA tie-dye dress, a short list of brands gets named. This is the set of buying prompts River+Sky should own, who AI names today, and exactly how brand mentions get River+Sky into those answers.</p>
+      <div class="meta">
+        <div>Prepared for<b>River+Sky</b></div>
+        <div>Basis<b>Live answer-engine captures, Sept 2026</b></div>
+        <div>Pairs with<b>Growth roadmap + brand mentions</b></div>
+      </div>
+    </section>
+
+    <!-- HOW AI DECIDES -->
+    <section class="block" id="how" data-nav="How AI decides">
+      <div class="label">The mechanism</div>
+      <h2>AI names the brands its sources already trust</h2>
+      <p class="lede">An answer engine does not invent a shortlist. When someone asks it a buying question, it synthesizes the sources it trusts on that topic: "best of" roundups, listicles, reviews, and community posts on credible sites. The brands that show up across those sources are the brands it names.</p>
+      <p>So winning a prompt is not about saying more about yourself. It is about being present in the exact sources AI reads when it answers that prompt. That is the whole job of brand mentions, and it is why the work starts from the prompts, not from a generic list of websites.</p>
+      <div class="callout info"><strong>What this means for River+Sky.</strong> Your made-in-USA, hand-dyed, artisan story is real and credible, which is the hard part. What is missing is presence in the roundups and reviews AI pulls from for your category. Competitors have it. You do not yet. Brand mentions close that specific gap, prompt by prompt.</div>
+    </section>
+
+    <!-- THE PROMPT MAP -->
+    <section class="block" id="prompts" data-nav="The prompt map">
+      <div class="label">The prompt map</div>
+      <h2>The buying prompts to own, and who AI names today</h2>
+      <p>These are real prompts a River+Sky customer types into ChatGPT, Google's AI Overviews, Perplexity and Gemini, grouped by the five parts of your catalog. The middle column is what AI actually answered when we ran them. The pattern is consistent: it names small brands that look just like you, and leaves you out.</p>
+      <table>
+        <thead><tr><th class="accent">Cluster</th><th class="accent">Prompt she types</th><th class="accent">Who AI names today</th><th class="accent">River+Sky</th></tr></thead>
+        <tbody>
+          <tr><td><span class="clus">Made in USA</span></td><td class="code">best sustainable tie dye maxi dresses made in usa</td><td>MATE the Label, Harvest &amp; Mill, Etsy artisans</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Made in USA</span></td><td class="code">best made in usa dresses for women</td><td>MATE the Label, Christy Dawn, Reformation</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Made in USA</span></td><td class="code">ethical and eco-friendly boho clothing brands</td><td>Faithfull, Christy Dawn, Dôen, Reformation</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Tie-dye</span></td><td class="code">best tie dye maxi dresses</td><td>River+Sky (#2), Kindom, Ithaca Tie Dyes</td><td class="hit">Named already</td></tr>
+          <tr><td><span class="clus">Tie-dye</span></td><td class="code">where to buy hand-dyed dresses made in usa</td><td>Etsy sellers, small shops</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Boho</span></td><td class="code">best made in usa boho maxi dress brands</td><td>Christy Dawn, Reformation, Surrealist USA, Three Bird Nest</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Boho</span></td><td class="code">flattering boho dresses for women over 50</td><td>Boutiques, few brands named</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Jewelry</span></td><td class="code">best handmade sterling silver boho jewelry made in usa</td><td>Ananda Khalsa, HappyGoLicky, MIMOSA</td><td class="miss">Not named</td></tr>
+          <tr><td><span class="clus">Loungewear</span></td><td class="code">sustainable made in usa loungewear</td><td>MATE the Label, small brands</td><td class="miss">Not named</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>The bright spot, and the proof it works.</strong> On a broad tie-dye prompt you already surface at number two, next to Kindom, without anyone trying. That tells us the brand is credible enough for AI to name. It just needs the outside sources for the higher-intent, made-in-USA and boho prompts, which is exactly what the rest of this plan builds.</div>
+      <p class="dim" style="font-size:13px">These are live reads from the dates we ran them. AI answers vary by person and shift over time, so treat them as direction. We baseline every priority prompt at kickoff and track movement monthly.</p>
+    </section>
+
+    <!-- HOW BRAND MENTIONS GET YOU IN -->
+    <section class="block" id="mentions" data-nav="How mentions win it">
+      <div class="label">The lever</div>
+      <h2>How a brand mention turns into a mention in the answer</h2>
+      <p>A brand mention is a placement on a real, trusted site, written for the exact prompt you want to win. It is not a generic backlink. Each one is built to become a source AI reads and cites when it answers. Three forms do the work.</p>
+      <div class="flow">
+        <div class="fcard"><div class="fn">Form 01</div><h4>Roundup placements</h4><p>Getting River+Sky onto the "best sustainable tie-dye dress brands" style lists AI pulls its shortlist from. This is where MATE and Christy Dawn were named from.</p></div>
+        <div class="fcard"><div class="fn">Form 02</div><h4>Reviews</h4><p>Honest reviews and features that validate River+Sky as a real, quality brand, the outside vote of confidence AI weighs when deciding whom to trust.</p></div>
+        <div class="fcard"><div class="fn">Form 03</div><h4>Query-relevant content</h4><p>Articles written for how AI reads entity and topic authority, tied to a specific prompt like made-in-USA hand-dyed dresses, not just for human readers.</p></div>
+      </div>
+      <p>Every placement lands on a site with a DR of 30 to 60 and 1,000+ monthly visitors, so it is a source answer engines already recognize and can cite. Here is the sequence behind each one.</p>
+      <div class="step"><div class="sh"><span class="sn">1</span><h3>Prompt and entity research</h3></div><p>Start from the priority prompt, then map the sources AI currently cites for it and the entities it associates with the answer, so we know exactly where River+Sky needs to appear.</p></div>
+      <div class="step"><div class="sh"><span class="sn">2</span><h3>Outreach to the right sites</h3></div><p>Manual, relationship-based outreach to the industry-relevant sites that already rank and get cited for that prompt, pitching a genuine, useful placement.</p></div>
+      <div class="step"><div class="sh"><span class="sn">3</span><h3>Content built for the answer</h3></div><p>We write the placement for how AI interprets trust, relevance and entity authority, naming River+Sky in the context of the prompt it is meant to win.</p></div>
+      <div class="step"><div class="sh"><span class="sn">4</span><h3>AI re-reads, and the answer changes</h3></div><p>Once the placement is live and indexed, it becomes source material the engines read for months. As the priority prompts accumulate mentions, River+Sky moves from unnamed to shortlisted to recommended.</p></div>
+    </section>
+
+    <!-- WORKED EXAMPLE -->
+    <section class="block" id="example" data-nav="Worked example">
+      <div class="label">One prompt, end to end</div>
+      <h2>How we win "best sustainable tie dye dresses made in usa"</h2>
+      <p>Take the prompt where AI names MATE the Label and Harvest &amp; Mill and leaves you out. Here is the path from that answer to one that names River+Sky.</p>
+      <table>
+        <thead><tr><th class="accent">Step</th><th class="accent">What happens</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Today</td><td>AI builds the answer from sustainable-fashion roundups and the brands' own sites. River+Sky is in none of those sources, so it is not on the list.</td></tr>
+          <tr><td class="strong">Placement 1</td><td>A roundup on a DR 40+ sustainable-fashion site: "best made-in-USA tie-dye dress brands," with River+Sky named alongside the category leaders.</td></tr>
+          <tr><td class="strong">Placement 2</td><td>A review or feature on a lifestyle site that covers the hand-dyed, made-in-California story and the 1,290+ customer reviews.</td></tr>
+          <tr><td class="strong">Placement 3</td><td>Query-relevant content targeting the exact phrase, tying River+Sky to made-in-USA, hand-dyed, and sustainable as entities AI can trust.</td></tr>
+          <tr><td class="strong">Result</td><td>The engines now have three trusted sources naming River+Sky for this prompt. Over the following weeks the answer starts to include you.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Played straight, always.</strong> Every placement is a genuine, useful piece on a real site, with your relationship disclosed. Your made-in-USA, artisan story is true, so honest placements do the work, and there is no astroturf that could damage the brand.</div>
+    </section>
+
+    <!-- ALLOCATION -->
+    <section class="block" id="allocation" data-nav="90-day allocation">
+      <div class="label">Putting the volume to work</div>
+      <h2>How we spend a month of mentions</h2>
+      <p>Mentions are a monthly volume, so we point each month at the prompts with the highest intent and the clearest gap first. This is a 90-day shape at the recommended Standard tier, five mentions a month, which you can scale up or down.</p>
+      <table>
+        <thead><tr><th class="accent">Month</th><th class="accent">Priority clusters</th><th class="accent">Prompts we target first</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Month 1</td><td>Made in USA, Tie-dye</td><td>Your strongest differentiators and highest intent: sustainable made-in-USA tie-dye and made-in-USA dresses.</td></tr>
+          <tr><td class="strong">Month 2</td><td>Boho, Tie-dye</td><td>Boho maxi and hand-dyed prompts, plus reinforcing the month-1 placements so they compound.</td></tr>
+          <tr><td class="strong">Month 3</td><td>Jewelry, Loungewear</td><td>Extend into the jewelry and SUNDoWN prompts once the apparel clusters are moving.</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info"><strong>Why sequence it this way.</strong> The made-in-USA and tie-dye prompts are where you are most credible and least visible, so they pay back fastest. Each mention is durable, so month 1 keeps working while month 2 and 3 add to it. We re-rank the priority list each month against what is actually moving.</div>
+    </section>
+
+    <!-- MEASURING -->
+    <section class="block" id="measure" data-nav="Measuring it">
+      <div class="label">How we prove it</div>
+      <h2>We track the answer, prompt by prompt</h2>
+      <p>The whole point is a change you can see, so we measure the thing itself, not a proxy.</p>
+      <ul class="body">
+        <li>Baseline every priority prompt at kickoff: for each one, whether River+Sky is named, and who else is, across ChatGPT, Google AI Overviews, Perplexity and Gemini.</li>
+        <li>Re-run the same prompts monthly and report the movement: unnamed to shortlisted to recommended, with the competitors you are now sitting next to.</li>
+        <li>Tie it back to the store: the branded and category search and traffic that follow as you start showing up in the answers.</li>
+      </ul>
+      <div class="callout good"><strong>You can check it yourself.</strong> Any of these prompts can be run in ChatGPT or Google in ten seconds, so the progress is not something you have to take on faith. That is the kind of result we want to be measured on.</div>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next step</div>
+      <h2>Pick the prompts, set the volume, start earning the mention</h2>
+      <p>We finalize the priority prompt list with you, baseline them, and point the first month of mentions at made-in-USA and tie-dye. Pair this with the content in the growth roadmap and the two reinforce each other, since the pages we build are also sources AI reads.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => { const a=document.createElement('a'); a.href='#'+s.id; a.innerHTML=s.getAttribute('data-nav'); toc.appendChild(a); });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)); });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
