@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DogiZone — Email Automation Flow Map · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#1697D4; --client-accent-soft:#e8f5fc;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+  .pill.api{background:var(--client-accent-soft);color:#0b6a99;} .pill.ui{background:#f3e8fc;color:#7b3fbf;}
+
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* flow card */
+  .flow { border:1px solid var(--border); border-radius:14px; margin:22px 0; overflow:hidden; }
+  .flow-head { display:flex; align-items:center; gap:14px; padding:18px 24px; background:var(--subtle); border-bottom:1px solid var(--border); }
+  .flow-head .fn { width:34px; height:34px; flex:none; background:var(--et-red); color:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; }
+  .flow-head h3 { margin:0; font-size:19px; flex:1; }
+  .flow-body { padding:20px 24px; }
+  .flow-meta { display:grid; grid-template-columns:110px 1fr; gap:6px 14px; font-size:14.5px; margin-bottom:14px; }
+  .flow-meta dt { font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); padding-top:2px; }
+  .flow-meta dd { margin:0; }
+  .emails { list-style:none; margin:6px 0 4px; }
+  .emails li { display:grid; grid-template-columns:86px 1fr; gap:14px; padding:10px 0; border-top:1px solid var(--border); font-size:15px; }
+  .emails li:first-child { border-top:none; }
+  .emails .when { font-weight:700; color:var(--client-accent); font-variant-numeric:tabular-nums; }
+  .emails b { color:var(--et-black); }
+
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+    .emails li { grid-template-columns:1fr; gap:2px; }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Email Automation Plan</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>Internal scope document</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Email Automation Flow Map</div>
+      <h1>DogiZone<br>Mailchimp &times; Shopify</h1>
+      <p class="subtitle">The automated email program for the new Shopify store — every flow, every email, every trigger, and exactly how each piece gets built.</p>
+      <div class="meta">
+        <div>Prepared for<b>Melissa — scope planning</b></div>
+        <div>Date<b>September 2026</b></div>
+        <div>Stack<b>Mailchimp + Mailchimp for Shopify</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="summary" data-nav="Overview">
+      <div class="label">Overview</div>
+      <h2>What this covers</h2>
+      <p class="lede">Six automated flows, seventeen emails. Together they cover the full customer lifecycle — capture, convert, repeat, recover — and they're the piece that turns the new store from a catalog into a revenue engine.</p>
+      <p>This maps the automation scope that was left out of the dev migration quote as an optional upgrade. Everything here runs on Mailchimp connected to the new Shopify store. Emails are designed and coded in the DogiZone brand, loaded into Mailchimp as custom templates, and assembled into Customer Journeys.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">6</div><div class="k">Automated flows (5 core + 1 optional)</div></div>
+        <div class="stat"><div class="v accent">17</div><div class="k">Automated emails, designed &amp; coded</div></div>
+        <div class="stat"><div class="v accent">1</div><div class="k">App install — Mailchimp for Shopify</div></div>
+        <div class="stat"><div class="v good">0</div><div class="k">Custom dev required</div></div>
+      </div>
+      <div class="callout info"><strong>Where transactional email lives:</strong> order confirmations, shipping updates, and pickup-ready notifications stay in Shopify — they're built in and branded during the store build. Mailchimp owns marketing automation only. No overlap, no double-sends.</div>
+    </section>
+
+    <section class="block" id="stack" data-nav="How the stack works">
+      <div class="label">The stack</div>
+      <h2>How Shopify talks to Mailchimp</h2>
+      <p>The official <strong>Mailchimp for Shopify</strong> app (free, one-click OAuth install) syncs customers, orders, products, and carts into Mailchimp continuously. That sync is what powers the triggers below — cart abandoned, product purchased, category purchased, time since last order — and ties every email to revenue in reporting.</p>
+      <ul class="body">
+        <li>Shopify store → customer, order, product, and cart data → Mailchimp audience</li>
+        <li>eTailPet customer export → one-time import into the same audience, tagged by source</li>
+        <li>Signup capture (site popup + footer + checkout opt-in) → audience with source tags</li>
+        <li>Every flow sends from DogiZone's domain — authenticated with DKIM/SPF during setup</li>
+      </ul>
+      <div class="callout warn"><strong>One platform constraint to scope around:</strong> Mailchimp's API cannot create Customer Journeys — the journey canvas itself is assembled in the Mailchimp UI. This is a Mailchimp restriction, not a tooling gap, and most ESPs share it. Everything around the journeys is fully scripted (templates, tags, segments, audience). Journey assembly is roughly 30–60 minutes per flow with everything pre-built, and we handle it — it just can't be waved away as "all automated," so it's budgeted honestly below.</div>
+      <div class="callout"><strong>Check before kickoff:</strong> DogiZone's eTailPet Plus tier bundles a Mailchimp integration — the client may already have a Mailchimp account with an audience in it. If so, we build in their existing account and merge the eTailPet export into it, keeping their sending history and any existing subscribers.</div>
+    </section>
+
+    <section class="block" id="flows" data-nav="The six flows">
+      <div class="label">The flows</div>
+      <h2>Six flows, seventeen emails</h2>
+      <p>Each flow lists its trigger, the emails with send timing, and the logic that keeps it polite — every flow exits on purchase, and global frequency caps prevent overlapping sends.</p>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">1</span><h3>Welcome series</h3><span class="pill p1">Core</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>New subscriber — popup, footer signup, or checkout opt-in (not the eTailPet import)</dd>
+            <dt>Exit</dt><dd>Makes a purchase, or completes the series</dd>
+            <dt>KPI</dt><dd>Signup → first-purchase rate</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">Immediate</span><span><b>Welcome + first-order offer.</b> Warm hello, what DogiZone is, single CTA with the welcome code (offer % is a client decision — see Decisions).</span></li>
+            <li><span class="when">Day 2</span><span><b>More than a store.</b> The Rockville story — retail plus daycare, boarding, grooming, training, DogiWash. Positions DogiZone against Chewy on the thing Chewy can't do: being local.</span></li>
+            <li><span class="when">Day 5</span><span><b>Bestsellers + proof.</b> Top products by category, Google review pulls, pickup/local-delivery reminder, code expiry nudge.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">2</span><h3>Abandoned cart</h3><span class="pill p1">Core</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>Cart abandoned — fires via Shopify cart sync, 1 hour after last activity</dd>
+            <dt>Exit</dt><dd>Checkout completed</dd>
+            <dt>KPI</dt><dd>Recovered revenue (Mailchimp attributes it per-email)</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">+1 hour</span><span><b>You left something.</b> Cart contents with images, one-click return to checkout. No discount — most recoveries don't need one.</span></li>
+            <li><span class="when">+24 hours</span><span><b>Objection handling.</b> Free local pickup today, same-day local delivery, staff help line. The local angle is the differentiator — lead with it before discounting.</span></li>
+            <li><span class="when">+72 hours</span><span><b>Last nudge.</b> Optional incentive (client decision) or urgency framing on stock. Final email in the flow.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">3</span><h3>Post-purchase</h3><span class="pill p1">Core</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>First order placed (repeat buyers skip to email 3)</dd>
+            <dt>Exit</dt><dd>Completes the series; re-entry allowed per order for email 3</dd>
+            <dt>KPI</dt><dd>Review submission rate, second-purchase rate</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">Day 1</span><span><b>Thanks — here's how it works.</b> Pickup hours and where to park, delivery window expectations, who to call. Sets up the in-store relationship.</span></li>
+            <li><span class="when">Day 10</span><span><b>Review request.</b> One product, one click. <em>Coordination note:</em> if Judge.me review requests are enabled in the store build, this email is dropped from the flow — one review ask per order, never two.</span></li>
+            <li><span class="when">Day 21</span><span><b>Category cross-sell.</b> Bought food → treats and toppers. Bought a leash → collars and ID. Driven by the purchased-category data from the Shopify sync.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">4</span><h3>Replenishment</h3><span class="pill p1">Core</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>Purchase in a consumable category — dry food, wet food, frozen/raw, treats</dd>
+            <dt>Exit</dt><dd>Any new food/treat order</dd>
+            <dt>KPI</dt><dd>Repeat-purchase rate, days between orders</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">Day 30*</span><span><b>Running low?</b> The exact product they bought, one-click reorder, pickup/delivery choice. *Interval tuned per category — dry food ~35–45 days, wet/frozen ~21, treats ~30.</span></li>
+            <li><span class="when">Day 40*</span><span><b>Don't run out.</b> Second touch if no reorder — same-day local delivery framing ("out of food is an emergency at dinner time").</span></li>
+          </ul>
+          <div class="callout" style="margin:14px 0 0"><strong>This is the money flow for a pet store.</strong> Food is a 30–45 day consumable and DogiZone's whole catalog skews consumable. Replenishment is where Mailchimp pays for itself — it's also the natural on-ramp if the client later adds subscriptions in Shopify.</div>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">5</span><h3>Win-back</h3><span class="pill p2">Core</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>Previous customer, no order in 90 days</dd>
+            <dt>Exit</dt><dd>Any purchase</dd>
+            <dt>KPI</dt><dd>Reactivation rate</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">Day 90</span><span><b>It's been a while.</b> What's new in store, new brands carried, upcoming events (DogiDeals, calendar events).</span></li>
+            <li><span class="when">Day 97</span><span><b>Come-back offer.</b> Client-approved incentive — discount code or a service tie-in (free DogiWash with $50 order is on-brand and protects product margin).</span></li>
+            <li><span class="when">Day 111</span><span><b>Last touch.</b> Soft goodbye + one-question feedback ask. Non-responders get suppressed from future sends — keeps the list healthy and deliverability strong.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="flow">
+        <div class="flow-head"><span class="fn">6</span><h3>Browse abandonment</h3><span class="pill p3">Optional · Phase 2</span></div>
+        <div class="flow-body">
+          <dl class="flow-meta">
+            <dt>Trigger</dt><dd>Viewed a product, no cart, identified subscriber — 24 hours later</dd>
+            <dt>Exit</dt><dd>Adds to cart (hands off to flow 2) or purchases</dd>
+            <dt>KPI</dt><dd>View → cart rate</dd>
+          </dl>
+          <ul class="emails">
+            <li><span class="when">+24 hours</span><span><b>Still thinking it over?</b> The viewed product plus related picks. Requires Mailchimp site tracking enabled on the storefront — proposed as phase 2 once the core five flows have a month of data.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="segments" data-nav="Audience &amp; segments">
+      <div class="label">Foundation</div>
+      <h2>Audience, tags, and segments</h2>
+      <p>One audience, structured with tags and segments — all created via API before any journey is assembled.</p>
+      <table>
+        <thead><tr><th>Layer</th><th>Values</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Source tags</td><td>etailpet-import · popup · footer · checkout-opt-in</td><td>Welcome flow entry control, deliverability warm-up for the import</td></tr>
+          <tr><td class="strong">Purchase segments</td><td>Food buyers by subcategory · treats · toys · gear · services-adjacent</td><td>Replenishment intervals, cross-sell targeting</td></tr>
+          <tr><td class="strong">Lifecycle segments</td><td>Never purchased · 1 order · repeat (2+) · VIP (3+ orders or $300+) · lapsed 90d</td><td>Flow entries, exclusions, and offer laddering</td></tr>
+          <tr><td class="strong">Local segment</td><td>Rockville-area ZIPs</td><td>Pickup / same-day delivery messaging; store events</td></tr>
+          <tr><td class="strong">Engagement</td><td>Engaged 90d · dormant</td><td>Frequency caps and suppression — protects sender reputation</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="build" data-nav="Build plan">
+      <div class="label">Build plan</div>
+      <h2>Who builds what, and how</h2>
+      <table>
+        <thead><tr><th>Workstream</th><th>Built via</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Flow strategy &amp; email copy</td><td><span class="pill api">Scripted / AI</span></td><td>This document is the strategy; copy drafted per-flow in DogiZone's voice</td></tr>
+          <tr><td class="strong">Email design — 17 emails</td><td><span class="pill api">Scripted / AI</span></td><td>Coded branded HTML (house email-builder pipeline), loaded as Mailchimp custom templates via API</td></tr>
+          <tr><td class="strong">Audience, tags, segments</td><td><span class="pill api">Scripted / AI</span></td><td>Created via Mailchimp API; eTailPet customer import included</td></tr>
+          <tr><td class="strong">Mailchimp for Shopify connect</td><td><span class="pill ui">UI · one-time</span></td><td>OAuth install from the Shopify admin — minutes, needs account owner present</td></tr>
+          <tr><td class="strong">Domain authentication</td><td><span class="pill ui">UI · one-time</span></td><td>DKIM/SPF records — one small DNS task on dogizone.com</td></tr>
+          <tr><td class="strong">Signup capture</td><td><span class="pill api">Scripted / AI</span></td><td>Popup + footer form styled to the new theme during the store build</td></tr>
+          <tr><td class="strong">Discount codes</td><td><span class="pill api">Scripted / AI</span></td><td>Generated in Shopify, referenced in flows — after client approves the offer ladder</td></tr>
+          <tr><td class="strong">Journey assembly — 6 flows</td><td><span class="pill ui">UI · per flow</span></td><td>The Mailchimp-canvas constraint: ~30–60 min per flow with all assets pre-built; we do the clicking</td></tr>
+          <tr><td class="strong">QA &amp; test sends</td><td><span class="pill ui">UI · per flow</span></td><td>Seed-list test of every email + trigger walkthrough before switching live</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good"><strong>Sequencing:</strong> flows go live in two waves — welcome + abandoned cart at store launch (they need zero history), then post-purchase, replenishment, and win-back once orders flow. Browse abandonment is proposed after the first month of data.</div>
+    </section>
+
+    <section class="block" id="decisions" data-nav="Client decisions">
+      <div class="label">Before we build</div>
+      <h2>Five decisions we need</h2>
+      <ul class="body">
+        <li><strong>Welcome offer</strong> — % off, $ off, or a service tie-in (free DogiWash) for first online order</li>
+        <li><strong>Cart incentive</strong> — whether email 3 of abandoned cart carries a discount, and how much</li>
+        <li><strong>Win-back offer</strong> — the day-97 incentive, sized against product margin</li>
+        <li><strong>Review destination</strong> — Judge.me (in the store scope) or Mailchimp email; one, not both</li>
+        <li><strong>Existing Mailchimp account</strong> — does DogiZone already have one via eTailPet Plus? Build there or start fresh</li>
+      </ul>
+      <p class="dim" style="font-size:13.5px">Also needed at kickoff: Mailchimp account access (or a green light to create one), and the final eTailPet customer export before the platform is cancelled — eTailPet purges all data at termination.</p>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>Ready to drop into the scope</h2>
+      <p>This maps the "optional upgrade" email scope as a concrete deliverable list — 6 flows, 17 emails, the build method for each piece, and the five client decisions that gate it. Questions or changes — ping Deanna.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.innerHTML = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
