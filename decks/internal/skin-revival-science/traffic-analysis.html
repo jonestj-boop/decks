@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRS Traffic Analysis · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#2F5D7C; --client-accent-soft:#eaf1f6;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .client-logo { max-height:46px; max-width:200px; margin-bottom:30px; object-fit:contain; }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── SCORE GAUGE (CRO audit) ───────────────────────────────────────── */
+  .score { display:flex; align-items:center; gap:26px; background:var(--subtle); border-radius:16px; padding:26px 30px; margin:10px 0; }
+  .score .ring { --p:64; width:104px; height:104px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring::after { content:""; position:absolute; }
+  .score .ring b { width:78px; height:78px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--et-black); }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  /* ── FINDINGS (numbered) ───────────────────────────────────────────── */
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 62px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); } .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  /* ── FIGURE PLACEHOLDER ────────────────────────────────────────────── */
+  .figure { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:220px;
+            display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:24px; margin:16px 0; }
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+
+  .chart-wrap { position:relative; margin:18px 0 8px; }
+  .legend { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--ink-600); margin-bottom:10px; }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:7px; vertical-align:-1px; }
+  #chart { width:100%; height:auto; display:block; overflow:visible; }
+  #chart text { font-family:inherit; }
+  .tip { position:absolute; pointer-events:none; background:var(--et-black); color:#fff; font-size:12.5px; line-height:1.5; padding:9px 12px; border-radius:8px; white-space:nowrap; transform:translate(-50%,-100%); }
+  .tip b { font-weight:700; }
+  td.ev { font-size:13px; color:var(--ink-500); }
+  @media (max-width:600px){ table { display:block; overflow-x:auto; } .stats{grid-template-columns:1fr 1fr;} }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Internal · Call prep</div>
+    <nav id="toc"></nav>
+    <div class="foot">Internal only, not for the client<br>Source: Shopify Analytics<br>Pulled Oct 1, 2026</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Traffic analysis · Launch to Sept 30</div>
+      <h1>Skin Revival Science<br>Where the traffic actually stands</h1>
+      <p class="subtitle">Scott says store sessions haven't grown in 8 weeks. He's right. The bigger problem is that most of those sessions were never going to buy. This page covers what the data shows, what we own, and how to frame the conversation with him.</p>
+      <div class="meta">
+        <div>Client<b>Scott Bradley</b></div>
+        <div>Window<b>Jul 27 – Sep 30, 2026</b></div>
+        <div>Source<b>Shopify sessions (human only)</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="headline" data-nav="Headline numbers">
+      <div class="label">Headline numbers</div>
+      <h2>2,486 sessions, but only about 330 were real shoppers who stayed</h2>
+      <p class="lede">Count only US and Canada visitors who didn't bounce, and the "qualified" number is about 13% of what Scott sees on his dashboard.</p>
+      <div class="stats">
+        <div class="stat"><div class="v">2,486</div><div class="k">Total human sessions since launch</div></div>
+        <div class="stat"><div class="v">1,898</div><div class="k">From the US + Canada (76%)</div></div>
+        <div class="stat"><div class="v red">331</div><div class="k">US + Canada sessions that didn't bounce (qualified)</div></div>
+        <div class="stat"><div class="v">21</div><div class="k">Completed checkouts (23 Shopify orders)</div></div>
+      </div>
+      <p style="margin-top:22px">The funnel itself is not broken. 21 purchases from 331 engaged, in-market sessions is about a <strong>6% conversion rate</strong> on qualified traffic. The problem is upstream: we're paying for clicks that leave in seconds.</p>
+    </section>
+
+    <section class="block" id="trend" data-nav="Weekly trend">
+      <div class="label">Weekly trend</div>
+      <h2>Flat volume, but qualified sessions are starting to climb</h2>
+      <p>Bars show weekly sessions, split into qualified (red), in-market but bounced (dark gray) and outside the US/Canada (light gray). The last bar covers only three days.</p>
+      <div class="chart-wrap">
+        <div class="legend">
+          <span><i style="background:#FF333C"></i>Qualified: US/CA, didn't bounce</span>
+          <span><i style="background:#474747"></i>US/CA, bounced</span>
+          <span><i style="background:#C4C4C4"></i>Outside US/CA</span>
+        </div>
+        <svg id="chart" role="img" aria-label="Weekly sessions stacked by quality, Jul 27 to Sep 30"></svg>
+        <div id="tip" class="tip" hidden></div>
+      </div>
+      <table>
+        <thead><tr><th>Week of</th><th class="num">Total</th><th class="num">US/CA</th><th class="num">Qualified</th><th class="num">Outside</th><th class="num">Orders</th><th>What happened</th></tr></thead>
+        <tbody id="wk"></tbody>
+      </table>
+      <div class="callout warn"><strong>Read the last row carefully.</strong> Sept 28–30 is only three days, yet it already has 50 qualified sessions, the best of any full week. Most of that is PMax (99 Google sessions, 68% bounce compared with 87% on Meta). It's early and a small sample, so don't present it as a trend. It is the first sign of movement, though.</div>
+    </section>
+
+    <section class="block" id="why-flat" data-nav="Why it's flat">
+      <div class="label">Why volume is flat</div>
+      <h2>Paid traffic follows spend, and spend went down</h2>
+      <ul class="body">
+        <li><strong>Every source of volume is paid.</strong> Meta (1,068) and Google (442) account for 61% of all sessions. Paid sessions grow when budget grows, not because time passes.</li>
+        <li><strong>Daily spend fell about 20%</strong> from roughly $206/day in August to roughly $164/day in September (Scott's numbers, which Camila confirmed). Flat-to-lower spend producing flat sessions is the expected result, not a failure in itself.</li>
+        <li><strong>Optimizing for Purchase instead of Add to Cart</strong> (early Sept) tells Meta to find fewer, likelier buyers, so it trades reach for intent. Orders rose from 2 to about 5 a week after the switch.</li>
+        <li><strong>Pausing Google Search</strong> took out roughly 50–70 sessions a week. The week of Sept 21 dropped to 11 Google sessions, which is most of the dip Scott is reacting to.</li>
+        <li><strong>Organic isn't contributing yet.</strong> See the SEO section. There's no compounding layer under the paid traffic.</li>
+      </ul>
+      <div class="callout"><strong>Don't lead with this.</strong> It's true, but it sounds like an excuse if it comes first. Camila's "sessions are a tricky metric" reply already landed badly: Scott pushed back the same day. Agree with him first, then explain.</div>
+    </section>
+
+    <section class="block" id="quality" data-nav="Quality problems">
+      <div class="label">What we own</div>
+      <h2>Four problems we own</h2>
+
+      <div class="finding"><div class="fn">01</div><div>
+        <h3>Meta traffic bounces 87% of the time, with an average visit of 23 seconds</h3>
+        <p>Across 1,068 Meta sessions, 44 added to cart (4.1%) and 13 purchased. Meta still produces most of the sales, but a large share of its clicks are worthless. In the week of Sept 14, 213 Meta sessions averaged <strong>2.95 seconds</strong> with a 93% bounce rate. One UTM line (facebook / paid / facebook, 179 sessions) averaged 2.85 seconds. That pattern fits Audience Network or accidental in-feed taps.</p>
+        <div class="tag-row"><span class="pill p1">Fix this week</span><span class="pill eff">Pull the placement breakdown · exclude Audience Network · watch landing-page-view rate, not clicks</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">02</div><div>
+        <h3>Google Search: 442 sessions, 3 add-to-carts, 0 purchases</h3>
+        <p>The pause was the right call, and Scott pushed for it. Shopify can't separate paid from organic Google because gclid traffic carries no UTMs, but blog landings are close to zero, so nearly all of this was paid. PMax is the live test now. Its first three days look more engaged than Meta, but it has no purchases yet.</p>
+        <div class="tag-row"><span class="pill p2">Hold</span><span class="pill eff">Report PMax against the gate list Scott asked for</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">03</div><div>
+        <h3>About a quarter of "store sessions" aren't customers at all</h3>
+        <p>588 sessions (24%) came from outside the US and Canada, mostly Bangladesh, Pakistan, India, the UK, South Africa and Nigeria, with <strong>zero purchases</strong>. 414 of them are "Direct" with a 157-second average, which looks like developers, freelancers or vendors working on the site rather than shoppers (a Fiverr referrer shows up too). Another ~120 sessions came from affiliate-network referrers (impact, fatcoupon, linkbux, awin) with no orders. All of this inflates the dashboard number Scott watches and drags conversion rate down.</p>
+        <div class="tag-row"><span class="pill p2">Fix in reporting</span><span class="pill eff">Report qualified sessions (US/CA, human, non-bounce) as the headline traffic metric</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">04</div><div>
+        <h3>We launched without Search Console, and Google never found the blog</h3>
+        <p>Our roadmap said "Connect GA4 + GSC at launch." Search Console was only verified on Oct 1 (domain property, owner access@embertribe.com), it has no performance data yet, and <strong>no sitemap has been submitted</strong>. The URL Inspection API shows the homepage is indexed (last crawled Sept 15), but <strong>the /blogs/journal index and every article we tested come back as "URL is unknown to Google."</strong> GA4 is still not visible to us. This is our miss, and the fix is quick.</p>
+        <div class="tag-row"><span class="pill p1">Fix today</span><span class="pill eff">Submit sitemap.xml · request indexing for the 40 live articles · get GA4 viewer access</span></div>
+      </div></div>
+    </section>
+
+    <section class="block" id="seo" data-nav="SEO yield">
+      <div class="label">SEO yield</div>
+      <h2>40 articles live, and Google doesn't know they exist</h2>
+      <p>The first 40 articles have been published since about Aug 3. Only <strong>12 sessions</strong> have landed on any /blogs/ page since then, with no add-to-carts. The reason isn't article quality or a slow ramp. <strong>Google has never discovered the blog.</strong> Results from URL Inspection (Search Console API, Oct 1):</p>
+      <table>
+        <thead><tr><th>URL</th><th>Google status</th><th>Last crawl</th></tr></thead>
+        <tbody>
+          <tr><td>/ (homepage)</td><td class="up">Submitted and indexed</td><td>Sep 15</td></tr>
+          <tr><td>/blogs/journal</td><td class="down">URL is unknown to Google</td><td class="dim">never</td></tr>
+          <tr><td>6 sampled articles (glycolic acid, perineal wash, eczema, C-section, under-eye patches, HOCl)</td><td class="down">URL is unknown to Google, all 6</td><td class="dim">never</td></tr>
+        </tbody>
+      </table>
+      <p>The pages themselves are indexable: no noindex, robots.txt allows /blogs/, and Shopify's sitemap lists all 40 articles. The problem is that nothing told Google about them. No sitemap was submitted, Search Console wasn't set up, and there are no backlinks pointing at the articles yet.</p>
+      <ul class="body">
+        <li><strong>Own this before Scott finds it.</strong> He's paying for SEO as acquisition and wants a 90-day yield read. Right now the honest read is "zero, because the articles were never indexed." Better that he hears it from us, along with the fix.</li>
+        <li><strong>Fix it today:</strong> submit /sitemap.xml in Search Console, request indexing for the 40 live articles, and check for discovery within 7–14 days. The 90-day clock effectively starts at indexing, not at publish.</li>
+        <li><strong>Reset the projection honestly.</strong> The roadmap's ramp (about 6,900 organic visits a month by month 12) assumed indexing from launch. Restate it from an October start.</li>
+        <li><strong>Hold the next 40 drafts</strong> until the first 40 are confirmed indexed, or publish them alongside the sitemap fix. Either way, don't promise October traffic from them.</li>
+      </ul>
+    </section>
+
+    <section class="block" id="framing" data-nav="Call framing">
+      <div class="label">How to frame the call</div>
+      <h2>Agree, redefine, commit</h2>
+      <div class="step"><div class="sh"><div class="sn">1</div><h3>Agree with him, plainly</h3></div>
+        <p>"You're right. Sessions have been flat since mid-August, and a lot of what we've been buying isn't qualified. Here's the breakdown." Don't defend the metric.</p></div>
+      <div class="step"><div class="sh"><div class="sn">2</div><h3>Redefine "qualified traffic" with him, then baseline it</h3></div>
+        <p>Propose: human sessions from the US/Canada that don't bounce. Baseline is about 30–48 a week since paid started. The last three days hit 50. This is the number to track week over week, and it maps to the "qualified sessions" line in his October list.</p></div>
+      <div class="step"><div class="sh"><div class="sn">3</div><h3>Show that the funnel works once traffic is qualified</h3></div>
+        <p>About 6% of qualified sessions purchase. The lever is buying fewer junk clicks, not changing the site. That fits his agreement to freeze site changes.</p></div>
+      <div class="step"><div class="sh"><div class="sn">4</div><h3>Commit to specific fixes with dates</h3></div>
+        <ul class="checklist">
+          <li>Meta placement audit and Audience Network exclusion this week, with cost per qualified session reported weekly</li>
+          <li>Separate Your Baby Club traffic with UTMs <em>before</em> it starts, so "paid vs YBC" is measurable from day one</li>
+          <li>Sitemap submitted and articles queued for indexing today, plus GA4 access. SEO goes on the MER page with indexed-page count, impressions and rankings, not only sessions</li>
+          <li>Weekly pack (Mon–Sun) leads with qualified sessions, cost per qualified session, purchases, CPA and MER</li>
+          <li>Ask whether the large discounts are comps or samples: $1,927 gross vs $1,158 net, and the week of Sept 28 shows $509 gross vs $49 net. Those orders shouldn't count toward CAC</li>
+        </ul></div>
+      <div class="callout info"><strong>His real deadline is Oct 31.</strong> He wants to raise spend but won't fund a 0.34x ROAS. Present qualified sessions and cost per qualified session as the evidence that will justify scaling, not as a new way to grade us more kindly.</div>
+    </section>
+
+    <section class="block" id="method" data-nav="Method & caveats">
+      <div class="label">Method & caveats</div>
+      <ul class="body">
+        <li>All figures come from Shopify Analytics (ShopifyQL, sessions table, human-only filter), pulled Oct 1, 2026. Weeks run Monday to Sunday. Data runs through Sept 30.</li>
+        <li>"Qualified" = US/CA sessions × (1 − bounce rate) per week, rounded. Shopify doesn't expose engaged sessions directly.</li>
+        <li>Meta = referrer facebook/instagram or utm_source facebook/paid. It includes about 30 organic social sessions.</li>
+        <li>Google can't be split into paid and organic in Shopify, because ad clicks carry gclid, not UTMs. Search Console was verified Oct 1 and has no performance data yet. Index status comes from the URL Inspection API.</li>
+        <li>Shopify shows 23 orders and 21 completed-checkout sessions. Scott cited 16 through Sept 24 from the ad reports. The difference is the Sept 25–30 orders plus any non-session orders (draft/manual).</li>
+      </ul>
+    </section>
+  </main>
+</div>
+<script>
+const W=[
+ {w:"Jul 27",tot:65,us:46,q:23,o:19,ord:0,ev:"Site live (soft launch)"},
+ {w:"Aug 3",tot:108,us:43,q:13,o:65,ord:0,ev:"First 40 articles published"},
+ {w:"Aug 10",tot:75,us:35,q:15,o:40,ord:0,ev:""},
+ {w:"Aug 17",tot:348,us:308,q:41,o:40,ord:0,ev:"Meta + Google Search launch (Search Aug 20)"},
+ {w:"Aug 24",tot:233,us:148,q:26,o:85,ord:2,ev:""},
+ {w:"Aug 31",tot:396,us:253,q:43,o:143,ord:5,ev:"Meta moved from Add to Cart to Purchase optimization"},
+ {w:"Sep 7",tot:422,us:330,q:42,o:92,ord:3,ev:""},
+ {w:"Sep 14",tot:341,us:298,q:30,o:43,ord:5,ev:"Meta junk week (2.95s avg); sold-out bug Sep 18"},
+ {w:"Sep 21",tot:254,us:216,q:48,o:38,ord:5,ev:"Google Search paused (11 Google sessions)"},
+ {w:"Sep 28",tot:244,us:221,q:50,o:23,ord:3,ev:"PMax live (3 days only)",partial:true}
+];
+document.getElementById('wk').innerHTML=W.map(r=>`<tr><td>${r.w}${r.partial?' <span class="dim">(3 days)</span>':''}</td><td class="num">${r.tot}</td><td class="num">${r.us}</td><td class="num strong">${r.q}</td><td class="num dim">${r.o}</td><td class="num">${r.ord}</td><td class="ev">${r.ev}</td></tr>`).join('')+
+ `<tr><td class="strong">Total</td><td class="num strong">2,486</td><td class="num strong">1,898</td><td class="num strong">331</td><td class="num strong">588</td><td class="num strong">23</td><td class="ev"></td></tr>`;
+(function(){
+  const svg=document.getElementById('chart'), tip=document.getElementById('tip');
+  const VW=760,VH=300,L=40,R=10,T=14,B=34, max=450, n=W.length, slot=(VW-L-R)/n, bw=Math.min(44,slot*0.62);
+  svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+  const y=v=>T+(VH-T-B)*(1-v/max), ns='http://www.w3.org/2000/svg';
+  let h='<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#fff" fill-opacity="0"/><line x1="0" y1="0" x2="0" y2="6" stroke="#fff" stroke-width="2" stroke-opacity=".55"/></pattern></defs>';
+  [0,100,200,300,400].forEach(v=>{h+=`<line x1="${L}" x2="${VW-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e7e7e7" stroke-width="1"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#6b6b6b">${v}</text>`});
+  W.forEach((r,i)=>{
+    const x=L+slot*i+(slot-bw)/2, segs=[[r.q,'#FF333C'],[r.us-r.q,'#474747'],[r.o,'#C4C4C4']];
+    let base=0;
+    segs.forEach(([v,c],k)=>{ if(!v) return; const y1=y(base+v), y0=y(base); const top=k===2||(k===1&&!r.o);
+      h+=`<rect x="${x}" y="${y1+ (base?1:0)}" width="${bw}" height="${Math.max(0,y0-y1-(base?2:0))}" fill="${c}" rx="${top?4:0}"/>`;
+      if(r.partial) h+=`<rect x="${x}" y="${y1+(base?1:0)}" width="${bw}" height="${Math.max(0,y0-y1-(base?2:0))}" fill="url(#hatch)"/>`;
+      base+=v; });
+    h+=`<text x="${x+bw/2}" y="${y(r.tot)-6}" text-anchor="middle" font-size="11" font-weight="700" fill="#303030">${r.q}</text>`;
+    h+=`<text x="${x+bw/2}" y="${VH-B+16}" text-anchor="middle" font-size="11" fill="#6b6b6b">${r.w}${r.partial?'*':''}</text>`;
+    h+=`<rect class="hit" data-i="${i}" x="${L+slot*i}" y="${T}" width="${slot}" height="${VH-T-B}" fill="transparent"/>`;
+  });
+  h+=`<text x="${VW-R}" y="${VH-2}" text-anchor="end" font-size="10.5" fill="#6b6b6b">Label above bar = qualified sessions · *3 days</text>`;
+  svg.innerHTML=h;
+  svg.querySelectorAll('.hit').forEach(el=>{
+    el.addEventListener('mousemove',e=>{const r=W[+el.dataset.i], b=svg.getBoundingClientRect(), wr=svg.parentElement.getBoundingClientRect();
+      tip.hidden=false; tip.innerHTML=`<b>Week of ${r.w}${r.partial?' (3 days)':''}</b><br>Qualified: ${r.q}<br>US/CA bounced: ${r.us-r.q}<br>Outside US/CA: ${r.o}<br>Orders: ${r.ord}`;
+      tip.style.left=(e.clientX-wr.left)+'px'; tip.style.top=(e.clientY-wr.top-12)+'px';});
+    el.addEventListener('mouseleave',()=>tip.hidden=true);
+  });
+})();
+const toc=document.getElementById('toc'); const secs=[...document.querySelectorAll('section[data-nav]')];
+secs.forEach(s=>{const a=document.createElement('a'); a.href='#'+s.id; a.textContent=s.getAttribute('data-nav'); toc.appendChild(a);});
+const links=[...toc.children];
+const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+e.target.id)); }),{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>io.observe(s));
+</script>
+</body>
+</html>
