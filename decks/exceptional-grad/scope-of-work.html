@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExceptionalGrad · CRO Scope of Work · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#4f5de4; --client-accent-soft:#eceefc;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; min-width:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); max-width:var(--maxw); }
+  .masthead .meta { display:flex; flex-wrap:wrap; gap:18px 40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .dim{color:var(--ink-500);}
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step p { font-size:15px; color:var(--ink-600); margin:6px 0 4px; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+  .checklist li span.dim { display:block; font-size:13.5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); max-width:var(--maxw); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  /* ── SIGN-OFF ──────────────────────────────────────────────────────── */
+  .sign td { height:52px; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    aside .doc-type { margin-bottom:0; }
+    .block, .masthead, .cta { padding:48px 16px; } .stats { grid-template-columns:repeat(2,1fr); }
+    h1 { font-size:38px; } h2 { font-size:26px; }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block, .step { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Scope of work</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>tj@embertribe.com</div>
+  </aside>
+
+  <main>
+    <!-- ══ MASTHEAD ══════════════════════════════════════════════════════ -->
+    <section class="masthead" id="top">
+      <div class="label">Scope of work · CRO implementation</div>
+      <h1>ExceptionalGrad<br>CRO implementation</h1>
+      <p class="subtitle">We put the fixes from your CRO audit live on exceptionalgrad.com, in the audit's order: stop the losses, remove the friction, then optimize. Thirty days after tracking goes live, we show you what moved.</p>
+      <div class="meta">
+        <div>Prepared for<b>Mihailo Miljanic, MD, MBA</b></div>
+        <div>Site<b>exceptionalgrad.com</b></div>
+        <div>Based on<b>CRO audit, 8 October 2026</b></div>
+        <div>Date<b>13 October 2026</b></div>
+      </div>
+    </section>
+
+    <!-- ══ OVERVIEW ══════════════════════════════════════════════════════ -->
+    <section class="block" id="overview" data-nav="Overview">
+      <div class="label">Overview</div>
+      <h2>What this project covers</h2>
+      <p class="lede">The audit found 23 issues. This scope turns them into finished work on your site, built in Elementor, WooCommerce and the plugins you already run. No rebuild.</p>
+      <p>Your Google traffic is growing. The problem is what happens after the click: half of the visits that reach checkout now leave without an order, blog readers rarely reach a service, and Google Analytics can't see a single form or purchase. This project fixes those things and sets up the tracking to prove it.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">23</div><div class="k">Audit findings covered</div></div>
+        <div class="stat"><div class="v">3</div><div class="k">Phases, in the audit's priority order</div></div>
+        <div class="stat"><div class="v accent">~6 wks</div><div class="k">From the security all-clear to the last fix</div></div>
+        <div class="stat"><div class="v">30 days</div><div class="k">After tracking goes live, a results readout</div></div>
+      </div>
+      <div class="callout warn"><strong>Security comes first.</strong> We make no conversion changes until the security finding from the audit (slides 5 and 6) is cleaned up by your web host or a WordPress security specialist and every login has been changed. That cleanup and its cost sit outside this scope. Our part is to confirm the result, before we start and again later.</div>
+    </section>
+
+    <!-- ══ PHASE 1 ═══════════════════════════════════════════════════════ -->
+    <section class="block" id="phase-1" data-nav="Phase 1 · Stop the losses">
+      <div class="label">Phase 1 · Week 1</div>
+      <h2>Stop the losses</h2>
+      <p>The three critical findings. These come first because nothing else can be measured until they are done.</p>
+
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Confirm the security all-clear</h3></div>
+        <div class="tag-row"><span class="pill p1">Critical</span><span class="pill eff">Audit finding 1</span></div>
+        <ul class="checklist">
+          <li>Check the page source of the homepage, shop, cart, checkout and contact pages for the code identified in the audit, once your specialist reports it removed</li>
+          <li>Repeat the same check two and four weeks later and send you the result each time</li>
+          <li>Remove unused plugins and the AI site-editing connectors named in the audit, with your sign-off on each one</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Fix checkout: one way to pay</h3></div>
+        <div class="tag-row"><span class="pill p1">Critical</span><span class="pill eff">Audit finding 2</span></div>
+        <ul class="checklist">
+          <li>Go through failed and pending orders and payment declines since 1 August with you, so the diagnosis is confirmed before anything changes</li>
+          <li>Keep WooPayments as the one card processor: switch on Apple Pay, Google Pay and Klarna inside it, then deactivate Payment Plugins for Stripe</li>
+          <li>Confirm checkout shows one card option and loads Stripe once</li>
+          <li>Place a live test order with you and refund it</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Turn on the tracking that would have caught this</h3></div>
+        <div class="tag-row"><span class="pill p1">Critical</span><span class="pill eff">Audit finding 3</span></div>
+        <ul class="checklist">
+          <li>Replace the GA Google Analytics plugin with Google Analytics for WooCommerce on your existing GA4 property, so one tag records add to cart, checkout started and purchase with order value</li>
+          <li>Send contact form 207 to a new thank-you page and record each visit to it as the form event</li>
+          <li>Mark purchase and the form event as key events in GA4, then test both end to end</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ PHASE 2 ═══════════════════════════════════════════════════════ -->
+    <section class="block" id="phase-2" data-nav="Phase 2 · Remove the friction">
+      <div class="label">Phase 2 · Weeks 2–4</div>
+      <h2>Remove the friction</h2>
+      <p>The 12 high-priority findings. We purge the Cloudflare cache after each change so visitors see it straight away.</p>
+
+      <div class="step">
+        <div class="sh"><span class="sn">4</span><h3>Checkout and contact</h3></div>
+        <ul class="checklist">
+          <li>Cut required billing fields to name, email, country and ZIP, unless you choose to keep the full address for Klarna approvals<span class="dim">Audit finding 6</span></li>
+          <li>Add three lines under Place Order: your 48 to 72-hour turnaround, the refund terms in one sentence and your 4.9 Trustpilot score, linked to your Terms page<span class="dim">Audit finding 10</span></li>
+          <li>Set up DKIM for Microsoft 365 and Mailgun, then a DMARC record in monitoring mode once both pass, and check form entries against your inbox<span class="dim">Audit finding 4</span></li>
+          <li>Reorder the contact page on phones so the form comes straight after a short hero<span class="dim">Audit finding 13</span></li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">5</span><h3>Speed on phones</h3></div>
+        <ul class="checklist">
+          <li>Remove the entrance animations from the top section of the homepage, contact page and all 6 service hubs<span class="dim">Audit finding 5</span></li>
+          <li>Install and configure a page-optimization plugin such as WP Rocket with its Cloudflare add-on, load one icon set instead of two, and replace the embedded reviews frame with a link<span class="dim">Audit finding 11</span></li>
+          <li>Re-test the 5 audited pages in PageSpeed Insights and test checkout after each change</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">6</span><h3>Messaging, pricing and proof</h3></div>
+        <ul class="checklist">
+          <li>Write and build one static homepage hero with a real H1 naming who you help, your proof, and two buttons: Free consultation and See pricing<span class="dim">Audit finding 9</span></li>
+          <li>Add a "Packages from $" line to each of the 6 hubs, linked to that vertical's service pages<span class="dim">Audit finding 14</span></li>
+          <li>Remove the CSS rule that hides Trustpilot widgets and add a TrustScore widget to hubs, product pages and checkout; where your plan doesn't cover a widget, hand-quote two or three reviews per vertical with a link to your profile<span class="dim">Audit finding 7</span></li>
+          <li>Create, publish and link a privacy policy page from the WordPress template, in the footer, at checkout and on the contact form<span class="dim">Audit finding 15</span></li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">7</span><h3>From blog post to service</h3></div>
+        <ul class="checklist">
+          <li>Build a mid-article block matched to each post's vertical (the service, its starting price and a consultation button) and place it in the 10 most-clicked posts<span class="dim">Audit finding 12</span></li>
+          <li>Fix the law hub's Resume and CV Review button, set the right price on the 5-program MBA supplemental service, merge the duplicate shop categories and fix the misspelled one, then click through every hub button<span class="dim">Audit finding 8</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ PHASE 3 ═══════════════════════════════════════════════════════ -->
+    <section class="block" id="phase-3" data-nav="Phase 3 · Optimize">
+      <div class="label">Phase 3 · Weeks 5–6</div>
+      <h2>Optimize</h2>
+      <p>The medium and low findings, done once Phase 1 tracking is collecting data so each change can be measured.</p>
+
+      <div class="step">
+        <div class="sh"><span class="sn">8</span><h3>Shop and urgency</h3></div>
+        <ul class="checklist">
+          <li>Add a product category per vertical, a category filter on /shop/ and a link from each hub to its category<span class="dim">Audit finding 16</span></li>
+          <li>Build an "Applying this cycle?" strip for each vertical with the next real deadline, and place the same offer beside the dates your top blog posts already cite. No countdown timers.<span class="dim">Audit finding 17</span></li>
+          <li>Add a fee-waiver discount line on product pages and the cart, linked to how to claim it<span class="dim">Audit finding 20</span></li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">9</span><h3>Small fixes that add up</h3></div>
+        <ul class="checklist">
+          <li>Set the homepage and hub counters to show their final numbers instead of 0<span class="dim">Audit finding 18</span></li>
+          <li>Make "How did you hear about us?" optional, add AI assistant and Other, and rename the button to "Request my free consultation"<span class="dim">Audit finding 19</span></li>
+          <li>Add a short source line under each outcome claim, using the figures you give us<span class="dim">Audit finding 21</span></li>
+          <li>Add a phone number to the header and contact page, or your support email and a reply-time promise to the footer, whichever you choose<span class="dim">Audit finding 22</span></li>
+          <li>Correct the brand spelling in the testimonials and hub copy, and update testimonials with program, year and school as you collect them from clients<span class="dim">Audit finding 23</span></li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">10</span><h3>30-day results readout</h3></div>
+        <ul class="checklist">
+          <li>Thirty days after Phase 1 tracking goes live, re-run the audit's key measures: checkout-to-order rate, blog-to-service visits, contact form sends and mobile PageSpeed on the 5 audited pages</li>
+          <li>A short written report and a call to walk through what moved and what to do next</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══ TIMELINE ══════════════════════════════════════════════════════ -->
+    <section class="block" id="timeline" data-nav="Timeline">
+      <div class="label">Timeline</div>
+      <h2>About six weeks of work</h2>
+      <p>Week 1 starts when payment has arrived, we have access, and your security specialist has confirmed the cleanup.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>When</th><th>Work</th><th>You'll see</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Week 1</td><td>Phase 1: security check, checkout fix, tracking</td><td>One way to pay at checkout; orders and form sends recorded in GA4</td></tr>
+            <tr><td class="strong">Weeks 2–4</td><td>Phase 2: the 12 high-priority fixes</td><td>Faster phone pages, new hero, prices on hubs, reviews at checkout, privacy page</td></tr>
+            <tr><td class="strong">Weeks 5–6</td><td>Phase 3: the medium and low fixes</td><td>Shop filter, deadline strips, cleaner contact form</td></tr>
+            <tr><td class="strong">Day 30 of tracking</td><td>Results readout</td><td>Before and after numbers, plus next steps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dim" style="font-size:13px">Dates depend on access and approvals arriving on time. We'll tell you straight away if anything slips.</p>
+    </section>
+
+    <!-- ══ WHAT WE NEED ══════════════════════════════════════════════════ -->
+    <section class="block" id="needs" data-nav="What we need from you">
+      <div class="label">What we need from you</div>
+      <h2>Access, decisions and a few facts only you have</h2>
+      <h3>Access, issued after logins are changed</h3>
+      <ul class="body">
+        <li>A WordPress administrator account in our name, with two-factor login</li>
+        <li>Cloudflare and DNS access for the cache and the email records</li>
+        <li>Editor access to GA4, plus WooPayments and Stripe dashboard access for the checkout work</li>
+        <li>Microsoft 365 admin and Mailgun access, or someone on your side who can paste in the records we send</li>
+      </ul>
+      <h3>Decisions and content</h3>
+      <ul class="body">
+        <li>The results of the four checks on the audit's last slide</li>
+        <li>Whether to keep the full billing address for Klarna</li>
+        <li>The correct price for the 5-program MBA supplemental service</li>
+        <li>The next application deadlines you want shown for each vertical</li>
+        <li>How your outcome figures were measured (period, number of clients)</li>
+        <li>Phone number or email reply-time promise, and any updated testimonials</li>
+        <li>Review of the privacy policy by your counsel before it goes live</li>
+        <li>Approvals within two business days so the timeline holds</li>
+      </ul>
+    </section>
+
+    <!-- ══ NOT INCLUDED ══════════════════════════════════════════════════ -->
+    <section class="block" id="excluded" data-nav="Not included">
+      <div class="label">Not included</div>
+      <h2>Outside this scope</h2>
+      <ul class="body">
+        <li>Removing the security code, forensic investigation and malware scans, which belong with your web host or a WordPress security specialist</li>
+        <li>Legal advice, customer notification, and contact with your payment processor or insurer</li>
+        <li>Third-party licenses and plans, such as WP Rocket or a paid Trustpilot widget, which you buy directly</li>
+        <li>A site redesign, new pages beyond the thank-you and privacy pages, and new blog content</li>
+        <li>A/B testing, ad management and ongoing site maintenance after the readout</li>
+      </ul>
+      <p>If something outside this list comes up, we'll quote it separately before any work starts.</p>
+    </section>
+
+    <!-- ══ INVESTMENT ════════════════════════════════════════════════════ -->
+    <section class="block" id="investment" data-nav="Investment">
+      <div class="label">Investment</div>
+      <h2>One fixed fee</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th class="num">Amount</th></tr></thead>
+          <tbody>
+            <tr><td><span class="strong">CRO implementation</span><br><span class="dim">Phases 1 to 3 covering all 23 audit findings, plus the 30-day results readout</span></td><td class="num strong">$3,750</td></tr>
+            <tr><td class="strong">Total</td><td class="num strong" style="color:var(--et-red);font-size:20px">$3,750</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout"><strong>Payment terms:</strong> 100% due upfront, on approval of this scope. Work begins once payment is received.</div>
+    </section>
+
+    <!-- ══ APPROVAL ══════════════════════════════════════════════════════ -->
+    <section class="block" id="approval" data-nav="Approval">
+      <div class="label">Approval</div>
+      <h2>Sign-off</h2>
+      <p>Signing below approves this scope and the fee above.</p>
+      <div class="table-wrap">
+        <table class="sign">
+          <thead><tr><th>For</th><th>Name</th><th>Signature</th><th>Date</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">ExceptionalGrad</td><td>Mihailo Miljanic, MD, MBA</td><td></td><td></td></tr>
+            <tr><td class="strong">EmberTribe</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══ CTA ═══════════════════════════════════════════════════════════ -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>Ready to start Phase 1?</h2>
+      <p>Approve the scope, and once your security specialist confirms the cleanup we'll begin with checkout and tracking that same week.</p>
+      <a class="btn" href="mailto:tj@embertribe.com?subject=ExceptionalGrad%20CRO%20scope%20approval">Approve the scope →</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>

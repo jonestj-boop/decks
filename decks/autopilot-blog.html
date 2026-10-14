@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autopilot Blog · Go-to-market plan · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    /* No brand color yet (pre-launch). Neutral slate as the single client accent */
+    --client-accent:#334155; --client-accent-soft:#eef1f5; --client-accent-ink:#334155;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#000000; --pillar-3:#334155; --pillar-4:#474747; --pillar-5:#2FC171; --pillar-6:#FFB000;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); flex-wrap:wrap; }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent-ink);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent-ink);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:#1f8a4c;}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); color:var(--et-white); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  th.c, td.c { text-align:center; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+  .yes { color:var(--good); font-weight:700; font-size:16px; }
+  .no { color:var(--ink-300); font-weight:700; }
+  td.us { background:#fff5f5 !important; }
+  td.us .no { color:var(--et-red); }
+  td.price { font-weight:700; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.cl { color:#fff; }
+
+  .bars { display:flex; flex-direction:column; gap:7px; margin:8px 0; }
+  .bar { display:grid; grid-template-columns:150px 1fr 44px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:20px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.ink{background:var(--et-black);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:18px 22px; }
+
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--et-black); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:820px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.7; padding-left:26px; position:relative; color:var(--ink-700); margin-bottom:6px; }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .answer { background:var(--et-white); border:1px solid var(--border); border-radius:16px; padding:24px 26px; }
+  .answer .q { font-size:13px; color:var(--ink-500); margin-bottom:12px; }
+  .answer .q b { color:var(--et-black); }
+  .answer p { font-size:16px; line-height:1.6; color:var(--ink-700); }
+  .answer mark { -webkit-box-decoration-break:clone; box-decoration-break:clone; background:var(--client-accent); color:var(--et-white); font-weight:700; padding:0 3px; border-radius:3px; }
+  .asset { background:var(--subtle); border:1px solid var(--border); border-radius:14px; padding:18px 18px 16px; }
+  .asset .ak { font-weight:700; font-size:10.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--client-accent-ink); margin-bottom:6px; }
+  .asset h4 { font-size:17px; font-weight:700; margin-bottom:5px; }
+  .asset p { font-size:13px; line-height:1.5; color:var(--ink-500); }
+  .menu { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:20px 22px 14px; }
+  .menu h3 { margin-bottom:2px; }
+  .menu .ms { font-size:12.5px; color:var(--ink-500); margin-bottom:10px; line-height:1.45; }
+  .menu table { font-size:13px; }
+  .menu td { padding:8px 11px; }
+  .srcnote { font-size:11px; color:var(--ink-500); margin-top:12px; }
+
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media (max-width:900px) {
+    :root { --pad-x:16px; }
+    .two-col, .three-col, .case { grid-template-columns:1fr !important; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .divider h1 { font-size:56px !important; }
+    table { font-size:12px; } th, td { padding:8px 9px; }
+    .slide { padding:28px var(--pad-x) 28px; }
+    .bar { grid-template-columns:100px 1fr 36px; }
+    .dots { display:none; }
+    .scroll-x { overflow-x:auto; }
+  }
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Go-to-market plan · Paid media + creative · Prepared by EmberTribe</div>
+    <h1>Autopilot Blog</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:900px">Twenty paying customers in about three months, with no website, through referrals and one sales rep. The product works and the price supports paid acquisition. This plan covers how to position the brand and site you're building, and a 90-day paid test to find the channel that scales.</p>
+    <div class="meta">
+      <div>Prepared for<b>Javid Jamae, Founder</b></div>
+      <div>Strategy call<b>Wed, October 14, 2026 · 2 PM CT</b></div>
+      <div>Status<b>Working name, site launching in 3 to 4 weeks</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · WHAT YOU'VE BUILT ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">What we heard on October 12</div>
+    <h2>A product that sells itself once people see it run.</h2>
+    <p class="subtitle">Everything here is from our call, plus Search Console for the FFmpeg Micro blog the product runs.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v">~20</div><div class="k">Paying customers since the spin-out about three months ago, set to pass FFmpeg Micro revenue within a couple of months if growth holds</div></div>
+      <div class="stat"><div class="v accent">$300–$1,000</div><div class="k">Monthly price per customer. $300 is the base package. Customers who need more packaged in pay up to $1,000</div></div>
+      <div class="stat"><div class="v honey">~90%</div><div class="k">Share of customers who are SMBs: roofers, med spas, photography studios, local services. Plus a few resellers</div></div>
+      <div class="stat"><div class="v good">3,141</div><div class="k">Google clicks in September to the FFmpeg Micro blog, which Autopilot Blog writes. It's your best proof</div></div>
+    </div>
+    <div class="three-col mt">
+      <div class="asset"><div class="ak">The engine</div><h4>Brain, clusters, drafts, audit</h4><p>An hour to train the brain on strategy, pillars, reader, and voice. Then keyword clusters with search demand, scored ideas, research-backed drafts, and 50 audit rules on every post.</p></div>
+      <div class="asset"><div class="ak">The close</div><h4>Demo, pilot, Stripe link</h4><p>Warm leads close on one call and cold leads on two. A 1 to 2 week pilot does the selling. For buyers who need more reassurance, you guarantee five new leads a month by month three, or you work free until they get there.</p></div>
+      <div class="asset"><div class="ak">The constraint</div><h4>You're the whole company</h4><p>Most sales calls, onboarding, SEO review for managed clients, support, and product all run through you. Every new customer adds to that load.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · THE MATH ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">The math</div>
+    <h2>At these prices, paid acquisition can work. On FFmpeg Micro it couldn't.</h2>
+    <p class="subtitle">FFmpeg Micro customers are worth about $100, so ads cost 10× what they returned. One Autopilot Blog customer is worth 30 to 60 times that. The open question is retention, which is too new to measure, so here are three scenarios.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.2fr 1fr">
+      <table>
+        <thead><tr><th>If the average customer stays…</th><th class="num">Lifetime value at $500/mo</th><th class="num">Max cost to acquire (3:1)</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">6 months</td><td class="num">$3,000</td><td class="num strong">$1,000</td></tr>
+          <tr><td class="strong">9 months</td><td class="num">$4,500</td><td class="num strong">$1,500</td></tr>
+          <tr><td class="strong">12 months</td><td class="num">$6,000</td><td class="num strong">$2,000</td></tr>
+          <tr><td class="strong">Reseller account</td><td class="num">$50,000–$100,000</td><td class="num dim">Won through sales calls</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="callout info"><strong>$500 a month is our planning number</strong>, between the $300 base and the $1,000 packages. We'll swap in your real average and margin after token costs on Wednesday.</div>
+        <div class="callout good"><strong>The target to beat:</strong> keep ad spend per new customer under $1,000 to $1,500, depending on retention. Our management fee comes on top of that, so the full cost per customer is higher (see slide 9).</div>
+        <div class="callout warn"><strong>Plan for the guarantee at volume.</strong> "Five leads a month by month three" is a strong offer for roofers. Ads will bring in more of those buyers at once, so we'd agree on how you'll track their leads before scaling.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · DIVIDER — BRAND + SITE ════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="04">
+  <div style="text-align:left">
+    <div class="label">Part one</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">Brand + site.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Your rep sells leads, and the site should too. One page per vertical, proof up front, and a single goal on every page: book a demo.</p>
+  </div>
+</section>
+
+<!-- ══ 5 · POSITIONING ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">Positioning</div>
+    <h2>Sell the leads. Explain the blog second.</h2>
+    <p class="subtitle">You said it on the call: a roofer doesn't care about impressions. The site should talk the way your rep does, and save the brain, clusters, and audit rules for people who ask how it works.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <table>
+        <thead><tr><th class="accent">Buyer</th><th class="accent">What they want to hear</th><th class="accent">Proof to show</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Owner, local service<div class="sub-td">Roofing, HVAC, med spa, studio</div></td><td>More calls from Google every month without writing anything or learning SEO</td><td>The 5-lead guarantee, a customer in their trade, and leads by month</td></tr>
+          <tr><td class="strong">Marketing lead at an SMB</td><td>A content program that runs itself, with an approval step so nothing goes out wrong</td><td>Sample drafts, the audit checklist, and the FFmpeg Micro blog's growth</td></tr>
+          <tr><td class="strong">Agency or software reseller<div class="sub-td">Web designers, CRM vendors</div></td><td>A service to bundle for every client without hiring writers, at a margin</td><td>Wholesale pricing, white-label option, and a named partner contact</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <h3>Name and domain</h3>
+        <ul class="ul-dash">
+          <li>"Autopilot Blog" says what it does but not what it gets the buyer. Pressure-test a name that hints at the result before printing anything</li>
+          <li>Check the .com, the trademark, and social handles before you commit, since "autopilot" is a crowded word in marketing software</li>
+          <li>Move off usergrowth.com so the brand can earn its own search presence and reviews</li>
+        </ul>
+        <div class="callout warn"><strong>Lead with one or two verticals.</strong> Your rep already talks to roofers and med spas. Owning "content for roofers" beats being one of many AI blog writers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · SITE PLAN ═════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">Site plan</div>
+    <h2>Six pages, one goal: a booked demo.</h2>
+    <p class="subtitle">You're building this in your 3 to 4 week window. These are the pages and pieces the ads will need on day one.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="asset"><div class="ak">Home</div><h4>Outcome, proof, guarantee</h4><p>A headline that promises leads. The FFmpeg Micro traffic chart and two customer results above the fold. Demo button everywhere.</p></div>
+      <div class="asset"><div class="ak">Verticals</div><h4>/roofing and /med-spas</h4><p>Each one shows real keyword clusters for that trade, an example post, and a customer from that trade. These are the ad landing pages.</p></div>
+      <div class="asset"><div class="ak">How it works</div><h4>Brain to published post</h4><p>The 1-hour setup, the cluster research, drafts with research behind them, your approval step, and the 50 audit rules. This page answers the skeptics.</p></div>
+      <div class="asset"><div class="ak">Lead magnet</div><h4>Free 90-day content plan</h4><p>The brain already builds a strategy in an hour. Give prospects their keyword clusters and first ten topics free, then walk them through it on the demo.</p></div>
+      <div class="asset"><div class="ak">Partners</div><h4>For agencies and resellers</h4><p>Wholesale pricing, white-label terms, and a separate "become a partner" call. This keeps reseller deals out of the SMB pricing conversation.</p></div>
+      <div class="asset"><div class="ak">Tracking</div><h4>Every step measured</h4><p>You set up GA4 events and a CRM stage for demo, pilot, and paid. We add UTMs and conversion tracking in Google and Meta, so cost per customer is measurable.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7 · DIVIDER — CHANNELS ════════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="07">
+  <div style="text-align:left">
+    <div class="label">Part two</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">A 90-day channel test.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Two paid channels pointed at two vertical pages, measured on booked demos and paid customers. Whichever channel brings customers in under target gets the budget.</p>
+  </div>
+</section>
+
+<!-- ══ 8 · CHANNELS ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">Channels to test</div>
+    <h2>Catch the owners already searching, then reach the ones who aren't yet.</h2>
+    <p class="subtitle">Google captures demand that already exists. Meta creates it with proof and a strong offer. Resellers are a sales motion, so they get their own track.</p>
+  </div>
+  <div class="fill">
+    <div class="scroll-x">
+    <table>
+      <thead><tr><th>Channel</th><th>Who we reach</th><th>Example targeting</th><th>Offer</th><th>Judged on</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Google Search</td><td>Owners shopping for marketing help right now</td><td class="dim">seo for roofers · roofing marketing company · med spa marketing agency · blog writing service for small business</td><td>Free 90-day content plan, or book a demo</td><td>Cost per booked demo</td></tr>
+        <tr><td class="strong">Meta (Facebook + Instagram)</td><td>Owners in two verticals who aren't searching yet</td><td class="dim">Roofing and med spa owners by job title and interest, plus lookalikes of current customers</td><td>Short proof video + the 5-lead guarantee</td><td>Cost per booked demo, demo show rate</td></tr>
+        <tr><td class="strong">Retargeting</td><td>Site visitors who didn't book</td><td class="dim">Vertical page visitors, plan downloaders, demo no-shows</td><td>Customer result + "see your plan"</td><td>Demos recovered</td></tr>
+        <tr><td class="strong">Reseller outreach<div class="sub-td">Your track, phase 2</div></td><td>Web design agencies and SMB software vendors</td><td class="dim">Agencies serving local service businesses, CRM and website builders for SMBs</td><td>Wholesale pricing, white-label, partner demo</td><td>Partner calls booked, blogs sold</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Search CPCs in these verticals run high.</strong> "Roofing marketing" draws bids from a lot of agencies. We'd bid tight on exact terms, add negatives for job seekers and DIY, and let the free plan lift the conversion rate.</div>
+      <div class="callout good"><strong>Your content becomes ad creative.</strong> The engine already writes for each vertical. We turn the best posts and your own blog results into Meta creative without a production shoot.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · FUNNEL TARGETS ════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Funnel targets</div>
+    <h2>What the test has to show to earn more budget.</h2>
+    <p class="subtitle">An example month at $3,000 in ad spend. These are targets the test has to beat. Your pilot-to-paid rate is the number we most want from Wednesday.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.2fr 1fr">
+      <table>
+        <thead><tr><th>Step</th><th>Target</th><th class="num">Example month</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Ad spend</td><td class="dim">Google $2,000 · Meta $1,000</td><td class="num">$3,000</td></tr>
+          <tr><td class="strong">Booked demos</td><td>Under $250 per demo</td><td class="num">12</td></tr>
+          <tr><td class="strong">Demos that show and start a pilot</td><td>About half</td><td class="num">6</td></tr>
+          <tr><td class="strong">Pilots that pay</td><td>40% or better from cold traffic</td><td class="num">2–3</td></tr>
+          <tr><td class="strong">Ad spend per new customer</td><td>$1,000 to $1,500, set by retention</td><td class="num strong">$1,000–$1,500</td></tr>
+          <tr><td class="strong">Lifetime value added</td><td>At $500/mo for 9 months</td><td class="num strong">$9,000–$13,500</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <h3>How we read it</h3>
+        <ul class="ul-dash">
+          <li>Month 1 is for learning. Expect a higher cost per demo while targeting and creative settle</li>
+          <li>Month 2 should get cost per demo under target on at least one channel</li>
+          <li>Month 3 decides: double the winner, cut the loser, or rework the offer</li>
+          <li>Every week you get a channel and vertical breakdown from ad to paid customer</li>
+          <li>With our $1,500 fee included, this example month costs about $1,500 to $2,250 per customer. At $500 a month in revenue, that pays back in three to five months. Our fee doesn't change with spend during the test</li>
+        </ul>
+        <div class="callout warn"><strong>The pilot is the lever.</strong> If more pilots convert, the same spend brings in more customers. Shorter pilots, a clear day-7 checkpoint, and a customer story in the follow-up all help.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · RESELLERS ════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Direct vs. resellers</div>
+    <h2>Run both, but price them so they don't compete.</h2>
+    <p class="subtitle">Resellers want a lower price in exchange for volume. That's a good trade if the floor protects your margin and resellers can't undercut your direct price to the same buyer.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="phase red">
+        <div class="when">Direct to SMB</div>
+        <h4>Your main engine</h4>
+        <ul class="ul-dash">
+          <li>Full price, $300 to $1,000 a month</li>
+          <li>Brought in by ads and the site, closed on demos</li>
+          <li>Managed onboarding is part of the value</li>
+          <li>Needs a hire or partner for SEO review as volume grows</li>
+        </ul>
+      </div>
+      <div class="phase accent">
+        <div class="when">Resellers</div>
+        <h4>Volume with less support</h4>
+        <ul class="ul-dash">
+          <li>Wholesale price per blog with a hard floor, plus volume tiers at 10, 25, and 50 blogs</li>
+          <li>The reseller handles client support and you handle the engine</li>
+          <li>White-label option for agencies, co-branded for software vendors</li>
+          <li>Minimum resale price so partners don't undercut your direct offer</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Our recommendation:</strong> launch direct first with the site and ads. Write up reseller terms now from your two existing partners, then start reaching out to agencies after the 90-day test, once the site and case studies exist to send them to.</div>
+  </div>
+</section>
+
+<!-- ══ 11 · ROADMAP ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Roadmap</div>
+    <h2>Launch the site, run the test, scale the winner.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="phase red">
+        <div class="when">Weeks 1–4 · Before launch</div>
+        <h4>You build, we prep the ads</h4>
+        <ul class="ul-dash">
+          <li>You: name, domain, site, two vertical pages, demo booking, lead magnet</li>
+          <li>You: GA4 events and CRM stages</li>
+          <li>Us: campaign builds, UTMs, and ad conversion tracking</li>
+          <li>Us: first ad creative from your posts and results</li>
+          <li>The 90-day term starts the day ads go live</li>
+        </ul>
+      </div>
+      <div class="phase accent">
+        <div class="when">Test months 1–3 · Run</div>
+        <h4>Google + Meta</h4>
+        <ul class="ul-dash">
+          <li>Google Search on two verticals' buyer terms</li>
+          <li>Meta proof ads with the guarantee</li>
+          <li>Retargeting for visitors and no-shows</li>
+          <li>Weekly report: demos, pilots, paid, by channel</li>
+          <li>Reseller terms written up from current partners</li>
+        </ul>
+      </div>
+      <div class="phase honey">
+        <div class="when">After 90 days · Scale</div>
+        <h4>Put more behind the winner</h4>
+        <ul class="ul-dash">
+          <li>Raise budget on the channel under target</li>
+          <li>Add a third vertical page</li>
+          <li>Start agency and software vendor outreach</li>
+          <li>Use the new brand's own blog to build organic traffic</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">Investment</div>
+    <h2>You build the site. We run the ads and make the creative.</h2>
+    <p class="subtitle">Ad spend is billed at cost and is never part of our fee. The test starts when the site and ads go live.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.15fr 1fr">
+      <div class="menu">
+        <h3>The 90-day test</h3>
+        <div class="ms">Paid media management and ad creative. Three-month term from launch day, our standard for ongoing work.</div>
+        <table>
+          <thead><tr><th>Line</th><th class="num">Monthly</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Paid media + creative · Google Search + Meta<div class="sub-td">$1,250 when you also sign up for the FFmpeg Micro plan</div></td><td class="price">$1,500</td></tr>
+            <tr><td class="strong">Suggested ad spend<div class="sub-td">Paid to Google and Meta at cost</div></td><td class="price">$3,000</td></tr>
+            <tr><td class="strong">Total during the test<div class="sub-td">$4,250 with both brands</div></td><td class="price" style="color:var(--et-red)">$4,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="menu">
+        <h3>What's included</h3>
+        <div class="ms">Everything needed to run the test, apart from the site itself.</div>
+        <ul class="ul-dash" style="margin-top:6px">
+          <li><b>Strategy and builds:</b> Google Search campaigns on two verticals' buyer terms, Meta campaigns, and retargeting</li>
+          <li><b>Creative:</b> ad copy and AI-made video and static ads built from your best posts, customer results, and the FFmpeg Micro blog's growth</li>
+          <li><b>Ad tracking:</b> UTMs on every ad and conversion tracking in Google and Meta</li>
+          <li><b>Targeting and optimization:</b> keywords, negatives, audiences, and weekly bid and creative changes</li>
+          <li><b>Reporting:</b> weekly demos, pilots, and paid customers by channel, plus a monthly strategy call</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · ANOTHER WAY TO WORK TOGETHER ═════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">To discuss · Another way to work together</div>
+    <h2>You build the product. We run the funnel.</h2>
+    <p class="subtitle">You said you'd rather spend your time on product and support than on sales. We're talking internally about a partnership that does that, and we'd like to explore it with you Wednesday. Nothing here is a final offer.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">EmberTribe runs</div><h4>Funnel and demo calls</h4><p>Ads and the demo and pilot calls. We sell across local, ecommerce, and SaaS every day, so this fits work we already do.</p></div>
+      <div class="pillar"><div class="pn">You run</div><h4>Product, onboarding, support</h4><p>Training each customer's brain, the engine, and the roadmap your customers keep giving you ideas for, like turning it into a fuller marketing suite.</p></div>
+      <div class="pillar"><div class="pn">Shared</div><h4>Revenue on what we bring in</h4><p>A revenue share on customers we source and close, in place of some or all of the fees on the previous slide. Terms to work out together.</p></div>
+    </div>
+    <div class="callout good mt"><strong>We'll start as a customer.</strong> We're onboarding EmberTribe onto Autopilot Blog in the second half of Wednesday's call. Using it ourselves is the best way to learn how to sell it.</div>
+  </div>
+</section>
+
+<!-- ══ 14 · WEDNESDAY ════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="head">
+    <div class="label">For Wednesday</div>
+    <h2>Six answers, then we can lock the plan.</h2>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="cta-box" style="max-width:none">
+        <h3>What we'd like to learn</h3>
+        <ul class="cta-bullets">
+          <li>What's the average monthly price today, and the margin after token and tool costs?</li>
+          <li>How many customers have churned so far, and why?</li>
+          <li>Which verticals close fastest, and what share of pilots convert?</li>
+          <li>Have you picked the name and domain?</li>
+          <li>What do your two resellers pay, and how many blogs could each bring?</li>
+          <li>Fee-based, partnership, or a mix: which would you rather start with?</li>
+        </ul>
+      </div>
+      <div class="cta-box" style="max-width:none">
+        <h3>Next steps</h3>
+        <ul class="cta-bullets">
+          <li>First 30 minutes: walk through this plan and the FFmpeg Micro plan</li>
+          <li>Second 30 minutes: onboard EmberTribe onto Autopilot Blog</li>
+          <li>Set the site go-live date so ads can launch with it</li>
+          <li>We build campaigns and draft ad creative while the site is built</li>
+        </ul>
+        <a class="btn" href="mailto:tj@embertribe.com?subject=Autopilot%20Blog%20plan">Reply to TJ →</a>
+      </div>
+    </div>
+    <p class="fine mt">Sources: customer count, pricing, sales process, guarantee, and reseller figures from our October 12, 2026 call. Blog traffic from Google Search Console for ffmpeg-micro.com, September 2026 (pages under /blog/). Lifetime value, funnel rates, and cost per customer are planning assumptions to confirm, not forecasts.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Autopilot Blog go-to-market plan</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 14</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-autopilot-blog-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-autopilot-blog-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved) && +saved < slides.length) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
