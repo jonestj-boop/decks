@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bailey's Implementation Scope</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype"); font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype"); font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#3E7D4F; --client-accent-soft:#eaf3ec;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:860px;
+  }
+  /* Brand document: the palette is fixed in both color schemes. */
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --surface:#FFFFFF; --ink-700:#303030; } }
+  :root[data-theme="dark"] { --surface:#FFFFFF; --ink-700:#303030; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+  main { padding:0; min-width:0; }
+  .block { padding:64px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:80px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red); }
+  .masthead .meta { display:flex; gap:40px; margin-top:30px; font-size:13px; color:var(--ink-500); flex-wrap:wrap; }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:48px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:30px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:19px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:15.5px; line-height:1.65; padding-left:22px; position:relative; margin-bottom:7px; }
+  ul.body li::before { content:"\2014"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+  table { width:100%; border-collapse:collapse; font-size:14px; margin:14px 0; }
+  th { text-align:left; padding:10px 12px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; } .strong{font-weight:700;} .dim{color:var(--ink-500);}
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; flex-wrap:wrap; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step .sub { font-size:13.5px; color:var(--ink-500); margin:0 0 8px; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"\2610"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:56px 64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.75); }
+  .tablewrap { overflow-x:auto; }
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:40px 16px; } .stats { grid-template-columns:repeat(2,1fr); }
+    h1 { font-size:36px; } h2 { font-size:26px; }
+  }
+  @media print { .shell { grid-template-columns:1fr; } aside { display:none; } .block { page-break-inside:avoid; border-bottom:none; } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Internal sales brief</div>
+    <nav id="toc"></nav>
+    <div class="foot">Internal. Not for the client.<br>Prepared Oct 15, 2026</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Internal sales brief</div>
+      <h1>Bailey's CBD:<br>the implementation scope behind the content plan</h1>
+      <p class="subtitle">We delivered a CRO audit and a three-month SEO roadmap. The client's own brief is bottom-of-funnel conversion. This note lays out what has to change on the site for that content to pay off, what is genuinely left to sell once the audit is in the client's hands, and what to say in the conversation.</p>
+      <div class="meta">
+        <div>Client<b>Bailey's CBD (baileyscbd.com, Shopify)</b></div>
+        <div>Client lead<b>Aaron</b></div>
+        <div>Delivered<b>CRO audit (28 issues) and SEO roadmap (150 articles)</b></div>
+        <div>Prepared by<b>Alex, EmberTribe</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="summary" data-nav="The situation">
+      <div class="label">The situation</div>
+      <h2>Aaron wants conversion. The content will land on a site that leaks.</h2>
+      <p class="lede">Aaron's direction, from Slack: commercial, long-tail, bottom-of-funnel content with no condition claims. The roadmap honors that. Month 1 is 45 product-and-label articles, 15 of them rewrites of the money pages, and every one of them links to a product page. So the content program's results depend on the product page, the cart and the checkout doing their job.</p>
+      <div class="stats">
+        <div class="stat"><div class="v">2.51%</div><div class="k">Site conversion rate, last 90 days (1,939 orders from 77,295 sessions)</div></div>
+        <div class="stat"><div class="v red">0.06%</div><div class="k">Conversion rate on blog landings, which are 46% of all sessions</div></div>
+        <div class="stat"><div class="v red">~1,260</div><div class="k">Sessions per quarter that added to cart and did not order</div></div>
+        <div class="stat"><div class="v accent">28</div><div class="k">Issues in the CRO audit, 3 Critical and 9 High, across six pillars</div></div>
+      </div>
+      <div class="callout"><strong>The pitch in one line:</strong> the roadmap moves the blog from the wrong readers to buyers, and the audit tells the client how to catch them. Those two together are the sale. Implementation is a line inside it, not a second deal.</div>
+      <p>Two facts shape the sale. First, the client makes site changes with Claude. Between our walkthroughs on October 14 and 15 the theme shipped a cart drawer with a free-shipping bar and a product row, which closed one of our findings before we sent it, and Aaron will almost certainly run the audit through his own agent. Second, the client already wrote an FDA/FTC content guide and asked us to follow it. Together they describe a client who can execute a backlog fast and needs someone to decide what goes into it, check what comes out, and keep it compliant. That is the scope. Build hours are optional.</p>
+      <div class="callout info"><strong>The drawer is the case in point.</strong> It shipped in a day. Its cross-sell is the catalog in store order with "Select Options" pickers instead of one-click adds, the cart page did not get the free-shipping bar, and the drawer now puts health-outcome testimonials ("Charlie's seizures have reduced dramatically") in front of every buyer, which the client's own guide rules out. Fast shipping without a review step is how a fix becomes a new finding.</div>
+    </section>
+
+    <section class="block" id="delivered" data-nav="What they have">
+      <div class="label">What the client has from us</div>
+      <h2>Two deliverables, already QA'd and live</h2>
+      <ul class="body">
+        <li><strong>CRO audit</strong> (<a href="https://client.embertribe.com/baileys-cbd/cro-audit.html">client.embertribe.com/baileys-cbd/cro-audit.html</a>): 28 issues across performance, UX, visual messaging, checkout, urgency and social proof, each with a specific Shopify, app or theme fix, sorted into three implementation phases. Re-verified against the live site on October 15.</li>
+        <li><strong>SEO roadmap</strong> (<a href="https://client.embertribe.com/baileys-cbd/growth-roadmap.html">growth-roadmap.html</a> plus the keyword workbook): 150 articles over three months, 75 rewrites and 75 new, every row graded against the client's FDA/FTC guide, with 53 redirects, 39 slug renames and a legal hold on the horse content.</li>
+        <li><strong>A Month 1 intake email</strong> (drafted, not yet sent): the product fact sheets, lot reports and reviewer names we need before writing starts.</li>
+      </ul>
+      <p>Everything below is work that neither deliverable includes. The audit tells the client what to fix. The roadmap tells them what to write. Nobody is yet scoped to do the fixing.</p>
+    </section>
+
+    <section class="block" id="dependency" data-nav="The dependency">
+      <div class="label">The dependency</div>
+      <h2>Four site changes the content plan cannot work without</h2>
+      <p>These are not optional polish. Each one is a stated precondition inside the roadmap, and the client has already seen them there.</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Change</th><th>Why the plan needs it</th><th>When</th><th>Who can do it</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Blog template without the product modules</td><td>Every post renders a "Shop Our Solutions" button, a product strip and the cart-drawer testimonials. Under the client's guide, condition articles (95 of the 150) cannot carry any of that. As the theme stands, no condition page can publish compliant.</td><td>Before the first condition page, end of Month 1</td><td>Shopify theme developer</td></tr>
+          <tr><td class="strong">53 redirects and 39 slug renames</td><td>Legacy posts that pair CBD with a condition, drug or dose consolidate into plan rows by 301. Slugs lock so articles can link to each other before they go live.</td><td>In step with each monthly batch</td><td>Shopify admin (URL redirects), light dev for the renames</td></tr>
+          <tr><td class="strong">Money-page rewrites implemented on the product and collection templates</td><td>Month 1 rewrites 15 product and collection pages as factual pages. We write the copy; someone has to place it in the template, which has fixed benefit blocks and a research tile.</td><td>Month 1</td><td>Client content admin plus theme developer for the blocks</td></tr>
+          <tr><td class="strong">Decision on the cart-drawer testimonials and the cortisol study tile</td><td>Both are compliance items under the client's own guide. The drawer now opens on every Add to Cart, so the testimonials are in front of every buyer.</td><td>Month 1</td><td>Client compliance owner decides; developer removes</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="callout warn"><strong>What this means for the retainer:</strong> if the template change slips, Months 2 and 3 of the content plan cannot publish as designed. That is the reason these four items get dates inside the content engagement, whoever builds them.</div>
+    </section>
+
+    <section class="block" id="packages" data-nav="What is left to sell">
+      <div class="label">What is left to sell</div>
+      <h2>The audit is the suggestion. This is what is left.</h2>
+      <p class="lede">The audit already tells Aaron what to change and where. His agent can execute most of it without us, and it should; that is the deliverable he paid for. The question for sales is whether Aaron wants someone accountable for the result, or just the list. The options below are ordered by how defensible they are. Hour figures are scoping estimates, not quotes.</p>
+
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Funnel review and measurement</h3><span class="pill p1">Core</span><span class="pill eff">Est. 6 to 10 h a month</span></div>
+        <p class="sub">The piece the client cannot get from his agent. Written into the content retainer, not sold as a second deal.</p>
+        <ul class="checklist">
+          <li>GA4 fixed first: internal and developer filters, Digioh events off, search tracking repaired, so the baseline is real (one-time, 4 to 6 h)</li>
+          <li>A definition of done for each audit item the client takes on: what changes, where, and what must be true afterwards</li>
+          <li>A check of each release on the live site: does it do what the finding asked, did anything get left behind, does it meet the client's own compliance guide</li>
+          <li>A monthly funnel note against the October baseline: add-to-cart, checkout and payment-step rates, blog-to-product clicks, revenue by landing group</li>
+        </ul>
+        <p class="sub" style="margin-top:10px"><strong>Why it holds up:</strong> nothing in the client's setup confirms that a change moved the funnel, and GA4 is miscounting today (455k empty search events, protection add-on inflating add-to-cart, unfiltered internal traffic). An agent closes tickets. This closes outcomes.</p>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>The content plan's site dependencies, as dated milestones</h3><span class="pill p1">Inside the content engagement</span><span class="pill eff">Blog template 8 to 16 h, redirects 6 to 10 h</span></div>
+        <p class="sub">Not a CRO sale. These are things our own program needs done, so they belong in the content engagement with dates, whoever does the typing.</p>
+        <ul class="checklist">
+          <li>Path B blog template without the product modules, before the first condition page publishes (end of Month 1)</li>
+          <li>53 redirects and 39 slug renames, batch by batch, so articles can link to each other before they go live</li>
+          <li>Month 1 money-page copy placed into the product and collection templates, with the fixed benefit blocks and the research tile resolved by the compliance owner</li>
+          <li>Acceptance check by us after each milestone; the client's agent or developer does the build</li>
+        </ul>
+        <p class="sub" style="margin-top:10px"><strong>Why it holds up:</strong> without the template change, 95 of the 150 articles cannot publish compliant. That is the strongest sentence in this brief, and it is about the content retainer, not about implementation hours.</p>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Settings sprint</h3><span class="pill p2">Opener</span><span class="pill eff">Est. 8 to 12 hours, no developer</span></div>
+        <p class="sub">The audit's Phase 1: ten changes in Shopify and app settings. These live in the Digioh, ShipInsure and payment-gateway dashboards rather than in theme code, so they are the items least likely to be in the agent's backlog already, and the fastest way to get our hands on the store.</p>
+        <ul class="checklist">
+          <li>Popup off on cart, checkout and after add-to-cart; once per 7 days</li>
+          <li>Protection unchecked by default in the drawer and the cart</li>
+          <li>Every wallet the CBD-approved gateway allows; pickup points off; app banner off on mobile</li>
+          <li>Countdown tied to the BESTLIFE coupon in words, or removed; subscription led with "save up to 30%"</li>
+          <li>Guarantee line under Add to Cart; Dr. Silver named once documented</li>
+        </ul>
+        <p class="sub" style="margin-top:10px"><strong>How to position:</strong> the first two weeks of the engagement, or goodwill inside the retainer. Do not give it away without item 1 attached.</p>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">4</span><h3>Build hours, only if Aaron asks</h3><span class="pill p3">Optional</span><span class="pill eff">Phase 2: 60 to 90 h. Phase 3: 30 to 50 h</span></div>
+        <p class="sub">The audit's theme work: cart page parity with the drawer, one review count with one label, the serving chart and batch report on the product page, script cleanup and media replacement behind the 79 MB homepage, badges and quick-add, then the homepage cut, mobile header and the subscription test. The client is more likely to build this with his own agent than to buy it. Have the figures ready; do not lead with them.</p>
+      </div>
+    </section>
+
+    <section class="block" id="money" data-nav="The money case">
+      <div class="label">The money case</div>
+      <h2>What the numbers support, and what they do not</h2>
+      <p>All figures are the client's own GA4 numbers for the 90 days to October 13, 2026. The scenarios are arithmetic on those numbers, not forecasts. Use them to size the conversation, not as promises.</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Baseline</th><th class="num">Value</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue, 90 days</td><td class="num">$117,755</td></tr>
+          <tr><td>Orders and average order value</td><td class="num">1,939 at $60.73</td></tr>
+          <tr><td>Sessions that added to cart and did not order</td><td class="num">about 1,260</td></tr>
+          <tr><td>Checkout sessions that never reach the payment step</td><td class="num">43%</td></tr>
+          <tr><td>Blog landing sessions, and the revenue they produced</td><td class="num">35,468 sessions, $932</td></tr>
+          <tr><td>Collection landing sessions, and the revenue they produced</td><td class="num">9,105 sessions, $31,656</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <h3>Three scenarios to put on the table</h3>
+      <ul class="body">
+        <li><strong>Each 0.1 point of site conversion rate</strong> on the current 77,295 sessions is about 77 orders, or about $4,700 a quarter at the current order value. The audit's checkout fixes target a step where 43% of checkout sessions currently fall out.</li>
+        <li><strong>Recovering one in ten of the abandoned add-to-cart sessions</strong> is about 126 orders, or about $7,600 a quarter. That is the number the popup, protection add-on and cart fixes are aimed at.</li>
+        <li><strong>Every 1,000 blog sessions that move to product-facts pages</strong> converting at the product-page landing rate (3.95%) is about 40 orders, against 0.6 orders today. That is the roadmap's job, and it only holds if the product page converts.</li>
+      </ul>
+      <div class="callout info"><strong>Do not say:</strong> a percentage lift, a payback period or a benchmark. The audit deliberately gives none, because CBD stores cannot use Shopify Payments, Shop Pay or PayPal, and the gateway limits what the checkout can offer. Stay on the client's own numbers.</div>
+    </section>
+
+    <section class="block" id="risks" data-nav="Risks and limits">
+      <div class="label">Risks and limits</div>
+      <h2>What to know before the call</h2>
+      <ul class="body">
+        <li><strong>The client's compliance guide governs everything.</strong> Several site elements the audit touches (the serving chart, the badges, the testimonials, the research tile) need the client's compliance owner before they change. We spec and build; we do not approve claims.</li>
+        <li><strong>The site changes without notice.</strong> One finding closed itself in a day. Any scope should be re-verified against the live site in the week it is signed.</li>
+        <li><strong>The gateway decides the wallets.</strong> Express checkout is Google Pay only and some of that is outside anyone's control. Do not promise Apple Pay or Shop Pay.</li>
+        <li><strong>The horse line is on legal hold.</strong> 11 planned keywords and all 66 live horse URLs wait on the client's legal reviewer. Keep it out of any scope.</li>
+        <li><strong>The client builds with Claude.</strong> Expect every finding to be checked by Aaron's agent against the live site before the call; the audit was re-verified on October 15 for exactly that reason, and the three findings the drawer closed were retired or rescoped. Expect some fixes to be in his backlog already, so lead with sequencing, review and measurement rather than with the list.</li>
+        <li><strong>An agent closes tickets, not outcomes.</strong> Nothing in the client's setup confirms that a change moved add-to-cart, checkout or payment rates. That measurement loop is the part they do not have and we do.</li>
+        <li><strong>Pricing is not in this note.</strong> The hour ranges are scoping estimates from the audit work. The standalone implementation number is small by design; the size of this account is the content retainer.</li>
+      </ul>
+    </section>
+
+    <section class="block" id="conversation" data-nav="The conversation">
+      <div class="label">The conversation</div>
+      <h2>Suggested shape for the client call</h2>
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Open with the dependency, not the audit</h3></div>
+        <p class="sub">"The content plan you asked for is built. Three of its preconditions are site changes, and the first one is due before the first condition article publishes." That frames implementation as part of the thing Aaron already wants.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Show the leak on their numbers</h3></div>
+        <p class="sub">Add to cart to order, the 43% checkout drop, the blog at 0.06%. Three numbers, all theirs. Then the three Critical findings and the fact that one High finding was already fixed by their developer this week.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Offer the review layer, and expect "my agent has this"</h3></div>
+        <p class="sub">Ask what his agent has already built or queued from the audit. When he says his agent has it, agree, then ask who checks it and who measures it. If there is no answer, that is the scope: item 1 inside the content retainer, the dependencies as dated milestones, the settings sprint as the opener. Build hours only if he asks.</p>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">4</span><h3>Questions sales needs answered</h3></div>
+        <ul class="checklist">
+          <li>What has Aaron's agent already changed or queued from the audit, and who reviews what it ships before it goes live?</li>
+          <li>Who owns GA4, and can fixing the tracking be the first measurement step?</li>
+          <li>Who is the compliance owner? Nothing on the product template moves without them.</li>
+          <li>Can we get collaborator access to Shopify, Digioh, ShipInsure and the payment gateway for the settings sprint?</li>
+          <li>Is the Month 1 intake email going out with the roadmap, so the fact sheets arrive before writing starts?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>What happens after the sales review</h2>
+      <p>Decide how the review and measurement layer is written into the content retainer, put dates on the two site dependencies, and send the Month 1 intake email so the writing can start while the scope is agreed. The deliverables are live at the links above and the roadmap workbook is in the client folder.</p>
+    </section>
+  </main>
+</div>
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav'); toc.appendChild(a); });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)); }); }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
