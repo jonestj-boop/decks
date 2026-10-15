@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Field Nation Impact Report · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#0E7492; --client-accent-soft:#e6f2f6; /* Field Nation secondary teal (their orange is too close to EmberTribe red) */
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:860px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-black);
+          color:#fff; padding:30px 22px; display:flex; flex-direction:column; overflow-y:auto; }
+  aside .chip { background:#fff; border-radius:10px; padding:9px 11px; display:inline-flex; margin-bottom:14px; align-self:flex-start; }
+  aside .chip img { height:30px; width:auto; display:block; }
+  aside .doc-type { font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:26px; }
+  aside nav { display:flex; flex-direction:column; gap:1px; }
+  aside nav a { color:rgba(255,255,255,0.66); font-size:13.5px; padding:7px 12px; border-radius:8px;
+                transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(255,255,255,0.08); }
+  aside nav a.active { color:#fff; font-weight:700; background:rgba(255,255,255,0.14); }
+  aside .foot { margin-top:auto; padding-top:24px; font-size:11px; color:rgba(255,255,255,0.5); line-height:1.6; }
+
+  main { min-width:0; }
+  .block { padding:68px 64px; border-bottom:1px solid var(--border); }
+  .block > * { max-width:var(--maxw); }
+
+  /* cover: solid red field, white headline, black caps labels */
+  .masthead { background:var(--et-red); color:#fff; padding:84px 64px 72px; }
+  .masthead .chip { background:#fff; border-radius:12px; padding:11px 14px; display:inline-flex; margin-bottom:46px; }
+  .masthead .chip img { height:40px; width:auto; display:block; }
+  .masthead .label { color:var(--et-black); }
+  .masthead h1 { color:#fff; font-size:60px; max-width:820px; }
+  .masthead .subtitle { color:rgba(255,255,255,0.92); max-width:700px; }
+  .masthead .meta { display:flex; flex-wrap:wrap; gap:18px 44px; margin-top:40px; }
+  .masthead .meta div { font-size:11px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); }
+  .masthead .meta b { display:block; color:#fff; font-weight:700; margin-top:4px; font-size:15px; letter-spacing:0; text-transform:none; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:22px; }
+  .note { font-size:13px; color:var(--ink-500); margin-top:10px; }
+  ul.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.65; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  b.n, .n { font-variant-numeric:tabular-nums; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:8px 0 6px; }
+  .stats.three { grid-template-columns:repeat(3,1fr); }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+  .stat .d { font-size:12.5px; font-weight:700; margin-top:6px; }
+  .stat.flag { background:#fff8e8; border:1px solid #f3dfae; }
+  .stat .flagnote { font-size:11.5px; line-height:1.4; color:#8a5d00; margin-top:8px; }
+  .up{color:#1f8a4c;font-weight:700;} .down{color:var(--et-red-deep);font-weight:700;} .dim{color:var(--ink-500);}
+
+  .compare { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:stretch; gap:10px; margin:18px 0 8px; }
+  .compare .col { background:var(--subtle); border-radius:14px; padding:20px; }
+  .compare .col.now { background:var(--client-accent-soft); }
+  .compare .when { font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-500); }
+  .compare .big { font-size:34px; font-weight:700; color:var(--et-black); line-height:1.1; margin-top:8px; font-variant-numeric:tabular-nums; }
+  .compare .sub { font-size:13px; color:var(--ink-500); }
+  .compare .arrow { display:flex; align-items:center; color:var(--ink-300); font-size:22px; }
+
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  .callout { border:1px solid #ffd3d5; background:#fff5f5; padding:16px 20px; border-radius:12px; margin:18px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:#b9d9e3;background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.warn{border-color:#f3dfae;background:#fff8e8;} .callout.warn strong{color:#8a5d00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#8a5d00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  .table-wrap { overflow-x:auto; margin:14px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; padding:11px 12px; font-weight:700; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); white-space:nowrap; }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; } .strong{font-weight:700;}
+  td.url { font-size:12.5px; color:var(--ink-600); word-break:break-all; }
+  td .kw { display:block; font-size:12.5px; color:var(--ink-500); }
+
+  .bars { display:flex; flex-direction:column; gap:9px; margin:16px 0; }
+  .bar { display:grid; grid-template-columns:150px 1fr 54px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; color:var(--ink-600); } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:0 4px 4px 0; background:var(--client-accent); }
+  .bar .bf.light { background:#7fb8c9; } .bar .bf.pale { background:#c3dde5; }
+  .bar .bv { font-size:13.5px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  .spot { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+  .spot .card { border:1px solid var(--border); border-radius:14px; padding:22px; }
+  .spot .tag { font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--client-accent); }
+  .spot h3 { margin:8px 0 6px; font-size:17px; line-height:1.3; }
+  .spot .lead { font-size:13.5px; color:var(--ink-500); margin-bottom:14px; }
+  .spot .nums { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; border-top:1px solid var(--border); padding-top:12px; }
+  .spot .nums div { font-size:11.5px; line-height:1.35; color:var(--ink-500); }
+  .spot .nums b { display:block; font-size:22px; color:var(--et-black); font-variant-numeric:tabular-nums; }
+
+  .chart { margin:16px 0 4px; position:relative; }
+  .chart svg { width:100%; height:auto; display:block; overflow:visible; }
+  .chart .axis { font-size:11px; fill:var(--ink-500); }
+  .chart .grid { stroke:var(--ink-100); stroke-width:1; }
+  .chart .base { stroke:var(--ink-300); stroke-width:1; }
+  .chart .vlab { font-size:11.5px; font-weight:700; fill:var(--ink-700); }
+  .chart .band { fill:var(--et-honey); opacity:0.16; }
+  .chart .bandlab { font-size:10.5px; font-weight:700; fill:#8a5d00; letter-spacing:0.06em; }
+  .chart .hit { fill:transparent; cursor:default; }
+  .chart-title { font-size:13px; font-weight:700; color:var(--et-black); margin-top:20px; }
+  .tip { position:absolute; pointer-events:none; background:var(--et-black); color:#fff; font-size:12px; line-height:1.45; padding:8px 10px; border-radius:8px; opacity:0; transition:opacity .12s; white-space:nowrap; z-index:5; }
+  .tip b { font-weight:700; }
+  .legend { display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--ink-600); margin-top:6px; }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+  .twocol { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step ul.body { margin-top:10px; } .step ul.body li { font-size:15px; }
+
+  .cta { background:var(--et-black); color:#fff; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.72); max-width:680px; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  .sources li { font-size:14px; }
+  /* month breakdown card shown as the chart tooltip */
+  .tip.mcard { background:var(--surface); color:var(--ink-700); border:1px solid var(--border); border-radius:12px; padding:12px 14px; width:190px; white-space:normal; box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+  .mcard .mh { font-size:13px; color:var(--ink-500); margin-bottom:6px; }
+  .mcard .mh b { color:var(--et-black); }
+  .mcard .mr { display:flex; align-items:center; gap:7px; font-size:12.5px; line-height:1.75; color:var(--ink-700); }
+  .mcard .mr i { width:8px; height:8px; border-radius:50%; flex:none; }
+  .mcard .mr span { flex:1; }
+  .mcard .mr b { font-weight:700; color:var(--et-black); font-variant-numeric:tabular-nums; }
+  .mcard .mt { display:flex; justify-content:space-between; border-top:1px solid var(--border); margin-top:6px; padding-top:7px; font-size:12.5px; }
+  .mcard .mt b { font-weight:700; color:var(--et-black); font-variant-numeric:tabular-nums; }
+
+  @media (max-width:980px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; padding:18px 16px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot, aside .doc-type { display:none; }
+    .block, .masthead, .cta { padding:44px 16px; }
+    .masthead h1 { font-size:40px; }
+    .stats, .stats.three { grid-template-columns:repeat(2,1fr); }
+    .spot, .twocol { grid-template-columns:1fr; }
+    .compare { grid-template-columns:1fr; } .compare .arrow { display:none; }
+    .bar { grid-template-columns:96px 1fr 46px; }
+    h2 { font-size:26px; }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+    .masthead, .cta { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="chip"><img src="../images/embertribe-napkin-horizontal.png" alt="EmberTribe, a NAPKIN company"></div>
+    <div class="doc-type">Impact report · Field Nation</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>Data through Oct 13, 2026</div>
+  </aside>
+
+  <main>
+    <!-- ══ COVER ═══════════════════════════════════════════════════════ -->
+    <section class="masthead" id="top">
+      <div class="chip"><img src="../images/embertribe-napkin-horizontal.png" alt="EmberTribe, a NAPKIN company"></div>
+      <div class="label">ClusterMagic content impact report</div>
+      <h1>Field Nation: what 101 articles are still doing for you</h1>
+      <p class="subtitle">We published 101 ClusterMagic articles for you between April and July 2024. This report measures where they stand two years later: rankings, AI search, traffic, and conversions.</p>
+      <div class="meta">
+        <div>Prepared for<b>Field Nation</b></div>
+        <div>Report date<b>October 14, 2026</b></div>
+        <div>Measured<b>Apr 1, 2024 to Oct 13, 2026</b></div>
+        <div>Sources<b>Semrush · Google Analytics 4</b></div>
+      </div>
+    </section>
+
+    <!-- ══ HIGHLIGHTS ══════════════════════════════════════════════════ -->
+    <section class="block" id="summary" data-nav="Highlights">
+      <div class="label">Recap · Highlights</div>
+      <h2>Two years later, the content is still ranking</h2>
+      <p class="lede">The last ClusterMagic article was delivered in July 2024, and we haven't published anything for you since. Today, 40 of the 101 articles still rank on Google for 434 keywords. 198 of those keywords are on page 1, which is 29% of all of fieldnation.com's page-1 rankings.</p>
+      <div class="stats">
+        <div class="stat"><div class="v">101</div><div class="k">Articles published, Apr 24 to Jul 5, 2024. All 101 are still live.</div></div>
+        <div class="stat"><div class="v accent">434</div><div class="k">Keywords the articles rank for in Google's top 100</div></div>
+        <div class="stat"><div class="v accent">198</div><div class="k">Of those keywords on page 1 (positions 1 to 10)</div></div>
+        <div class="stat"><div class="v red">29%</div><div class="k">Share of fieldnation.com's 682 page-1 keywords held by these articles</div></div>
+      </div>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat"><div class="v">39</div><div class="k">Google AI Overview citations across 11 articles</div></div>
+        <div class="stat"><div class="v">34.4K</div><div class="k">Monthly searches covered by the articles' page-1 keywords</div></div>
+        <div class="stat"><div class="v">1,563</div><div class="k">Organic sessions that started on an article (GA4, Apr 2024 to Oct 2026)</div></div>
+        <div class="stat"><div class="v">+14.2%</div><div class="k">Conversions credited to organic search, last 6 months vs previous 6</div></div>
+      </div>
+      <div class="callout warn"><strong>Read the traffic numbers with care.</strong> In GA4 on fieldnation.com, 82% of organic sessions since April 2024 record a key event, and 47% of all sessions have no landing page recorded, so those sessions can't be counted toward any article. For conversions, this report uses 4 sign-up and sales events as a working definition, pending confirmation from your team. The fixes are in <a href="#tracking">Measurement issues</a>.</div>
+    </section>
+
+    <!-- ══ WHAT WE BUILT ═══════════════════════════════════════════════ -->
+    <section class="block" id="program" data-nav="What we built">
+      <div class="label">ClusterMagic at a glance</div>
+      <h2>What the 101 articles cover</h2>
+      <p>The articles answer questions your buyers and technicians search before they hire or sign up. We grouped the 101 articles into four topic clusters: IT outsourcing and staff augmentation; technicians, cabling and infrastructure; contractors, 1099 and contingent labor; and field service operations and software. Together, the 101 target keywords total about 105,600 monthly searches.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Cluster</th><th class="num">Articles</th><th class="num">Keywords ranking</th><th class="num">Page-1 keywords</th><th class="num">AI Overview cites</th><th class="num">GA4 organic views</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">IT outsourcing &amp; staff augmentation</td><td class="num">26</td><td class="num">150</td><td class="num strong">85</td><td class="num">18</td><td class="num">489</td></tr>
+            <tr><td class="strong">Technicians, cabling &amp; infrastructure</td><td class="num">21</td><td class="num">134</td><td class="num strong">57</td><td class="num">8</td><td class="num">568</td></tr>
+            <tr><td class="strong">Contractors, 1099 &amp; contingent labor</td><td class="num">20</td><td class="num">78</td><td class="num strong">29</td><td class="num">9</td><td class="num">278</td></tr>
+            <tr><td class="strong">Field service operations &amp; software</td><td class="num">34</td><td class="num">72</td><td class="num strong">27</td><td class="num">4</td><td class="num">599</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">Clusters are our grouping of the 101 articles by primary topic. Rankings: Semrush, US desktop, Oct 13, 2026. Views: GA4 organic page views (Session source / medium contains "organic"), Apr 1, 2024 to Oct 13, 2026.</p>
+      <div class="callout info"><strong>Outsourcing articles hold the most rankings.</strong> The 26 articles in that cluster hold 85 of the 198 page-1 keywords and 18 of the 39 AI Overview citations, including buyer comparisons like "staff augmentation vs outsourcing" (#1) and "outsourced IT support" (#4).</div>
+    </section>
+
+    <!-- ══ KEYWORD RANKINGS ════════════════════════════════════════════ -->
+    <section class="block" id="rankings" data-nav="Keyword rankings">
+      <div class="label">Keyword rankings</div>
+      <h2>fieldnation.com before, during, and after ClusterMagic</h2>
+      <p>Semrush monthly keyword snapshots for the whole domain, organic positions only. The articles went live between April and July 2024. In September 2024, two months after the last one shipped, fieldnation.com ranked for 46% more keywords and 84% more page-1 keywords than in April. These are domain-wide totals, so they include all of the site's content, and Semrush can't separate how much of the change came from the articles. What we can measure directly: today the 101 articles hold 198 of the domain's 682 page-1 keywords.</p>
+      <div class="compare">
+        <div class="col"><div class="when">April 2024 · before</div><div class="big">2,340</div><div class="sub">ranked keywords<br><b class="n">225</b> on page 1</div></div>
+        <div class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+        <div class="col"><div class="when">September 2024 · right after</div><div class="big">3,420</div><div class="sub">ranked keywords, <span class="up">+46%</span><br><b class="n">413</b> on page 1, <span class="up">+84%</span></div></div>
+        <div class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+        <div class="col now"><div class="when">October 2026 · today</div><div class="big">3,214</div><div class="sub">ranked keywords, <span class="up">+37%</span> vs Apr 2024<br><b class="n">682</b> on page 1, <span class="up">3× Apr 2024</span></div></div>
+      </div>
+      <div class="chart-title">Ranked keywords for fieldnation.com (organic positions 1 to 100), by month</div>
+      <div class="chart" id="chart-snapshots"></div>
+      <p class="note">Each column is the month's organic ranked keywords (positions 1 to 100). Hover over any month to see the breakdown by position, including SERP features, which Semrush counts separately and which are not included in the column. Semrush Organic Keywords Trend, fieldnation.com, US desktop, monthly. Domain-wide: these totals include all site content, not only the 101 articles. Top-3 keywords doubled over the period, from 89 to 181.</p>
+
+      <h3>Where the articles' 434 keywords rank today</h3>
+      <div class="bars" id="bars-positions">
+        <div class="bar"><div class="bl">Positions 1 to 3</div><div class="bt"><div class="bf" style="width:23.75%"></div></div><div class="bv">38</div></div>
+        <div class="bar"><div class="bl">Positions 4 to 10</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">160</div></div>
+        <div class="bar"><div class="bl">Positions 11 to 20</div><div class="bt"><div class="bf light" style="width:43.1%"></div></div><div class="bv">69</div></div>
+        <div class="bar"><div class="bl">Positions 21 to 50</div><div class="bt"><div class="bf pale" style="width:66.25%"></div></div><div class="bv">106</div></div>
+        <div class="bar"><div class="bl">Positions 51 to 100</div><div class="bt"><div class="bf pale" style="width:38.1%"></div></div><div class="bv">61</div></div>
+      </div>
+      <div class="callout info"><strong>Most page-1 rankings sit below the top 3.</strong> 160 of the 198 page-1 keywords are at positions 4 to 10, the closest to the top 3. Another 69 are on page 2 (positions 11 to 20), the closest to page 1.</div>
+      <p class="note">Semrush positions export, Oct 13, 2026, organic results only. Each keyword is counted once per article, even when it ranks on both the old /learn/ URL and the new /resources/ URL. 75% of the keywords are informational and 23% commercial.</p>
+    </section>
+
+    <!-- ══ PAGE-2 OPPORTUNITIES ════════════════════════════════════════ -->
+    <section class="block" id="page-two" data-nav="Page-2 opportunities">
+      <div class="label">Page-2 opportunities</div>
+      <h2>442 keywords rank on page 2</h2>
+      <p>fieldnation.com ranks at positions 11 to 20 for these keywords: already ranking, one page below where most clicks happen, and within striking distance of page 1. 427 of them have a Semrush keyword difficulty under 50 (4 have no difficulty score in Semrush). The 69 on our articles are the link-building targets; the biggest are listed in <a href="#plan">Growth recommendations</a>.</p>
+      <div class="stats">
+        <div class="stat"><div class="v accent">442</div><div class="k">fieldnation.com keywords at positions 11 to 20</div></div>
+        <div class="stat"><div class="v">75.4K</div><div class="k">Monthly searches across those keywords</div></div>
+        <div class="stat"><div class="v">149</div><div class="k">Of them at positions 11 to 13</div></div>
+        <div class="stat"><div class="v red">69</div><div class="k">Belong to 20 of our articles (9,170 searches/mo)</div></div>
+      </div>
+
+      <h3>The biggest page-2 keywords on other /resources/ and /skills/ pages</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Keyword</th><th class="num">Position</th><th class="num">Searches/mo</th><th class="num">Difficulty</th><th>Ranking page</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">self employment health insurance</td><td class="num">12</td><td class="num">2,900</td><td class="num">42</td><td>/resources/self-employed-health-insurance</td></tr>
+            <tr><td class="strong">field technician</td><td class="num">11</td><td class="num">2,900</td><td class="num">25</td><td>/skills/field-nation-technician</td></tr>
+            <tr><td class="strong">do private contractors have to give there badge number</td><td class="num">16</td><td class="num">1,900</td><td class="num">26</td><td>/resources/independent-contractors-ein</td></tr>
+            <tr><td class="strong">what is horizontal strategy</td><td class="num">11</td><td class="num">1,300</td><td class="num">32</td><td>/resources/market-strategies</td></tr>
+            <tr><td class="strong">ab5</td><td class="num">19</td><td class="num">1,000</td><td class="num">30</td><td>/resources/ab-5</td></tr>
+            <tr><td class="strong">ein for sole proprietorship</td><td class="num">12</td><td class="num">720</td><td class="num">23</td><td>/resources/independent-contractors-ein</td></tr>
+            <tr><td class="strong">cablings</td><td class="num">11</td><td class="num">720</td><td class="num">48</td><td>/skills/network-cabling-services</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Five of these seven are technician topics: field technician work, contractor EINs and badge numbers, AB5, and cabling skills. They reach the same audience as the 1099 and technician articles.</p>
+      <p class="note">Semrush positions export filtered to positions 11 to 20, fieldnation.com, US, Oct 13, 2026 (442 keywords, matching Semrush's monthly count). Article keywords are counted once per article at their best position, so a keyword that also ranks on page 1 for the same article isn't counted as page 2. The table covers non-article pages under /resources/ and /skills/ (194 unique keywords, 32,090 searches/mo), sorted by search volume. It shows the top 7, stops before a three-way tie at 590 searches/mo, and leaves out one query about another company.</p>
+    </section>
+
+    <!-- ══ AI SEARCH ═══════════════════════════════════════════════════ -->
+    <section class="block" id="ai" data-nav="AI search">
+      <div class="label">AI search visibility</div>
+      <h2>The articles are already cited in Google's AI Overviews</h2>
+      <div class="stats three">
+        <div class="stat"><div class="v accent">39</div><div class="k">Keywords where Google's AI Overview cites one of the articles</div></div>
+        <div class="stat"><div class="v accent">11</div><div class="k">Articles cited in at least one AI Overview</div></div>
+        <div class="stat"><div class="v accent">10</div><div class="k">AI Overview citations for Outsourced IT Support, the most of any article</div></div>
+      </div>
+      <p style="margin-top:18px">The most-cited articles are <b>Outsourced IT Support</b> (10 AI Overviews), <b>1099-K vs. 1099-NEC</b> (9), and <b>Staff Augmentation vs Outsourcing</b> (5).</p>
+      <p><b>Separately, sitewide:</b> GA4's AI Assistant channel (visits referred by AI assistants such as ChatGPT and Perplexity) was credited with 1,013 conversions (counting the 4 tracked events) from April to October 2026, 3.5% of the 28,684 total. No AI Assistant row appears in the same report for the previous 6 months. This figure covers the whole site and isn't tied to the AI Overview citations above.</p>
+      <p class="note">AI Overview citations: Semrush positions export, Oct 13, 2026 (position type "AI overview"). AI Assistant conversions: GA4 Key event attribution models report, last click, sitewide, using the 4 conversion events defined in <a href="#conversions">Conversions</a>.</p>
+    </section>
+
+    <!-- ══ #1 RANKINGS ═════════════════════════════════════════════════ -->
+    <section class="block" id="number-one" data-nav="#1 rankings">
+      <div class="label">#1 on Google today</div>
+      <h2>Four articles still hold the top spot</h2>
+      <p>As of October 13, 2026, four ClusterMagic articles rank #1 on Google for 14 keywords. That's 20% of all the keywords fieldnation.com ranks #1 for. Of the other 57, almost half (27) are searches for the Field Nation brand itself.</p>
+      <div class="stats">
+        <div class="stat"><div class="v accent">4</div><div class="k">Articles ranking #1 on Google</div></div>
+        <div class="stat"><div class="v accent">14</div><div class="k">Keywords where they hold #1</div></div>
+        <div class="stat"><div class="v">2,360</div><div class="k">Monthly searches across those keywords</div></div>
+        <div class="stat"><div class="v red">20%</div><div class="k">Of fieldnation.com's 71 #1 keywords</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Article</th><th class="num">#1 keywords</th><th class="num">Searches/mo</th><th>Keywords at #1</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Staff Augmentation vs Outsourcing: Determining the Best Fit</td><td class="num strong">11</td><td class="num">2,220</td><td>staff augmentation vs outsourcing (1,300/mo), staff augmentation outsourcing (210), staff augmentation vs software outsourcing (140, featured snippet), staff augmentation vs project outsourcing (110), outsourcing vs staff augmentation (110), and 6 more variations</td></tr>
+            <tr><td class="strong">IT Services Profit Margins Explained</td><td class="num strong">1</td><td class="num">50</td><td>it provider benchmark service pricing margins</td></tr>
+            <tr><td class="strong">Navigating Field Service Software Pricing</td><td class="num strong">1</td><td class="num">50</td><td>it field service providers utilisation-based pricing</td></tr>
+            <tr><td class="strong">How to Price IT Services</td><td class="num strong">1</td><td class="num">40</td><td>pricing it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout info"><strong>Owning a buyer question.</strong> Staff Augmentation vs Outsourcing ranks #1 for 11 different phrasings of that comparison, and it holds the featured snippet for one of them. 13 of these 14 searches also show a Google AI Overview above the results, so holding #1 here sits right next to the AI answer.</div>
+      <p class="note">Semrush positions export filtered to position 1, fieldnation.com, US, Oct 13, 2026 (71 keywords). Matched to the 101 article URLs on /learn/ and /resources/.</p>
+    </section>
+
+    <!-- ══ SPOTLIGHTS ══════════════════════════════════════════════════ -->
+    <section class="block" id="spotlights" data-nav="Article spotlights">
+      <div class="label">Article spotlights</div>
+      <h2>Four articles that stand out</h2>
+      <div class="spot">
+        <div class="card">
+          <div class="tag">Closest to revenue</div>
+          <h3>Staff Augmentation vs Outsourcing: Determining the Best Fit</h3>
+          <div class="lead">#1 on Google for "staff augmentation vs outsourcing" (1,300 searches/mo). The only article that produced both a sales inquiry and a booked sales meeting.</div>
+          <div class="nums"><div><b>17</b>keywords ranking on page 1 (positions&nbsp;1–10)</div><div><b>11</b>keywords where it ranks #1</div><div><b>5</b>Google AI Overviews citing this article</div></div>
+        </div>
+        <div class="card">
+          <div class="tag">Biggest search demand</div>
+          <h3>Outsourced IT Support: Benefits and Considerations</h3>
+          <div class="lead">#4 for "outsourced IT support" (4,400 searches/mo). Cited in more AI Overviews than any other article.</div>
+          <div class="nums"><div><b>59</b>keywords ranking in Google's top 100</div><div><b>29</b>of those on page 1 (positions&nbsp;1–10)</div><div><b>10</b>Google AI Overviews citing this article</div></div>
+        </div>
+        <div class="card">
+          <div class="tag">Widest footprint · most read</div>
+          <h3>MDF to IDF Cabling: Best Practices Onsite</h3>
+          <div class="lead">Ranks for 86 keywords, including "mdf room" (#7, 1,000 searches/mo). The most-visited article in GA4.</div>
+          <div class="nums"><div><b>40</b>keywords ranking on page 1 (positions&nbsp;1–10)</div><div><b>331</b>organic page views in GA4 since April 2024</div><div><b>315</b>organic visits that started on this article (GA4)</div></div>
+        </div>
+        <div class="card">
+          <div class="tag">Deepest engagement</div>
+          <h3>1099-K vs. 1099-NEC: What You Need to Know</h3>
+          <div class="lead">#4 for "1099 k vs 1099 nec" and 20 page-1 keywords. Readers stay almost twice as long as the article average.</div>
+          <div class="nums"><div><b>20</b>keywords ranking on page 1 (positions&nbsp;1–10)</div><div><b>9</b>Google AI Overviews citing this article</div><div><b>1m 45s</b>average time an organic reader spends engaged (GA4)</div></div>
+        </div>
+      </div>
+      <p class="note">Keyword and AI Overview counts: Semrush, US, Oct 13, 2026. A keyword counts once per article, even if it ranks on both the old /learn/ and new /resources/ URL. Views, visits, and engagement time: GA4, organic only, Apr 1, 2024 to Oct 13, 2026.</p>
+    </section>
+
+    <!-- ══ TOP ARTICLES ════════════════════════════════════════════════ -->
+    <section class="block" id="top-articles" data-nav="Top articles">
+      <div class="label">Top articles</div>
+      <h2>Top 12 articles by page-1 keywords</h2>
+      <div class="table-wrap">
+        <table id="top-table">
+          <thead><tr><th>Article</th><th class="num">Page 1</th><th class="num">Top 3</th><th class="num">All kw</th><th class="num">AI cites</th><th class="num">GA4 organic views</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note">Sorted by page-1 keywords, then top-3 keywords. Page 1 / Top 3 / All kw: Semrush organic keywords per article, Oct 13, 2026. Lead keyword shown under each title (best page-1 keyword by search volume). GA4 organic views: Session source / medium contains "organic", Apr 1, 2024 to Oct 13, 2026, old and new URLs combined.</p>
+    </section>
+
+    <!-- ══ TRAFFIC ═════════════════════════════════════════════════════ -->
+    <section class="block" id="traffic" data-nav="Organic metrics">
+      <div class="label">Organic metrics · GA4</div>
+      <h2>Organic traffic, last 6 months vs previous 6</h2>
+      <p>Apr 13 to Oct 13, 2026, compared with Oct 11, 2025 to Apr 12, 2026.</p>
+
+      <h3>Sitewide</h3>
+      <div class="stats">
+        <div class="stat"><div class="v">29,834</div><div class="k">Organic users</div><div class="d up">+3.1% vs 28,932</div></div>
+        <div class="stat"><div class="v">27,865</div><div class="k">New organic users</div><div class="d up">+5.4% vs 26,436</div></div>
+        <div class="stat"><div class="v">84,287</div><div class="k">Organic sessions</div><div class="d up">+7.0% vs 78,789</div></div>
+        <div class="stat"><div class="v">1m 23s</div><div class="k">Avg. engagement time per organic user</div><div class="d up">+5.5% vs 1m 18s</div></div>
+      </div>
+      <div class="stats" style="margin-top:14px">
+        <div class="stat flag"><div class="v">233,842</div><div class="k">Organic key events</div><div class="d dim">+20.5% vs 194,078</div><div class="flagnote">Flag: as GA4 reports it, counting all 22 key events. See <a href="#tracking">Measurement issue 01</a>.</div></div>
+        <div class="stat flag"><div class="v">88.95%</div><div class="k">Organic user key event rate</div><div class="d dim">+1.2% vs 87.87%</div><div class="flagnote">Flag: as GA4 reports it, counting all 22 key events. See <a href="#tracking">Measurement issue 01</a>.</div></div>
+      </div>
+      <p class="note">Users, key events and key event rate: GA4 User acquisition, first user channel = Organic Search. Sessions: GA4 Traffic acquisition, session channel = Organic Search.</p>
+
+      <h3>Blog only (/resources/)</h3>
+      <div class="stats">
+        <div class="stat"><div class="v">5,167</div><div class="k">Organic page views on /resources/ pages</div><div class="d down">−21.2% vs 6,560</div></div>
+        <div class="stat"><div class="v">2,782</div><div class="k">Organic active users</div><div class="d down">−23.0% vs 3,612</div></div>
+        <div class="stat"><div class="v">1m 01s</div><div class="k">Avg. engagement time per active user</div><div class="d up">+8.7% vs 56s</div></div>
+        <div class="stat flag"><div class="v">11,162</div><div class="k">Organic key events on /resources/ pages</div><div class="d dim">−21.9% vs 14,298</div><div class="flagnote">Flag: as GA4 reports it, counting all 22 key events. See <a href="#tracking">Measurement issue 01</a>.</div></div>
+      </div>
+      <p class="note">GA4 Pages and screens, page path contains /resources/, Session source / medium contains "organic".</p>
+
+      <h3>The 101 ClusterMagic articles</h3>
+      <div class="stats">
+        <div class="stat"><div class="v">390</div><div class="k">Organic page views, last 6 months</div><div class="d down">−23% vs 506</div></div>
+        <div class="stat"><div class="v">1,934</div><div class="k">Organic page views since April 2024</div></div>
+        <div class="stat"><div class="v">1,563</div><div class="k">Organic sessions that started on an article since April 2024</div></div>
+        <div class="stat"><div class="v">93</div><div class="k">Of 101 articles with organic views since April 2024</div></div>
+      </div>
+      <p class="note">Page views: GA4 Pages and screens, Session source / medium contains "organic", old /learn/ and new /resources/ URLs added together. Sessions: GA4 Landing page, session channel = Organic Search (1,297 of them were new users). Since April 2024 = Apr 1, 2024 to Oct 13, 2026.</p>
+
+      <div class="callout warn"><strong>Rankings held, recorded organic views fell.</strong> Over the same 6 months, fieldnation.com's page-1 keywords held near their high in Semrush, while GA4 recorded fewer organic page views on /resources/ pages. At current rankings, Semrush estimates the articles get about 1,000 organic visits a month; GA4 recorded about 64 organic article views a month on average since April 2024. Semrush's traffic numbers are modeled estimates, so they won't match GA4 exactly. Separately, 47% of sessions on the site have no landing page in GA4, and those sessions can't be counted toward any page (see <a href="#tracking">Measurement issue 02</a>).</div>
+    </section>
+
+    <!-- ══ CONVERSIONS ═════════════════════════════════════════════════ -->
+    <section class="block" id="conversions" data-nav="Conversions">
+      <div class="label">Conversions</div>
+      <h2>Organic search is credited with a quarter of sign-up and sales conversions</h2>
+      <p>GA4 counts 22 events as key events, and 82% of organic sessions since April 2024 record at least one (see <a href="#tracking">Measurement issues</a>). For this report we counted 4 events whose names describe sign-ups and sales actions: <b>provider_signup</b> (technician sign-up), <b>buyer_signup</b> (company sign-up), <b>sales_inquiry_form</b>, and <b>chilipiper_booked</b> (sales meeting booked).</p>
+      <div class="callout info"><strong>To confirm with your team.</strong> This is our working definition, not yours. If your team counts other events as conversions, or doesn't count some of these, we'll rerun the numbers on your definition.</div>
+      <div class="compare">
+        <div class="col"><div class="when">Oct 11, 2025 to Apr 12, 2026</div><div class="big">6,321</div><div class="sub">conversions credited to organic search<br>25.5% of all conversions</div></div>
+        <div class="arrow"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>
+        <div class="col now"><div class="when">Apr 13 to Oct 13, 2026</div><div class="big">7,216</div><div class="sub">conversions credited to organic search<br>25.2% of all conversions</div></div>
+        <div class="arrow"></div>
+        <div class="col" style="background:#e9f9f0"><div class="when">Change</div><div class="big up" style="color:#1f8a4c">+14.2%</div><div class="sub">Organic is the #2 converting channel, after referral</div></div>
+      </div>
+      <p class="note">GA4 Advertising, Key event attribution models report, last-click and data-driven models (they agree within 0.5%). Last click gives each conversion to the last channel (other than direct) the visitor arrived through before converting. Data-driven splits credit across the channels on the path. Both include provider_signup, which may be counted twice per sign-up (see <a href="#tracking">Measurement issue 04</a>).</p>
+
+      <h3>Conversions that started on an article</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Article</th><th>Conversion</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Staff Augmentation vs Outsourcing</td><td>Sales inquiry form</td><td class="num">1</td></tr>
+            <tr><td class="strong">Staff Augmentation vs Outsourcing</td><td>Sales meeting booked (Chili Piper)</td><td class="num">1</td></tr>
+            <tr><td class="strong">Outsourced IT Support</td><td>Technician sign-up</td><td class="num">2*</td></tr>
+            <tr><td class="strong">Elevating IT Field Technician Skills</td><td>Technician sign-up</td><td class="num">2*</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">GA4 Landing page report, Apr 1, 2024 to Oct 13, 2026, session channel = Organic Search. All of these came from organic visits; the same check across all channels found the same conversions. No buyer sign-ups started on an article. *Shown as GA4 reports it. Every provider_signup count we checked was an even number, so these may represent 1 sign-up each; see <a href="#tracking">Measurement issue 04</a>.</p>
+      <div class="callout"><strong>6 conversions started on an article in 30 months.</strong> The articles rank and get cited, but few readers sign up or contact sales in the same visit. The next step is to give each article a clear job: a buyer or technician offer matched to its topic, plus internal links into the sign-up and demo pages.</div>
+    </section>
+
+    <!-- ══ DOMAIN TREND ════════════════════════════════════════════════ -->
+    <section class="block" id="domain" data-nav="Domain trend">
+      <div class="label">Domain trend</div>
+      <h2>Semrush estimates domain traffic has halved since early 2025</h2>
+      <p>Semrush estimates fieldnation.com's organic traffic peaked at about 32,000 visits a month in January 2025. By September 2026 it was about 16,500, down 49%. Semrush's daily estimate then dropped by about a third on September 29, 2026, and has stayed near 10,800 since.</p>
+      <div class="chart-title">Estimated monthly organic traffic, fieldnation.com</div>
+      <div class="chart" id="chart-traffic"></div>
+      <p class="note">Semrush Domain Overview, US, monthly average of daily estimates. October 2024 covers Oct 15 to 31 and October 2026 covers Oct 1 to 13 only. Semrush traffic is modeled from rankings and search volume, so it shows direction, not exact visits.</p>
+      <div class="callout info"><strong>Why this matters for the restart.</strong> Semrush's estimated organic traffic for the domain has fallen since early 2025. Today, the 101 articles hold 198 page-1 keywords. A restart would start from pages that already rank: refresh them, then add content to the clusters with the most rankings.</div>
+    </section>
+
+    <!-- ══ MEASUREMENT ISSUES ══════════════════════════════════════════ -->
+    <section class="block" id="tracking" data-nav="Measurement issues">
+      <div class="label">Measurement issues</div>
+      <h2>Five tracking problems to fix first</h2>
+      <p>We found these five issues while pulling the data for this report. Each one lists what we saw, where we saw it, and how it affects the numbers.</p>
+
+      <div class="finding"><div class="fn">01</div><div>
+        <h3>Key events count far more than sign-ups and sales actions</h3>
+        <p><b>What we found:</b> GA4 has 22 key events. Five of them are <b>ioj1_impression</b>, <b>ioj2_introduced</b>, <b>ioj3_interested</b>, <b>ioj3_investigated</b>, and <b>ioj5_initiated</b>, all active (GA4 Admin, Key events).</p>
+        <p><b>What your GA4 exports show:</b></p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>GA4 report (organic)</th><th class="num">Key events</th><th class="num">Compared with</th><th class="num">GA4 rate shown</th></tr></thead>
+            <tbody>
+              <tr><td class="strong">Traffic acquisition, Sep 18, 2021 to Mar 31, 2024</td><td class="num">75,646</td><td class="num">662,590 sessions</td><td class="num">4.0% of sessions had one</td></tr>
+              <tr><td class="strong">Traffic acquisition, Apr 1, 2024 to Oct 13, 2026</td><td class="num">1,675,744</td><td class="num">619,954 sessions</td><td class="num">82.4% of sessions had one</td></tr>
+              <tr><td class="strong">User acquisition, Sep 18, 2021 to Mar 31, 2024</td><td class="num">67,747</td><td class="num">263,249 users</td><td class="num">5.6% of users had one</td></tr>
+              <tr><td class="strong">User acquisition, Apr 1, 2024 to Oct 13, 2026</td><td class="num">1,536,583</td><td class="num">242,370 users</td><td class="num">93.5% of users had one</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><b>Why we think these numbers don't reflect conversions:</b></p>
+        <ul class="body">
+          <li>Organic key events were 22 times higher in the second period while organic sessions fell 6%, and the share of organic users with a key event went from 5.6% to 93.5%.</li>
+          <li>On 116 of the 124 article URLs (the 101 articles' old /learn/ and new /resources/ addresses), GA4 records more key events than page views. The old /learn/ URL of MDF to IDF Cabling alone shows 703 key events against 315 page views.</li>
+          <li>The median article landing page has a 100% session key event rate, but sessions that started on an article led to only 6 sign-up and sales events (see <a href="#conversions">Conversions</a>).</li>
+          <li>In the Key event attribution models report for the last 6 months, organic search is credited with 282,281 key events when all 22 are counted, and 7,216 (2.6%) when only the 4 sign-up and sales events are counted.</li>
+        </ul>
+        <p class="note">Table figures are from the Traffic acquisition and User acquisition exports you sent; the article page view, key event and session figures in the reasons below are from your Pages and screens and Landing page exports (organic filters as listed in Sources); the 6 sign-up and sales events are from GA4 on Oct 14, 2026. The rates shown are GA4's own key event rates: the share of sessions or users with at least one key event, not key events divided by sessions. GA4 later showed 1,675,785 for the Traffic acquisition key events, as data for the last days finished processing.</p>
+        <p><b>Fix:</b> confirm which events your team counts as conversions, then set key events to match. Events that aren't conversions can still be collected without key event status.</p>
+        <div class="tag-row"><span class="pill p1">P1 · Critical</span><span class="pill eff">Effort: Low</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">02</div><div>
+        <h3>47% of sessions have no landing page</h3>
+        <p><b>What we found:</b> in the GA4 Landing page report, 1,113,888 of 2,349,614 sessions from April 2024 to October 2026 have a landing page of "(not set)".</p>
+        <p><b>The effect:</b> those sessions don't appear under any page in landing page reports, so they can't be counted toward any article or page. The article session counts in this report come from the other 53%. Page views come from a different report (Pages and screens).</p>
+        <p><b>Fix:</b> find out why these sessions record no landing page (for example, sessions with no page view event) and fix the cause.</p>
+        <div class="tag-row"><span class="pill p1">P1 · Critical</span><span class="pill eff">Effort: Medium</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">03</div><div>
+        <h3>The Search Console data in GA4 is close to zero</h3>
+        <p><b>What we found:</b> GA4 is linked to Search Console. Its "Google organic search traffic" report shows 1 click and 260 impressions for all /resources/ pages combined, April 2024 to October 2026.</p>
+        <p><b>The effect:</b> GA4 recorded 33,972 organic search sessions landing on /resources/ pages in the same period, and Semrush shows one of those pages ranking #3 for a keyword with 22,200 monthly searches. The linked data doesn't match either source, so it can't be used for clicks, impressions, or rankings. This report uses Semrush for rankings instead.</p>
+        <p><b>Fix:</b> check which Search Console property is linked to GA4, link the domain property for fieldnation.com, and give EmberTribe read access.</p>
+        <div class="tag-row"><span class="pill p1">P1 · High</span><span class="pill eff">Effort: Low</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">04</div><div>
+        <h3>Technician sign-up counts are always even</h3>
+        <p><b>What we found:</b> in the GA4 Landing page report (April 2024 to October 2026), every <b>provider_signup</b> count we checked on /resources/ pages was an even number: 2, 4, 6, 10, 22, 56. None were odd.</p>
+        <p><b>The effect:</b> if the event fires twice per sign-up, technician sign-ups in GA4 are double the real number. We haven't confirmed this, so this report shows provider_signup counts as GA4 reports them, with a note.</p>
+        <p><b>Fix:</b> compare GA4's provider_signup count for a set period with the sign-ups recorded in your own system. If GA4 is double, fix the trigger.</p>
+        <div class="tag-row"><span class="pill p2">P2 · Medium</span><span class="pill eff">Effort: Low</span></div>
+      </div></div>
+
+      <div class="finding"><div class="fn">05</div><div>
+        <h3>Google still ranks the old /learn/ URLs</h3>
+        <p><b>What we found:</b> all 101 articles now live at /resources/, and their old /learn/ URLs redirect there (we loaded each one). In Semrush, 364 of the articles' 434 ranking keywords (84%) still list the old /learn/ URL.</p>
+        <p><b>The effect:</b> every visitor from those results goes through a redirect before the article loads. In GA4, the same article's visits are split across a /learn/ row and a /resources/ row, so they have to be added together to see an article's full traffic, as we did for this report.</p>
+        <p><b>Fix:</b> update internal links and the XML sitemap to the /resources/ URLs, and confirm the redirects return a 301 (permanent) status.</p>
+        <div class="tag-row"><span class="pill p2">P2 · Medium</span><span class="pill eff">Effort: Low</span></div>
+      </div></div>
+    </section>
+
+    <!-- ══ GROWTH PLAN ═════════════════════════════════════════════════ -->
+    <section class="block" id="plan" data-nav="Growth recommendations">
+      <div class="label">ClusterMagic · Growth recommendations</div>
+      <h2>Link building first, then new content</h2>
+      <p class="lede">Based on where the articles rank today, we recommend:</p>
+
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Link building</h3></div>
+        <ul class="body">
+          <li>Powerful backlinks to specific pages to move rankings up surgically, starting with the keywords within striking distance of page 1 (positions 11 to 20) with a keyword difficulty under 50 (table below)</li>
+          <li>Then the 160 keywords at positions 4 to 10, to move them into the top 3</li>
+        </ul>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Page-2 keyword</th><th class="num">Position</th><th class="num">Searches/mo</th><th class="num">KD</th><th>Page to build links to</th></tr></thead>
+            <tbody>
+              <tr><td class="strong">what does flat rate mean</td><td class="num">12</td><td class="num">880</td><td class="num">30</td><td class="url">/resources/flat-rate-vs-hourly-pricing</td></tr>
+              <tr><td class="strong">field service automation</td><td class="num">12</td><td class="num">720</td><td class="num">14</td><td class="url">/resources/field-service-automation-streamlining-operations</td></tr>
+              <tr><td class="strong">idf network</td><td class="num">13</td><td class="num">720</td><td class="num">17</td><td class="url">/resources/mdf-to-idf-cabling-best-practices-onsite</td></tr>
+              <tr><td class="strong">idf in networking</td><td class="num">11</td><td class="num">480</td><td class="num">11</td><td class="url">/resources/mdf-to-idf-cabling-best-practices-onsite</td></tr>
+              <tr><td class="strong">idf network meaning</td><td class="num">15</td><td class="num">480</td><td class="num">21</td><td class="url">/resources/mdf-to-idf-cabling-best-practices-onsite</td></tr>
+              <tr><td class="strong">it service delivery</td><td class="num">18</td><td class="num">480</td><td class="num">19</td><td class="url">/resources/it-service-delivery-ensuring-quality-and-efficiency</td></tr>
+              <tr><td class="strong">mdf in networking</td><td class="num">11</td><td class="num">320</td><td class="num">16</td><td class="url">/resources/mdf-to-idf-cabling-best-practices-onsite</td></tr>
+              <tr><td class="strong">consulting contracts</td><td class="num">18</td><td class="num">260</td><td class="num">23</td><td class="url">/resources/contract-vs-consultant-choosing-the-right-engagement-model</td></tr>
+              <tr><td class="strong">intermediate distribution frame idf</td><td class="num">19</td><td class="num">260</td><td class="num">5</td><td class="url">/resources/mdf-to-idf-cabling-best-practices-onsite</td></tr>
+              <tr><td class="strong">wrench time</td><td class="num">12</td><td class="num">210</td><td class="num">16</td><td class="url">/resources/increasing-wrench-time-the-key-to-technician-potential</td></tr>
+              <tr><td class="strong">benefits of outsourcing it</td><td class="num">16</td><td class="num">210</td><td class="num">23</td><td class="url">/resources/benefits-of-it-outsourcing-advantages-for-businesses</td></tr>
+              <tr><td class="strong">1099 misc vs 1099 k</td><td class="num">16</td><td class="num">170</td><td class="num">15</td><td class="url">/resources/1099-k-vs-1099-nec-what-you-need-to-know</td></tr>
+              <tr><td class="strong">reduce labor costs</td><td class="num">16</td><td class="num">170</td><td class="num">15</td><td class="url">/resources/strategies-to-reduce-labor-costs-responsibly</td></tr>
+              <tr><td class="strong">pros of outsourcing it</td><td class="num">16</td><td class="num">170</td><td class="num">24</td><td class="url">/resources/benefits-of-it-outsourcing-advantages-for-businesses</td></tr>
+              <tr><td class="strong">contract consulting</td><td class="num">14</td><td class="num">140</td><td class="num">22</td><td class="url">/resources/contract-vs-consultant-choosing-the-right-engagement-model</td></tr>
+              <tr><td class="strong">form 1099 k vs 1099 misc</td><td class="num">14</td><td class="num">140</td><td class="num">26</td><td class="url">/resources/1099-k-vs-1099-nec-what-you-need-to-know</td></tr>
+              <tr><td class="strong">data infrastructure services</td><td class="num">16</td><td class="num">140</td><td class="num">20</td><td class="url">/resources/data-center-support-services-critical-solutions-for-data-infrastructure</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">The 17 biggest by search volume of the articles' 69 page-2 keywords (positions 11 to 20, 9,170 searches/mo in total, across 20 articles); the last three tie at 140/mo. 68 of the 69 have a Semrush keyword difficulty (KD) under 50, the highest being 44; Semrush has no KD for the other one ("project delivery software engineering firms profit margins", 50/mo). Five of the 17 are on MDF to IDF Cabling, which already holds 40 page-1 keywords. Links point to the live /resources/ URL; the old /learn/ URLs redirect there. Semrush, US, Oct 13, 2026, organic positions, each keyword counted once per article at its best position. Search volume is shown instead of clicks because the Search Console data in GA4 isn't usable yet (see <a href="#tracking">Measurement issue 03</a>).</p>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Ongoing SEO + link building</h3></div>
+        <ul class="body">
+          <li>New ClusterMagic content: more branded, researched posts in the clusters with the most rankings, IT outsourcing and staff augmentation first (85 page-1 keywords from 26 articles), then technicians and cabling (57)</li>
+          <li>Refresh the 40 ranking articles, and review the 61 with no Semrush top-100 rankings: rework them, or merge them into related articles that do</li>
+          <li>Powerful backlinks to specific pages to keep moving rankings up surgically</li>
+        </ul>
+      </div>
+
+      <div class="callout info"><strong>Before both: fix measurement.</strong> Confirm which events your team counts as conversions and update key events to match; check provider_signup against your own sign-up records; fix "(not set)" landing pages; and link GA4 to the fieldnation.com domain property in Search Console so the next report can show clicks.</div>
+    </section>
+
+    <!-- ══ CTA ═════════════════════════════════════════════════════════ -->
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>Pick up where the articles left off</h2>
+      <p>The 101 articles still hold more than a quarter of fieldnation.com's page-1 rankings (198 of 682). Let's book a working session to agree on the measurement fixes and pick the first articles to refresh.</p>
+      <a class="btn" href="mailto:sales@embertribe.com">Book a working session</a>
+    </section>
+
+    <!-- ══ SOURCES ═════════════════════════════════════════════════════ -->
+    <section class="block" id="sources" data-nav="Sources &amp; method">
+      <div class="label">Sources &amp; method</div>
+      <h2>Where the numbers come from</h2>
+      <ul class="body sources">
+        <li><b>Articles:</b> EmberTribe ClusterMagic tracker, 101 Field Nation articles delivered Apr 24 to Jul 5, 2024. All 101 load today at fieldnation.com/resources/ (the original /learn/ URLs redirect there).</li>
+        <li><b>Rankings and AI Overviews:</b> Semrush Organic Research positions for fieldnation.com, US database, Oct 13, 2026. Organic results only. Each keyword is counted once per article.</li>
+        <li><b>#1 keywords:</b> Semrush positions export filtered to position 1, fieldnation.com, US, Oct 13, 2026 (71 keywords).</li>
+        <li><b>Page-2 keywords:</b> Semrush positions export filtered to positions 11 to 20, fieldnation.com, US, Oct 13, 2026 (442 keywords).</li>
+        <li><b>Domain trend:</b> Semrush Organic Keywords Trend snapshots (US desktop, Apr 2024 to Oct 2026) and Domain Overview traffic estimates (Oct 15, 2024 to Oct 13, 2026; the first and last months are partial).</li>
+        <li><b>Traffic:</b> GA4, organic only. Page views: Pages and screens with Session source / medium contains "organic". Sessions and article conversions: Landing page with session channel = Organic Search. Users: User acquisition, first user channel = Organic Search. Last 6 months = Apr 13 to Oct 13, 2026 vs Oct 11, 2025 to Apr 12, 2026; "since April 2024" = Apr 1, 2024 to Oct 13, 2026. GA4 numbers were read in GA4 on Oct 14, 2026, except the all-key-event attribution totals, which come from report screenshots taken the same day. Measurement issue 01 also uses the Traffic acquisition, User acquisition, Pages and screens, and Landing page CSV exports you sent.</li>
+        <li><b>Conversions:</b> GA4 Key event attribution models (organic search, Apr 13 to Oct 13, 2026 vs Oct 11, 2025 to Apr 12, 2026) and Landing page reports, using provider_signup, buyer_signup, sales_inquiry_form, and chilipiper_booked as a working conversion definition (not yet confirmed by your team).</li>
+        <li><b>Not available:</b> Search Console clicks and impressions (see Measurement issue 03).</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<script>
+  // ── Sidebar nav from sections with data-nav
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav'); toc.appendChild(a); });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+
+  const fmt = n => n.toLocaleString('en-US');
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (tag, attrs, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+  function tipFor(box) { const t = document.createElement('div'); t.className = 'tip'; box.appendChild(t); return t; }
+  function showTip(tip, box, html, x, y) {
+    tip.innerHTML = html; tip.style.opacity = 1;
+    const bw = box.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
+    if (y - th - 10 >= 0) { // room above the cursor
+      tip.style.left = Math.max(0, Math.min(bw - tw, x - tw / 2)) + 'px'; tip.style.top = (y - th - 10) + 'px';
+    } else { // keep it inside the chart: sit beside the cursor instead
+      tip.style.left = (x + 16 + tw <= bw ? x + 16 : Math.max(0, x - tw - 16)) + 'px';
+      tip.style.top = Math.max(0, Math.min(box.clientHeight - th, y - th / 2)) + 'px';
+    }
+  }
+
+  // ── Chart 1: organic ranked keywords per month (positions 1-100, SERP features excluded), Apr 2024 to Oct 2026; hover card shows every bucket
+  (function () {
+    // month: [top 3, 4-10, 11-20, 21-50, 51-100, SERP features, total] from Semrush Organic Keywords Trend (US desktop)
+    const snaps = {
+      '2024-04': [89, 136, 217, 637, 1261, 117, 2457], '2024-05': [87, 174, 228, 663, 1422, 156, 2730], '2024-06': [98, 157, 215, 669, 1543, 168, 2850],
+      '2024-07': [93, 167, 201, 696, 1605, 190, 2952], '2024-08': [98, 190, 245, 817, 1597, 325, 3272], '2024-09': [118, 295, 347, 942, 1718, 580, 4000],
+      '2024-10': [117, 252, 268, 1022, 1984, 558, 4201], '2024-11': [127, 231, 288, 951, 1878, 445, 3920], '2024-12': [131, 260, 281, 1018, 1874, 482, 4046],
+      '2025-01': [135, 267, 362, 1156, 1722, 1643, 5285], '2025-02': [116, 235, 331, 1100, 1615, 1982, 5379], '2025-03': [121, 224, 313, 1005, 1551, 869, 4083],
+      '2025-04': [122, 224, 330, 1021, 1519, 1054, 4270], '2025-05': [124, 216, 282, 792, 1394, 1893, 4701], '2025-06': [120, 229, 294, 801, 1285, 1360, 4089],
+      '2025-07': [113, 245, 283, 822, 1327, 1753, 4543], '2025-08': [119, 259, 301, 960, 1257, 604, 3500], '2025-09': [127, 279, 319, 1034, 1389, 810, 3958],
+      '2025-10': [128, 280, 318, 1025, 1355, 872, 3978], '2025-11': [122, 301, 331, 1000, 1307, 923, 3984], '2025-12': [140, 354, 448, 1075, 1404, 843, 4264],
+      '2026-01': [159, 483, 570, 1376, 1935, 1191, 5714], '2026-02': [162, 532, 615, 1473, 2021, 2178, 6981], '2026-03': [170, 520, 574, 1323, 1591, 1623, 5801],
+      '2026-04': [171, 513, 491, 1315, 1477, 418, 4385], '2026-05': [169, 490, 425, 1322, 1358, 424, 4188], '2026-06': [184, 446, 417, 1121, 1083, 398, 3649],
+      '2026-07': [188, 459, 488, 1193, 972, 426, 3726], '2026-08': [184, 475, 502, 1200, 891, 353, 3605], '2026-09': [187, 512, 483, 1173, 964, 295, 3614],
+      '2026-10': [181, 501, 442, 1173, 917, 261, 3475] };
+    const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const months = []; for (let y = 2024, m = 4; y < 2026 || (y === 2026 && m <= 10); m === 12 ? (y++, m = 1) : m++) months.push(`${y}-${String(m).padStart(2, '0')}`);
+    const lab = k => mon[+k.slice(5) - 1] + ' ' + k.slice(0, 4);
+    const box = document.getElementById('chart-snapshots'), W = 860, H = 300, L = 46, R = 8, T = 22, B = 34;
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Monthly column chart of organic ranked keywords for fieldnation.com: 2,340 in April 2024, 3,420 in September 2024, 4,803 in February 2026, and 3,214 in October 2026' });
+    const max = 5000, iw = W - L - R, ih = H - T - B, step = iw / months.length, bw = Math.max(8, step * 0.62);
+    [0, 1000, 2000, 3000, 4000, 5000].forEach(v => { const y = T + ih - v / max * ih;
+      svg.appendChild(el('line', { x1: L, x2: W - R, y1: y, y2: y, class: v ? 'grid' : 'base' }));
+      svg.appendChild(el('text', { x: L - 8, y: y + 4, 'text-anchor': 'end', class: 'axis' }, fmt(v))); });
+    // publishing window: Apr to Jul 2024 (first 4 slots)
+    svg.appendChild(el('rect', { x: L + 1, y: T, width: step * 4 - 2, height: ih, rx: 6, class: 'band' }));
+    svg.appendChild(el('text', { x: L + step * 2, y: T + 14, 'text-anchor': 'middle', class: 'bandlab' }, 'PUBLISHING'));
+    svg.appendChild(el('text', { x: L + step * 2, y: T + 27, 'text-anchor': 'middle', class: 'bandlab' }, 'APR–JUL 2024'));
+    const tip = tipFor(box), labelled = ['2024-04', '2024-09', '2026-02', '2026-10'];
+    tip.classList.add('mcard');
+    const rowsDef = [['Top 3', 'var(--client-accent)'], ['4–10', '#7fb8c9'], ['11–20', '#c3dde5'], ['21–50', 'var(--ink-300)'], ['51–100', 'var(--ink-200)'], ['SERP Features', '#f2d28f']];
+    const fullMon = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const card = k => { const d = snaps[k];
+      return `<div class="mh">${fullMon[+k.slice(5) - 1]} ${k.slice(0, 4)}${k <= '2024-07' ? ' · <b>publishing</b>' : ''}</div>`
+        + rowsDef.map(([name, c], j) => `<div class="mr"><i style="background:${c}"></i><span>${name}</span><b>${fmt(d[j])}</b></div>`).join('')
+        + `<div class="mt"><span>Organic total (excl. SERP features)</span><b>${fmt(d[6] - d[5])}</b></div>`; };
+    months.forEach((k, i) => {
+      const cx = L + i * step + step / 2;
+      if (k.endsWith('-01') || k === '2024-04' || k.endsWith('-07')) svg.appendChild(el('text', { x: cx, y: H - 12, 'text-anchor': 'middle', class: 'axis' }, lab(k)));
+      const d = snaps[k];
+      // one solid column per month, height = the month's total ranked keywords (breakdown by position lives in the hover card)
+      const v = d[6] - d[5], x = cx - bw / 2, base = T + ih, y = base - v / max * ih, last = k === '2026-10', r = Math.min(4, bw / 2);
+      svg.appendChild(el('path', { d: `M${x},${base} V${y + r} Q${x},${y} ${x + r},${y} H${x + bw - r} Q${x + bw},${y} ${x + bw},${y + r} V${base} Z`, fill: last ? 'var(--client-accent)' : '#7fb8c9' }));
+      if (labelled.includes(k)) svg.appendChild(el('text', { x: cx, y: y - 6, 'text-anchor': last ? 'end' : 'middle', dx: last ? bw / 2 : 0, class: 'vlab' }, fmt(v)));
+      const hit = el('rect', { x: L + i * step, y: T, width: step, height: ih, class: 'hit' });
+      hit.addEventListener('mousemove', ev => { const rr = box.getBoundingClientRect();
+        showTip(tip, box, card(k), ev.clientX - rr.left, ev.clientY - rr.top); });
+      hit.addEventListener('mouseleave', () => tip.style.opacity = 0);
+      svg.appendChild(hit);
+    });
+    box.prepend(svg);
+
+  })();
+
+  // ── Chart 2: Semrush estimated monthly organic traffic (line, one series)
+  (function () {
+    const data = [['2024-10',28382],['2024-11',28812],['2024-12',28804],['2025-01',32219],['2025-02',31673],['2025-03',24744],['2025-04',23879],['2025-05',24865],['2025-06',19835],['2025-07',17685],['2025-08',17189],['2025-09',18062],['2025-10',18624],['2025-11',17051],['2025-12',18354],['2026-01',18928],['2026-02',18826],['2026-03',17221],['2026-04',16186],['2026-05',16080],['2026-06',14995],['2026-07',15870],['2026-08',17107],['2026-09',16469],['2026-10',10754]];
+    const mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const lab = k => mon[+k.slice(5) - 1] + ' ' + k.slice(0, 4);
+    const box = document.getElementById('chart-traffic'), W = 860, H = 250, L = 48, R = 14, T = 22, B = 30;
+    const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Line chart of estimated monthly organic traffic for fieldnation.com, peaking near 32,000 in January 2025 and falling to about 16,500 by September 2026' });
+    const max = 35000, iw = W - L - R, ih = H - T - B, sx = i => L + i * iw / (data.length - 1), sy = v => T + ih - v / max * ih;
+    [0, 10000, 20000, 30000].forEach(v => { svg.appendChild(el('line', { x1: L, x2: W - R, y1: sy(v), y2: sy(v), class: v ? 'grid' : 'base' }));
+      svg.appendChild(el('text', { x: L - 8, y: sy(v) + 4, 'text-anchor': 'end', class: 'axis' }, v ? (v / 1000) + 'K' : '0')); });
+    data.forEach(([k], i) => { if (k.endsWith('-01') || k.endsWith('-07') || i === 0) svg.appendChild(el('text', { x: sx(i), y: H - 8, 'text-anchor': 'middle', class: 'axis' }, lab(k))); });
+    const solid = data.slice(0, -1).map(([, v], i) => `${i ? 'L' : 'M'}${sx(i)},${sy(v)}`).join(' ');
+    svg.appendChild(el('path', { d: solid, fill: 'none', stroke: 'var(--client-accent)', 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+    const n = data.length - 1;
+    svg.appendChild(el('path', { d: `M${sx(n - 1)},${sy(data[n - 1][1])} L${sx(n)},${sy(data[n][1])}`, fill: 'none', stroke: 'var(--client-accent)', 'stroke-width': 2, 'stroke-dasharray': '4 4' }));
+    [[3, 'Peak 32.2K', 0, -10, 'middle'], [n - 1, 'Sep 16.5K', 0, -12, 'middle'], [n, 'Oct 10.8K (partial)', -10, 18, 'end']].forEach(([i, t, dx, dy, anchor]) => {
+      svg.appendChild(el('circle', { cx: sx(i), cy: sy(data[i][1]), r: 4, fill: 'var(--client-accent)', stroke: '#fff', 'stroke-width': 2 }));
+      svg.appendChild(el('text', { x: sx(i) + dx, y: sy(data[i][1]) + dy, 'text-anchor': anchor, class: 'vlab' }, t)); });
+    const tip = tipFor(box), cross = el('line', { y1: T, y2: T + ih, stroke: 'var(--ink-300)', 'stroke-width': 1, opacity: 0 });
+    svg.appendChild(cross);
+    const hit = el('rect', { x: L, y: T, width: iw, height: ih, class: 'hit' });
+    hit.addEventListener('mousemove', ev => {
+      const r = box.getBoundingClientRect(), px = (ev.clientX - r.left) * W / r.width, i = Math.max(0, Math.min(n, Math.round((px - L) / (iw / n))));
+      cross.setAttribute('x1', sx(i)); cross.setAttribute('x2', sx(i)); cross.setAttribute('opacity', 1);
+      showTip(tip, box, `<b>${lab(data[i][0])}</b><br>~${fmt(data[i][1])} visits/mo${i === n ? '<br>Oct 1 to 13 only' : i === 0 ? '<br>Oct 15 to 31 only' : ''}`, sx(i) * r.width / W, sy(data[i][1]) * r.height / H);
+    });
+    hit.addEventListener('mouseleave', () => { tip.style.opacity = 0; cross.setAttribute('opacity', 0); });
+    svg.appendChild(hit);
+    box.prepend(svg);
+  })();
+
+  // ── Top articles table
+  (function () {
+    const rows = [
+      ['MDF to IDF Cabling: Best Practices Onsite', 'mdf room', 7, 1000, 40, 2, 86, 4, 331],
+      ['Outsourced IT Support: Benefits and Considerations', 'outsourced it support', 4, 4400, 29, 6, 59, 10, 15],
+      ['1099-K vs. 1099-NEC: What You Need to Know', '1099 k vs 1099 nec', 4, 480, 20, 0, 37, 9, 124],
+      ['Contract vs Consultant: Choosing the Right Engagement Model', 'consultant vs contractor', 7, 390, 18, 1, 24, 0, 105],
+      ['Staff Augmentation vs Outsourcing: Determining the Best Fit', 'staff augmentation vs outsourcing', 1, 1300, 17, 14, 19, 5, 58],
+      ['Comprehensive IT Infrastructure Assessments: A Roadmap', 'it infrastructure assessment', 3, 320, 8, 3, 12, 1, 60],
+      ['Flat Rate vs. Hourly Pricing', "what's flat rate", 8, 210, 8, 1, 9, 0, 63],
+      ['In-House vs Outsource: Finding the Ideal Balance', 'in house vs outsourcing', 5, 210, 6, 0, 14, 1, 59],
+      ['Craft a Winning Business Plan for Your MSP Company', 'managed service provider business plan', 6, 320, 5, 0, 7, 0, 12],
+      ['Strategies to Reduce Labor Costs Responsibly', 'labor cost optimization', 7, 70, 5, 0, 32, 0, 28],
+      ['Elevating IT Field Technician Skills for Peak Performance', 'it field technician', 6, 390, 4, 0, 8, 1, 34],
+      ['Minimizing Windshield Time for Maximum Productivity', 'windshield time', 3, 210, 3, 3, 3, 3, 29]];
+    const tb = document.querySelector('#top-table tbody');
+    rows.forEach(([t, kw, pos, vol, p1, t3, all, ai, v]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td><span class="strong">${t}</span><span class="kw">"${kw}" · #${pos} · ${fmt(vol)}/mo</span></td><td class="num strong">${p1}</td><td class="num">${t3}</td><td class="num">${all}</td><td class="num">${ai}</td><td class="num">${fmt(v)}</td>`;
+      tb.appendChild(tr);
+    });
+  })();
+</script>
+</body>
+</html>
