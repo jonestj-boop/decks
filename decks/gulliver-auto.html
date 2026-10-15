@@ -1,0 +1,596 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gulliver Auto Group · Map Pack + AI Visibility · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#006A46; --client-accent-soft:#e6f2ed;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#2F5D7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  /* ── DECK-SPECIFIC ─────────────────────────────────────────────────── */
+  ul.body { list-style:none; margin:8px 0 0; }
+  ul.body li { font-size:15px; line-height:1.6; padding-left:24px; position:relative; color:var(--ink-700); margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .slide.dark ul.body li { color:rgba(255,255,255,0.82); }
+  .price { font-weight:700; font-variant-numeric:tabular-nums; }
+  td.price { text-align:right; font-size:16px; }
+  .grid-legend { display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .grid-legend span { display:inline-flex; align-items:center; gap:6px; }
+  .grid-legend i { width:12px; height:12px; border-radius:50%; display:inline-block; }
+  .srcnote { font-size:11.5px; color:var(--ink-500); margin-top:10px; }
+  .prompt { background:var(--subtle); border:1px solid var(--border); border-radius:10px; padding:10px 14px; font-size:14px; margin-bottom:8px; }
+  .prompt b { color:var(--client-accent); font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; display:block; margin-bottom:3px; }
+  @media (max-width:820px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:42px; } h2 { font-size:26px; }
+    .two-col, .three-col { grid-template-columns:1fr !important; }
+    .slide.cover::after, .slide.divider::after { font-size:360px; bottom:-80px; }
+    .cover .meta { flex-wrap:wrap; gap:18px; }
+    .dots { display:none; }
+    table { font-size:12.5px; }
+  }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Sample dealer plan · Prepared by EmberTribe for Overfuel</div>
+    <h1>Gulliver Auto Group</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">Own the Plano map pack with a ranking guarantee, then get named when buyers ask AI where to shop for a used car.</p>
+    <div class="meta">
+      <div>Dealer<b>Gulliver Auto Group, Plano TX</b></div>
+      <div>Date<b>October 2026</b></div>
+      <div>Scope<b>Map pack guarantee + brand mentions</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · WHERE GULLIVER STARTS ═════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">Where Gulliver starts</div>
+    <h2>The website is already doing its job. The gap is off the site.</h2>
+    <p class="subtitle">Gulliver's Overfuel site has the pieces Google wants on-page: fast inventory pages, dealer schema with ratings, 25 city pages and a working blog. What it can't do on its own is win the map pack or get the dealer named on the sites AI assistants read.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v accent">4.4★</div><div class="k">Average rating across 1,049 reviews</div></div>
+      <div class="stat"><div class="v accent">458</div><div class="k">Vehicle pages in the inventory sitemap today</div></div>
+      <div class="stat"><div class="v accent">25</div><div class="k">"Used car dealer near" city pages, Allen to Wylie</div></div>
+      <div class="stat"><div class="v accent">35</div><div class="k">Blog posts: model guides and trim explainers</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What's working:</strong> a real review base, a Japanese-brand specialty (Toyota, Lexus, Honda, Acura, Nissan, Mazda, Subaru), Spanish and Japanese-speaking staff, and a "we buy cars" offer. These are the proof points buyers and AI both look for.</div>
+      <div class="callout warn"><strong>What's missing:</strong> an outside push on the map pack across the Plano radius, and third-party pages that name Gulliver as a top used-car dealer. The site can't earn either of those by itself.</div>
+    </div>
+    <p class="srcnote">Source: gulliverauto.com homepage schema and sitemaps, pulled Oct 15, 2026.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · TWO PLACES BUYERS DECIDE ══════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">How buyers pick a dealer now</div>
+    <h2>Two places decide who gets the visit.</h2>
+    <p class="subtitle">A used-car shopper usually lands on a dealer from one of two screens. We work both, because the signals that win one also help the other.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="pillar">
+        <div class="pn">Screen 01 · Google Maps</div>
+        <h4>The map pack</h4>
+        <p>The three dealers Google shows for "used car dealer near me" or "used Toyota Plano." Those three take most of the calls, direction requests and walk-ins. Rank 4 and below barely gets seen.</p>
+      </div>
+      <div class="pillar">
+        <div class="pn">Screen 02 · AI assistants</div>
+        <h4>The AI answer</h4>
+        <p>ChatGPT, Google AI Mode and Perplexity answer "best used car dealer in Plano" with a short list. They build that list from review sites, local roundups and "best of" articles, so the dealers named there get named in the answer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · DIVIDER — MAP PACK ════════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="04">
+  <div style="text-align:left">
+    <div class="label">Part one</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">Guaranteed map pack.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Top three in Google Maps for an agreed keyword set, inside a set radius, within 90 days.</p>
+  </div>
+</section>
+
+<!-- ══ 5 · THE GUARANTEE ═════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">The guarantee</div>
+    <h2>Top 3 for 10 to 15 keywords, 5 miles out, inside 90 days.</h2>
+    <p class="subtitle">The radius is measured from the rooftop at 3333 W Plano Pkwy. Five miles covers most of Plano plus the edges of Carrollton, Richardson, Addison and south Frisco, which is where most of Gulliver's walk-in buyers live.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1.1fr">
+      <div>
+        <h3>What's covered</h3>
+        <ul class="body">
+          <li>10 to 15 keywords agreed with the dealer before we start</li>
+          <li>Top 3 position in the Google Maps pack across the 5-mile radius</li>
+          <li>Rank checked from a grid of points across the radius, not one spot</li>
+          <li>A before scan on day one and the same scan every month</li>
+        </ul>
+        <h3 style="margin-top:18px">What's not</h3>
+        <ul class="body">
+          <li>Organic (blue link) rankings</li>
+          <li>Rankings outside the agreed radius</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout info"><strong>Why 5 miles to start:</strong> it's the tightest ring around the lot, and it's where a guarantee is fastest to deliver. Dealers who want to pull buyers from McKinney, Frisco or Dallas can go to a 10-mile radius once the 5-mile ring is locked in.</div>
+        <div class="callout"><strong>One rooftop, one guarantee.</strong> Each dealer location gets its own radius and keyword set. A group with three rooftops gets three guarantees.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · KEYWORD SET ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">Starting keyword set</div>
+    <h2>Built from what Gulliver actually sells.</h2>
+    <p class="subtitle">A draft list from Gulliver's inventory mix, financing and trade-in offers. We'd finalize the 10 to 15 with the dealer after the baseline scan shows where they rank today.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Keyword</th><th>Why it's on the list</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">used car dealer plano</td><td>The core term. Every Plano used-car shopper starts here.</td><td><span class="pill p1">Core</span></td></tr>
+        <tr><td class="strong">used cars plano tx</td><td>Same intent, the most common phrasing</td><td><span class="pill p1">Core</span></td></tr>
+        <tr><td class="strong">used car dealership near me</td><td>Map-only query, highest walk-in intent</td><td><span class="pill p1">Core</span></td></tr>
+        <tr><td class="strong">used toyota plano</td><td>Toyota leads the inventory and the site's own headline</td><td><span class="pill p2">Make</span></td></tr>
+        <tr><td class="strong">used lexus plano</td><td>Higher ticket, strong in stock</td><td><span class="pill p2">Make</span></td></tr>
+        <tr><td class="strong">used honda dealer plano</td><td>Civic, Accord and CR-V all have their own blog posts already</td><td><span class="pill p2">Make</span></td></tr>
+        <tr><td class="strong">used suv plano</td><td>RAV4, CR-V, CX-5, QX60, RX: the bulk of the lot</td><td><span class="pill p2">Body</span></td></tr>
+        <tr><td class="strong">used cars under 25k plano</td><td>Matches an existing inventory page</td><td><span class="pill p2">Price</span></td></tr>
+        <tr><td class="strong">sell my car plano</td><td>"We buy cars even if you don't buy from us" is a lead source in its own right</td><td><span class="pill p3">Acquisition</span></td></tr>
+        <tr><td class="strong">used car financing plano</td><td>"All credit types" pre-approval offer</td><td><span class="pill p3">Finance</span></td></tr>
+      </tbody>
+    </table>
+    <p class="srcnote">Plus room for 3 to 5 more, such as "japanese car dealer plano," "used hybrid plano" or "pre-owned cars plano," depending on the scan.</p>
+  </div>
+</section>
+
+<!-- ══ 7 · THE REPORT (geo-grid) ═════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">What the dealer sees every month</div>
+    <h2>A rank check from every corner of the radius.</h2>
+    <p class="subtitle">Each dot is a search run from that spot on the map. The dealer sees the same grid on day one and every month after, so the change is plain to see and nobody has to take our word for it.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1fr">
+      <div class="chart-wrap">
+        <div class="fine" style="margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Day 1 · "used car dealer plano" · illustrative</div>
+        <svg viewBox="0 0 300 300" width="100%" style="display:block;max-width:340px;margin:0 auto" id="grid-before"></svg>
+      </div>
+      <div class="chart-wrap">
+        <div class="fine" style="margin-bottom:8px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Day 90 · same keyword · illustrative</div>
+        <svg viewBox="0 0 300 300" width="100%" style="display:block;max-width:340px;margin:0 auto" id="grid-after"></svg>
+      </div>
+    </div>
+    <div class="grid-legend"><span><i style="background:var(--good)"></i>Top 3</span><span><i style="background:var(--et-honey)"></i>4 to 10</span><span><i style="background:var(--et-red)"></i>11+ or not found</span><span><i style="background:#000"></i>Gulliver Auto Group</span></div>
+    <p class="srcnote">Illustrative layout only. We haven't scanned Gulliver yet; the real day-one grid comes from the baseline scan at kickoff.</p>
+  </div>
+</section>
+
+<!-- ══ 8 · MONTHLY WORK ══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">How we get there</div>
+    <h2>A ranking engine, plus the work that makes rankings stick.</h2>
+    <p class="subtitle">Plenty of tools can push a map listing up for a while. Rankings hold when Google also sees a busy profile and a dealer other sites talk about. We run all three.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Layer 01</div><h4>Map ranking engine</h4><p>Proximity and relevance signals worked across the full grid, aimed at the agreed keyword set. This is what carries the guarantee.</p></div>
+      <div class="pillar"><div class="pn">Layer 02</div><h4>Profile that looks alive</h4><p>Business profile tuned to the keyword set: categories, services, products, Q&amp;A. Weekly posts and photos of new arrivals, plus listings matched across the major directories.</p></div>
+      <div class="pillar"><div class="pn">Layer 03</div><h4>Brand mentions</h4><p>Gulliver named on real, trafficked sites (part two). The same mentions that feed AI answers tell Google the dealer is a known local business.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · DIVIDER — AI VISIBILITY ═══════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="09">
+  <div style="text-align:left">
+    <div class="label">Part two</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">Brand mentions for AI.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">Get Gulliver named on the pages AI assistants read when someone asks where to buy a used car in Plano.</p>
+  </div>
+</section>
+
+<!-- ══ 10 · THE AI GAP ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">The AI gap</div>
+    <h2>1,049 reviews, and Gulliver still isn't on Plano's "top 3" list.</h2>
+    <p class="subtitle">Three Best Rated's "Top 3 Used Car Dealers in Plano" names Auto Web Expo, Autos of Dallas and DriveTime Plano. Gulliver isn't on the page. Roundups like this one are a big part of what AI assistants pull from when they build a shortlist.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <table>
+        <thead><tr><th>Source checked</th><th>Gulliver named?</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Three Best Rated</strong><div class="sub-td">Top 3 used car dealers in Plano</div></td><td class="down">No</td></tr>
+          <tr><td><strong>Auto Web Expo blog</strong><div class="sub-td">"Top used car dealerships in Plano" posts</div></td><td class="down">No (competitor-run)</td></tr>
+          <tr><td><strong>CarEdge</strong><div class="sub-td">Car dealers near Plano directory</div></td><td class="up">Yes, as a listing</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="callout warn"><strong>A competitor writes its own roundups.</strong> Auto Web Expo publishes "top used car dealerships in Plano" posts on its own blog. That's the content an AI model finds when it looks for a Plano shortlist.</div>
+        <div class="callout good"><strong>Gulliver has the facts to win a fair comparison:</strong> a 4.4 average across 1,000+ reviews, a deep Japanese-brand lot, multilingual staff and a cash offer for trade-ins. It just isn't written up anywhere AI looks.</div>
+      </div>
+    </div>
+    <p class="srcnote">Checked Oct 15, 2026. A full AI visibility scan (ChatGPT, Google AI Mode, Perplexity) runs at kickoff and becomes the baseline.</p>
+  </div>
+</section>
+
+<!-- ══ 11 · WHAT A BRAND MENTION IS ══════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">What a brand mention is</div>
+    <h2>Gulliver, named on a real site, for the question a buyer asks.</h2>
+    <p class="subtitle">Each mention is a placement on an established site that already gets traffic: a "best of" roundup, a buying guide or a review piece. Gulliver is named in context next to the facts that make it worth recommending.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div>
+        <h3>Every mention</h3>
+        <ul class="body">
+          <li>Lives on a DR 30 to 60 site with 1,000+ monthly visitors</li>
+          <li>Is a listicle, review or guide matched to a real buyer question</li>
+          <li>Names Gulliver with real facts: rating, specialty, location</li>
+          <li>Is reported with the live URL every month</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Questions we'd target first</h3>
+        <div class="prompt"><b>Local shortlist</b>Best used car dealers in Plano / North Dallas</div>
+        <div class="prompt"><b>Make specialist</b>Where to buy a used Toyota or Lexus in DFW</div>
+        <div class="prompt"><b>Trade-in</b>Best places to sell your car for cash in Plano</div>
+        <div class="prompt"><b>Language</b>Used car dealers in Dallas with Spanish or Japanese-speaking staff</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · 90 DAYS ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>What happens, and when.</h2>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th style="width:150px">When</th><th>Map pack</th><th>Brand mentions</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Weeks 1–2</td><td>Baseline geo-grid scan, keyword set agreed, profile audit and fixes</td><td>AI visibility baseline across ChatGPT, AI Mode and Perplexity; target questions locked</td></tr>
+        <tr><td class="strong">Weeks 3–4</td><td>Ranking engine live, directory listings matched, weekly posts start</td><td>First 2 mentions placed and live</td></tr>
+        <tr><td class="strong">Month 2</td><td>Grid movement across the radius, gaps targeted</td><td>2 more mentions; first re-check of AI answers</td></tr>
+        <tr><td class="strong">Month 3</td><td>Guarantee window: top 3 for the agreed keywords</td><td>2 more mentions (6 total); before-and-after AI report</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info mt"><strong>Reporting is unbranded.</strong> Monthly grid, keyword ranks and live mention URLs, delivered so Overfuel can put it in front of the dealer under its own name.</div>
+  </div>
+</section>
+
+<!-- ══ 13 · PARTNER PRICING ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">Partner pricing · For Overfuel</div>
+    <h2>Per rooftop, per month. Overfuel sets the dealer price.</h2>
+    <p class="subtitle">White-label rates. We deliver, Overfuel owns the dealer relationship and the margin.</p>
+  </div>
+  <div class="fill">
+    <table style="max-width:960px">
+      <thead><tr><th>Service</th><th>What's included</th><th class="num">Monthly</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Guaranteed map pack · 5 mi</td><td>Top 3 for 10 to 15 keywords within 90 days, profile management, monthly geo-grid report</td><td class="price">$700</td></tr>
+        <tr><td class="strong">Brand mentions · 2 per month</td><td>Two placements on DR 30 to 60 sites with 1,000+ monthly traffic, live URLs reported</td><td class="price">$1,498</td></tr>
+        <tr><td class="strong" style="color:var(--et-red)">Both, as shown in this plan</td><td>Map pack guarantee plus AI visibility for one rooftop</td><td class="price" style="color:var(--et-red)">$2,198</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt" style="max-width:960px">
+      <div class="callout"><strong>Wider radius:</strong> 10-mile guarantees are quoted per market after the baseline scan, since a dense metro like DFW takes more work than a single suburb.</div>
+      <div class="callout info"><strong>Groups:</strong> each rooftop is its own guarantee. Add-ons like DR 30+ backlinks and local content are available per dealer.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="fill" style="align-items:flex-start">
+    <div class="label">Next steps</div>
+    <h2>Start with one dealer and let the grid do the talking.</h2>
+    <div class="cta-box">
+      <p style="color:var(--ink-500);font-size:17px;line-height:1.6">To kick off a pilot:</p>
+      <ul class="cta-bullets">
+        <li>Pick the first rooftop (Gulliver or another Overfuel dealer)</li>
+        <li>Manager access to its Google Business Profile</li>
+        <li>We run the baseline grid and AI scan in week one</li>
+        <li>Agree the keyword set, then the 90-day clock starts</li>
+      </ul>
+      <a class="btn" href="mailto:tj@embertribe.com?subject=Overfuel%20map%20pack%20pilot">Start the pilot →</a>
+    </div>
+    <p class="fine mt">Questions? tj@embertribe.com</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Map Pack + AI Visibility</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-gulliver-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button') || e.target.closest('.mtab')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  // month tabs inside the articles slide
+  document.querySelectorAll('.mtab').forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.stopPropagation();
+      const target = tab.getAttribute('data-mtarget');
+      const slide = tab.closest('.slide');
+      slide.querySelectorAll('.mtab').forEach(t => t.classList.toggle('is-active', t === tab));
+      slide.querySelectorAll('.month-block').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-month') === target));
+    });
+  });
+  // illustrative geo-grids (7x7 points across the 5-mile radius)
+  function drawGrid(id, ranks) {
+    const svg = document.getElementById(id), ns = 'http://www.w3.org/2000/svg';
+    const c = r => r <= 3 ? '#2FC171' : r <= 10 ? '#FFB000' : '#FF333C';
+    const ring = document.createElementNS(ns, 'circle');
+    ring.setAttribute('cx', 150); ring.setAttribute('cy', 150); ring.setAttribute('r', 140);
+    ring.setAttribute('fill', 'none'); ring.setAttribute('stroke', 'rgba(0,0,0,0.12)'); ring.setAttribute('stroke-dasharray', '4,4');
+    svg.appendChild(ring);
+    ranks.forEach((row, y) => row.forEach((r, x) => {
+      const cx = 30 + x * 40, cy = 30 + y * 40;
+      const g = document.createElementNS(ns, 'g');
+      const dot = document.createElementNS(ns, 'circle');
+      dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.setAttribute('r', 15); dot.setAttribute('fill', (x === 3 && y === 3) ? '#000' : c(r));
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('x', cx); t.setAttribute('y', cy + 4); t.setAttribute('text-anchor', 'middle');
+      t.setAttribute('font-size', '11'); t.setAttribute('font-weight', '700'); t.setAttribute('font-family', 'Quatro');
+      t.setAttribute('fill', (r > 3 && r <= 10 && !(x === 3 && y === 3)) ? '#000' : '#fff');
+      t.textContent = r > 20 ? '20+' : r;
+      g.appendChild(dot); g.appendChild(t); svg.appendChild(g);
+    }));
+  }
+  drawGrid('grid-before', [
+    [21,21,18,14,17,21,21],[21,16,11,8,10,15,21],[17,11,6,4,5,9,16],[13,8,4,2,4,7,12],[16,10,5,4,6,10,17],[21,14,9,7,9,13,21],[21,21,15,12,16,21,21]]);
+  drawGrid('grid-after', [
+    [6,4,3,2,3,4,7],[4,3,2,1,2,3,4],[3,2,1,1,1,2,3],[2,1,1,1,1,1,2],[3,2,1,1,1,2,3],[4,3,2,2,2,3,5],[7,4,3,3,3,5,8]]);
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-gulliver-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
