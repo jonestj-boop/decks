@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — SEO GROWTH ROADMAP · MACHINE TEMPLATE
+     Filled by scripts/roadmap/build_deck.py — never hand-edit tokens here.
+     Visual canon: embertribe-design (growth-roadmap-deck.html) — red cover +
+     divider with the "e" watermark, body slides black-on-white, Quatro,
+     headers Sentence case, labels ALL CAPS, honey accents, single client
+     accent color. Content-structure canon: the coastal-crate-pet-co dial-in
+     (14 slides, no CTA slide — the call is the CTA; case study never dropped).
+     Deploys one level under decks/ → ../fonts and ../images resolve.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertical Web · SEO Growth Roadmap · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#4568AD; --client-accent-soft:#ecf0f7;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#4568AD; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:34px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+  code { font-family:"SF Mono","Fira Code",monospace; background:var(--ink-50); padding:2px 6px; border-radius:4px; font-size:11.5px; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.cover .stat { background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.2); }
+  .slide.cover .stat .v, .slide.cover .stat .v.accent, .slide.cover .stat .v.good { color:var(--et-white); }
+  .slide.cover .stat .v.honey { color:var(--et-honey); }
+  .slide.cover .stat .k { color:rgba(255,255,255,0.8); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .good{color:var(--good);} .warn-t{color:#e0930a;} .bad{color:var(--bad);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS + CHIPS ─────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .chart-cap { font-size:12px; color:var(--ink-500); margin-bottom:8px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .chart-cap span { font-weight:400; text-transform:none; letter-spacing:0; }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLAR CARDS (engine slide) ───────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; flex:1; min-width:0; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .titles-note { font-size:12.5px; font-style:italic; color:var(--ink-600); background:var(--subtle);
+    border-left:3px solid var(--et-honey); padding:9px 13px; border-radius:0 8px 8px 0; margin:2px 0 10px; max-width:960px; line-height:1.5; }
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 12px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  .month-head { display:flex; gap:26px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-500); margin-bottom:8px; }
+  .month-head strong { color:var(--et-black); }
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+  .art-note { font-size:10.5px; color:var(--ink-500); font-style:italic; margin-top:2px; }
+
+  /* ── WHY-THIS-PLAN ─────────────────────────────────────────────────── */
+  .strategy-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+  .strategy-card { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; }
+  .strategy-card h4 { font-size:13.5px; margin-bottom:5px; }
+  .strategy-card p { font-size:12px; color:var(--ink-500); line-height:1.55; }
+  .x-list { list-style:none; padding:0; margin:6px 0 0 0; font-size:12.5px; line-height:1.65; }
+  .x-list li { padding-left:20px; position:relative; margin-bottom:6px; }
+  .x-list li::before { content:"×"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .strategy-timeline { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0; }
+  .ts-step { background:var(--subtle); padding:10px 8px; border-radius:8px; text-align:center; border-top:3px solid var(--client-accent); }
+  .ts-step .ts-when { font-size:10px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .ts-step .ts-what { font-size:12px; font-weight:600; line-height:1.35; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:flex!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active">
+  <div>
+    <img class="client-logo" src="" alt="" onerror="this.style.display='none'" style="max-height:48px;max-width:210px;margin-bottom:28px;object-fit:contain;">
+    <div class="accent-rule"></div>
+    <div class="label">SEO Growth Roadmap · Prepared by EmberTribe</div>
+    <h1>Vertical Web</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">SEO growth roadmap: where Houston searches go today, and an 89-article plan to win more of them</p>
+    <div class="stats" style="margin-top:30px;max-width:1100px;">
+      <div class="stat"><div class="v good">1,268</div><div class="k">Current monthly organic visits (SEMrush, October 2026)</div></div>
+      <div class="stat"><div class="v honey">83,900</div><div class="k">Monthly Houston-area searches where a rival agency ranks and you don't</div></div>
+      <div class="stat"><div class="v ">~2,150</div><div class="k">Month 12 target, monthly visits (conservative)</div></div>
+      <div class="stat"><div class="v honey">4+ yrs</div><div class="k">EmberTribe content engine, zero penalties</div></div>
+    </div>
+    <div class="meta">
+      <div>Date<b>October 2026</b></div>
+      <div>Engine<b>ClusterMagic</b></div>
+      <div>Deliverables<b>This roadmap + keyword research workbook</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE OPPORTUNITY ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The opportunity</div>
+    <h2>Houston searchers are choosing agencies you compete with every week</h2>
+    <p class="subtitle">The 10 largest Houston-area searches where EWR Digital, Regex SEO or 71three rank on page one and verticalweb.com does not rank at all</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="red">Keyword</th><th class="red num">Monthly volume</th><th class="red">Top competitor</th><th class="red num">Their pos</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">houston seo</td><td class="num">2,400</td><td>Regex SEO</td><td class="num strong good">2</td></tr>
+          <tr><td class="strong">seo agency houston</td><td class="num">1,600</td><td>Regex SEO</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">website redesign houston</td><td class="num">1,600</td><td>71three</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">search engine optimization houston</td><td class="num">1,300</td><td>Regex SEO</td><td class="num strong good">2</td></tr>
+          <tr><td class="strong">houston seo firm</td><td class="num">1,000</td><td>Regex SEO</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">seo services texas</td><td class="num">1,000</td><td>EWR Digital</td><td class="num strong good">8</td></tr>
+          <tr><td class="strong">digital marketing houston</td><td class="num">880</td><td>EWR Digital</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">houston seo expert</td><td class="num">880</td><td>EWR Digital</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">katy seo company</td><td class="num">880</td><td>EWR Digital</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">local search engine optimization services katy</td><td class="num">880</td><td>EWR Digital</td><td class="num strong good">5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px;">If you ranked in the top 5 for these…</h3>
+      <div class="stats" style="flex-direction:column;gap:10px;">
+      <div class="stat"><div class="v accent">~1,860</div><div class="k">Estimated monthly clicks at position 5 (15% CTR) on these 10 searches</div></div>
+      <div class="stat"><div class="v accent">+147%</div><div class="k">Lift over your current monthly organic visits</div></div>
+      <div class="stat"><div class="v good">$19,500/mo</div><div class="k">SEMrush estimated value of those clicks at current Google Ads prices</div></div>
+      </div>
+      <div class="callout info mt">
+<strong>Why this list is Houston-only.</strong> The raw gap against your four rivals is 493,280 searches a month, mostly national terms like “seo agency” that Google answers with local results. Filtered to Houston buyers, 414 keywords and 83,900 searches remain. That is the number we stand behind.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · STRIKING DISTANCE ═════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Striking distance</div>
+    <h2>Your most valuable pages are one push from page one</h2>
+    <p class="subtitle">Keywords where your site already ranks 11 to 30, sorted by searches per position</p>
+  </div>
+  <table>
+    <thead><tr><th class="accent">Keyword</th><th class="accent num">Current position</th><th class="accent num">Volume</th><th class="accent num">Clicks/mo now</th><th class="accent num">Clicks/mo at pos 5</th><th class="accent num">Gap</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">houston seo company <span class="chip intent">Month 1 refresh</span></td><td class="num strong warn-t">16</td><td class="num">2,400</td><td class="num dim">18</td><td class="num strong">360</td><td class="num up">+342</td></tr>
+      <tr><td class="strong">seo company houston <span class="chip intent">same page</span></td><td class="num strong warn-t">17</td><td class="num">1,900</td><td class="num dim">13</td><td class="num strong">285</td><td class="num up">+272</td></tr>
+      <tr><td class="strong">seo company in houston <span class="chip intent">same page</span></td><td class="num strong warn-t">13</td><td class="num">1,300</td><td class="num dim">12</td><td class="num strong">195</td><td class="num up">+183</td></tr>
+      <tr><td class="strong">monthly seo services <span class="chip intent">pricing refresh</span></td><td class="num strong bad">24</td><td class="num">2,400</td><td class="num dim">12</td><td class="num strong">360</td><td class="num up">+348</td></tr>
+      <tr><td class="strong">fixed price seo packages <span class="chip intent">pricing refresh</span></td><td class="num strong warn-t">14</td><td class="num">1,300</td><td class="num dim">11</td><td class="num strong">195</td><td class="num up">+184</td></tr>
+      <tr><td class="strong">houston seo services <span class="chip intent">3rd page competing</span></td><td class="num strong bad">26</td><td class="num">1,600</td><td class="num dim">7</td><td class="num strong">240</td><td class="num up">+233</td></tr>
+      <tr><td class="strong">website design houston <span class="chip intent">homepage ranks</span></td><td class="num strong bad">26</td><td class="num">1,600</td><td class="num dim">7</td><td class="num strong">240</td><td class="num up">+233</td></tr>
+      <tr><td class="strong">web design houston <span class="chip intent">homepage ranks</span></td><td class="num strong bad">28</td><td class="num">1,600</td><td class="num dim">7</td><td class="num strong">240</td><td class="num up">+233</td></tr>
+      <tr><td class="strong">what is included in seo services <span class="chip intent">Month 2 refresh</span></td><td class="num strong bad">21</td><td class="num">880</td><td class="num dim">5</td><td class="num strong">132</td><td class="num up">+127</td></tr>
+      <tr><td class="strong">seo company the galleria tx <span class="chip intent">Galleria refresh</span></td><td class="num strong warn-t">12</td><td class="num">480</td><td class="num dim">5</td><td class="num strong">72</td><td class="num up">+67</td></tr>
+    </tbody>
+  </table>
+  <div class="two-col" style="margin-top:12px;">
+    <div class="callout good" style="margin:0;">
+<strong>Most of these are refreshes, not new articles.</strong> “houston seo company”, “seo company houston” and “seo company in houston” all sit on /houston-seo-company-expert. Rewriting that one page is Month 1, row 1. Writing a new article against it would split your own rankings.
+    </div>
+    <div class="callout info" style="margin:0;">
+<strong>Why connecting Search Console matters.</strong> These positions come from SEMrush, which samples. Your own Search Console data usually shows three to five times more keywords sitting in positions 11 to 30, including the long-tail Houston searches SEMrush misses.
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · WHERE YOU STAND ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Where you stand · SEMrush view</div>
+    <h2>Your traffic grew sevenfold this year. Your keyword count is shrinking.</h2>
+    <p class="subtitle">SEMrush estimates, verticalweb.com, United States</p>
+  </div>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="stats" style="flex-wrap:wrap;margin-bottom:12px;">
+        <div class="stat"><div class="v accent">26</div><div class="k">Authority Score</div></div>
+        <div class="stat"><div class="v accent">1,502</div><div class="k">Ranking keywords (down from 2,190 in August)</div></div>
+        <div class="stat"><div class="v accent">5,000</div><div class="k">Referring domains</div></div>
+        <div class="stat"><div class="v accent">38</div><div class="k">Pages driving traffic, of 988 in your sitemap</div></div>
+      </div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>Why connecting Search Console matters:</strong> everything on this slide is a SEMrush estimate. With read access to your Search Console and GA4 we can show real clicks, real form fills and which pages bring them, and re-run this plan against that data every month.
+</div>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Monthly organic visits, estimated <span>· SEMrush · Oct 2025 to Oct 2026</span></div>
+        <svg viewBox="0 -12 310 160" style="width:100%;display:block;" xmlns="http://www.w3.org/2000/svg">
+<line x1="38" y1="10" x2="300" y2="10" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="14" text-anchor="end" font-size="9" fill="#9aa0a6">1.5K</text>
+<line x1="38" y1="44" x2="300" y2="44" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="48" text-anchor="end" font-size="9" fill="#9aa0a6">1K</text>
+<line x1="38" y1="78" x2="300" y2="78" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="82" text-anchor="end" font-size="9" fill="#9aa0a6">500</text>
+<line x1="38" y1="112" x2="300" y2="112" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="116" text-anchor="end" font-size="9" fill="#9aa0a6">0</text>
+<polyline points="55,100 95,96 135,77 175,54 215,65 255,38 295,26" fill="none" stroke="var(--client-accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="55" cy="100" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="55" y="93" text-anchor="middle" font-size="8" fill="#6b6b6b">177</text>
+<text x="55" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Oct &#x27;25</text>
+<circle cx="95" cy="96" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="95" y="89" text-anchor="middle" font-size="8" fill="#6b6b6b">231</text>
+<text x="95" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Dec &#x27;25</text>
+<circle cx="135" cy="77" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="135" y="70" text-anchor="middle" font-size="8" fill="#6b6b6b">511</text>
+<text x="135" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Feb &#x27;26</text>
+<circle cx="175" cy="54" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="175" y="47" text-anchor="middle" font-size="8" fill="#6b6b6b">847</text>
+<text x="175" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Apr &#x27;26</text>
+<circle cx="215" cy="65" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="215" y="58" text-anchor="middle" font-size="8" fill="#6b6b6b">694</text>
+<text x="215" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jun &#x27;26</text>
+<circle cx="255" cy="38" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="255" y="31" text-anchor="middle" font-size="8" fill="#6b6b6b">1,092</text>
+<text x="255" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Aug &#x27;26</text>
+<circle cx="295" cy="26" r="5" fill="var(--client-accent)" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="295" y="19" text-anchor="middle" font-size="8" fill="#6b6b6b" font-weight="700">1,268</text>
+<text x="295" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Oct &#x27;26</text>
+<rect x="216" y="134" width="90" height="16" rx="8" fill="#e9f9f0"/><text x="261" y="145" text-anchor="middle" font-size="9" fill="#2FC171" font-weight="700">177 → 1,268</text>
+</svg>
+      </div>
+      <div class="callout " style="font-size:12.5px;">
+<strong>The new pages are working.</strong> Estimated visits went from 177 in October 2025 to 1,268 this month. Your ranking keywords peaked at 2,190 in August and have since dropped to 1,502, so the growth now rests on fewer keywords than it did two months ago.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4b · WHAT THE TRAFFIC DOES ONCE IT LANDS (optional; empty unless the
+     client's analytics record an intent event) ══════════════════════════ -->
+
+
+<!-- ══ 5 · AI SEARCH PRESENCE ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">AI search presence</div>
+    <h2>How often does AI recommend your brand?</h2>
+    <p class="subtitle">You sell AI SEO services. Here is what the AI engines say about you today.</p>
+  </div>
+  <div class="callout info" style="margin:0 0 16px;">
+<strong>Quick primer:</strong> SEMrush samples thousands of buyer-style questions in your category and runs them through ChatGPT, Google AI Overview, Google AI Mode, and Gemini. Then it counts how often your brand is <em>named</em> in the answer (mentions) and how often your pages are <em>cited as the source</em> (cited pages).
+  </div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div class="stat" style="padding:18px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+<svg viewBox="0 0 80 50" style="width:104px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg"><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--ink-100)" stroke-width="9" stroke-linecap="round"/><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--et-honey)" stroke-width="9" stroke-linecap="round" stroke-dasharray="14.1 100.5"/><text x="40" y="40" text-anchor="middle" font-size="20" font-weight="800" fill="var(--et-black)">14</text></svg>
+        <div>
+          <div class="k" style="margin-top:0;">AI Visibility Score</div>
+          <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.4;">A 0–100 index. The higher, the more often AI engines surface your brand in category answers.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--ink-100) 0%,var(--ink-100) 25%,#fff3d1 25%,#fff3d1 60%,#dcf5e6 60%,#dcf5e6 100%);">
+          <div style="position:absolute;left:14%;top:-3px;width:2px;height:14px;background:var(--et-black);"></div>
+          <div style="position:absolute;left:14%;top:-18px;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--et-black);white-space:nowrap;">You · 14</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-500);margin-top:6px;font-weight:600;">
+          <span>0 · Invisible</span>
+          <span style="margin-left:5%;">25 · Emerging</span>
+          <span>60 · Established</span>
+          <span>100 · Dominant</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Brand mentions</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">8</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Times “Vertical Web” was <strong>named in the answer text</strong> across all four AI engines in the last reporting window.</div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Pages cited as sources</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">13</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Unique URLs from verticalweb.com that AI engines linked to <strong>as the source</strong> behind their answer.</div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:8px;">Where you show up, by AI engine</h3>
+      <table style="font-size:13px;">
+        <thead><tr><th class="accent">Engine</th><th class="accent num">Mentions</th><th class="accent num">Cited pages</th><th class="accent num">% of mentions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Google AI Overview</strong><div class="sub-td">the AI box at the top of Google results</div></td><td class="num strong">4</td><td class="num">7</td><td class="num strong good">50%</td></tr>
+          <tr><td><strong>Google AI Mode</strong><div class="sub-td">Google&#x27;s full-page conversational search</div></td><td class="num strong">1</td><td class="num">2</td><td class="num strong warn-t">12.5%</td></tr>
+          <tr><td><strong>ChatGPT</strong><div class="sub-td">OpenAI&#x27;s assistant + search</div></td><td class="num strong">1</td><td class="num">4</td><td class="num strong warn-t">12.5%</td></tr>
+          <tr><td><strong>Gemini</strong><div class="sub-td">Google&#x27;s standalone AI assistant</div></td><td class="num strong">2</td><td class="num">2</td><td class="num strong warn-t">25%</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="font-size:12.5px;">
+<strong>Reading the table:</strong> when “Cited pages” is much higher than “Mentions”, the AI is <em>reading your site for context</em> but not <em>naming you in the answer</em>. ChatGPT does this with you now: it cites 4 of your pages and names you once.
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:8px;">What this means for Vertical Web</h3>
+      <div class="callout good" style="font-size:12.5px;">
+<strong>Google AI Overviews is where you already show up.</strong> Half of your 8 mentions come from it. It draws on Google's index, where your Kingwood pages already rank #1.
+</div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>A score of 14 sits in the Emerging band.</strong> Every engine names you fewer than 5 times. For a firm that sells AI SEO, prospects will check this themselves, so it is worth fixing first on your own site.
+</div>
+      <div class="callout " style="font-size:12.5px;">
+<strong>The plan's AI pillar does this in public.</strong> Nine articles cover AI Overviews, AEO and GEO, and tracking brand mentions. Each one doubles as a worked example your sales team can point to.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · TECH ROADBLOCKS ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Tech roadblocks</div>
+    <h2>Five fixes that clear the way for the content</h2>
+    <p class="subtitle">Each finding below was checked on the live site on October 23, 2026, not taken from a crawl report</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="accent">Priority</th><th class="accent">Issue</th><th class="accent num">Scope</th><th class="accent">Unlocks</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p1">P1</span></td><td><strong>Mobile pages take about 27 seconds to show their main content</strong><div class="sub-td">Homepage: 26.7 to 27.2 s in four runs, 4.9 MB page. /houston-seo-company-expert: 24.8 s.</div></td><td class="num strong">3 of 3 pages tested</td><td>Google's threshold is 2.5 s, and your main money page competes at #16 while this slow.</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Your pricing page copies the Houston SEO page's title and description</strong><div class="sub-td">/seo-pricing-plans and /houston-seo-company-expert serve one identical title and meta.</div></td><td class="num strong">2 money pages</td><td>Each page gets one job: the Houston SEO page for “houston seo company”, the pricing page for “seo pricing”.</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Google ranks your homepage, not your web design page, for “web design houston”</strong><div class="sub-td">Homepage sits at #26 to 28 for 3,200 searches a month; /web-design-houston does not rank for its own term.</div></td><td class="num strong">2 head terms</td><td>A homepage title that stops claiming web design lets the dedicated page take the term.</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Your free SEO audit tool page has a blank meta description</strong><div class="sub-td">It ranks #1 for “free seo auditing tools” with 117 words of copy.</div></td><td class="num strong">1 lead-magnet page</td><td>A written description and a fuller page improve the click-through on a #1 ranking you already own.</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>A misspelled duplicate of your podcast page is linked from your homepage</strong><div class="sub-td">The “nternet-” URL returns 200; your homepage links to it 4 times.</div></td><td class="num strong">1 duplicate URL</td><td>A 301 to the correct URL and fixed links consolidate the page.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="score-cards" style="margin-bottom:14px;">
+        <div class="score-card"><div class="sc-cap">Mobile</div><div class="sc-v bad">30</div><div class="sc-l">PageSpeed performance</div></div>
+        <div class="score-card"><div class="sc-cap">Desktop</div><div class="sc-v bad">37</div><div class="sc-l">PageSpeed performance</div></div>
+      </div>
+      <table style="font-size:12.5px;">
+        <thead><tr><th>Core Web Vital</th><th class="num">Mobile</th><th class="num">Desktop</th></tr></thead>
+        <tbody>
+          <tr><td>LCP <span class="sub-td">(target &lt; 2.5s)</span></td><td class="num strong bad">26.9 s</td><td class="num strong bad">4.6 s</td></tr>
+          <tr><td>TBT <span class="sub-td">(target &lt; 200ms)</span></td><td class="num strong bad">1,410 ms</td><td class="num strong bad">1,400 ms</td></tr>
+          <tr><td>CLS <span class="sub-td">(target &lt; 0.1)</span></td><td class="num strong good">0.076</td><td class="num strong good">0.093</td></tr>
+        </tbody>
+      </table>
+      
+      <div class="callout warn mt">
+<strong>About the counts:</strong> our crawl covered 100 of the roughly 988 URLs in your sitemap, so page counts describe what we checked, not the whole site. The speed numbers come from four separate PageSpeed runs on your homepage.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7 · THE COMPETITOR GAP ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The competitor gap</div>
+    <h2>You have the most links in the room and a fraction of the traffic</h2>
+    <p class="subtitle">verticalweb.com against three Houston agencies that rank where you don't (SEMrush, October 2026)</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th class="red">Vertical Web</th>
+            <th>EWR Digital</th>
+            <th>Regex SEO</th>
+            <th>71three</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="strong">Authority Score</td><td class="num strong" style="color:var(--et-red);">26</td><td class="num">38</td><td class="num">31</td><td class="num">25</td></tr>
+          <tr><td class="strong">Monthly organic visits</td><td class="num strong" style="color:var(--et-red);">1.3K</td><td class="num">15.4K</td><td class="num">3.8K</td><td class="num">1.7K</td></tr>
+          <tr><td class="strong">Ranking keywords</td><td class="num strong" style="color:var(--et-red);">1.5K</td><td class="num">7.6K</td><td class="num">882</td><td class="num">342</td></tr>
+          <tr><td class="strong">Referring domains</td><td class="num strong" style="color:var(--et-red);">5.0K</td><td class="num">4.4K</td><td class="num">3.2K</td><td class="num">408</td></tr>
+          <tr><td class="strong">Backlinks</td><td class="num strong" style="color:var(--et-red);">40K</td><td class="num">93.4K</td><td class="num">28.2K</td><td class="num">5.2K</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good mt">
+<strong>Your link foundation is already there.</strong> You have more referring domains than any of the three. EWR Digital gets 12 times your traffic from fewer of them, because its pages target the Houston and suburb searches buyers type.
+      </div>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Monthly organic visits <span>· SEMrush · Oct 2026</span></div>
+        <div class="bars" style="margin:0;">
+<div class="bar"><div class="bl">EWR Digital</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">15,400</div></div>
+<div class="bar"><div class="bl">Regex SEO</div><div class="bt"><div class="bf" style="width:24.7%"></div></div><div class="bv">3,800</div></div>
+<div class="bar"><div class="bl">71three</div><div class="bt"><div class="bf" style="width:11.0%"></div></div><div class="bv">1,700</div></div>
+<div class="bar"><div class="bl">Vertical Web</div><div class="bt"><div class="bf red" style="width:8.2%"></div></div><div class="bv">1,268</div></div>
+        </div>
+      </div>
+      <div class="chart-wrap" style="margin-top:14px;">
+        <div class="chart-cap">Referring domains <span>· SEMrush · Oct 2026</span></div>
+        <div class="bars" style="margin:0;">
+<div class="bar"><div class="bl">EWR Digital</div><div class="bt"><div class="bf" style="width:88.0%"></div></div><div class="bv">4,400</div></div>
+<div class="bar"><div class="bl">Regex SEO</div><div class="bt"><div class="bf" style="width:64.0%"></div></div><div class="bv">3,200</div></div>
+<div class="bar"><div class="bl">71three</div><div class="bt"><div class="bf" style="width:8.2%"></div></div><div class="bv">408</div></div>
+<div class="bar"><div class="bl">Vertical Web</div><div class="bt"><div class="bf red" style="width:100.0%"></div></div><div class="bv">5,000</div></div>
+        </div>
+      </div>
+      <div class="callout mt">
+<strong>Regex SEO and 71three rank for fewer keywords than you</strong> and still get more visits, because their keywords are the money terms: Regex SEO is #1 for “seo agency houston” and 71three is #1 for “website redesign houston”.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · DIVIDER — ClusterMagic ════════════════════════════════════════ -->
+<section class="slide divider">
+  <div style="text-align:left">
+    <div class="label">How we capture it</div>
+    <h1 style="font-size:104px;letter-spacing:-0.03em;margin-bottom:18px">ClusterMagic.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">An AI-powered content engine that builds entity-rich content architectures for compounding authority, the same engine behind 4+ years of zero-penalty growth across our portfolio.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · THE CLUSTERMAGIC ENGINE ═══════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The ClusterMagic engine</div>
+    <h2>Three pillars. Four years. Zero penalties.</h2>
+    <p class="subtitle">The pattern is consistent across every client we run this for. Each pillar reinforces the others, and that is why it compounds instead of plateauing like one-off content.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Pillar 01</div><h4>Entity-rich content</h4><p>Every article is built around the entities Google's index already understands. Structured data, internal linking, and topic clusters tell Google exactly what each page is about. This is what makes the content rank.</p></div>
+      <div class="pillar"><div class="pn">Pillar 02</div><h4>AI-powered execution</h4><p>25 to 100 articles per month at the quality bar of human-written. ClusterMagic codifies your brand voice, sources real citations, builds internal links to your existing pages, and ships to your CMS as drafts for review.</p></div>
+      <div class="pillar"><div class="pn">Pillar 03</div><h4>Compounds for years</h4><p>Random AI content gets caught by the next update. ClusterMagic content gets <em>better</em> with each Google update, because it is built on what Google rewards: real entities, real intent, real authority signals. 4+ years of growth. Zero penalties.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · CASE STUDY (ALWAYS INCLUDED — fixed proof, never dropped) ════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same engine, with 4+ years of zero-penalty results across our portfolio, is what we would run for you.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="../images/casestudy-500k.jpg" alt="SEMrush organic traffic chart: 8,500 to 500K+ monthly organic visits over 12 months">
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px;font-size:12.5px;">
+<strong>“Their site improves with each Google update.”</strong> This client's traffic <em>climbs</em> on update days, the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · CONTENT PLAN OVERVIEW ════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The 90-day content plan</div>
+    <h2>89 articles. 5 pillars. Built to capture the gap.</h2>
+    <p class="subtitle">89 articles over three months: 44 rewrites of pages you already own and 45 new pieces, each with one keyword and one job</p>
+  </div>
+  <div class="stats" style="margin-bottom:16px;">
+    <div class="stat"><div class="v bad">89</div><div class="k">Articles planned</div></div>
+    <div class="stat"><div class="v accent">143.2K</div><div class="k">Total monthly searches in scope</div></div>
+    <div class="stat"><div class="v accent">51</div><div class="k">Easy-win keywords (KD &lt; 30)</div></div>
+    <div class="stat"><div class="v accent">~27</div><div class="k">Average difficulty</div></div>
+  </div>
+  <div class="two-col">
+    <div class="chart-wrap">
+      <div class="chart-cap">Coverage by pillar</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">SEO and Internet Marketing</div><div class="bt"><div class="bf" style="width:100.0%;background:var(--pillar-1)"></div></div><div class="bv">36</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Hiring and Pricing an Agency</div><div class="bt"><div class="bf" style="width:38.9%;background:var(--pillar-2)"></div></div><div class="bv">14</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Web Design and Development</div><div class="bt"><div class="bf" style="width:50.0%;background:var(--pillar-3)"></div></div><div class="bv">18</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">AI Search Visibility</div><div class="bt"><div class="bf" style="width:25.0%;background:var(--pillar-4)"></div></div><div class="bv">9</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">SEO by Industry</div><div class="bt"><div class="bf" style="width:33.3%;background:#7A4FA3"></div></div><div class="bv">12</div></div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-cap">Funnel mix</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Top of funnel</div><div class="bt"><div class="bf honey" style="width:9.3%"></div></div><div class="bv">5</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Middle of funnel</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">54</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Bottom of funnel</div><div class="bt"><div class="bf red" style="width:55.6%"></div></div><div class="bv">30</div></div>
+      </div>
+      <div class="callout info" style="margin:14px 0 0;font-size:11.5px;line-height:1.5;">
+<strong>Month 1 is the revenue layer.</strong> It rewrites the pages that already sit on page two or three for Houston SEO, web design, pricing and your city pages, then adds the cost and comparison articles buyers read right before they call.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · THE ARTICLES (month tabs) ════════════════════════════════════ -->
+<section class="slide">
+  <div class="head" style="margin-bottom:8px;">
+    <div class="label">The 89 articles</div>
+    <h2 style="margin-bottom:6px;">Mapped, scoped, and ready to ship.</h2>
+    <p class="subtitle" style="font-size:15px;">Every row has a target keyword, a pillar and a funnel stage. Refresh rows name the page they rewrite.</p>
+  </div>
+  <div class="titles-note">Headlines shown are working titles. The keyword, angle, and funnel stage for each article are locked. Final headlines are SEO-optimized at production, and your input is welcome.</div>
+  <div class="mtabs">
+    <button class="mtab is-active" data-mtarget="1"><span class="mt-n">Month 1</span><span class="mt-c">30 · Near-final</span></button>
+    <button class="mtab" data-mtarget="2"><span class="mt-n">Month 2</span><span class="mt-c">30 · Best current targets</span></button>
+    <button class="mtab" data-mtarget="3"><span class="mt-n">Month 3</span><span class="mt-c">29 · Best current targets</span></button>
+  </div>
+  <div class="month-block is-active" data-month="1">
+    <div class="month-head"><span><strong>30</strong> articles</span><span><strong>49,610</strong> total monthly searches</span><span>Avg KD <strong>27</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">1</td><td><div class="strong">Houston SEO Company With an In-House Team Since 1998</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>houston seo company</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">2</td><td><div class="strong">Local SEO in Houston: Google Maps, Reviews and Neighborhood Pages</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>local seo houston</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">3</td><td><div class="strong">SEO Pricing Plans From $595 a Month, No Long-Term Contract</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>monthly seo services</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">4</td><td><div class="strong">Houston Web Design: WordPress Sites Designed, Written and Hosted by One Team</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>web design houston tx</code></td><td class="num">480</td><td class="num"><span class="kd-pill m">34</span></td></tr>
+        <tr><td class="dim">5</td><td><div class="strong">A Houston Digital Marketing Agency for SEO, Google Ads and Websites</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>digital marketing agency houston</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill m">40</span></td></tr>
+        <tr><td class="dim">6</td><td><div class="strong">Website Redesign Services That Keep the Rankings You Already Earned</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>website redesign services</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">7</td><td><div class="strong">AI SEO Services That Make Your Business Easy for AI Engines to Verify</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>ai seo services</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">43</span></td></tr>
+        <tr><td class="dim">8</td><td><div class="strong">PPC Management in Houston From a Certified Google Partner</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>ppc management houston</code></td><td class="num">320</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">9</td><td><div class="strong">Katy SEO Company for Local Search, Reviews and Websites</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>katy seo company</code></td><td class="num">880</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">10</td><td><div class="strong">SEO Company in The Woodlands, With Offices in Kingwood and the Galleria</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company the woodlands</code></td><td class="num">720</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">11</td><td><div class="strong">Small Business Web Design in Houston That Brings In Calls</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>small business website design</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill h">50</span></td></tr>
+        <tr><td class="dim">12</td><td><div class="strong">Ecommerce Web Design for Stores That Need to Rank as Well as Sell</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>ecommerce web design company</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill m">36</span></td></tr>
+        <tr><td class="dim">13</td><td><div class="strong">Custom WordPress Development: Themes, Plugins and Integrations</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>wordpress development company</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill m">38</span></td></tr>
+        <tr><td class="dim">14</td><td><div class="strong">Online Reputation Management in Houston: Reviews, Replies and Search Results</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>reputation management services</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill m">48</span></td></tr>
+        <tr><td class="dim">15</td><td><div class="strong">Free SEO Audit for Houston Businesses, Reviewed by a Person</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>free seo audit</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill h">67</span></td></tr>
+        <tr><td class="dim">16</td><td><div class="strong">How to Choose an SEO Company for a Small Business: 10 Questions to Ask</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>best seo company for small business</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">17</td><td><div class="strong">How Much Does SEO Cost for a Small Business in 2026?</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>how much does seo cost for small business</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">29</span></td></tr>
+        <tr><td class="dim">18</td><td><div class="strong">What a Small Business Website Costs, From Template to Custom Build</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>average cost of website design for small business</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill m">34</span></td></tr>
+        <tr><td class="dim">19</td><td><div class="strong">Hiring an SEO Consultant in Houston vs a Full Agency</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Compare</span></td><td class="kw"><code>seo consultant houston</code></td><td class="num">590</td><td class="num"><span class="kd-pill m">36</span></td></tr>
+        <tr><td class="dim">20</td><td><div class="strong">Houston Law Firm SEO: Practice-Area Pages, Reviews and Bar Advertising Rules</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span></td><td class="kw"><code>houston law firm seo</code></td><td class="num">480</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">21</td><td><div class="strong">Medical Practice SEO in Houston: Winning New-Patient Searches</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span></td><td class="kw"><code>houston medical seo company</code></td><td class="num">260</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">22</td><td><div class="strong">WordPress SEO Services for Sites Another Agency Built</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span></td><td class="kw"><code>wordpress seo services</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">23</td><td><div class="strong">How to Hire a Web Designer: Contracts, Timelines and Hosting</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>hire web designer</code></td><td class="num">880</td><td class="num"><span class="kd-pill m">49</span></td></tr>
+        <tr><td class="dim">24</td><td><div class="strong">Affordable SEO for Small Businesses: What Gets Cut in a Cheap Plan</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>affordable seo services for small business</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">25</td><td><div class="strong">SEO vs SEM: Which a Houston Business Should Fund First</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>difference between sem and seo</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">26</td><td><div class="strong">Oil and Gas Marketing and Websites for Houston Energy Companies</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>oil and gas marketing agency</code></td><td class="num">590</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">27</td><td><div class="strong">Cypress and Northwest Houston SEO for Local Service Companies</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company cypress</code></td><td class="num">260</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">28</td><td><div class="strong">Galleria-Area SEO and Web Design for Inner-Loop Houston Businesses</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company the galleria tx</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">29</td><td><div class="strong">Montgomery County SEO Company Based in Kingwood</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>montgomery county seo company</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">30</td><td><div class="strong">Local SEO Packages Compared: Setup Fees, Monthly Work and Contracts</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>local seo packages</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="2">
+    <div class="month-head"><span><strong>30</strong> articles</span><span><strong>47,890</strong> total monthly searches</span><span>Avg KD <strong>25</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">31</td><td><div class="strong">Cy-Fair SEO and Web Design for Local Service Businesses</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company cy-fair tx</code></td><td class="num">260</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">32</td><td><div class="strong">Humble SEO Company Serving Humble and Atascocita</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company in humble</code></td><td class="num">140</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">33</td><td><div class="strong">Spring Branch and Memorial SEO for Neighborhood Businesses</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo company spring branch tx</code></td><td class="num">210</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">34</td><td><div class="strong">Conroe Web Design and SEO for Lake Conroe Businesses</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>conroe web design</code></td><td class="num">70</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">35</td><td><div class="strong">Local Citation Services That Make Every Business Listing Match</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>local citation services</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">36</td><td><div class="strong">How Long Does SEO Take? What Months 1, 3, 6 and 12 Look Like</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how long does seo take to see results</code></td><td class="num">320</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">37</td><td><div class="strong">What Is Included in SEO Services? A Monthly Deliverables Checklist</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>what is included in seo services</code></td><td class="num">880</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">38</td><td><div class="strong">Comparing Web Design Firms: Portfolio, Process and Site Ownership</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>web design firms</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill h">50</span></td></tr>
+        <tr><td class="dim">39</td><td><div class="strong">Custom Website Development or a Theme? When a Business Needs Custom Code</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>custom website development services</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">40</td><td><div class="strong">Responsive Web Design Company Building Mobile-First Sites</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>responsive web design company</code></td><td class="num">880</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">41</td><td><div class="strong">Website Design and SEO Packages: Launching a Site That Already Ranks</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>website design and seo packages</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">42</td><td><div class="strong">Ecommerce SEO for WooCommerce Stores: Category Pages, Product Copy and Speed</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>ecommerce seo service</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">43</td><td><div class="strong">How to Improve Brand Visibility in AI Search Engines</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to improve brand visibility in ai search engines</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">44</td><td><div class="strong">How a Local Business Shows Up in Google AI Overviews</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to rank in ai overviews</code></td><td class="num">480</td><td class="num"><span class="kd-pill m">35</span></td></tr>
+        <tr><td class="dim">45</td><td><div class="strong">Hiring a Generative Engine Optimization Agency: 8 Questions Before You Sign</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>generative engine optimization agency</code></td><td class="num">480</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">46</td><td><div class="strong">SEO vs AEO vs GEO: What Changes for a Local Business</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>seo vs aeo vs geo</code></td><td class="num">590</td><td class="num"><span class="kd-pill m">38</span></td></tr>
+        <tr><td class="dim">47</td><td><div class="strong">Home Services SEO for Plumbers, Electricians and Remodelers</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>home services seo</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">48</td><td><div class="strong">Digital Marketing for Contractors Who Want Jobs From Search, Not Lead Brokers</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>digital marketing for contractors</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">49</td><td><div class="strong">B2B SEO for Professional Services Firms: Engineering, Accounting and Consulting</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>b2b seo services</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">50</td><td><div class="strong">Technical SEO Audit: The Crawling, Speed and Schema Problems We Find Most</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>technical seo audit service</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill ve">12</span></td></tr>
+        <tr><td class="dim">51</td><td><div class="strong">Organic SEO Services: Earning Rankings Without Paying per Click</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>organic seo services</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">52</td><td><div class="strong">On-Page SEO Services: The Page-by-Page Fixes That Move Rankings</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>on page seo services</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill m">35</span></td></tr>
+        <tr><td class="dim">53</td><td><div class="strong">National SEO vs Local SEO for Companies Growing Beyond Houston</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>national seo company</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">37</span></td></tr>
+        <tr><td class="dim">54</td><td><div class="strong">Dental SEO in Houston: New Patients From Maps and Search</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span></td><td class="kw"><code>seo expert dentist marketing company houston</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">55</td><td><div class="strong">Local SEO for HVAC Companies: Service Areas, Reviews and Summer Demand</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>local seo for hvac</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">56</td><td><div class="strong">Landing Page Design That Turns Google Ads Clicks Into Calls</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>landing page design service</code></td><td class="num">390</td><td class="num"><span class="kd-pill vh">73</span></td></tr>
+        <tr><td class="dim">57</td><td><div class="strong">SaaS Marketing for Houston Tech Companies: Trials, Demos and Search</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>saas marketing company</code></td><td class="num">390</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">58</td><td><div class="strong">What a Search Engine Marketing Agency Manages Beyond the Ads</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>sem agency</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">59</td><td><div class="strong">Link Building Strategies for Local Businesses: Chambers, Sponsors and Suppliers</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>link building strategies</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill h">62</span></td></tr>
+        <tr><td class="dim">60</td><td><div class="strong">Managed SEO Services: What You Hand Off and What Stays With You</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>managed seo services</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill m">39</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="3">
+    <div class="month-head"><span><strong>29</strong> articles</span><span><strong>45,750</strong> total monthly searches</span><span>Avg KD <strong>30</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">61</td><td><div class="strong">What Is Local SEO Marketing and How Does It Work?</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>what is local seo marketing</code></td><td class="num">590</td><td class="num"><span class="kd-pill m">45</span></td></tr>
+        <tr><td class="dim">62</td><td><div class="strong">Local SEO Tips for Getting a Business Onto Google Maps</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>local seo tips</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill h">55</span></td></tr>
+        <tr><td class="dim">63</td><td><div class="strong">SEO Audit Checklist: 25 Checks a Business Owner Can Run in an Afternoon</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>seo audit checklist</code></td><td class="num">5,400</td><td class="num"><span class="kd-pill h">61</span></td></tr>
+        <tr><td class="dim">64</td><td><div class="strong">How to Read a Monthly SEO Report: The Numbers That Matter</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>how to read a monthly seo report</code></td><td class="num">260</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">65</td><td><div class="strong">Link Building Packages: What Earned Links Look Like for a Local Business</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>link building packages</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill h">50</span></td></tr>
+        <tr><td class="dim">66</td><td><div class="strong">What to Publish Each Month: SEO Content Strategy for Local Service Companies</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>seo content strategy</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill m">48</span></td></tr>
+        <tr><td class="dim">67</td><td><div class="strong">What Google Ads Clicks Cost in Houston, Industry by Industry</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>cost of keywords in google adwords</code></td><td class="num">320</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">68</td><td><div class="strong">Remarketing Ads for Local Businesses: Who to Show Ads to Again</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>ppc remarketing services</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">69</td><td><div class="strong">Performance-Based SEO: Why Pay-Per-Ranking Deals Backfire</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>performance based seo services</code></td><td class="num">880</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">70</td><td><div class="strong">Do You Need an SEO Company, or Can You Handle SEO Yourself?</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>do i need an seo company</code></td><td class="num">260</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">71</td><td><div class="strong">How to Check an SEO Company&#x27;s Reviews Before You Sign</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>seo company review</code></td><td class="num">260</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">72</td><td><div class="strong">How Does WordPress Work? Themes, Plugins and Hosting for Business Owners</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Top</span><span class="chip intent">Info</span></td><td class="kw"><code>how does wordpress work</code></td><td class="num">320</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">73</td><td><div class="strong">Houston Web Hosting for Business Websites, Supported In-House</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>web hosting houston</code></td><td class="num">390</td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">74</td><td><div class="strong">Choosing a Web Development Agency: Code Ownership, Hosting and Support</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>web development agency</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill h">54</span></td></tr>
+        <tr><td class="dim">75</td><td><div class="strong">Tracking Your Brand Mentions in ChatGPT, Gemini and AI Overviews</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to track brand mentions in ai search results</code></td><td class="num">320</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">76</td><td><div class="strong">Writing Content That AI Search Engines Can Quote</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>how to optimize content for ai search engines</code></td><td class="num">260</td><td class="num"><span class="kd-pill m">40</span></td></tr>
+        <tr><td class="dim">77</td><td><div class="strong">AI SEO Strategy: A 12-Month Plan for a Houston Service Company</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>ai seo strategy</code></td><td class="num">320</td><td class="num"><span class="kd-pill m">48</span></td></tr>
+        <tr><td class="dim">78</td><td><div class="strong">AEO for Law Firms: Getting Recommended When Clients Ask AI for a Lawyer</div><span class="chip pillar" style="background:var(--pillar-4)">AI Search Visibility</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>aeo for legal firms</code></td><td class="num">480</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+        <tr><td class="dim">79</td><td><div class="strong">A B2B SEO Strategy for Companies With Long Sales Cycles</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>b2b seo strategy</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill m">34</span></td></tr>
+        <tr><td class="dim">80</td><td><div class="strong">Off-Page SEO: Links, Citations and Reviews Outside Your Website</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>off page seo services</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">81</td><td><div class="strong">Manufacturing Marketing in Houston: RFQs, Trade Shows and Search</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>manufacturing marketing agency</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">82</td><td><div class="strong">SEO Copywriting: Why Who Writes Your Service Pages Matters</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>seo copywriting agency</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">83</td><td><div class="strong">Backlink Audit: Finding the Links Holding a Small Business Site Back</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Info</span></td><td class="kw"><code>backlink audit</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">33</span></td></tr>
+        <tr><td class="dim">84</td><td><div class="strong">Internet Marketing and SEO Services: How the Pieces Fit Together</div><span class="chip pillar" style="background:var(--pillar-1)">SEO and Internet Marketing</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>internet marketing and seo services</code></td><td class="num">260</td><td class="num"><span class="kd-pill m">35</span></td></tr>
+        <tr><td class="dim">85</td><td><div class="strong">What Should Be in an SEO Proposal Before You Sign It</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>proposal seo</code></td><td class="num">390</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">86</td><td><div class="strong">Digital Branding Services: Logo, Voice and Website as One System</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>digital branding services</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">87</td><td><div class="strong">What a Small Business Should Get From a Marketing Agency in the First 90 Days</div><span class="chip pillar" style="background:var(--pillar-2)">Hiring and Pricing an Agency</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>digital marketing agency for small business</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">88</td><td><div class="strong">Restaurant Marketing in Houston: Maps, Menus and Reviews</div><span class="chip pillar" style="background:#7A4FA3">SEO by Industry</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span></td><td class="kw"><code>restaurant digital marketing agency</code></td><td class="num">320</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">89</td><td><div class="strong">Franchise Website Design That Scales With Every Location</div><span class="chip pillar" style="background:var(--pillar-3)">Web Design and Development</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>franchise website system</code></td><td class="num">140</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · WHY THIS PLAN ════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Why this plan</div>
+    <h2>Built on what you sell and where you already rank</h2>
+    <p class="subtitle">Five pillars, each tied to a service page you already have</p>
+  </div>
+  <h3 style="font-size:14px;color:var(--client-accent);margin-top:6px;">The pillars</h3>
+  <div class="strategy-grid">
+    <div class="strategy-card" style="border-left-color:var(--pillar-1);"><h4>SEO and Internet Marketing · 36 articles</h4><p>Your Houston SEO, local SEO and PPC pages, your ten city pages, and the audit, citation and link work behind them.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-3);"><h4>Web Design and Development · 18 articles</h4><p>Houston web design, redesign, WordPress, ecommerce and hosting, so the right page ranks instead of your homepage.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-2);"><h4>Hiring and Pricing an Agency · 14 articles</h4><p>Cost, packages, proposals and how to choose. Your published pricing gives you an edge most agencies won't take.</p></div>
+    <div class="strategy-card" style="border-left-color:#7A4FA3;"><h4>SEO by Industry · 12 articles</h4><p>Law, medical, dental, HVAC, contractors, oil and gas, manufacturing, SaaS and restaurants, linked to your industry design pages.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-4);"><h4>AI Search Visibility · 9 articles</h4><p>AI Overviews, AEO and GEO, and tracking mentions, written to show the work you sell.</p></div>
+  </div>
+  <div class="two-col" style="margin-top:16px;">
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What we deliberately excluded</h3>
+      <ul class="x-list">
+        <li><strong>Searches unrelated to what you sell</strong>. 6,004 keywords, about 6.3 million searches a month, such as “responsive design” (1.83 million, mostly students and designers).</li>
+        <li><strong>Do-it-yourself SEO and site building</strong>. 119 keywords, about 96,000 searches a month: people learning SEO or building their own site, not hiring.</li>
+        <li><strong>Other cities</strong>. 69 keywords from Dallas to London. Sugar Land, Pearland, Spring and Tomball are on the Bench until you confirm you serve them.</li>
+        <li><strong>Political campaign searches</strong>. About 700 a month in total, and you already have nine political pages. No articles; see the call questions.</li>
+      </ul>
+      <div class="callout info" style="margin-top:12px;font-size:12px;">
+<strong>The honest market size.</strong> We started from 9,587 keywords and 8.5 million monthly searches. 1,890 keywords survived the filters. The plan uses 89 of them, the Bench holds 24 more, and every cut is listed in the workbook with its reason.
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What to expect, month by month</h3>
+      <div class="strategy-timeline">
+        <div class="ts-step" style="border-top-color:var(--pillar-1);"><div class="ts-when">M1–2</div><div class="ts-what">Refreshed money pages re-indexed; new articles published</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-2);"><div class="ts-when">M2–4</div><div class="ts-what">Houston SEO and web design pages move toward page one</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-3);"><div class="ts-when">M4–6</div><div class="ts-what">City pages and comparison articles start bringing calls</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-4);"><div class="ts-when">M6–12</div><div class="ts-what">Authority builds; head terms like “houston seo” come into reach</div></div>
+      </div>
+      <h3 style="font-size:14px;color:var(--client-accent);margin-top:12px;">How each article is built</h3>
+      <p style="font-size:12.5px;line-height:1.6;">Each article targets one keyword the plan assigns to it and no other row, checked against Google's own top-10 results so two articles never chase the same answer. Claims about Vertical Web come only from your live site: since 1998, everything in-house, Certified Google Partner, your published plan prices. Rewrites keep the URL and the rankings the page already has.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CALL QUESTIONS ══ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">For our call</div>
+    <h2>Five answers that would reshape this plan</h2>
+    <p class="subtitle">Each answer opens up topics the data supports but we did not assume</p>
+  </div>
+  <div class="strategy-grid">
+    <div class="strategy-card"><h4>Do you take clients in Sugar Land, Pearland, Spring and Tomball?</h4><p>Eight city pages are waiting on the Bench. Sugar Land alone draws about 12,500 searches a month where EWR Digital ranks and you don't.</p></div>
+    <div class="strategy-card"><h4>Is political consulting a growth line or a campaign-season one?</h4><p>Political searches total about 700 a month and you have nine political pages already. If it is a growth line, the play is referrals and AI search cleanup, not blog volume.</p></div>
+    <div class="strategy-card"><h4>Should your classes and podcast pull search traffic?</h4><p>Beginner searches like “seo tips” (8,100 a month) were cut as do-it-yourself traffic. If classes are a revenue line, a small class-signup pillar comes back.</p></div>
+    <div class="strategy-card"><h4>Do you want web design and AI SEO clients outside Houston?</h4><p>Your process already runs remotely. A yes widens the WordPress, ecommerce and AI rows to national buyers.</p></div>
+    <div class="strategy-card"><h4>What should happen to the 2012 and 2013 blog posts?</h4><p>Your sitemap lists 461 posts. Two old ones are rewritten in this plan and a 2013 cost post folds into a new article; the rest is a consolidate-or-redirect project.</p></div>
+  </div>
+</section>
+
+<!-- ══ 14 · PROJECTED TRAJECTORY — the closing slide ═════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Your projected trajectory</div>
+    <h2>Where your organic traffic can be in 12 months</h2>
+    <p class="subtitle">Monthly organic visits, from today's SEMrush estimate</p>
+  </div>
+  <div class="fill">
+    <div class="chart-wrap">
+<svg viewBox="0 0 900 260" width="100%" style="display:block">
+<g stroke="rgba(0,0,0,0.08)" stroke-width="1"><line x1="60" y1="30" x2="880" y2="30"/><line x1="60" y1="110" x2="880" y2="110"/><line x1="60" y1="190" x2="880" y2="190"/></g>
+<g fill="#6b6b6b" font-size="11" text-anchor="end"><text x="52" y="194">0</text><text x="52" y="114">1.2K</text><text x="52" y="34">2.4K</text></g>
+<polyline fill="none" stroke="var(--client-accent)" stroke-width="3.5" stroke-dasharray="8,4" points="80,105 340,97 560,80 880,46"/>
+<rect x="72" y="105" width="8" height="85" rx="1" fill="rgba(47,193,113,0.4)"/>
+<circle cx="80" cy="105" r="6" fill="var(--good)"/>
+<circle cx="340" cy="97" r="5" fill="var(--client-accent)"/>
+<circle cx="560" cy="80" r="5" fill="var(--client-accent)"/>
+<circle cx="880" cy="46" r="6.5" fill="var(--et-honey)"/>
+<g font-weight="700"><text x="80" y="95" text-anchor="middle" fill="var(--good)" font-size="13">1,268</text>
+<text x="340" y="86" text-anchor="middle" fill="#6b6b6b" font-size="12">~1,395</text>
+<text x="560" y="69" text-anchor="middle" fill="#6b6b6b" font-size="12">~1,648</text>
+<text x="880" y="35" text-anchor="end" fill="#e0930a" font-size="15">~2,156</text>
+</g>
+<g fill="#6b6b6b" font-size="11" text-anchor="middle"><text x="80" y="215">Oct &#x27;26</text>
+<text x="340" y="215">Month 3</text>
+<text x="560" y="215">Month 6</text>
+<text text-anchor="end" x="898" y="215">Month 12</text>
+</g>
+<g font-size="10" text-anchor="middle" font-weight="600"><text x="80" y="230" fill="var(--good)">Confirmed (SEMrush)</text>
+<text x="340" y="230" fill="#6b6b6b">+10%</text>
+<text x="560" y="230" fill="#6b6b6b">+30%</text>
+<text text-anchor="end" x="898" y="230" fill="#e0930a">+70%</text>
+</g></svg>
+      <div class="legend"><span><i style="background:var(--good)"></i>Confirmed (SEMrush)</span><span><i style="background:var(--client-accent)"></i>Projected</span></div>
+    </div>
+    <div class="callout mt">
+<strong>Directional, not guaranteed.</strong> These are directional projections, not guarantees. The range is conservative: 1.6 to 1.8 times today's traffic by month 12, before counting any city pages from the Bench.
+    </div>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Vertical Web · SEO Growth Roadmap</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  const storeKey = 'et-deck-' + location.pathname;
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem(storeKey, i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button') || e.target.closest('.mtab')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  document.querySelectorAll('.mtab').forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.stopPropagation();
+      const target = tab.getAttribute('data-mtarget');
+      const slide = tab.closest('.slide');
+      slide.querySelectorAll('.mtab').forEach(t => t.classList.toggle('is-active', t === tab));
+      slide.querySelectorAll('.month-block').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-month') === target));
+    });
+  });
+  go(0);
+</script>
+</body>
+</html>
