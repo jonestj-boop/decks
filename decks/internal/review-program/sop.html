@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — CLIENT REPORT / ONE-PAGER TEMPLATE
+     Long scrolling report. CRO audit · ecommerce report · implementation workbook.
+
+     HOW TO USE (for Claude Code)
+     1. Copy this whole folder into the client repo (keep /fonts alongside).
+     2. Set --client-accent to the client color (see TOKENS). Keep the red/black/
+        honey EmberTribe palette — that's the house frame.
+     3. Optional client logo on the masthead (see .masthead).
+     4. Duplicate any <section class="block"> and fill with real content. Every
+        module you need appears once below — reorder/duplicate, don't invent new ones.
+     5. Sidebar nav auto-builds from each <section class="block" id="…" data-nav="…">.
+     RULES: headers Sentence case · labels ALL CAPS · bullets em-dash (—) · Quatro.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Program SOP · EmberTribe Internal</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#4E5AEA; --client-accent-soft:#eceefd;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .client-logo { max-height:46px; max-width:200px; margin-bottom:30px; object-fit:contain; }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:#fff; font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── SCORE GAUGE (CRO audit) ───────────────────────────────────────── */
+  .score { display:flex; align-items:center; gap:26px; background:var(--subtle); border-radius:16px; padding:26px 30px; margin:10px 0; }
+  .score .ring { --p:64; width:104px; height:104px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring::after { content:""; position:absolute; }
+  .score .ring b { width:78px; height:78px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--et-black); }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  /* ── FINDINGS (numbered) ───────────────────────────────────────────── */
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 62px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); } .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  /* ── FIGURE PLACEHOLDER ────────────────────────────────────────────── */
+  .figure { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:220px;
+            display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:24px; margin:16px 0; }
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+
+  /* ── SOP ADDITIONS ─────────────────────────────────────────────────── */
+  .masthead .meta b { color:var(--et-black); }
+  .msg { background:var(--subtle); border:1px solid var(--border); border-radius:12px; padding:16px 20px; margin:10px 0 18px; font-size:15px; line-height:1.6; white-space:pre-line; }
+  .msg .mk { display:block; font-weight:700; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; white-space:normal; }
+  .rule { display:grid; grid-template-columns:28px 1fr; gap:12px; padding:12px 0; border-top:1px solid var(--border); font-size:15px; }
+  .rule:first-of-type { border-top:none; }
+  .rule .x { font-weight:700; color:var(--et-red); font-size:18px; line-height:1.3; }
+  .rule .ok { font-weight:700; color:var(--good); font-size:18px; line-height:1.3; }
+  .rule p { margin:0; } .rule b { color:var(--et-black); }
+  @media (max-width:900px) { table { display:block; overflow-x:auto; } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Internal SOP</div>
+    <nav id="toc"></nav>
+    <div class="foot">Internal only. Not for clients.<br>Owner: Local SEO team</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Standard operating procedure</div>
+      <h1>Google review program<br>setup and management</h1>
+      <p class="subtitle">How we set up and run a review program for local clients: getting more Google reviews every month, replying to every one, and staying inside Google, FTC and HIPAA rules.</p>
+      <div class="meta">
+        <div>Service<b>Review program (setup + monthly)</b></div>
+        <div>Best fit<b>Local service businesses, dental and medical</b></div>
+        <div>Version<b>v1 · October 2026</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="overview" data-nav="Overview">
+      <div class="label">Overview</div>
+      <h2>What this service is</h2>
+      <p class="lede">Reviews are the biggest thing we can change that affects where a local business ranks on the map. We build the system that asks every customer for a review, run it every month, and reply to every review so the client doesn't have to.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">100%</div><div class="k">Of customers get asked (no filtering)</div></div>
+        <div class="stat"><div class="v">48 hrs</div><div class="k">Max time to reply to a review (24 hrs if negative)</div></div>
+        <div class="stat"><div class="v accent">10–15%</div><div class="k">Typical share of asked customers who leave a review</div></div>
+        <div class="stat"><div class="v good">60–90</div><div class="k">Days until map rankings usually start moving</div></div>
+      </div>
+      <h3>What the client gets</h3>
+      <ul class="body">
+        <li>Google Business Profile tune-up and a direct review link</li>
+        <li>Automated review requests by text and email after each appointment, set up in their existing patient or customer messaging software</li>
+        <li>QR code cards and signs for checkout and treatment rooms</li>
+        <li>Scripts and a 30-minute training for the doctor, hygienists and front desk</li>
+        <li>A one-time campaign asking past customers for reviews</li>
+        <li>Replies to every Google review within 48 hours, written to be HIPAA-safe</li>
+        <li>A monthly report: new reviews, rating, progress against target, competitor review counts</li>
+      </ul>
+      <div class="callout"><strong>The rule everything else depends on:</strong> we ask every customer the same way and never offer anything in exchange for a review. A fast way to lose a client's profile is to filter out unhappy customers or pay for reviews. Google removes those reviews, and it can suspend the profile.</div>
+    </section>
+
+    <section class="block" id="compliance" data-nav="Compliance rules">
+      <div class="label">Compliance rules</div>
+      <h2>Non-negotiables</h2>
+      <p>These come from Google's review policies, the FTC's rule against fake reviews and review suppression (2024), and HIPAA for healthcare clients. Read them before any client kickoff. If a client asks us to break one, escalate to the account lead. Don't negotiate it yourself.</p>
+
+      <div class="rule"><div class="x">✕</div><p><b>No incentives to customers.</b> No discounts, gift cards, raffle entries, free whitening or donations "per review". This applies even if the reward is offered for honest reviews.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No review gating.</b> Don't ask "how did we do?" first and send only happy customers to Google. Every customer gets the same Google link, and we never leave out customers we think are unhappy.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No staff, family or owner reviews.</b> Not about the practice and not about competitors.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No writing reviews for customers</b> and no scripted review text. We can suggest what to mention ("what you came in for"). We never supply the words.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No review stations in the office.</b> No office tablets, front-desk computers or "use our Wi-Fi to leave a review". Customers use their own phones. Reviews posted from the business's own network often get filtered.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No PHI in replies (healthcare).</b> Never confirm someone is a patient and never mention a treatment, visit date or condition, even if the reviewer brought it up first.</p></div>
+      <div class="rule"><div class="x">✕</div><p><b>No texts without consent.</b> Only text customers who agreed to text messages at intake. Respect STOP and opt-outs right away.</p></div>
+      <div class="rule"><div class="ok">✓</div><p><b>Allowed:</b> rewarding <em>staff</em> for asking (leaderboards, team lunches for hitting targets), asking every customer in person, sending reminders, and reporting reviews that genuinely break Google policy.</p></div>
+    </section>
+
+    <section class="block" id="roles" data-nav="Roles">
+      <div class="label">Roles</div>
+      <h2>Who does what</h2>
+      <table>
+        <thead><tr><th>Task</th><th>EmberTribe</th><th>Client</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Business Profile access and tune-up</td><td>Does it</td><td>Grants Manager access</td></tr>
+          <tr><td class="strong">Set up automated review requests</td><td>Builds it in their software (or supplies a tool)</td><td>Grants admin login and confirms text consent</td></tr>
+          <tr><td class="strong">QR cards and signs</td><td>Designs the print files</td><td>Prints them and puts them out</td></tr>
+          <tr><td class="strong">Ask in person</td><td>Writes scripts and runs the training</td><td>Asks every customer, every visit</td></tr>
+          <tr><td class="strong">Past-customer campaign</td><td>Writes the messages and schedules batches</td><td>Exports the customer list</td></tr>
+          <tr><td class="strong">Reply to reviews</td><td>Replies within 48 hrs</td><td>Handles escalated negatives offline</td></tr>
+          <tr><td class="strong">Monthly report and check-in</td><td>Builds it and sends it</td><td>Reviewer: client contact or office manager</td></tr>
+        </tbody>
+      </table>
+      <p class="dim" style="font-size:13px">Each client names one internal contact, usually the office manager, as their champion. That person owns the in-office habit, and we report to them every week.</p>
+    </section>
+
+    <section class="block" id="setup" data-nav="Phase 1 · Setup">
+      <div class="label">Phase 1 · Weeks 1–2</div>
+      <h2>Setup</h2>
+
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Kickoff and intake</h3></div>
+        <ul class="checklist">
+          <li>Get Manager access to the Google Business Profile (never take Primary Owner)</li>
+          <li>Identify their customer messaging software (Weave, RevenueWell, NexHealth, Solutionreach, Lighthouse 360, Birdeye, etc.) and get admin access</li>
+          <li>Confirm that text consent is collected at intake, and get a written OK to send review texts</li>
+          <li>Get monthly customer volume (unique visits a month). This sets the target.</li>
+          <li>Name the client champion and the escalation contact for negative reviews (the owner or doctor)</li>
+          <li>Record the baseline: review count, average rating, reviews added in the last 90 days, reply rate</li>
+          <li>Record 3–5 map competitors' review counts and ratings (whoever shows in the top 3 for their main search)</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Business Profile tune-up</h3></div>
+        <ul class="checklist">
+          <li>Primary and secondary categories match how customers search (e.g. Dentist, Cosmetic dentist)</li>
+          <li>Services list is complete. Hours and holiday hours are correct. Booking link works.</li>
+          <li>Name, address and phone match the website exactly. No keywords stuffed into the business name.</li>
+          <li>At least 15 real photos: team, office, exterior, signage. Add new ones monthly.</li>
+          <li>Description is written and website links use UTM tags</li>
+          <li>Reply to every existing unanswered review using the templates below</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Review link and QR assets</h3></div>
+        <ul class="checklist">
+          <li>Copy the direct review link from the Business Profile ("Ask for reviews" / "Get more reviews")</li>
+          <li>Test it on iPhone and Android, signed in and signed out</li>
+          <li>Make a QR code that points straight at the Google link. No in-between "rate us" page, because that counts as gating.</li>
+          <li>Design a business card for checkout, a sign for treatment rooms and a counter tent. Send print-ready PDFs.</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">4</span><h3>Automated review requests</h3></div>
+        <ul class="checklist">
+          <li>First text goes out 1–2 hours after the appointment is marked complete</li>
+          <li>One reminder 72 hours later, only if they haven't clicked. Never more than 2 messages per visit.</li>
+          <li>Each customer is asked at most once every 6 months, even if they visit more often</li>
+          <li>Email as a backup for customers without text consent</li>
+          <li>Messages go to every completed appointment. Don't filter by provider, procedure or satisfaction score.</li>
+          <li>For minors, the request goes to the parent or guardian on file</li>
+          <li>If the client has no software that can do this, recommend our approved tool (priced separately)</li>
+          <li>Test it end to end on a staff phone before going live</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">5</span><h3>Team training (30 minutes)</h3></div>
+        <ul class="checklist">
+          <li>Explain why reviews matter: they're how new customers find the practice on the map</li>
+          <li>Go through the in-person scripts below and role-play the ask in the chair and at checkout</li>
+          <li>Go through the compliance rules, especially no incentives, no office devices and no PHI</li>
+          <li>Agree the team goal and staff reward (the client decides the reward)</li>
+          <li>Set up the weekly count for the champion: a whiteboard or a Slack/text update</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="launch" data-nav="Phase 2 · Launch">
+      <div class="label">Phase 2 · Weeks 3–6</div>
+      <h2>Launch and past-customer campaign</h2>
+      <p>This is where the first big jump comes from. Customers from the last 12–18 months who already like the practice and have never been asked usually bring in the biggest single month of reviews.</p>
+      <ul class="body">
+        <li><b>List:</b> the client exports every customer seen in the last 12–18 months. Take out only people who opted out of texts or emails, have no valid contact details, or have died. Don't take anyone out for being unhappy, because that's gating.</li>
+        <li><b>Remove</b> anyone who has already left a Google review, where you can match them by name</li>
+        <li><b>Pace it:</b> split the list into 4 weekly batches. A steady stream of reviews looks natural to Google, while a huge one-day spike can get reviews filtered.</li>
+        <li><b>Channels:</b> text to customers who consented, email to everyone else, and one reminder per channel</li>
+        <li><b>Watch:</b> check new reviews daily during the campaign and reply within 24 hours</li>
+      </ul>
+      <div class="callout warn"><strong>Pacing check:</strong> if a single day brings in more than about 3 times the client's normal weekly reviews, pause the next batch for a week. Reviews that Google filters don't come back.</div>
+    </section>
+
+    <section class="block" id="ongoing" data-nav="Phase 3 · Monthly">
+      <div class="label">Phase 3 · Ongoing</div>
+      <h2>Monthly management</h2>
+      <table>
+        <thead><tr><th>How often</th><th>Task</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Daily (weekdays)</td><td>Check for new reviews and reply. Negative reviews: reply and escalate within 24 hrs.</td><td>Fulfillment specialist</td></tr>
+          <tr><td class="strong">Weekly</td><td>Send the new-review count and progress against target to the client champion. Flag a slow week early.</td><td>Fulfillment specialist</td></tr>
+          <tr><td class="strong">Weekly</td><td>Check automation health: messages sent vs appointments completed. Fix it if the gap is over 10%.</td><td>Fulfillment specialist</td></tr>
+          <tr><td class="strong">Monthly</td><td>Report: new reviews, rating, reply rate, progress against target, competitor counts, map ranking snapshot</td><td>Account lead</td></tr>
+          <tr><td class="strong">Monthly</td><td>Add 4+ new photos to the Business Profile. Post one Business Profile update.</td><td>Fulfillment specialist</td></tr>
+          <tr><td class="strong">Quarterly</td><td>Run a refresher training for staff, especially new hires. Reset targets against competitors.</td><td>Account lead</td></tr>
+        </tbody>
+      </table>
+      <h3>Negative review protocol</h3>
+      <ul class="body">
+        <li>Within 24 hours, post the short holding reply below. It takes the conversation offline and gives no details.</li>
+        <li>Send the review to the client's escalation contact, who calls the customer if they can identify them</li>
+        <li>Never argue in public, never mention care or billing details, and never say whether the reviewer was a patient</li>
+        <li>If the review breaks Google policy (spam, off-topic, conflict of interest, hate speech), report it through the Business Profile and log it. Don't promise the client it will be removed.</li>
+        <li>Never ask a customer to change or remove a review in exchange for anything</li>
+      </ul>
+    </section>
+
+    <section class="block" id="scripts" data-nav="Request scripts">
+      <div class="label">Request scripts</div>
+      <h2>Asking for reviews</h2>
+      <p>Change the practice name and contact name. Keep the asks short and the same for every customer. Never include suggested review wording.</p>
+
+      <div class="msg"><span class="mk">In the chair · doctor or hygienist</span>"I'm really glad that went well. If you have a minute later, a quick Google review would mean a lot to us. It's how other families in [City] find us. You'll get a text with the link."</div>
+      <div class="msg"><span class="mk">Checkout · front desk</span>"You're all set! One small favor: we're trying to reach more people in [City]. If you scan this card, it goes straight to our Google reviews. It takes about a minute."</div>
+      <div class="msg"><span class="mk">Text · 1–2 hrs after appointment</span>Hi [First name], thanks for visiting [Practice] today! Would you take a minute to share your experience on Google? It really helps our neighbors find us: [review link]
+Reply STOP to opt out.</div>
+      <div class="msg"><span class="mk">Text reminder · 72 hrs (once, only if not clicked)</span>Hi [First name], just a quick reminder from [Practice]. If you have a minute, we'd love your Google review: [review link]. Thank you!</div>
+      <div class="msg"><span class="mk">Email · past-customer campaign</span>Subject: A quick favor from [Practice]
+
+Hi [First name],
+
+Thank you for trusting us with your care. We're a local practice, and most new patients find us through Google reviews from people like you.
+
+If you have a minute, would you share your experience? It helps to mention what you came in for, but anything you'd like to say is welcome.
+
+[Leave a Google review]
+
+Thank you,
+[Doctor name] and the [Practice] team</div>
+      <div class="msg"><span class="mk">QR card copy</span>Loved your visit? Tell [City].
+Scan to leave us a Google review.
+[QR] · [Practice name]</div>
+    </section>
+
+    <section class="block" id="responses" data-nav="Reply templates">
+      <div class="label">Reply templates</div>
+      <h2>Replying to reviews (HIPAA-safe)</h2>
+      <p>Change the wording every time so replies don't read as copy-paste. Use the reviewer's first name only if it shows on the review. Never mention a treatment, visit or result, even when the reviewer did.</p>
+
+      <div class="msg"><span class="mk">5 stars</span>Thank you so much, [First name]! We really appreciate you taking the time to share this. Our team works hard to make every visit comfortable, and we're glad that came through.</div>
+      <div class="msg"><span class="mk">5 stars · variation</span>This made our day, thank you! It means a lot to our whole team. We're grateful for kind words like these.</div>
+      <div class="msg"><span class="mk">3–4 stars</span>Thank you for the feedback, [First name]. We're always working to improve, and we'd welcome the chance to hear more. Please call our office manager at [phone] whenever it's convenient.</div>
+      <div class="msg"><span class="mk">1–2 stars · holding reply (within 24 hrs)</span>We're sorry to hear this and take all feedback seriously. Because of privacy rules we can't discuss details here, but we'd like to talk directly. Please contact our office manager, [Name], at [phone].</div>
+      <div class="msg"><span class="mk">Unclear or suspicious review</span>Thank you for your feedback. We take every concern seriously and would like to understand more. Please contact our office at [phone] so we can follow up directly.</div>
+      <div class="callout info"><strong>Why no details:</strong> under HIPAA, confirming someone is a patient counts as disclosing health information, even when they've identified themselves publicly. That's why every reply stays general.</div>
+    </section>
+
+    <section class="block" id="targets" data-nav="Targets &amp; KPIs">
+      <div class="label">Targets &amp; KPIs</div>
+      <h2>Setting the target</h2>
+      <p class="lede">Monthly review target = unique customer visits a month × 0.12. Then check it against the competitor gap: how long until the client passes the #3 competitor on the map?</p>
+      <table>
+        <thead><tr><th>KPI</th><th class="num">Target</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">New Google reviews a month</td><td class="num">Visits × 0.12</td><td class="dim">Expect about half the target in month 1 while the in-person habit forms</td></tr>
+          <tr><td class="strong">Request coverage</td><td class="num">≥ 90%</td><td class="dim">Requests sent ÷ appointments completed</td></tr>
+          <tr><td class="strong">Reply rate</td><td class="num">100%</td><td class="dim">Within 48 hrs (24 hrs for 1–3 stars)</td></tr>
+          <tr><td class="strong">Average rating</td><td class="num">≥ 4.8</td><td class="dim">Investigate if it falls more than 0.1 in a month</td></tr>
+          <tr><td class="strong">Reviews in the last 90 days</td><td class="num">Above #3 competitor</td><td class="dim">How recent the reviews are matters as much as the total</td></tr>
+          <tr><td class="strong">Map top-3 coverage</td><td class="num">Trending up</td><td class="dim">From the map ranking grid in the local SEO report</td></tr>
+        </tbody>
+      </table>
+      <h3>Monthly report contents</h3>
+      <ul class="body">
+        <li>New reviews this month and the running total, compared with target</li>
+        <li>Average rating, reply rate and the number of negatives with what happened to each</li>
+        <li>Competitor review counts (same 3–5 practices every month)</li>
+        <li>Map ranking snapshot for the client's main searches</li>
+        <li>One coaching note for the team, e.g. "Tuesday hygiene days produced 40% of reviews. Copy that ask on doctor days."</li>
+      </ul>
+    </section>
+
+    <section class="block" id="locklear" data-nav="Client · Locklear">
+      <div class="label">First rollout</div>
+      <h2>Locklear Dentistry</h2>
+      <p>Greensboro, NC general and cosmetic practice. The review program sits alongside local SEO, citations (Gary) and link building (PosiRank).</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">377</div><div class="k">Google reviews (4.9★) · Oct 29, 2026</div></div>
+        <div class="stat"><div class="v">1,053</div><div class="k">Friendly Dentistry (4.9★)</div></div>
+        <div class="stat"><div class="v">974</div><div class="k">Triad Dentistry</div></div>
+        <div class="stat"><div class="v">606</div><div class="k">Mango Dental</div></div>
+      </div>
+      <ul class="body">
+        <li><b>Proposed target:</b> 50 reviews a month. That passes Mango in about 5 months and gets close to Friendly and Triad in about 12. Confirm against patient volume. Below about 400 visits a month, plan for 30–40.</li>
+        <li><b>Open items:</b> messaging software, monthly patient volume, champion name, text consent status, whether Dr. Locklear is an ADA member</li>
+        <li><b>Map baseline:</b> top 3 for under 4% of the tracked area (June 2026 local report). Re-run the ranking grid at kickoff.</li>
+      </ul>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Kickoff checklist</div>
+      <h2>Before the first client call</h2>
+      <p>Pull the review baseline and competitor counts, confirm which messaging software they use, and send the intake list (Business Profile access, software login, text consent, monthly volume, champion). Setup takes 2 weeks from the day we have access.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
