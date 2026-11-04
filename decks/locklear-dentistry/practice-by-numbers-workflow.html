@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Locklear PbN Workflow · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#4E5AEA; --client-accent-soft:#eceefd;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .client-logo { max-height:46px; max-width:200px; margin-bottom:30px; object-fit:contain; }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:#fff; font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── SCORE GAUGE (CRO audit) ───────────────────────────────────────── */
+  .score { display:flex; align-items:center; gap:26px; background:var(--subtle); border-radius:16px; padding:26px 30px; margin:10px 0; }
+  .score .ring { --p:64; width:104px; height:104px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring::after { content:""; position:absolute; }
+  .score .ring b { width:78px; height:78px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--et-black); }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  /* ── FINDINGS (numbered) ───────────────────────────────────────────── */
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 62px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); } .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  /* ── FIGURE PLACEHOLDER ────────────────────────────────────────────── */
+  .figure { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:220px;
+            display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:24px; margin:16px 0; }
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+
+  .masthead .meta b { color:var(--et-black); }
+  @media (max-width:900px) { table { display:block; overflow-x:auto; } .block, .masthead, .cta { padding-left:16px; padding-right:16px; } .masthead .meta { flex-direction:column; gap:12px; } h1 { font-size:38px; } }
+  @media print { html { scroll-behavior:auto; } .step, tr, .callout { break-inside:avoid; } .block { page-break-inside:auto; padding:32px 40px; } .masthead { padding:40px; } table { display:table; } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Automation workflow</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>tj@embertribe.com</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Practice by Numbers</div>
+      <h1>Locklear Dentistry<br>automation workflow</h1>
+      <p class="subtitle">The full setup for reminders, missed appointments, reviews, treatment follow-up and recall, using the system the practice already has.</p>
+      <div class="meta">
+        <div>Prepared for<b>Dr. Locklear and team</b></div>
+        <div>Date<b>November 4, 2026</b></div>
+        <div>Status<b>Proposed, settings to confirm in the account</b></div>
+      </div>
+    </section>
+
+    <section class="block" id="summary" data-nav="Summary">
+      <div class="label">Summary</div>
+      <h2>The system is in place. It can do much more for you.</h2>
+      <p class="lede">Practice by Numbers can already remind patients, recover missed visits, request reviews and follow up on treatment. This plan turns those tools on in order, so no patient depends on someone remembering to call.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">54%</div><div class="k">New patient show-up rate, Oct 1–15. Goal: 75%.</div></div>
+        <div class="stat"><div class="v">56</div><div class="k">Conversations marked "Needs reply" on Nov 4</div></div>
+        <div class="stat"><div class="v">11 of 24</div><div class="k">New patient bookings didn't show, Oct 1–15</div></div>
+        <div class="stat"><div class="v accent">8</div><div class="k">Automations in this plan</div></div>
+      </div>
+      <div class="callout"><strong>What automation won't do:</strong> it won't replace the phone. Practice by Numbers sends the messages and creates call tasks. Your team still makes the calls, using the front desk script.</div>
+    </section>
+
+    <section class="block" id="map" data-nav="Workflow map">
+      <div class="label">Workflow map</div>
+      <h2>What happens at each patient moment</h2>
+      <table>
+        <thead><tr><th>#</th><th>Moment</th><th>Automation</th><th>Team's part</th><th>Stops when</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">1</td><td class="strong">Patient replies</td><td>Inbox rules and after-hours replies</td><td>Clear the inbox twice a day</td><td>Conversation is closed</td></tr>
+          <tr><td class="strong">2</td><td class="strong">Appointment booked</td><td>Booking message and confirmation reminders</td><td>Call anyone unconfirmed the day before</td><td>Patient confirms</td></tr>
+          <tr><td class="strong">3</td><td class="strong">New patient booked</td><td>Online forms and form reminders</td><td>Check pending forms the day before</td><td>Forms are submitted</td></tr>
+          <tr><td class="strong">4</td><td class="strong">Visit completed</td><td>Google review request and one follow-up</td><td>Ask in person, reply to reviews</td><td>Patient clicks or sequence ends</td></tr>
+          <tr><td class="strong">5</td><td class="strong">No-show or cancellation</td><td>Text, email and call tasks</td><td>Make the calls and log the reason</td><td>Patient rebooks</td></tr>
+          <tr><td class="strong">6</td><td class="strong">Treatment not scheduled</td><td>Follow-up sequence, implants first</td><td>Call higher-value cases</td><td>Patient schedules</td></tr>
+          <tr><td class="strong">7</td><td class="strong">Cleaning is due</td><td>Recall messages and call tasks</td><td>Call patients who are overdue</td><td>Patient books</td></tr>
+          <tr><td class="strong">8</td><td class="strong">Patient has lapsed</td><td>Reactivation campaign in weekly batches</td><td>Answer replies and book</td><td>Patient books or opts out</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="foundation" data-nav="Before we start">
+      <div class="label">Before we start</div>
+      <h2>Foundation checks</h2>
+      <div class="step">
+        <div class="sh"><span class="sn">0</span><h3>Confirm these first</h3></div>
+        <ul class="checklist">
+          <li><b>Business Associate Agreement:</b> confirm it's signed before EmberTribe works in the account</li>
+          <li><b>Plan:</b> confirm your plan includes each tool here, especially review management and campaigns</li>
+          <li><b>Dentrix sync:</b> complete, confirm and cancel test appointments, then confirm each status reaches Practice by Numbers correctly</li>
+          <li><b>Baseline:</b> export 90 days of appointments, messages, confirmations, no-shows and new reviews</li>
+          <li><b>Owners:</b> name one person each for the inbox, missed-visit calls and recall tasks. Unassigned tasks can get missed.</li>
+          <li><b>Opt-outs:</b> review New Settings &gt; Communication Settings &gt; Opted Out Patients</li>
+          <li><b>Consent:</b> confirm how patients agree to appointment texts and to recall, review and reactivation messages</li>
+          <li><b>Message rule:</b> never mention a treatment, condition or result in a text or email subject line</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="inbox" data-nav="1 · Inbox">
+      <div class="label">Automation 1</div>
+      <h2>Clean up the inbox</h2>
+      <p>Start here. Patients who reply and hear nothing are more likely to miss a visit. Some of the current queue may be simple confirmations, so sort it before judging the backlog.</p>
+      <div class="step">
+        <div class="sh"><span class="sn">A</span><h3>One-time cleanup</h3></div>
+        <ul class="checklist">
+          <li>In the Communication Center, filter Reply Status to Needs Reply and Conversation to Open</li>
+          <li>Reply to real questions and reschedule requests first, oldest first</li>
+          <li>Close completed threads with Done. Closing doesn't delete the history.</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">B</span><h3>Settings</h3></div>
+        <ul class="checklist">
+          <li>In the Appointment Reminders Campaign under Special Settings, review "When a patient responds to an appointment reminder campaign message with C, 1, or 2, mark the message thread as unread." If confirmations are cluttering the inbox, turn it off after confirming what "2" does.</li>
+          <li>Turn on Replies for Missed Messages and Replies for Missed Calls under Settings &gt; Communications</li>
+          <li>Under Automation and Closure Rules, review the 45-day defaults. Don't let the Unresponded rule stand in for answering patients.</li>
+          <li>Assign conversations to the inbox owner</li>
+        </ul>
+      </div>
+      <div class="callout info"><strong>New routine:</strong> check Needs Reply at opening and again after lunch, and answer patient messages the same business day.</div>
+    </section>
+
+    <section class="block" id="reminders" data-nav="2 · Reminders">
+      <div class="label">Automation 2</div>
+      <h2>Reminders and confirmations</h2>
+      <p>Menu: Campaigns &gt; Follow-up Campaigns &gt; Appointment Reminders Campaign. Your booking messages appear to be running already, so confirm what's on before changing anything.</p>
+      <table>
+        <thead><tr><th>Reminder slot</th><th>Status</th><th>Timing</th><th>Send to</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Save the Date</td><td>Active</td><td>On booking</td><td>New and moved appointments</td></tr>
+          <tr><td class="strong">Primary Early</td><td>Active</td><td>7 days before</td><td>Unconfirmed only</td></tr>
+          <tr><td class="strong">Secondary Early</td><td>Active</td><td>3 days before</td><td>Unconfirmed only</td></tr>
+          <tr><td class="strong">Primary Day Before</td><td>Active</td><td>1 day before</td><td>All appointments</td></tr>
+          <tr><td class="strong">Secondary Day Before</td><td>Inactive</td><td>Not used</td><td>The team calls instead</td></tr>
+          <tr><td class="strong">Primary Same Day</td><td>Active</td><td>3 hours before</td><td>Unconfirmed only</td></tr>
+          <tr><td class="strong">Secondary Same Day</td><td>Inactive</td><td>Not used</td><td>Not used</td></tr>
+        </tbody>
+      </table>
+      <ul class="body">
+        <li><b>Delivery:</b> Text Preferred, so email is the fallback where it's available</li>
+        <li><b>Send window:</b> set this to your office's preferred hours under Reminder Timing</li>
+        <li><b>Special Settings:</b> turn on Family Messaging, Send Confirmation Notification, Send Call Back Notification and "Include the day of the week"</li>
+        <li><b>Team step:</b> the day before each visit, call any new patient who still hasn't confirmed</li>
+        <li><b>Monitor:</b> check the Not Sent tab weekly for missing contact details and other failures</li>
+      </ul>
+      <p class="dim" style="font-size:13px">Short-notice bookings won't receive the earlier reminders. Same-day reminders must go out at least 2 hours before the appointment.</p>
+    </section>
+
+    <section class="block" id="forms" data-nav="3 · New patient forms">
+      <div class="label">Automation 3</div>
+      <h2>New patient forms</h2>
+      <p>Finished forms mean a smoother first visit, and they give the team an early signal about who is likely to show up.</p>
+      <ul class="body">
+        <li>Confirm that new patient forms send automatically when a new patient is booked</li>
+        <li>The day before each visit, check Pending Forms and use Send Reminder for anyone who hasn't finished</li>
+        <li>Treat unfinished forms plus an unconfirmed appointment as the top priority for a phone call</li>
+        <li>Use Mark as Submitted only when a form was completed on paper or outside the system</li>
+        <li>Check the Not Sent tab for missing or invalid contact details</li>
+      </ul>
+    </section>
+
+    <section class="block" id="reviews" data-nav="4 · Review requests">
+      <div class="label">Automation 4</div>
+      <h2>Google review requests</h2>
+      <p>Menu: Campaigns &gt; Review Request Campaign. Practice by Numbers' help articles list it under both General and Follow-Up Campaigns.</p>
+      <div class="step">
+        <div class="sh"><span class="sn">A</span><h3>Connect and tag</h3></div>
+        <ul class="checklist">
+          <li>Check the Google connection under New Settings &gt; Reputation &gt; Review Request Settings</li>
+          <li>Run Settings &gt; Marketing &gt; Tag Patients Who Have Written Reviews one time</li>
+          <li>Check the tagged list on the Reputation page. Tag patients by hand where Google and Dentrix names don't match.</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">B</span><h3>Campaign settings</h3></div>
+        <ul class="checklist">
+          <li><b>Audience:</b> all patients with completed appointments</li>
+          <li><b>Exclude:</b> check "Exclude the patients who already reviewed"</li>
+          <li><b>Frequency:</b> no more than one request per patient in 12 months, using the past-year exclusion</li>
+          <li><b>Households:</b> turn on "Exclude even if a patient with the same contact information got contacted"</li>
+          <li><b>Channel:</b> Text Preferred, with a send window during business hours</li>
+          <li><b>Timing:</b> as soon after the visit as the account allows, ideally 1–2 hours</li>
+          <li><b>Follow-up:</b> one reminder 3 days later if the patient didn't click</li>
+          <li><b>Review site:</b> send patients straight to Google if the selection page allows it</li>
+          <li>Use the Test Date option, send a test to a staff phone, then set the campaign to Active</li>
+        </ul>
+      </div>
+      <div class="callout"><strong>Keep the profile safe:</strong> leave "Give patient an option to send feedback directly to you" off unless it's clear this doesn't steer unhappy patients away from Google. Don't use offers in review invites, and don't exclude patients because they might be unhappy.</div>
+      <ul class="body">
+        <li><b>New review alerts:</b> turn on Google Business Profile notifications for the reply owner, and also use any alert available in Practice by Numbers</li>
+        <li><b>In person:</b> whoever sees the patient keeps asking, and patients leave the review on their own phones</li>
+        <li><b>Staff drawing:</b> it's fine to reward staff, but nothing is offered to patients</li>
+      </ul>
+    </section>
+
+    <section class="block" id="missed" data-nav="5 · Missed visits">
+      <div class="label">Automation 5</div>
+      <h2>No-shows and cancellations</h2>
+      <p>Menu: Campaigns &gt; Cancelled Appointments Campaign. The default covers only cancelled appointments, sends a message after one day and creates a task after 14 days. That's too slow for a no-show.</p>
+      <table>
+        <thead><tr><th>When</th><th>Step</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Same day</td><td>Call task, ideally within 1 hour. Use the front desk script.</td><td>Front desk</td></tr>
+          <tr><td class="strong">Next day</td><td>Text and email with a simple way to rebook</td><td>Automatic</td></tr>
+          <tr><td class="strong">Day 2</td><td>Second call task</td><td>Front desk</td></tr>
+          <tr><td class="strong">Day 7</td><td>Third call task</td><td>Front desk</td></tr>
+          <tr><td class="strong">Day 30</td><td>Final text and email</td><td>Automatic</td></tr>
+        </tbody>
+      </table>
+      <div class="step">
+        <div class="sh"><span class="sn">✓</span><h3>Settings</h3></div>
+        <ul class="checklist">
+          <li>Under Edit Filters, include failed appointments as well as cancelled ones</li>
+          <li>Keep "Not Reappointed" checked so patients who already rebooked are left out</li>
+          <li>Set "No Appointment Within" so anyone already scheduled is left out</li>
+          <li>Close the sequence when the patient makes an appointment</li>
+          <li>Assign the task owner</li>
+          <li>Run one test no-show and confirm it counts as a "failed appointment," and how soon the task appears</li>
+        </ul>
+      </div>
+      <div class="callout info"><strong>Track it:</strong> log the reason and whether the patient rebooked. Your staff incentive could reward each no-show who gets back on the schedule.</div>
+    </section>
+
+    <section class="block" id="treatment" data-nav="6 · Unscheduled treatment">
+      <div class="label">Automation 6</div>
+      <h2>Unscheduled treatment, starting with implants</h2>
+      <p>This matches your priority of higher-value, better-quality cases. Start with implants and tooth replacement, then expand once the sequence is working. Menu: Revenue IQ Follow-Up, or Campaigns &gt; Unscheduled Treatment Campaign.</p>
+      <ul class="body">
+        <li><b>Audience:</b> filter Service Code(s) to the implant and tooth replacement codes Dr. Locklear approves</li>
+        <li><b>Provider:</b> use Provider(s) if some providers should be handled separately</li>
+        <li><b>Starting schedule:</b> day 3 text and email, day 10 text, day 21 call task, day 45 final text</li>
+        <li><b>Stop rule:</b> messages stop when the patient schedules a procedure from the treatment plan</li>
+        <li><b>Message:</b> keep it general, such as "We'd love to help you with your next step." Save treatment details for the phone or the office.</li>
+      </ul>
+    </section>
+
+    <section class="block" id="recall" data-nav="7 · Recall">
+      <div class="label">Automation 7</div>
+      <h2>Recall</h2>
+      <p>Menu: Campaigns &gt; Recall Campaign. The default audience is active patients who are unscheduled for recall.</p>
+      <table>
+        <thead><tr><th>When</th><th>Step</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">30 days before due</td><td>Text and email</td></tr>
+          <tr><td class="strong">Due date</td><td>Text</td></tr>
+          <tr><td class="strong">14 days overdue</td><td>Text and email</td></tr>
+          <tr><td class="strong">30 days overdue</td><td>Call task for the recall owner</td></tr>
+        </tbody>
+      </table>
+      <p>Set the owner and closure rule in the Owner, Closure, and Expiration panel, and close the sequence when any appointment is scheduled. Use the Test button on automatic tasks to preview who qualifies before going live.</p>
+    </section>
+
+    <section class="block" id="reactivation" data-nav="8 · Past patients">
+      <div class="label">Automation 8</div>
+      <h2>Past patients</h2>
+      <p>These are two separate campaigns. Run them in different weeks so nobody gets both messages together.</p>
+      <table>
+        <thead><tr><th>Campaign</th><th>Audience</th><th>Goal</th><th>Pace</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Past-patient reviews</td><td>Seen in the last 12–18 months, without a review tag</td><td>Google reviews</td><td>One time, 4 weekly batches</td></tr>
+          <tr><td class="strong">Reactivation</td><td>No visit in 12+ months and nothing scheduled</td><td>Booked appointments</td><td>Weekly batches</td></tr>
+        </tbody>
+      </table>
+      <ul class="body">
+        <li>Build both under Campaigns &gt; Custom Campaigns, using a saved search or built-in list</li>
+        <li>Keep each text batch under Practice by Numbers' 500-patient limit, and confirm how the limit applies to your account</li>
+        <li>Leave out anyone who opted out or already has an appointment</li>
+        <li>Have the inbox owner ready the day each batch goes out</li>
+      </ul>
+    </section>
+
+    <section class="block" id="rules" data-nav="Message rules">
+      <div class="label">Message rules</div>
+      <h2>How to keep this from feeling like too many texts</h2>
+      <ul class="body">
+        <li><b>Priority:</b> appointment reminders come first, then missed-visit recovery, treatment follow-up, recall, reviews and reactivation</li>
+        <li><b>Spacing:</b> avoid more than one non-appointment message to a patient in the same week where the account allows it</li>
+        <li><b>Booked patients:</b> every follow-up stops once the patient has an appointment</li>
+        <li><b>Opt-outs:</b> these apply across every campaign. Don't place STOP or similar keywords in message text unless Practice by Numbers advises it for your account.</li>
+        <li><b>Privacy:</b> keep treatment details out of messages</li>
+      </ul>
+      <div class="callout warn"><strong>Planned closures:</strong> our notes show Nov 19, Nov 23–26, Dec 23–24 and Dec 28–31. Once confirmed, don't launch batches around those dates, and set an after-hours reply saying when the office reopens.</div>
+    </section>
+
+    <section class="block" id="rollout" data-nav="Rollout">
+      <div class="label">Rollout</div>
+      <h2>Turn it on in this order</h2>
+      <table>
+        <thead><tr><th>Phase</th><th>Work</th><th>Done when</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Week 1</td><td>Foundation checks, baseline, inbox cleanup</td><td>Backlog is cleared and owners are named</td></tr>
+          <tr><td class="strong">Week 2</td><td>Reminders, forms, no-show sequence</td><td>Test appointment runs correctly end to end</td></tr>
+          <tr><td class="strong">Week 3</td><td>Review campaign, team training</td><td>First live requests are sent and alerts work</td></tr>
+          <tr><td class="strong">Week 4</td><td>Implant treatment follow-up</td><td>Approved code list is live</td></tr>
+          <tr><td class="strong">Weeks 5–6</td><td>Recall and past-patient reviews</td><td>First batches are sent</td></tr>
+          <tr><td class="strong">Weeks 7–8</td><td>Reactivation and review of results</td><td>Settings are adjusted from the data</td></tr>
+        </tbody>
+      </table>
+      <p>Turn on one group at a time so that if something goes wrong, we know which automation caused it.</p>
+    </section>
+
+    <section class="block" id="measures" data-nav="Measures">
+      <div class="label">Measures</div>
+      <h2>How we'll know it's working</h2>
+      <table>
+        <thead><tr><th>Measure</th><th>Starting point</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">New patient show-up rate</td><td>54% (Oct 1–15)</td><td>75%</td></tr>
+          <tr><td class="strong">No-shows rebooked</td><td>To be measured</td><td>Set after 30 days</td></tr>
+          <tr><td class="strong">"Needs reply" conversations</td><td>56 (Nov 4)</td><td>Cleared each business day</td></tr>
+          <tr><td class="strong">New Google reviews a month</td><td>From the baseline</td><td>Confirm after baseline (proposed: 50)</td></tr>
+          <tr><td class="strong">Review requests vs completed visits</td><td>From the baseline</td><td>90% or higher, after exclusions</td></tr>
+          <tr><td class="strong">Implant follow-ups scheduled</td><td>From the baseline</td><td>Set after 60 days</td></tr>
+          <tr><td class="strong">Overdue recall booked</td><td>From the baseline</td><td>Set after 60 days</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="block" id="confirm" data-nav="To confirm">
+      <div class="label">To confirm</div>
+      <h2>What we'll verify in your account</h2>
+      <p>These steps come from Practice by Numbers' public help center, not from a review of your live settings. Timing values are our recommendations, and screens may differ by plan.</p>
+      <ul class="body">
+        <li>Whether "failed appointments" includes no-shows, and whether a same-day task is possible</li>
+        <li>How soon after a visit a review request can send</li>
+        <li>Whether confirmation messages can be edited, since help articles disagree</li>
+        <li>What the confirmation reply keywords are, including what "2" does</li>
+        <li>Whether reviews can be answered inside Practice by Numbers, or only in Google</li>
+        <li>Whether Practice by Numbers sends new-review alerts</li>
+        <li>How review requests, reminders and campaigns overlap when one patient qualifies for several</li>
+      </ul>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next step</div>
+      <h2>Confirm access, then start with the inbox</h2>
+      <p>Once the Business Associate Agreement and owners are in place, we'll pull the baseline, clear the inbox and start the first reminders review.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
