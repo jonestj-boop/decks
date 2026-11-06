@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════════════════════
+     EMBERTRIBE — SEO GROWTH ROADMAP · MACHINE TEMPLATE
+     Filled by scripts/roadmap/build_deck.py — never hand-edit tokens here.
+     Visual canon: embertribe-design (growth-roadmap-deck.html) — red cover +
+     divider with the "e" watermark, body slides black-on-white, Quatro,
+     headers Sentence case, labels ALL CAPS, honey accents, single client
+     accent color. Content-structure canon: the coastal-crate-pet-co dial-in
+     (14 slides, no CTA slide — the call is the CTA; case study never dropped).
+     Deploys one level under decks/ → ../fonts and ../images resolve.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEVATA · SEO Growth Roadmap · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#263D30; --client-accent-soft:#e9ecea;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#263D30; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:34px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+  code { font-family:"SF Mono","Fira Code",monospace; background:var(--ink-50); padding:2px 6px; border-radius:4px; font-size:11.5px; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.cover .stat { background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.2); }
+  .slide.cover .stat .v, .slide.cover .stat .v.accent, .slide.cover .stat .v.good { color:var(--et-white); }
+  .slide.cover .stat .v.honey { color:var(--et-honey); }
+  .slide.cover .stat .k { color:rgba(255,255,255,0.8); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; color:var(--ink-700); } .callout.good strong{color:#1B7F4A;}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .good{color:var(--good);} .warn-t{color:#e0930a;} .bad{color:var(--bad);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS + CHIPS ─────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .chart-cap { font-size:12px; color:var(--ink-500); margin-bottom:8px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .chart-cap span { font-weight:400; text-transform:none; letter-spacing:0; }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLAR CARDS (engine slide) ───────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; flex:1; min-width:0; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .titles-note { font-size:12.5px; font-style:italic; color:var(--ink-600); background:var(--subtle);
+    border-left:3px solid var(--et-honey); padding:9px 13px; border-radius:0 8px 8px 0; margin:2px 0 10px; max-width:960px; line-height:1.5; }
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 12px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  .month-head { display:flex; gap:26px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-500); margin-bottom:8px; }
+  .month-head strong { color:var(--et-black); }
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+  .art-note { font-size:10.5px; color:var(--ink-500); font-style:italic; margin-top:2px; }
+
+  /* ── WHY-THIS-PLAN ─────────────────────────────────────────────────── */
+  .strategy-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+  .strategy-card { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; }
+  .strategy-card h4 { font-size:13.5px; margin-bottom:5px; }
+  .strategy-card p { font-size:12px; color:var(--ink-500); line-height:1.55; }
+  .x-list { list-style:none; padding:0; margin:6px 0 0 0; font-size:12.5px; line-height:1.65; }
+  .x-list li { padding-left:20px; position:relative; margin-bottom:6px; }
+  .x-list li::before { content:"×"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .strategy-timeline { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:10px 0; }
+  .ts-step { background:var(--subtle); padding:10px 8px; border-radius:8px; text-align:center; border-top:3px solid var(--client-accent); }
+  .ts-step .ts-when { font-size:10px; color:var(--ink-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; }
+  .ts-step .ts-what { font-size:12px; font-weight:600; line-height:1.35; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:flex!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active">
+  <div>
+    <img class="client-logo" src="" alt="" onerror="this.style.display='none'" style="max-height:48px;max-width:210px;margin-bottom:28px;object-fit:contain;">
+    <div class="accent-rule"></div>
+    <div class="label">SEO Growth Roadmap · Prepared by EmberTribe</div>
+    <h1>DEVATA</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">Where your organic search stands today, what your competitors are taking, and a plan built around the gold you want to sell.</p>
+    <div class="stats" style="margin-top:30px;max-width:1100px;">
+      <div class="stat"><div class="v good">1,422</div><div class="k">Monthly search clicks (your Search Console, last 90 days)</div></div>
+      <div class="stat"><div class="v honey">762K</div><div class="k">Monthly searches on 411 gold keywords where a rival is top 10 and you are past page 2 or absent</div></div>
+      <div class="stat"><div class="v ">2,417</div><div class="k">Month 12 monthly clicks, conservative target</div></div>
+      <div class="stat"><div class="v honey">4+ yrs</div><div class="k">EmberTribe content engine, zero penalties</div></div>
+    </div>
+    <div class="meta">
+      <div>Date<b>November 2026</b></div>
+      <div>Engine<b>ClusterMagic</b></div>
+      <div>Deliverables<b>This roadmap + keyword research workbook</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE OPPORTUNITY ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The opportunity</div>
+    <h2>Independent gold brands rank where you are missing.</h2>
+    <p class="subtitle">These ten terms bring 196,200 searches a month. Your Search Console shows you past page 2 on all of them, or not at all.</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="red">Keyword</th><th class="red num">Monthly volume</th><th class="red">Top competitor</th><th class="red num">SEMrush pos</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">gold necklace</td><td class="num">49,500</td><td>Oradina</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">gold earrings</td><td class="num">40,500</td><td>Oradina</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">gold bracelets for women</td><td class="num">22,200</td><td>Norm Jewels</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">gold rings for women</td><td class="num">18,100</td><td>Norm Jewels</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">14k gold chain</td><td class="num">18,100</td><td>Baby Gold</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">stackable rings</td><td class="num">14,800</td><td>Oradina</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">14k gold jewelry</td><td class="num">12,100</td><td>Baby Gold</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">gold pendant necklace</td><td class="num">9,900</td><td>Norm Jewels</td><td class="num strong good">1</td></tr>
+          <tr><td class="strong">gold huggie earrings</td><td class="num">6,600</td><td>Baby Gold</td><td class="num strong good">3</td></tr>
+          <tr><td class="strong">14k gold stud earrings</td><td class="num">4,400</td><td>Baby Gold</td><td class="num strong good">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px;">If you ranked in the top 5 for these…</h3>
+      <div class="stats" style="flex-direction:column;gap:10px;">
+      <div class="stat"><div class="v accent">1,864</div><div class="k">Estimated monthly clicks at positions 4 to 6, using your own 0.95% click rate</div></div>
+      <div class="stat"><div class="v accent">+131%</div><div class="k">Lift over your current monthly clicks, from these ten terms alone</div></div>
+      <div class="stat"><div class="v good">$1,609</div><div class="k">What those clicks would cost a month in Google Ads (SEMrush CPC)</div></div>
+      </div>
+      <div class="callout info mt">
+<strong>We filtered first.</strong> The raw gap was 3,518,590 searches. Removing what you do not sell and everything you already rank for on page 1 or 2 leaves 762,050, across 411 keywords.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · STRIKING DISTANCE ═════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Striking distance</div>
+    <h2>You are close to page 1 on your best gold terms.</h2>
+    <p class="subtitle">Your own collection pages rank on page 2 for these. All 8 are refreshes, so no new page is needed.</p>
+  </div>
+  <table>
+    <thead><tr><th class="accent">Keyword</th><th class="accent num">Current position</th><th class="accent num">Volume</th><th class="accent num">Clicks/mo now</th><th class="accent num">Clicks/mo at pos 5</th><th class="accent num">Gap</th></tr></thead>
+    <tbody>
+      <tr><td class="strong">14k gold earrings <span class="chip intent">refresh</span></td><td class="num strong warn-t">15.7</td><td class="num">18,100</td><td class="num dim">1</td><td class="num strong">172</td><td class="num up">+171</td></tr>
+      <tr><td class="strong">bangle bracelet <span class="chip intent">refresh</span></td><td class="num strong warn-t">15.5</td><td class="num">6,600</td><td class="num dim">6</td><td class="num strong">63</td><td class="num up">+57</td></tr>
+      <tr><td class="strong">real gold necklace <span class="chip intent">refresh</span></td><td class="num strong warn-t">13.4</td><td class="num">5,400</td><td class="num dim">0</td><td class="num strong">51</td><td class="num up">+51</td></tr>
+      <tr><td class="strong">solid gold necklace <span class="chip intent">refresh</span></td><td class="num strong warn-t">18.6</td><td class="num">4,400</td><td class="num dim">0</td><td class="num strong">42</td><td class="num up">+42</td></tr>
+      <tr><td class="strong">real gold rings <span class="chip intent">refresh</span></td><td class="num strong warn-t">11.1</td><td class="num">2,900</td><td class="num dim">0</td><td class="num strong">28</td><td class="num up">+28</td></tr>
+      <tr><td class="strong">14 karat gold necklace <span class="chip intent">refresh</span></td><td class="num strong warn-t">13.0</td><td class="num">2,400</td><td class="num dim">2</td><td class="num strong">23</td><td class="num up">+21</td></tr>
+      <tr><td class="strong">14k gold bracelets <span class="chip intent">refresh</span></td><td class="num strong warn-t">11.5</td><td class="num">2,400</td><td class="num dim">5</td><td class="num strong">23</td><td class="num up">+18</td></tr>
+      <tr><td class="strong">14k necklace <span class="chip intent">refresh</span></td><td class="num strong warn-t">11.9</td><td class="num">1,300</td><td class="num dim">0</td><td class="num strong">12</td><td class="num up">+12</td></tr>
+    </tbody>
+  </table>
+  <div class="two-col" style="margin-top:12px;">
+    <div class="callout good" style="margin:0;">
+<strong>From your Search Console:</strong> 2,869 queries sit at positions 11 to 30 right now, 130 of them with 100 or more impressions. The workbook lists those 130.
+    </div>
+    <div class="callout info" style="margin:0;">
+<strong>Why these go first:</strong> Google already connects these pages to the search. A clearer title, tighter copy and internal links from your journal usually move a page faster than a new URL would.
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · WHERE YOU STAND ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Where you stand · Verified data</div>
+    <h2>Your own work doubled your search traffic.</h2>
+    <p class="subtitle">You and your team did this on weekends. Your Search Console shows what that work produced.</p>
+  </div>
+  <div class="two-col" style="align-items:start;">
+    <div>
+      <div class="stats" style="margin-bottom:12px;">
+        <div class="stat"><div class="v accent">1,405</div><div class="k">Search clicks, October 2026 (Search Console)</div></div>
+        <div class="stat"><div class="v accent">44%</div><div class="k">Non-branded share of clicks with a visible search term</div></div>
+      </div>
+      <div class="bars" style="margin:0 0 12px;">
+<div class="bar"><div class="bl">Non-branded: 965 clicks</div><div class="bt"><div class="bf" style="width:79.9%"></div></div><div class="bv">44</div></div>
+<div class="bar"><div class="bl">Branded: 1,210 clicks</div><div class="bt"><div class="bf honey" style="width:100.0%"></div></div><div class="bv">56</div></div>
+      </div>
+      <table style="font-size:12px;">
+        <thead><tr><th class="accent">Top non-branded GSC query</th><th class="accent num">Clicks, 90 days</th><th class="accent num">Pos.</th></tr></thead>
+        <tbody>
+          <tr><td class="kw"><code>14k gold necklace</code></td><td class="num strong">34</td><td class="num strong good">9.5</td></tr>
+          <tr><td class="kw"><code>14k solid gold necklace</code></td><td class="num strong">22</td><td class="num strong good">7.4</td></tr>
+          <tr><td class="kw"><code>gold plated sterling silver</code></td><td class="num strong">19</td><td class="num strong good">1.6</td></tr>
+          <tr><td class="kw"><code>bangle bracelet</code></td><td class="num strong">17</td><td class="num strong warn-t">15.5</td></tr>
+          <tr><td class="kw"><code>14k gold bracelets</code></td><td class="num strong">16</td><td class="num strong warn-t">11.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Search clicks · 12 months <span>· Google Search Console</span></div>
+        <svg viewBox="0 -12 310 160" style="width:100%;display:block;" xmlns="http://www.w3.org/2000/svg">
+<line x1="38" y1="10" x2="300" y2="10" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="14" text-anchor="end" font-size="9" fill="#9aa0a6">1.5K</text>
+<line x1="38" y1="44" x2="300" y2="44" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="48" text-anchor="end" font-size="9" fill="#9aa0a6">1K</text>
+<line x1="38" y1="78" x2="300" y2="78" stroke="rgba(0,0,0,0.08)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="32" y="82" text-anchor="end" font-size="9" fill="#9aa0a6">500</text>
+<line x1="38" y1="112" x2="300" y2="112" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+<text x="32" y="116" text-anchor="end" font-size="9" fill="#9aa0a6">0</text>
+<polyline points="55,62 77,41 99,64 120,63 142,62 164,60 186,47 208,49 230,31 251,16 273,20 295,16" fill="none" stroke="var(--client-accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="55" cy="62" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="55" y="55" text-anchor="middle" font-size="8" fill="#6b6b6b">739</text>
+<text x="55" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Nov</text>
+<circle cx="77" cy="41" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="77" y="34" text-anchor="middle" font-size="8" fill="#6b6b6b">1,043</text>
+<text x="77" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Dec</text>
+<circle cx="99" cy="64" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="99" y="57" text-anchor="middle" font-size="8" fill="#6b6b6b">712</text>
+<text x="99" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jan</text>
+<circle cx="120" cy="63" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="120" y="56" text-anchor="middle" font-size="8" fill="#6b6b6b">725</text>
+<text x="120" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Feb</text>
+<circle cx="142" cy="62" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="142" y="55" text-anchor="middle" font-size="8" fill="#6b6b6b">731</text>
+<text x="142" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Mar</text>
+<circle cx="164" cy="60" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="164" y="53" text-anchor="middle" font-size="8" fill="#6b6b6b">772</text>
+<text x="164" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Apr</text>
+<circle cx="186" cy="47" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="186" y="40" text-anchor="middle" font-size="8" fill="#6b6b6b">958</text>
+<text x="186" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">May</text>
+<circle cx="208" cy="49" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="208" y="42" text-anchor="middle" font-size="8" fill="#6b6b6b">923</text>
+<text x="208" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jun</text>
+<circle cx="230" cy="31" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="230" y="24" text-anchor="middle" font-size="8" fill="#6b6b6b">1,188</text>
+<text x="230" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Jul</text>
+<circle cx="251" cy="16" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="251" y="9" text-anchor="middle" font-size="8" fill="#6b6b6b">1,408</text>
+<text x="251" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Aug</text>
+<circle cx="273" cy="20" r="4" fill="#ffffff" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="273" y="13" text-anchor="middle" font-size="8" fill="#6b6b6b">1,347</text>
+<text x="273" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Sep</text>
+<circle cx="295" cy="16" r="5" fill="var(--client-accent)" stroke="var(--client-accent)" stroke-width="2"/>
+<text x="295" y="9" text-anchor="middle" font-size="8" fill="#6b6b6b" font-weight="700">1,405</text>
+<text x="295" y="128" text-anchor="middle" font-size="9" fill="#9aa0a6">Oct</text>
+<rect x="216" y="134" width="90" height="16" rx="8" fill="#e9f9f0"/><text x="261" y="145" text-anchor="middle" font-size="9" fill="#2FC171" font-weight="700">+113% year on year</text>
+</svg>
+      </div>
+      <div class="callout good" style="font-size:12.5px;">
+<strong>2,007 clicks became 4,266</strong> in the same 90 days, a year apart. Most of that climb started in May.
+</div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>Reading the split:</strong> it covers the 2,175 clicks Google shows a search term for. Google hides the term on the other 2,091. SEMrush estimates 3.8K a month; your real number is 1,422.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4b · WHAT THE TRAFFIC DOES ONCE IT LANDS (optional; empty unless the
+     client's analytics record an intent event) ══════════════════════════ -->
+
+
+<!-- ══ 5 · AI SEARCH PRESENCE ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">AI search presence</div>
+    <h2>How often does AI recommend your brand?</h2>
+    <p class="subtitle">AI answers already mention you, and they often cite your retailers rather than your store.</p>
+  </div>
+  <div class="callout info" style="margin:0 0 16px;">
+<strong>Quick primer:</strong> SEMrush asks four AI engines buyer-style questions and counts when you are <em>named</em> and when your pages are <em>cited</em>.
+  </div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+    <div class="stat" style="padding:18px;">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">
+<svg viewBox="0 0 80 50" style="width:104px;flex-shrink:0;" xmlns="http://www.w3.org/2000/svg"><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--ink-100)" stroke-width="9" stroke-linecap="round"/><path d="M8,42 A32,32 0 0,1 72,42" fill="none" stroke="var(--et-honey)" stroke-width="9" stroke-linecap="round" stroke-dasharray="23.1 100.5"/><text x="40" y="40" text-anchor="middle" font-size="20" font-weight="800" fill="var(--et-black)">23</text></svg>
+        <div>
+          <div class="k" style="margin-top:0;">AI Visibility Score</div>
+          <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.4;">A 0–100 index. The higher, the more often AI engines surface your brand in category answers.</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <div style="position:relative;height:8px;border-radius:4px;background:linear-gradient(90deg,var(--ink-100) 0%,var(--ink-100) 25%,#fff3d1 25%,#fff3d1 60%,#dcf5e6 60%,#dcf5e6 100%);">
+          <div style="position:absolute;left:23%;top:-3px;width:2px;height:14px;background:var(--et-black);"></div>
+          <div style="position:absolute;left:23%;top:-18px;transform:translateX(-50%);font-size:10px;font-weight:700;color:var(--et-black);white-space:nowrap;">You · 23</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--ink-500);margin-top:6px;font-weight:600;">
+          <span>0 · Invisible</span>
+          <span style="margin-left:5%;">25 · Emerging</span>
+          <span>60 · Established</span>
+          <span>100 · Dominant</span>
+        </div>
+      </div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Brand mentions</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">137</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Times “DEVATA” was <strong>named in the answer text</strong> across all four AI engines in the last reporting window.</div>
+    </div>
+    <div class="stat" style="padding:18px;">
+      <div class="k" style="margin-top:0;">Pages cited as sources</div>
+      <div class="v" style="font-size:42px;margin-top:6px;">53</div>
+      <div style="font-size:12px;color:var(--ink-500);margin-top:6px;line-height:1.45;">Unique URLs from devata.com that AI engines linked to <strong>as the source</strong> behind their answer.</div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:8px;">Where you show up, by AI engine</h3>
+      <table style="font-size:13px;">
+        <thead><tr><th class="accent">Engine</th><th class="accent num">Mentions</th><th class="accent num">Cited pages</th><th class="accent num">% of mentions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Google AI Overview</strong><div class="sub-td">the AI box at the top of Google results</div></td><td class="num strong">75</td><td class="num">32</td><td class="num strong good">54.7%</td></tr>
+          <tr><td><strong>Google AI Mode</strong><div class="sub-td">Google&#x27;s full-page conversational search</div></td><td class="num strong">23</td><td class="num">3</td><td class="num strong warn-t">16.8%</td></tr>
+          <tr><td><strong>ChatGPT</strong><div class="sub-td">OpenAI&#x27;s assistant + search</div></td><td class="num strong">29</td><td class="num">22</td><td class="num strong warn-t">21.2%</td></tr>
+          <tr><td><strong>Gemini</strong><div class="sub-td">Google&#x27;s standalone AI assistant</div></td><td class="num strong">10</td><td class="num">6</td><td class="num strong bad">7.3%</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="font-size:12.5px;">
+<strong>Reading it:</strong> Google AI Overview carries over half your mentions.
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:8px;">What this means for DEVATA</h3>
+      <div class="callout good" style="font-size:12.5px;">
+<strong>You are already in the conversation.</strong> 75 of your 137 mentions come from Google AI Overview, and it cited your gold plated page above your own #1 result when we checked.
+</div>
+      <div class="callout info" style="font-size:12.5px;">
+<strong>Retailers collect the credit.</strong> When AI names you, its sources include nordstrom.com (51) and macys.com (42). A sale there pays commission.
+</div>
+      <div class="callout " style="font-size:12.5px;">
+<strong>The fix is answers on your own site.</strong> Direct answers on karat, tarnish, sizing and care are what AI engines quote.
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · TECH ROADBLOCKS ═══════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Tech roadblocks</div>
+    <h2>Five things are holding back the pages Google already sees.</h2>
+    <p class="subtitle">Each one was confirmed on your live site on November 6.</p>
+  </div>
+  <div class="two-col" style="grid-template-columns:1.5fr 1fr;">
+    <div>
+      <table>
+        <thead><tr><th class="accent">Priority</th><th class="accent">Issue</th><th class="accent num">Scope</th><th class="accent">Unlocks</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill p1">P1</span></td><td><strong>Your most visible lines are mostly sold out</strong><div class="sub-td">Your 60 silver styles come in two finishes: 8 are available in any finish, 3 in gold plated. All 20 ring styles are sold out. These pages hold your largest impression count.</div></td><td class="num strong">60 styles</td><td>Visitors land on pieces they can buy. Inbound stock helps here</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Your chain and bangle collections are thin</strong><div class="sub-td">14K chains hold 8 products and 14K bangles 5. Inside chains, Cuban has 4 and paperclip 2. Hoops (16) and band rings (15) have more to work with.</div></td><td class="num strong">2 ad collections</td><td>More to rank with and more to advertise</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>An Indonesian store copy in English</strong><div class="sub-td">/id/ pages are tagged Indonesian, read in English, and Indonesia is not on your shipping list.</div></td><td class="num strong">499 URLs seen by Google</td><td>Google spends its crawl on your real pages</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>Collections with the wrong identity</strong><div class="sub-td">/collections/love-knot is titled Lab grown diamond. /collections/cuff-bracelets is live with 0 products. Two chain pairs share one title.</div></td><td class="num strong">6 collections</td><td>Clear signals on which page owns which term</td></tr>
+          <tr><td><span class="pill p2">P2</span></td><td><strong>No product reviews on product pages</strong><div class="sub-td">Neither product page we sampled carries rating data. Your store rating already shows in Google; your products have nothing to show.</div></td><td class="num strong">2 of 2 sampled</td><td>Star ratings in results, already in your site work quote</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="score-cards" style="margin-bottom:14px;">
+        <div class="score-card"><div class="sc-cap">Mobile</div><div class="sc-v warn">83</div><div class="sc-l">PageSpeed performance</div></div>
+        <div class="score-card"><div class="sc-cap">Desktop</div><div class="sc-v warn">87</div><div class="sc-l">PageSpeed performance</div></div>
+      </div>
+      <table style="font-size:12.5px;">
+        <thead><tr><th>Core Web Vital</th><th class="num">Mobile</th><th class="num">Desktop</th></tr></thead>
+        <tbody>
+          <tr><td>LCP <span class="sub-td">(target &lt; 2.5s)</span></td><td class="num strong warn-t">3.5s</td><td class="num strong good">0.7s</td></tr>
+          <tr><td>TBT <span class="sub-td">(target &lt; 200ms)</span></td><td class="num strong warn-t">330ms</td><td class="num strong warn-t">290ms</td></tr>
+          <tr><td>CLS <span class="sub-td">(target &lt; 0.1)</span></td><td class="num strong good">0</td><td class="num strong good">0</td></tr>
+        </tbody>
+      </table>
+      
+      <div class="callout warn mt">
+<strong>What already works:</strong> your collection titles follow a clear pattern and your pages carry product and collection schema. Homepage mobile score ranged 52 to 83 across two runs; the figures above are the second.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7 · THE COMPETITOR GAP ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The competitor gap</div>
+    <h2>Your rivals win on coverage more than on authority.</h2>
+    <p class="subtitle">All figures are SEMrush estimates for the US, so they compare fairly with each other.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th class="red">DEVATA</th>
+            <th>Oradina</th>
+            <th>Baby Gold</th>
+            <th>Norm Jewels</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="strong">Authority Score</td><td class="num strong" style="color:var(--et-red);">19</td><td class="num">38</td><td class="num">41</td><td class="num">25</td></tr>
+          <tr><td class="strong">Monthly organic traffic</td><td class="num strong" style="color:var(--et-red);">3.8K</td><td class="num">80.4K</td><td class="num">90.1K</td><td class="num">69.1K</td></tr>
+          <tr><td class="strong">Referring domains</td><td class="num strong" style="color:var(--et-red);">1.3K</td><td class="num">3.1K</td><td class="num">2.9K</td><td class="num">2.1K</td></tr>
+          <tr><td class="strong">Organic keywords</td><td class="num strong" style="color:var(--et-red);">1.5K</td><td class="num">9.6K</td><td class="num">22.1K</td><td class="num">8.9K</td></tr>
+        </tbody>
+      </table>
+      <div class="callout good mt">
+<strong>Norm Jewels is the one to study.</strong> Its Authority Score is 25 against your 19, yet SEMrush puts its traffic at 18 times yours, with roughly six times your keywords.
+      </div>
+    </div>
+    <div>
+      <div class="chart-wrap">
+        <div class="chart-cap">Monthly organic traffic <span>· SEMrush · US · Nov 2026</span></div>
+        <div class="bars" style="margin:0;">
+<div class="bar"><div class="bl">Baby Gold</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">90,100</div></div>
+<div class="bar"><div class="bl">Oradina</div><div class="bt"><div class="bf" style="width:89.2%"></div></div><div class="bv">80,400</div></div>
+<div class="bar"><div class="bl">Norm Jewels</div><div class="bt"><div class="bf" style="width:76.7%"></div></div><div class="bv">69,100</div></div>
+<div class="bar"><div class="bl">DEVATA</div><div class="bt"><div class="bf red" style="width:4.2%"></div></div><div class="bv">3,800</div></div>
+        </div>
+      </div>
+      <div class="callout mt">
+<strong>Links come second, not first.</strong> Forbes, BuzzFeed, Refinery29 and The Knot link to at least two of these rivals and not to you. Those placements are a month 4+ job.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · DIVIDER — ClusterMagic ════════════════════════════════════════ -->
+<section class="slide divider">
+  <div style="text-align:left">
+    <div class="label">How we capture it</div>
+    <h1 style="font-size:104px;letter-spacing:-0.03em;margin-bottom:18px">ClusterMagic.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">An AI-powered content engine that builds entity-rich content architectures for compounding authority, the same engine behind 4+ years of zero-penalty growth across our portfolio.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · THE CLUSTERMAGIC ENGINE ═══════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The ClusterMagic engine</div>
+    <h2>Three pillars. Four years. Zero penalties.</h2>
+    <p class="subtitle">The pattern is consistent across every client we run this for. Each pillar reinforces the others, and that is why it compounds instead of plateauing like one-off content.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Pillar 01</div><h4>Entity-rich content</h4><p>Every article is built around the entities Google's index already understands. Structured data, internal linking, and topic clusters tell Google exactly what each page is about. This is what makes the content rank.</p></div>
+      <div class="pillar"><div class="pn">Pillar 02</div><h4>AI-powered execution</h4><p>25 to 100 articles per month at the quality bar of human-written. ClusterMagic codifies your brand voice, sources real citations, builds internal links to your existing pages, and ships to your CMS as drafts for review.</p></div>
+      <div class="pillar"><div class="pn">Pillar 03</div><h4>Compounds for years</h4><p>Random AI content gets caught by the next update. ClusterMagic content gets <em>better</em> with each Google update, because it is built on what Google rewards: real entities, real intent, real authority signals. 4+ years of growth. Zero penalties.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · CASE STUDY (ALWAYS INCLUDED — fixed proof, never dropped) ════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same engine, with 4+ years of zero-penalty results across our portfolio, is what we would run for you.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="../images/casestudy-500k.jpg" alt="SEMrush organic traffic chart: 8,500 to 500K+ monthly organic visits over 12 months">
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px;font-size:12.5px;">
+<strong>“Their site improves with each Google update.”</strong> This client's traffic <em>climbs</em> on update days, the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · CONTENT PLAN OVERVIEW ════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">The 90-day content plan</div>
+    <h2>120 articles. 5 pillars. Built to capture the gap.</h2>
+    <p class="subtitle">88 new articles, 27 refreshes of pages you already own and 5 new collection pages. Gold first.</p>
+  </div>
+  <div class="stats" style="margin-bottom:16px;">
+    <div class="stat"><div class="v bad">120</div><div class="k">Pieces planned</div></div>
+    <div class="stat"><div class="v accent">652.6K</div><div class="k">Total monthly searches in scope</div></div>
+    <div class="stat"><div class="v accent">110</div><div class="k">Easy-win keywords (KD &lt; 30)</div></div>
+    <div class="stat"><div class="v accent">~18</div><div class="k">Average difficulty</div></div>
+  </div>
+  <div class="two-col">
+    <div class="chart-wrap">
+      <div class="chart-cap">Coverage by pillar</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Chains &amp; Necklaces</div><div class="bt"><div class="bf" style="width:100.0%;background:var(--pillar-1)"></div></div><div class="bv">33</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Rings &amp; Bands</div><div class="bt"><div class="bf" style="width:72.7%;background:var(--pillar-2)"></div></div><div class="bv">24</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Hoops &amp; Earrings</div><div class="bt"><div class="bf" style="width:57.6%;background:var(--pillar-3)"></div></div><div class="bv">19</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Bangles &amp; Bracelets</div><div class="bt"><div class="bf" style="width:51.5%;background:var(--pillar-4)"></div></div><div class="bv">17</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Solid Gold Know-How</div><div class="bt"><div class="bf" style="width:81.8%;background:#7A4FA3"></div></div><div class="bv">27</div></div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-cap">Funnel mix</div>
+      <div class="bars" style="margin:0;">
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Top of funnel</div><div class="bt"><div class="bf honey" style="width:35.8%"></div></div><div class="bv">24</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Middle of funnel</div><div class="bt"><div class="bf" style="width:100.0%"></div></div><div class="bv">67</div></div>
+<div class="bar" style="grid-template-columns:150px 1fr 66px"><div class="bl">Bottom of funnel</div><div class="bt"><div class="bf red" style="width:43.3%"></div></div><div class="bv">29</div></div>
+      </div>
+      <div class="callout info" style="margin:14px 0 0;font-size:11.5px;line-height:1.5;">
+<strong>Month 1 sells, months 2 and 3 explain.</strong> The first 40 rows fix the pages closest to an order, starting with your four ad collections. The next 80 answer the questions a gold buyer asks first, and they link back to those pages.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · THE ARTICLES (month tabs) ════════════════════════════════════ -->
+<section class="slide">
+  <div class="head" style="margin-bottom:8px;">
+    <div class="label">The 120 articles</div>
+    <h2 style="margin-bottom:6px;">The full list, month by month.</h2>
+    <p class="subtitle" style="font-size:15px;">Every row names its keyword and whether it is a new article, a refresh or a new collection page.</p>
+  </div>
+  <div class="titles-note">Headlines shown are working titles: the keyword, angle, and funnel stage for each article are locked. Final headlines are SEO-optimized at production, and your input is welcome.</div>
+  <div class="mtabs">
+    <button class="mtab is-active" data-mtarget="1"><span class="mt-n">Month 1</span><span class="mt-c">40 · Near-final</span></button>
+    <button class="mtab" data-mtarget="2"><span class="mt-n">Month 2</span><span class="mt-c">40 · Best current targets</span></button>
+    <button class="mtab" data-mtarget="3"><span class="mt-n">Month 3</span><span class="mt-c">40 · Best current targets</span></button>
+  </div>
+  <div class="month-block is-active" data-month="1">
+    <div class="month-head"><span><strong>40</strong> articles</span><span><strong>339,490</strong> total monthly searches</span><span>Avg KD <strong>20</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">1</td><td><div class="strong">14K Gold Chains: Solid Cuban, Paperclip and Cable Styles</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold chain</code></td><td class="num">18,100</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">2</td><td><div class="strong">Solid Gold Cuban Link Chains in 2mm and 2.8mm</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold cuban link chain</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">3</td><td><div class="strong">Gold Paperclip Chains in Solid 14K</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold paperclip necklace</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">4</td><td><div class="strong">14K Gold Necklaces: Solid Pendants, Charms and Chains</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold necklace</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">5</td><td><div class="strong">14K Pendant Necklaces: Cross, Heart and Clover Drops</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold pendant necklace</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">6</td><td><div class="strong">Cross Necklaces and Pendants: Plain Gold and Diamond</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Build out</span></td><td class="kw"><code>gold cross necklace</code></td><td class="num">22,200</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">7</td><td><div class="strong">Gold Charms You Can Add to Any Chain</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold charms</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">8</td><td><div class="strong">Heart Jewelry in 14K Gold: Necklaces, Rings and Hoops</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold heart necklace</code></td><td class="num">8,100</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">9</td><td><div class="strong">Necklace Length Chart: What 16, 18, 20 and 24 Inches Look Like On</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>necklace lengths</code></td><td class="num">22,200</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">10</td><td><div class="strong">Types of Gold Chains: Cuban, Paperclip, Cable and Figaro Side by Side</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>types of gold chains</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">11</td><td><div class="strong">14K Gold Band Rings from 1.2mm to 5mm</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold band ring</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">12</td><td><div class="strong">14K Gold Rings: Solid Bands, Chevrons and Motif Rings</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold ring</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">13</td><td><div class="strong">Stacking Rings in 14K Gold</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Build out</span></td><td class="kw"><code>gold stacking rings</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">14</td><td><div class="strong">Rings with Lab Grown Diamonds, Set in Solid Gold</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>lab grown diamond rings</code></td><td class="num">33,100</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">15</td><td><div class="strong">Ring Size Chart for Women: Measure at Home and Convert Your Size</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>ring size chart for women</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">16</td><td><div class="strong">How to Build a Gold Ring Stack That Does Not Crowd Your Finger</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold ring stack</code></td><td class="num">880</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">17</td><td><div class="strong">14K Gold Hoop Earrings from 10mm to 35mm</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold hoop earrings</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">25</span></td></tr>
+        <tr><td class="dim">18</td><td><div class="strong">Hoop Earrings: Classic, Oval, Huggie and Motif Styles</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>hoop earrings</code></td><td class="num">27,100</td><td class="num"><span class="kd-pill m">30</span></td></tr>
+        <tr><td class="dim">19</td><td><div class="strong">14K Gold Earrings: Studs, Hoops and Huggies</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold earrings</code></td><td class="num">18,100</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">20</td><td><div class="strong">Solid Gold Huggie Earrings</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Build out</span></td><td class="kw"><code>gold huggie earrings</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">21</td><td><div class="strong">Stud Earrings in 14K Gold: Clover, Cross, Bow and Ball</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold stud earrings</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">22</td><td><div class="strong">Lab Grown Diamond Earrings: Studs and Hoops</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>lab grown diamond earrings</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">23</td><td><div class="strong">Hoop Earring Size Chart: What 10mm to 35mm Looks Like on Your Ear</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>hoop earring size chart</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">24</td><td><div class="strong">Small Gold Hoop Earrings: Which Size Stays Comfortable All Day</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>small gold hoop earrings</code></td><td class="num">5,400</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">25</td><td><div class="strong">Solid Gold Bangles: Round, Oval and Square</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold bangle bracelet</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">26</td><td><div class="strong">Bangle Bracelets in Gold and Sterling Silver</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>bangle bracelet</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">27</td><td><div class="strong">14K Gold Bracelets: Solid Chain, Bangle and Charm Styles</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold bracelet</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">28</td><td><div class="strong">Gold Chain Bracelets: Cuban, Cable and Paperclip</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold chain bracelet</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">29</td><td><div class="strong">Cuban Link Bracelets: How 2mm and 2.8mm Wear on the Wrist</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>cuban link bracelet</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">30</td><td><div class="strong">Gold Paperclip Bracelets with Heart and Cross Charms</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Build out</span></td><td class="kw"><code>paperclip bracelet</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">31</td><td><div class="strong">Bracelet Size Guide: Measure Your Wrist for Chains and Bangles</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>bracelet sizing</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">32</td><td><div class="strong">Does Gold Tarnish? What Happens to 10K, 14K and 18K Over Time</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>does gold tarnish</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">33</td><td><div class="strong">How to Clean Gold Jewelry at Home Without Damaging It</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>how to clean gold jewelry</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">34</td><td><div class="strong">Solid Gold vs Gold Plated: How to Tell What You Are Buying</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>what does gold plated mean</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">35</td><td><div class="strong">Solid 14K Gold Jewelry: Rings, Earrings, Bracelets and Necklaces</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>14k gold jewelry</code></td><td class="num">12,100</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">36</td><td><div class="strong">How to Tell If Gold Is Real: Six Checks You Can Do at Home</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how to tell if gold is real</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">37</td><td><div class="strong">What Is 14K Gold? Purity, Color and the 585 Stamp</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>14 karat gold</code></td><td class="num">8,100</td><td class="num"><span class="kd-pill e">27</span></td></tr>
+        <tr><td class="dim">38</td><td><div class="strong">What Karat Gold Is Best for Jewelry You Wear Every Day</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>what karat gold is best</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">39</td><td><div class="strong">10K vs 14K Gold: Purity, Color and Which Holds Up Better</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>difference between 10k gold and 14k gold</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">40</td><td><div class="strong">Love Knot Jewelry in 14K Gold and Sterling Silver</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>love knot bracelet</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="2">
+    <div class="month-head"><span><strong>40</strong> articles</span><span><strong>139,740</strong> total monthly searches</span><span>Avg KD <strong>15</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">41</td><td><div class="strong">Cuban Link vs Curb Chain: Are They the Same Thing?</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>curb chain vs cuban link</code></td><td class="num">260</td><td class="num"><span class="kd-pill ve">3</span></td></tr>
+        <tr><td class="dim">42</td><td><div class="strong">Gold Chain Sizes: What 1mm, 2mm and 3mm Look Like on Your Neck</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold chain sizes</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">43</td><td><div class="strong">16 vs 18 Inch Necklace: Which Length Suits Your Neckline</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>16 vs 18 inch necklace</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">44</td><td><div class="strong">How to Layer Gold Necklaces So They Stop Tangling</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>layering necklaces</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">45</td><td><div class="strong">How to Build a Charm Necklace from One Chain and Three Pendants</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>charm necklace</code></td><td class="num">27,100</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">46</td><td><div class="strong">Pairing a Pendant with the Right Gold Chain</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold chain with pendant</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">47</td><td><div class="strong">Dainty Gold Necklaces: Cable, Paperclip and Pendant Styles</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>dainty gold necklace</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">29</span></td></tr>
+        <tr><td class="dim">48</td><td><div class="strong">Dainty Gold Cross Necklaces: Pendant Sizes and Chain Lengths</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>dainty cross necklace</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">49</td><td><div class="strong">Gold Chains for Women: How Thick Should Yours Be?</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold chains for women</code></td><td class="num">8,100</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">50</td><td><div class="strong">Four Leaf Clover Necklaces in Gold: Open, Solid and Diamond Styles</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>four leaf clover necklace</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">51</td><td><div class="strong">Gold Key Necklace: Key Pendant Charm in Solid 14K</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold key necklace</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">52</td><td><div class="strong">Bezel Set Diamond Rings: Why the Setting Suits Everyday Wear</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>bezel diamond ring</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">53</td><td><div class="strong">Solitaire Rings with Lab Grown Stones</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Build out</span></td><td class="kw"><code>solitaire ring</code></td><td class="num">9,900</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">54</td><td><div class="strong">Thick Gold Bands: How Wide Can You Go Before It Feels Heavy?</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>thick gold band</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">55</td><td><div class="strong">Average Women&#x27;s Ring Size and Why Yours May Differ</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>average women&#x27;s ring size</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">56</td><td><div class="strong">Gold Dome Rings: Why This Shape Works Alone or in a Stack</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold dome ring</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">57</td><td><div class="strong">Stacking Rings with an Engagement Ring: Spacing and Metal Rules</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>stacking rings with engagement ring</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">58</td><td><div class="strong">Are Lab Grown Diamonds Cheaper Than Mined Ones?</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>are lab grown diamonds cheaper</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">59</td><td><div class="strong">What Moves the Price of a Lab Grown Diamond</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>lab grown diamond cost</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">24</span></td></tr>
+        <tr><td class="dim">60</td><td><div class="strong">2mm vs 3mm Gold Band: Which Looks Better on Your Hand</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>2mm gold band</code></td><td class="num">390</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">61</td><td><div class="strong">What Are Huggie Hoop Earrings and How Should They Fit?</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>huggie hoop earrings</code></td><td class="num">8,100</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">62</td><td><div class="strong">Chunky Gold Hoop Earrings: Weight, Width and Comfort</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>chunky gold hoop earrings</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">63</td><td><div class="strong">Large Gold Hoop Earrings: What 30mm and 35mm Really Look Like</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>large gold hoop earrings</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">20</span></td></tr>
+        <tr><td class="dim">64</td><td><div class="strong">How to Build a Gold Earring Stack for Two or Three Piercings</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold earring stack</code></td><td class="num">720</td><td class="num"><span class="kd-pill ve">8</span></td></tr>
+        <tr><td class="dim">65</td><td><div class="strong">Gold Heart Earrings: Studs, Hoops and Huggies Compared</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold heart earrings</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill ve">12</span></td></tr>
+        <tr><td class="dim">66</td><td><div class="strong">Gold Ball Earrings: Stud Sizes and How They Sit on the Ear</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold ball earrings</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">67</td><td><div class="strong">Gold Diamond Hoop Earrings: Bezel, Triple and Knot Settings</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold diamond hoop earrings</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">68</td><td><div class="strong">How to Stack Bangles Without the Noise</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>bangle stack</code></td><td class="num">590</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">69</td><td><div class="strong">Stackable Gold Bracelets: Mixing Chains with Bangles</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>stackable gold bracelets</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">70</td><td><div class="strong">Gold Link Bracelets: Cuban, Cable and Round Link Compared</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold link bracelet</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">71</td><td><div class="strong">Dainty Gold Bracelets: Clasps, Links and Everyday Care</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>dainty gold bracelet</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">72</td><td><div class="strong">Gold Bracelets for Women: Chain, Bangle or Charm?</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold bracelets for women</code></td><td class="num">22,200</td><td class="num"><span class="kd-pill m">32</span></td></tr>
+        <tr><td class="dim">73</td><td><div class="strong">Clover Jewelry: Gold Bracelets, Rings and Studs</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>gold clover bracelet</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">74</td><td><div class="strong">Gold Heart Bracelets: Chain, Paperclip and Bangle Styles</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold heart bracelet</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">13</span></td></tr>
+        <tr><td class="dim">75</td><td><div class="strong">How Long Does Gold Plated Jewelry Last?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how long does gold plated jewelry last</code></td><td class="num">880</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">76</td><td><div class="strong">Does Gold Plated Jewelry Tarnish, and Can You Slow It Down?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>does gold plated tarnish</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">77</td><td><div class="strong">14K vs 24K Gold: Why Purer Is Not Better for Jewelry</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>14k gold vs 24k gold</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill ve">14</span></td></tr>
+        <tr><td class="dim">78</td><td><div class="strong">Is 14K Gold Good for Everyday Jewelry?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>is 14k gold good</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">79</td><td><div class="strong">What Does Karat Mean in Gold? A Plain Scale from 10K to 24K</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>what does karat mean in gold</code></td><td class="num">720</td><td class="num"><span class="kd-pill ve">2</span></td></tr>
+        <tr><td class="dim">80</td><td><div class="strong">Does Gold Turn Your Skin Green? What Causes It</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>does gold turn green</code></td><td class="num">480</td><td class="num"><span class="dim" style="font-size:11px">not measured</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+  <div class="month-block" data-month="3">
+    <div class="month-head"><span><strong>40</strong> articles</span><span><strong>173,400</strong> total monthly searches</span><span>Avg KD <strong>19</strong></span></div>
+    <div class="articles-scroll">
+    <table>
+      <thead><tr><th style="width:36px">#</th><th>Article</th><th>Primary keyword</th><th class="num">Volume</th><th class="num">KD</th></tr></thead>
+      <tbody>
+        <tr><td class="dim">81</td><td><div class="strong">18 Inch Gold Chain: Where It Sits and Who It Suits</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>18 inch gold chain</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">11</span></td></tr>
+        <tr><td class="dim">82</td><td><div class="strong">3mm Cuban Link Chain: How It Compares to 2mm and 2.8mm</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>3mm cuban link chain</code></td><td class="num">720</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">83</td><td><div class="strong">Thin Gold Chains: What to Check Before You Buy One</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>thin gold chain</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">84</td><td><div class="strong">Everyday Gold Necklaces: Lengths That Work with Any Neckline</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>everyday gold necklace</code></td><td class="num">590</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">85</td><td><div class="strong">Gold Butterfly Necklaces: Pendant and Charm Styles</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold butterfly necklace</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill ve">5</span></td></tr>
+        <tr><td class="dim">86</td><td><div class="strong">Gold Infinity Necklaces: What the Shape Means and How to Wear It</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold infinity necklace</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">87</td><td><div class="strong">Gold Necklace Gift Ideas for Your Girlfriend, by Budget</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold necklace for girlfriend</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">25</span></td></tr>
+        <tr><td class="dim">88</td><td><div class="strong">Anniversary Necklaces in Gold: Hearts, Infinity and Bezel Diamonds</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>anniversary necklace</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">89</td><td><div class="strong">Mother&#x27;s Day Necklaces in 14K Gold: Hearts, Keys and Clovers</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>mothers day necklace</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">90</td><td><div class="strong">Bezel Diamond Necklaces: Single, Station and Graduated</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>bezel diamond necklace</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">91</td><td><div class="strong">Lab Grown Diamond Necklaces: Bezel, Station and Pendant</div><span class="chip pillar" style="background:var(--pillar-1)">Chains &amp; Necklaces</span><span class="chip funnel">Bot</span><span class="chip intent">Decision</span><span class="chip funnel">Refresh</span></td><td class="kw"><code>lab grown diamond necklace</code></td><td class="num">4,400</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">92</td><td><div class="strong">Women&#x27;s Wedding Bands: Plain Gold Styles by Width and Finish</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>women&#x27;s wedding bands</code></td><td class="num">18,100</td><td class="num"><span class="kd-pill ve">10</span></td></tr>
+        <tr><td class="dim">93</td><td><div class="strong">Gold Solitaire Ring with a Wedding Band: How They Fit Together</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>solitaire ring with wedding band</code></td><td class="num">590</td><td class="num"><span class="kd-pill ve">6</span></td></tr>
+        <tr><td class="dim">94</td><td><div class="strong">Anniversary Rings for Women: Bands, Bezels and Eternity Hearts</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>anniversary rings for women</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill m">34</span></td></tr>
+        <tr><td class="dim">95</td><td><div class="strong">Simple Gold Rings for Every Day: Bands, Domes and Chevrons</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>simple gold rings</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">21</span></td></tr>
+        <tr><td class="dim">96</td><td><div class="strong">Chunky Gold Rings: Dome, Puffy and Wide Band Styles</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>chunky gold rings</code></td><td class="num">1,900</td><td class="num"><span class="kd-pill e">19</span></td></tr>
+        <tr><td class="dim">97</td><td><div class="strong">Lab Grown Diamonds: What They Are and How They Are Made</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>lab grown diamonds</code></td><td class="num">90,500</td><td class="num"><span class="kd-pill m">41</span></td></tr>
+        <tr><td class="dim">98</td><td><div class="strong">Lab Grown vs Mined Diamonds: How the Price Compares</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>lab diamonds vs real diamonds price</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">99</td><td><div class="strong">Lab Grown Diamond Clarity Chart: What the Grades Mean</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>lab grown diamond clarity chart</code></td><td class="num">390</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">100</td><td><div class="strong">Dainty Gold Rings: Thin Bands and Small Motifs</div><span class="chip pillar" style="background:var(--pillar-2)">Rings &amp; Bands</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>dainty gold rings</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">101</td><td><div class="strong">Real Gold Earrings for Women: What to Check on the Label</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>real gold earrings for women</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">25</span></td></tr>
+        <tr><td class="dim">102</td><td><div class="strong">Everyday Gold Earrings: Which Stud or Hoop Fits Your Routine</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>everyday gold earrings</code></td><td class="num">390</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+        <tr><td class="dim">103</td><td><div class="strong">Gold Flower Earrings: Daisy, Clover and Bezel Styles</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold flower earrings</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">7</span></td></tr>
+        <tr><td class="dim">104</td><td><div class="strong">Gold Cross Earrings: Studs with and without Diamonds</div><span class="chip pillar" style="background:var(--pillar-3)">Hoops &amp; Earrings</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold cross earrings</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">105</td><td><div class="strong">Real Gold Bracelets for Women: Solid, Filled or Plated?</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>real gold bracelet for women</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">106</td><td><div class="strong">Gold Bangles for Women: How to Measure Before You Order</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>gold bangles for women</code></td><td class="num">3,600</td><td class="num"><span class="kd-pill m">31</span></td></tr>
+        <tr><td class="dim">107</td><td><div class="strong">Thin Gold Bracelets for Layering with a Watch</div><span class="chip pillar" style="background:var(--pillar-4)">Bangles &amp; Bracelets</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>thin gold bracelet</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">25</span></td></tr>
+        <tr><td class="dim">108</td><td><div class="strong">How Much Is 14K Gold Worth? What Sets the Price of a Finished Piece</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how much is 14k gold worth</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">28</span></td></tr>
+        <tr><td class="dim">109</td><td><div class="strong">How Much Gold Is in 14K Gold?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how much gold is in 14k gold</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">110</td><td><div class="strong">Is Yellow Gold Real Gold?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>yellow gold vs gold</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">111</td><td><div class="strong">Does Gold Rust? What Gold Does and Does Not React With</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>does gold rust</code></td><td class="num">2,900</td><td class="num"><span class="kd-pill ve">9</span></td></tr>
+        <tr><td class="dim">112</td><td><div class="strong">What Is GF Gold? How It Compares with Solid 14K and Plated</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>what is gf gold</code></td><td class="num">2,400</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">113</td><td><div class="strong">What Is Italian Gold, and Is 14K from Italy Real?</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>what is italian gold</code></td><td class="num">210</td><td class="num"><span class="kd-pill e">15</span></td></tr>
+        <tr><td class="dim">114</td><td><div class="strong">Can You Wear Jewelry Through TSA? What to Keep On and Pack</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>can i wear jewelry through tsa</code></td><td class="num">480</td><td class="num"><span class="kd-pill e">17</span></td></tr>
+        <tr><td class="dim">115</td><td><div class="strong">How to Keep Jewelry from Tarnishing Between Wears</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how to keep jewelry from tarnishing</code></td><td class="num">590</td><td class="num"><span class="kd-pill e">16</span></td></tr>
+        <tr><td class="dim">116</td><td><div class="strong">How to Clean Gold Plated Jewelry Without Stripping It</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Top</span><span class="chip intent">Info</span><span class="chip funnel">New article</span></td><td class="kw"><code>how to clean gold plated jewelry</code></td><td class="num">1,600</td><td class="num"><span class="kd-pill e">18</span></td></tr>
+        <tr><td class="dim">117</td><td><div class="strong">Jewelry Gifts for Her: Picks by Occasion and Budget</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>jewelry gifts for her</code></td><td class="num">1,000</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">118</td><td><div class="strong">Affordable Gold Jewelry: Where Solid 14K Starts</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>affordable gold jewelry</code></td><td class="num">1,300</td><td class="num"><span class="kd-pill e">26</span></td></tr>
+        <tr><td class="dim">119</td><td><div class="strong">How to Choose Dainty Jewelry That Lasts</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>dainty jewelry</code></td><td class="num">6,600</td><td class="num"><span class="kd-pill e">22</span></td></tr>
+        <tr><td class="dim">120</td><td><div class="strong">Birthday Jewelry: What to Give When You Do Not Know Her Taste</div><span class="chip pillar" style="background:#7A4FA3">Solid Gold Know-How</span><span class="chip funnel">Mid</span><span class="chip intent">Compare</span><span class="chip funnel">New article</span></td><td class="kw"><code>birthday jewelry</code></td><td class="num">720</td><td class="num"><span class="kd-pill e">23</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · WHY THIS PLAN ════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Why this plan</div>
+    <h2>Why this plan fits how you sell.</h2>
+    <p class="subtitle">Four pillars from your own menu, plus the gold questions you already win.</p>
+  </div>
+  <h3 style="font-size:14px;color:var(--client-accent);margin-top:6px;">The pillars</h3>
+  <div class="strategy-grid">
+    <div class="strategy-card" style="border-left-color:var(--pillar-1);"><h4>Chains & Necklaces · 33 pieces</h4><p>14K chains: 713 impressions. 14K necklaces: 36,789. This pillar closes that gap.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-2);"><h4>Rings & Bands · 24 pieces</h4><p>Bands from 1.2mm to 5mm, stacking, lab grown diamonds. Band page: 7 impressions.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-3);"><h4>Hoops & Earrings · 19 pieces</h4><p>Size charts and fit questions lead to hoops from 10mm to 35mm. Hoops page: 6 impressions.</p></div>
+    <div class="strategy-card" style="border-left-color:var(--pillar-4);"><h4>Bangles & Bracelets · 17 pieces</h4><p>Bangles: 21,304 impressions at position 19, plus strong 14K bracelet rankings.</p></div>
+    <div class="strategy-card" style="border-left-color:#7A4FA3;"><h4>Solid Gold Know-How · 27 pieces</h4><p>One tarnish article earned 348 of your 418 blog clicks. AI engines quote these answers.</p></div>
+  </div>
+  <div class="two-col" style="margin-top:16px;">
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What we deliberately excluded</h3>
+      <ul class="x-list">
+        <li><strong>Gold you do not stock</strong>. White and rose gold, 10K, 18K, 24K: about 517,000 searches.</li>
+        <li><strong>Pieces you do not carry</strong>. Anklets, signet rings, tennis bracelets, big stones, engraving.</li>
+        <li><strong>Gold as a commodity</strong>. Price per gram, bullion and selling gold. Nobody there is shopping.</li>
+        <li><strong>Waiting on your call</strong>. New silver collections wait for stock. Men's chains and engagement ring pages wait for you.</li>
+      </ul>
+      <div class="callout info" style="margin-top:12px;font-size:12px;">
+<strong>33,202 keywords went in. 2,401 survived.</strong> Every cut is listed with its reason in your workbook.
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:14px;color:var(--client-accent);">What to expect, month by month</h3>
+      <div class="strategy-timeline">
+        <div class="ts-step" style="border-top-color:var(--pillar-1);"><div class="ts-when">M1–2</div><div class="ts-what">Ad collections rebuilt, first articles indexed</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-2);"><div class="ts-when">M2–4</div><div class="ts-what">Striking-distance terms start reaching page 1</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-3);"><div class="ts-when">M4–6</div><div class="ts-what">Non-brand clicks compound, first orders from new pages</div></div>
+        <div class="ts-step" style="border-top-color:var(--pillar-4);"><div class="ts-when">M6–12</div><div class="ts-what">Head terms open up, links begin</div></div>
+      </div>
+      <h3 style="font-size:14px;color:var(--client-accent);margin-top:12px;">How each article is built</h3>
+      <p style="font-size:12.5px;line-height:1.6;">Each piece gets its own research pass, your verified facts and a human read. Nothing claims a certificate, origin or warranty term your site does not state.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13b · PAID + SEARCH ════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Paid and search together</div>
+    <h2>The four collections you advertise barely exist in search.</h2>
+    <p class="subtitle">Band rings, hoops, bangles and chains are where your ad budget lands. This is what Google sees of the 14K version of each.</p>
+  </div>
+  <div class="two-col">
+    <div>
+      <table>
+        <thead><tr><th>14K collection</th><th class="num">Impressions, 90 days</th><th class="num">In stock</th></tr></thead>
+        <tbody>
+          <tr><td class="kw">Chains</td><td class="num strong">713</td><td class="num">7 of 8</td></tr>
+          <tr><td class="kw">Band rings</td><td class="num strong">7</td><td class="num">12 of 15</td></tr>
+          <tr><td class="kw">Hoop earrings</td><td class="num strong">6</td><td class="num">12 of 16</td></tr>
+          <tr><td class="kw">Bangle bracelets</td><td class="num strong">2</td><td class="num">3 of 5</td></tr>
+        </tbody>
+      </table>
+      <div class="callout mt">For scale: your 14K necklaces page had 36,789 impressions in the same 90 days.</div>
+    </div>
+    <div>
+      <div class="callout good"><strong>One landing page, two channels.</strong> Search work on these collections improves the same pages your ads send people to: clearer copy, in-stock pieces first, answers to the questions buyers ask.</div>
+      <div class="callout info mt"><strong>Ads first is the right order.</strong> Search will not move Black Friday. Paid tells us which pieces sell at a profit, and the plan then builds rankings around those pieces. Your Meta audit shows $482.87 per order on your live 14K campaign. A page that ranks earns clicks with no per-click charge.</div>
+      <div class="callout mt"><strong>Ask on the call:</strong> Which of the four carries your best margin? Which gets the most inbound stock in December? The answers reorder month 1.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14 · PROJECTED TRAJECTORY — the closing slide ═════════════════════ -->
+<section class="slide">
+  <div class="head">
+    <div class="label">Your projected trajectory</div>
+    <h2>Where this takes your search traffic.</h2>
+    <p class="subtitle">Built from your real Search Console clicks, using multipliers we keep deliberately modest.</p>
+  </div>
+  <div class="fill">
+    <div class="chart-wrap">
+<svg viewBox="0 0 900 260" width="100%" style="display:block">
+<g stroke="rgba(0,0,0,0.08)" stroke-width="1"><line x1="60" y1="30" x2="880" y2="30"/><line x1="60" y1="110" x2="880" y2="110"/><line x1="60" y1="190" x2="880" y2="190"/></g>
+<g fill="#6b6b6b" font-size="11" text-anchor="end"><text x="52" y="194">0</text><text x="52" y="114">1.5K</text><text x="52" y="34">3K</text></g>
+<polyline fill="none" stroke="var(--client-accent)" stroke-width="3.5" stroke-dasharray="8,4" points="80,114 340,107 560,91 880,61"/>
+<rect x="72" y="114" width="8" height="76" rx="1" fill="rgba(47,193,113,0.4)"/>
+<circle cx="80" cy="114" r="6" fill="var(--good)"/>
+<circle cx="340" cy="107" r="5" fill="var(--client-accent)"/>
+<circle cx="560" cy="91" r="5" fill="var(--client-accent)"/>
+<circle cx="880" cy="61" r="6.5" fill="var(--et-honey)"/>
+<g font-weight="700"><text x="80" y="104" text-anchor="middle" fill="var(--good)" font-size="13">1,422</text>
+<text x="340" y="96" text-anchor="middle" fill="#6b6b6b" font-size="12">~1,565</text>
+<text x="560" y="80" text-anchor="middle" fill="#6b6b6b" font-size="12">~1,849</text>
+<text x="880" y="50" text-anchor="end" fill="#e0930a" font-size="15">~2,417</text>
+</g>
+<g fill="#6b6b6b" font-size="11" text-anchor="middle"><text x="80" y="215">Now</text>
+<text x="340" y="215">Month 3</text>
+<text x="560" y="215">Month 6</text>
+<text text-anchor="end" x="898" y="215">Month 12</text>
+</g>
+<g font-size="10" text-anchor="middle" font-weight="600"><text x="80" y="230" fill="var(--good)">Confirmed (Search Console)</text>
+<text x="340" y="230" fill="#6b6b6b">+10%</text>
+<text x="560" y="230" fill="#6b6b6b">+30%</text>
+<text text-anchor="end" x="898" y="230" fill="#e0930a">+70%</text>
+</g></svg>
+      <div class="legend"><span><i style="background:var(--good)"></i>Confirmed (Search Console)</span><span><i style="background:var(--client-accent)"></i>Projected</span></div>
+    </div>
+    <div class="callout mt">
+<strong>These are directional projections, not guarantees.</strong> Your clicks doubled last year on weekend work, and the plan assumes much less than that. Without GA4 access we project clicks, not revenue. Once GA4 is connected we can tie the same line to orders.
+    </div>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · DEVATA · SEO Growth Roadmap</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  const storeKey = 'et-deck-' + location.pathname;
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem(storeKey, i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button') || e.target.closest('.mtab')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  document.querySelectorAll('.mtab').forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.stopPropagation();
+      const target = tab.getAttribute('data-mtarget');
+      const slide = tab.closest('.slide');
+      slide.querySelectorAll('.mtab').forEach(t => t.classList.toggle('is-active', t === tab));
+      slide.querySelectorAll('.month-block').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-month') === target));
+    });
+  });
+  go(0);
+</script>
+</body>
+</html>
