@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TheraDeck · Rent-to-Own Growth Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#4C6762; --client-accent-soft:#e8efed;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#4C6762; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .rto { display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:stretch; }
+  .rto .arrow { display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:var(--et-red); }
+  .chan { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .chan.paid { background:#ffe1e2; color:#c62828; } .chan.seo { background:var(--client-accent-soft); color:var(--client-accent); } .chan.bm { background:#fff0d6; color:#a86a00; }
+  code { font-family:inherit; font-size:12.5px; background:var(--ink-100); padding:2px 7px; border-radius:6px; }
+  @media (max-width:900px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .two-col, .three-col, .case { grid-template-columns:1fr !important; }
+    .rto { grid-template-columns:1fr; } .rto .arrow { transform:rotate(90deg); padding:4px 0; }
+    .bar { grid-template-columns:110px 1fr 46px; }
+    table { font-size:12px; } .dots { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Rent-to-own growth strategy · Prepared by EmberTribe</div>
+    <h1>TheraDeck</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:920px">People recovering from knee, hip and back surgery are searching for a firm surface to exercise on at home. Right now none of them find TheraDeck. The plan: rent that demand with paid ads, learn which searches buy, then own it with content, backlinks and brand mentions.</p>
+    <div class="meta">
+      <div>Prepared for<b>TheraDeck</b></div>
+      <div>Date<b>November 2026</b></div>
+      <div>Model<b>Rent → Learn → Own</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · SNAPSHOT ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">Where you stand today</div>
+    <h2>A good product at a better price, and almost no one can find it.</h2>
+    <p class="subtitle">TheraDeck sells for $229, well below the closest competitor. It's HSA/FSA eligible through Truemed and backed by strong reviews. But search sends it close to zero visitors, and no ads are running.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v red">0</div><div class="k">Est. monthly organic visits (US)</div></div>
+      <div class="stat"><div class="v">5</div><div class="k">Keywords ranking in the top 100, none on page one</div></div>
+      <div class="stat"><div class="v red">0</div><div class="k">Paid search keywords or ad traffic</div></div>
+      <div class="stat"><div class="v honey">77%</div><div class="k">Share of backlinks using one spam anchor</div></div>
+      <div class="stat"><div class="v accent">$229</div><div class="k">TheraDeck price vs. $345–$395 for PhysioBoard</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What's working:</strong> a clear product built with physical therapists, a 30-day return policy, HSA/FSA checkout through Truemed, and reviews that speak straight to the buyer: <em>"I can't get on the floor."</em> You also have three recovery guides live (knee, hip, lumbar fusion) to build on.</div>
+      <div class="callout"><strong>What isn't:</strong> no paid demand capture, no page-one rankings, and a backlink profile made almost entirely of spam directory links. Google has very little reason to trust or rank the site yet.</div>
+    </div>
+    <p class="fine mt">Sources: Semrush Domain Overview, US desktop, Nov 12 2026; theradeck.com product page; PhysioBoard pricing from its brand store and Truemed listing. Semrush figures are estimates; we'll confirm against Search Console and GA4 once we have access.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · RANKINGS ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">Search visibility</div>
+    <h2>Five keywords, all past page three.</h2>
+    <p class="subtitle">The site ranks for almost nothing, and the few terms it does show up for are mostly misspellings of other brands. The one real buying term, "physio board for bed", sits at position 33.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.2fr 1fr">
+      <table>
+        <thead><tr><th>Keyword</th><th class="num">Position</th><th class="num">US volume / mo</th><th>Read</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">physio board for bed</td><td class="num">33</td><td class="num">110</td><td><span class="pill p1">Buying intent</span></td></tr>
+          <tr><td>deck pt</td><td class="num">61</td><td class="num">140</td><td class="dim">Ambiguous</td></tr>
+          <tr><td>theurapedic</td><td class="num">73</td><td class="num">50</td><td class="dim">Other brand</td></tr>
+          <tr><td>theratec</td><td class="num">77</td><td class="num">90</td><td class="dim">Other brand</td></tr>
+          <tr><td>theratec</td><td class="num">81</td><td class="num">90</td><td class="dim">Other brand</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="chart-wrap">
+          <div class="fine" style="margin-bottom:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Keywords by Google position</div>
+          <div class="bars" style="margin:0">
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">1–10</div><div class="bt"><div class="bf" style="width:0%"></div></div><div class="bv">0</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">11–30</div><div class="bt"><div class="bf honey" style="width:0%"></div></div><div class="bv">0</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">31–40</div><div class="bt"><div class="bf honey" style="width:25%"></div></div><div class="bv">1</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">51–100</div><div class="bt"><div class="bf red" style="width:100%"></div></div><div class="bv">4</div></div>
+          </div>
+        </div>
+        <div class="callout info"><strong>Blank slate, not a broken site.</strong> There's no ranking history to protect and no bad content to unwind. Every page we publish adds to the footprint. That's why paid has to carry sales for the first few months while content builds.</div>
+      </div>
+    </div>
+    <p class="fine mt">Source: Semrush organic keywords, US, Nov 12 2026.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · BACKLINK RED FLAG ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Authority · Red flag</div>
+    <h2>1,600 backlinks, and almost none of them count.</h2>
+    <p class="subtitle">The domain shows 1.6K backlinks, but the top anchors are SEO-vendor ad copy pasted across directory and "domain stats" sites. Links like these are spam you didn't ask for, and they aren't building trust with Google.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Top anchor text pointing to theradeck.com</th><th class="num">Share</th><th class="num">Domains</th></tr></thead>
+      <tbody>
+        <tr><td>"boost search rankings with premium theradeck.com authority backlinks"</td><td class="num strong down">77%</td><td class="num">1,214</td></tr>
+        <tr><td>"theradeck.com"</td><td class="num">13%</td><td class="num">132</td></tr>
+        <tr><td>"high quality dofollow backlinks da 50 pa 40 premium pbn network service theradeck.com…"</td><td class="num down">5%</td><td class="num">76</td></tr>
+        <tr><td>"powerful guest post service for theradeck.com to boost domain authority…"</td><td class="num down">3%</td><td class="num">51</td></tr>
+        <tr><td>"theradeck.com provided exceptional guest posting, elevating my site's authority…"</td><td class="num down">1%</td><td class="num">22</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout"><strong>Why it matters:</strong> top referring domains are takes.homes, allwebsitesdirectory.com, bestwebstats.com, blinks.sbs and domain.com.lc. Two of them share one server IP. About 86% of the anchor profile is boilerplate from link sellers. Google mostly ignores these, so the real number of trusted links is close to zero.</div>
+      <div class="callout good"><strong>The real ones:</strong> your best links today are Truemed's partner and product pages, both pointing straight to the shop. That's the kind of link we'll add more of: relevant, health-related sites that send buyers, not bots.</div>
+    </div>
+    <p class="fine mt">Source: Semrush Backlinks, Nov 12 2026.</p>
+  </div>
+</section>
+
+<!-- ══ 5 · MARKET + COMPETITOR ═══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">Who buys and who you're up against</div>
+    <h2>The buyer is shopping before surgery or right after the first PT visit.</h2>
+    <p class="subtitle">People don't search for "TheraDeck". They search for what they need to get through recovery, or for how to do their home exercises when they can't get on the floor. That's where TheraDeck has to show up.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1.1fr">
+      <div>
+        <h3>Three buyers, three moments</h3>
+        <table>
+          <thead><tr><th>Buyer</th><th>When they search</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Pre-op patient</td><td>2–4 weeks before a knee or hip replacement, building a "what to buy" list</td></tr>
+            <tr><td class="strong">Post-op patient</td><td>After the PT hands over a home exercise sheet and the floor isn't an option</td></tr>
+            <tr><td class="strong">Adult child or caregiver</td><td>Buying for a parent who is aging in place or coming home from rehab</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info"><strong>A fourth channel: the PT.</strong> Your site says TheraDeck was built with physical therapists. Every clinic that hands a patient your card is a referral source that keeps paying out.</div>
+      </div>
+      <div>
+        <h3>TheraDeck vs. PhysioBoard</h3>
+        <table>
+          <thead><tr><th></th><th class="accent">TheraDeck</th><th>PhysioBoard</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Price</td><td class="up">$229</td><td>$345–$395</td></tr>
+            <tr><td class="strong">Weight</td><td>17 lb</td><td>11.5 lb</td></tr>
+            <tr><td class="strong">Size</td><td>60 × 24 × 1.25 in</td><td>69 × 27 × 2 in</td></tr>
+            <tr><td class="strong">Capacity</td><td>250 lb</td><td>325 lb</td></tr>
+            <tr><td class="strong">HSA/FSA via Truemed</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td class="strong">Folds flat</td><td>Yes</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>Lead with price and PT backing.</strong> PhysioBoard is bigger and carries more weight, so we don't fight on specs. We win on "$120+ less, designed with physical therapists, HSA/FSA eligible."</div>
+      </div>
+    </div>
+    <p class="fine mt">Competitor specs from PhysioBoard's brand store and Truemed listing, Nov 2026. Prices change; we'll recheck before ads launch.</p>
+  </div>
+</section>
+
+<!-- ══ 6 · RENT TO OWN ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">The model · Rent to own</div>
+    <h2>Rent the traffic, learn what sells, then own it.</h2>
+    <p class="subtitle">Paid ads put TheraDeck in front of buyers this month. Content and links take months to rank, but then the traffic is yours and you stop paying for every click. Rent to own uses the first to aim the second, so we only build content around searches that have already sold boards.</p>
+  </div>
+  <div class="fill">
+    <div class="rto">
+      <div class="phase red">
+        <div class="when">Rent · Month 1 onward</div>
+        <h4>Buy the clicks</h4>
+        <ul class="ul-dash">
+          <li>Google Search on "bed exercise board" and recovery-equipment searches</li>
+          <li>Google Shopping so the $229 price shows up next to PhysioBoard</li>
+          <li>Meta video aimed at people 55+ and adult children of aging parents</li>
+          <li>Retargeting for everyone who read a recovery guide</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase accent">
+        <div class="when">Learn · Weekly</div>
+        <h4>Keep what sells</h4>
+        <ul class="ul-dash">
+          <li>Which searches turn into orders, and at what cost</li>
+          <li>Which buyer converts best: pre-op, post-op or caregiver</li>
+          <li>Which hook wins: price, HSA/FSA, or "no more floor exercises"</li>
+          <li>Cut losers fast, move budget to winners</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase honey">
+        <div class="when">Own · Month 1 onward</div>
+        <h4>Build what ranks</h4>
+        <ul class="ul-dash">
+          <li>ClusterMagic articles aimed at the searches that sold</li>
+          <li>Brand mentions in "what to buy before knee replacement" lists</li>
+          <li>Real links from PT clinics, health and caregiver sites</li>
+          <li>As pages rank, bid less on those same searches</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Why this order matters for a $229 product:</strong> margins on a single board leave little room for wasted clicks. Paid tells us fast which searches are worth it. Content then takes over those searches at a fraction of the cost per order.</div>
+  </div>
+</section>
+
+<!-- ══ 7 · PAID PLAN (RENT) ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">Rent · Paid media plan</div>
+    <h2>Show up where recovery shopping happens.</h2>
+    <p class="subtitle">Start narrow on the searches closest to a purchase, prove a cost per order that works with your margin, then widen. Every campaign is judged on orders, not clicks.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Campaign</th><th>Targets</th><th>Role</th><th>Launch</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Google Search · Product</td><td><code>bed exercise board</code> <code>board for bed exercises</code> <code>physio board for bed</code> <code>padded board for bed exercises</code></td><td>Highest intent. People already looking for exactly this.</td><td>Week 1</td></tr>
+        <tr><td class="strong">Google Shopping</td><td>Product feed with price, reviews and HSA/FSA callout</td><td>Puts $229 beside $345+ in the results</td><td>Week 1</td></tr>
+        <tr><td class="strong">Google Search · Recovery</td><td><code>knee replacement recovery equipment</code> <code>hip replacement recovery kit</code> <code>knee surgery rehab equipment</code></td><td>Pre-op shoppers building a list</td><td>Week 2</td></tr>
+        <tr><td class="strong">Meta · Prospecting</td><td>Adults 55+, interests in joint replacement and physical therapy; adult children of aging parents</td><td>Short demo video: bed to firm surface in 10 seconds</td><td>Week 3</td></tr>
+        <tr><td class="strong">Meta + Google · Retargeting</td><td>Site visitors and recovery-guide readers</td><td>Reviews, the 30-day return policy and the HSA/FSA offer</td><td>Week 3</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Lead with what's true and checkable:</strong> $229, designed with physical therapists, folds flat, 30-day returns, HSA/FSA eligible through Truemed for qualified customers. No recovery-time or medical-outcome claims. Health ads get reviewed hard on both Google and Meta.</div>
+      <div class="callout warn"><strong>Set the target before we spend:</strong> we'll work back from your gross margin per board to a maximum cost per order. If a campaign can't hit it after a fair test, budget moves to the ones that can.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · KEYWORD STRATEGY ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">Keyword strategy</div>
+    <h2>Four keyword groups, each with a job.</h2>
+    <p class="subtitle">These come from what people are typing into Google today. Buying terms go to paid first. Question and how-to terms go to content, where they build rankings and feed AI answers. Each group links back to the product page.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Group</th><th>Example searches</th><th>Intent</th><th>Channel</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · The product</td><td><code>physio board for bed</code> <code>bed exercise board</code> <code>board for bed exercises</code> <code>padded board for bed exercises</code> <code>bed top exercise board</code> <code>tri fold bed exercise board</code> <code>bed board for exercise</code></td><td>Buy</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">2 · Recovery gear</td><td><code>knee replacement recovery equipment</code> <code>knee replacement recovery kit</code> <code>hip replacement recovery equipment</code> <code>hip surgery recovery kit</code> <code>knee surgery rehab equipment</code> <code>best home exercise equipment after knee replacement</code></td><td>Compare</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span><span class="chan bm">Mentions</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">3 · Home exercise how-to</td><td><code>exercises in bed after hip replacement</code> <code>leg exercises in bed after surgery</code> <code>home exercise program after knee replacement</code> <code>home exercises after total knee replacement</code> <code>exercises after lumbar fusion</code></td><td>Learn</td><td><span class="chan seo">SEO</span></td><td><span class="pill p2">Month 1+</span></td></tr>
+        <tr><td class="strong">4 · Aging in place &amp; HSA</td><td><code>leg exercises in bed after stroke</code> <code>exercise after bed rest</code> <code>exercises for seniors who can't get on the floor</code> <code>can you use hsa for physical therapy</code> <code>hsa eligible physical therapy</code></td><td>Learn</td><td><span class="chan seo">SEO</span></td><td><span class="pill p3">Month 2+</span></td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout good"><strong>The fastest SEO win:</strong> "physio board for bed" (110 searches/mo) already ranks at 33 with no page built for it. A dedicated landing page and a few real links should move it toward page one.</div>
+      <div class="callout info"><strong>Next step:</strong> the full workbook (search volumes, difficulty and the article each term maps to) comes with month one. Paid search term data then re-ranks the list every month.</div>
+    </div>
+    <p class="fine mt">Example searches from Google autocomplete, Nov 12 2026. Volume shown only where Semrush reports it.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · CONTENT PLAN (OWN) ════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Own · ClusterMagic content plan</div>
+    <h2>Become the home-recovery resource, with TheraDeck in every guide.</h2>
+    <p class="subtitle">Your three recovery guides are the right idea. ClusterMagic scales them into full topic clusters, so Google and AI tools see TheraDeck as an authority on exercising at home after surgery.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Cluster 1 · Joint replacement</div><h4>Knee &amp; hip recovery</h4>
+        <ul class="ul-dash">
+          <li>What to buy before knee replacement</li>
+          <li>Hip replacement recovery checklist, week by week</li>
+          <li>Bed exercises after total knee replacement</li>
+          <li>Hip precautions: exercises you can still do in bed</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 2 · Spine &amp; back</div><h4>Back surgery &amp; pain</h4>
+        <ul class="ul-dash">
+          <li>Lumbar fusion recovery exercises at home</li>
+          <li>Why a firm surface matters for back exercises</li>
+          <li>Exercises after a microdiscectomy</li>
+          <li>Back pain stretches you can do in bed</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 3 · Staying active</div><h4>Aging in place</h4>
+        <ul class="ul-dash">
+          <li>Exercises for seniors who can't get on the floor</li>
+          <li>Leg exercises in bed after a stroke</li>
+          <li>Building strength after a hospital stay</li>
+          <li>Using HSA/FSA funds for home therapy equipment</li>
+        </ul></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Every article sells, quietly:</strong> each guide shows the exercise on a TheraDeck and links to the product page, so readers see the board in use before they decide.</div>
+      <div class="callout warn"><strong>Medical accuracy first:</strong> drafts cite published PT and orthopedic sources and go to your team (or a PT partner) for review before they publish. We write "talk to your therapist", never "this replaces therapy."</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · BACKLINKS + BRAND MENTIONS ═══════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Own · Backlink &amp; brand mention strategy</div>
+    <h2>Replace 1,600 junk links with a few hundred that matter.</h2>
+    <p class="subtitle">Ranking a new site in a health category takes trust. That comes from relevant sites linking to you and from being named in the lists buyers and AI tools read. Here's the order we'd build it in.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Step</th><th>What we do</th><th>Why</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Clean up</td><td>Domain-level disavow file for the spam networks (takes.homes, blinks.sbs, the shared-IP directories) plus a monthly check for new ones</td><td>Keeps the spam from defining your profile as real links come in</td><td>Month 1</td></tr>
+        <tr><td class="strong">2 · Brand mentions</td><td>Placements on health, lifestyle and family blogs in "what to buy before knee replacement" and "home recovery essentials" style posts</td><td>These are the pages buyers read and ChatGPT and Google AI pull answers from</td><td>Month 1+</td></tr>
+        <tr><td class="strong">3 · Partner links</td><td>Listings on HSA/FSA marketplaces and Truemed; "recommended equipment" pages on PT clinic and home-health sites</td><td>Relevant links that also send buyers</td><td>Month 2+</td></tr>
+        <tr><td class="strong">4 · Earned links</td><td>Pitch the recovery guides to caregiver, aging-in-place and senior-living blogs as free patient resources</td><td>Linkable content does the outreach work</td><td>Month 3+</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Why brand mentions first:</strong> when someone asks an AI tool "what do I need after knee replacement," it answers from list-style articles. Being named in those lists puts TheraDeck in the answer, alongside walkers and raised toilet seats.</div>
+      <div class="callout"><strong>What we won't do:</strong> buy PBN links, private blog networks or bulk directory submissions. That's the kind of link already sitting in your profile, and it's why the domain has 1.6K links and no rankings.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · CASE STUDY (fixed proof) ═════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same ClusterMagic engine we'd run for you, with 4+ years of zero-penalty results across our portfolio.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="images/casestudy-500k.jpg" alt="SEMrush organic traffic chart, 8,500 to 500K+ monthly organic visits over 12 months" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="case-img" style="display:none">[ SEMrush organic-traffic chart ]</div>
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px"><strong>"Their site improves with each Google update."</strong> This client's traffic <em>climbs</em> on update days. That's the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · 90-DAY ROADMAP ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>Launch, learn, then shift the budget toward what you own.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Month 1 · Launch</div><h4>Start renting, start building</h4>
+        <ul class="ul-dash">
+          <li>GA4, Meta pixel and purchase tracking checked end to end</li>
+          <li>Merchant Center feed and Google Shopping live</li>
+          <li>Google Search product campaign live</li>
+          <li>"Physio board for bed" landing page built</li>
+          <li>Disavow file submitted</li>
+          <li>First ClusterMagic articles to your team for review</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 2 · Learn</div><h4>Find the winners</h4>
+        <ul class="ul-dash">
+          <li>Meta prospecting and retargeting live</li>
+          <li>Recovery-gear search campaign added</li>
+          <li>Search terms cut to the ones that produce orders</li>
+          <li>First brand mentions placed</li>
+          <li>Articles re-aimed at the searches that sold</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 3 · Shift</div><h4>Own more, rent less</h4>
+        <ul class="ul-dash">
+          <li>Budget moves to the best campaign and buyer</li>
+          <li>Partner-link outreach to PT clinics and HSA/FSA stores</li>
+          <li>Internal links across every cluster</li>
+          <li>90-day review: orders, cost per order, first page-one gains</li>
+        </ul></div>
+    </div>
+    <div class="callout info mt"><strong>What you'll know by day 90:</strong> your real cost per order by search term and audience, which buyer to scale, which topics earn the next round of articles, and the first rankings coming in from content you own.</div>
+  </div>
+</section>
+
+<!-- ══ 13 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">Investment · À la carte</div>
+    <h2>Pick the pieces. Rent, own, or both.</h2>
+    <p class="subtitle">No bundle to buy. Each line stands on its own. Ad spend is billed at cost and never folded into our fees.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="align-items:start">
+      <div>
+        <h3><span class="chan paid">Rent</span> Paid media management</h3>
+        <table>
+          <thead><tr><th>Scope</th><th class="num">Fee</th></tr></thead>
+          <tbody>
+            <tr><td>1 channel (Google Ads <em>or</em> Meta), up to $20K/mo spend</td><td class="num strong">$2,500/mo</td></tr>
+            <tr><td>Each additional channel</td><td class="num strong">+$1,000/mo</td></tr>
+            <tr><td>Google + Meta together</td><td class="num strong">$3,500/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Includes strategy and build, Shopping feed, creative, audience targeting, weekly reporting and a monthly strategy call. Ad spend billed at cost.</p>
+      </div>
+      <div>
+        <h3><span class="chan seo">Own</span> ClusterMagic content</h3>
+        <table>
+          <thead><tr><th>Articles/mo</th><th class="num">Monthly</th><th class="num">3-month rate</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">25</td><td class="num">$1,000</td><td class="num">$883/mo</td></tr>
+            <tr><td class="strong">40</td><td class="num">$1,500</td><td class="num">$1,300/mo</td></tr>
+            <tr><td class="strong">50</td><td class="num">$1,750</td><td class="num">$1,533/mo</td></tr>
+            <tr><td class="strong">100</td><td class="num">$3,000</td><td class="num">$2,633/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">1,200–2,000 word articles, published to Shopify and internally linked. 3-month rate billed as one commitment ($2,650 / $3,900 / $4,600 / $7,900).</p>
+      </div>
+      <div>
+        <h3><span class="chan bm">Own</span> Brand mentions</h3>
+        <table>
+          <thead><tr><th>Package</th><th class="num">Per month</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">2 mentions</td><td class="num">$1,686</td></tr>
+            <tr><td class="strong">3 mentions</td><td class="num">$2,248</td></tr>
+            <tr><td class="strong">5 mentions</td><td class="num">$3,748</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Placements on established DR 30–60 sites with 1,000+ monthly traffic, in list and review-style posts matched to your keywords. Live in about 15–30 days.</p>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Where we'd start:</strong> Google Ads management with Shopping, plus 25 ClusterMagic articles a month. Add Meta once Google shows a cost per order that works, and add brand mentions as soon as you want TheraDeck named in the recovery lists buyers and AI tools read.</div>
+  </div>
+</section>
+
+<!-- ══ 14 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide dark" data-screen-label="14">
+  <div class="head">
+    <div class="label">Next steps</div>
+    <h2>Pick your starting pieces and we'll have ads live in two weeks.</h2>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">To get started</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Choose your à la carte lines: paid, content, brand mentions</li>
+          <li style="color:rgba(255,255,255,0.85)">Share read access to Shopify, GA4 and Search Console</li>
+          <li style="color:rgba(255,255,255,0.85)">Grant access to Google Ads, Merchant Center and Meta Business Manager</li>
+          <li style="color:rgba(255,255,255,0.85)">Kickoff call to set the cost-per-order target</li>
+        </ul>
+      </div>
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">We'll ask about</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Gross margin per board and monthly ad budget</li>
+          <li style="color:rgba(255,255,255,0.85)">Current sales volume and where orders come from</li>
+          <li style="color:rgba(255,255,255,0.85)">PT partners who might review content or list TheraDeck</li>
+          <li style="color:rgba(255,255,255,0.85)">Existing photos and video of the board in use</li>
+          <li style="color:rgba(255,255,255,0.85)">Who approves health claims in ads and articles</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine mt">Data in this deck comes from Semrush (Nov 12 2026), Google autocomplete and a review of theradeck.com. Nothing here is medical advice.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Rent-to-Own Strategy</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-theradeck-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-theradeck-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
