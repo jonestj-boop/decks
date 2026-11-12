@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BridgeVA · Rent-to-Own Growth Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#0A78F0; --client-accent-soft:#e7f1fe;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#0A78F0; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .rto { display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:stretch; }
+  .rto.four { grid-template-columns:1fr 26px 1fr 26px 1fr 26px 1fr; }
+  .rto .arrow { display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:var(--et-red); }
+  .chan { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .chan.paid { background:#ffe1e2; color:#c62828; } .chan.seo { background:var(--client-accent-soft); color:var(--client-accent); } .chan.bm { background:#fff0d6; color:#a86a00; }
+  code { font-family:inherit; font-size:12.5px; background:var(--ink-100); padding:2px 7px; border-radius:6px; }
+  @media (max-width:900px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .two-col, .three-col, .case { grid-template-columns:1fr !important; }
+    .rto, .rto.four { grid-template-columns:1fr; } .rto .arrow { transform:rotate(90deg); padding:4px 0; }
+    .bar { grid-template-columns:110px 1fr 46px; }
+    table { font-size:12px; } .dots { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Rent-to-own growth strategy · Meta &amp; Google go-to-market · Prepared by EmberTribe</div>
+    <h1>BridgeVA</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:940px">Property managers, brokers and investors are searching for help with the work that buries them. BridgeVA has the offer. The plan: rent that demand with Google and Meta, learn which buyers book and sign, then own those searches with content and brand mentions so every new client costs less than the last.</p>
+    <div class="meta">
+      <div>Prepared for<b>BridgeVA</b></div>
+      <div>Date<b>November 2026</b></div>
+      <div>Model<b>Rent → Learn → Own</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · SNAPSHOT ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">Where you stand today</div>
+    <h2>A strong offer with big numbers, and a site that asks buyers to take it on faith.</h2>
+    <p class="subtitle">BridgeVA places dedicated, managed Virtual Systems Managers inside real estate teams, across 13 job functions. The proof on the site is large. What's missing is the detail that turns a curious visitor into a booked call.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v accent">4,800+</div><div class="k">Virtual assistants placed (site claim)</div></div>
+      <div class="stat"><div class="v accent">13</div><div class="k">Job functions offered, from ISA to escrow support</div></div>
+      <div class="stat"><div class="v red">0</div><div class="k">Prices, starting rates or contract terms anywhere on the site</div></div>
+      <div class="stat"><div class="v honey">7</div><div class="k">Articles on the Insights page, none dated</div></div>
+      <div class="stat"><div class="v red">0</div><div class="k">Testimonials with a full name or company</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What's working:</strong> a clear real-estate focus, named software experience (Follow Up Boss, AppFolio, Buildium, Dotloop and more), real management structure (daily reports, weekly scorecards, a Client Success Manager), a free-replacement promise, and a lead magnet already built: the outsourcing assessment.</div>
+      <div class="callout"><strong>What isn't:</strong> every path ends at "book a call" with no price anchor. Stats are unsourced, testimonials are first-name only, four of five team profiles say "coming soon," and some numbers contradict each other ("in days" vs. "10 to 14 business days").</div>
+    </div>
+    <p class="fine mt">Source: review of bridgeva.com (home, about, process, compare, insights, contact), Nov 12 2026. We'll confirm traffic and conversion data once we have GA4 and Search Console access.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · FIX BEFORE SPEND ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">Before the first dollar of ad spend</div>
+    <h2>Fix six things, or paid clicks land on a page that leaks.</h2>
+    <p class="subtitle">Ads multiply whatever the landing page already does. These changes are small, mostly copy and tracking, and they raise the return on every channel that comes after.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Issue</th><th>What we found</th><th>Fix</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Ad tracking</td><td>GA4 is on the homepage. We didn't find a Meta pixel or Google Ads conversion tag in the page source.</td><td>Meta pixel + Conversions API, Google Ads tag, call-booked and form events, HubSpot stage sync</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">No price anchor</td><td>No starting rate on any page</td><td>"Full-time VSMs from $X/mo" on the homepage and compare page, or a pricing range with what's included</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">Thin proof</td><td>Four first-name testimonials, unsourced "5.0" and "#1" claims</td><td>Named reviews with company and role, a linked review platform, two short client videos</td><td><span class="pill p1">Weeks 1–3</span></td></tr>
+        <tr><td class="strong">Mixed numbers</td><td>10+ vs. 20+ years; "days" vs. 10–14 business days; same-day vs. one-day reply</td><td>One set of facts, used everywhere</td><td><span class="pill p2">Week 1</span></td></tr>
+        <tr><td class="strong">One generic page</td><td>Every ad would land on the same homepage</td><td>Vertical landing pages: property management, brokerages and teams, investors</td><td><span class="pill p2">Weeks 1–2</span></td></tr>
+        <tr><td class="strong">Broken promise</td><td>"Claude AI+VA system guide" CTA goes to the article index</td><td>Gate the real guide behind a short form and use it as a Meta offer</td><td><span class="pill p3">Week 2</span></td></tr>
+      </tbody>
+    </table>
+    <p class="fine mt">Tracking check based on the public homepage HTML, Nov 12 2026. Tags fired through a tag manager or loaded later may not show there; we'll confirm in your accounts.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · SEARCH MARKET ═════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">The search market · Watch out</div>
+    <h2>Half the people searching "real estate virtual assistant" want the job, not the hire.</h2>
+    <p class="subtitle">Google's own suggestions show it. For the two biggest category terms, most completions are about jobs, salary and training. Run broad ads on these terms without heavy filtering and you pay for job seekers' clicks.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <table>
+        <thead><tr><th>Google suggestion</th><th>Who is searching</th></tr></thead>
+        <tbody>
+          <tr><td>real estate virtual assistant <b>companies</b></td><td><span class="pill p3">Buyer</span></td></tr>
+          <tr><td>property management virtual assistant <b>hiring</b></td><td><span class="dim">Mixed</span></td></tr>
+          <tr><td>real estate virtual assistant <b>jobs remote</b></td><td><span class="pill p1">Job seeker</span></td></tr>
+          <tr><td>real estate virtual assistant <b>salary</b></td><td><span class="pill p1">Job seeker</span></td></tr>
+          <tr><td>real estate virtual assistant <b>training online free</b></td><td><span class="pill p1">Job seeker</span></td></tr>
+          <tr><td>property management virtual assistant <b>careers</b></td><td><span class="pill p1">Job seeker</span></td></tr>
+          <tr><td>property management virtual assistant <b>clark pampanga</b></td><td><span class="pill p1">Job seeker</span></td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="chart-wrap">
+          <div class="fine" style="margin-bottom:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Clear job-seeker suggestions, top 10</div>
+          <div class="bars" style="margin:0">
+            <div class="bar" style="grid-template-columns:150px 1fr 40px"><div class="bl">"real estate VA"</div><div class="bt"><div class="bf red" style="width:60%"></div></div><div class="bv">6/10</div></div>
+            <div class="bar" style="grid-template-columns:150px 1fr 40px"><div class="bl">"property mgmt VA"</div><div class="bt"><div class="bf red" style="width:60%"></div></div><div class="bv">6/10</div></div>
+          </div>
+        </div>
+        <div class="callout info"><strong>The buyers phrase it differently.</strong> They add "for," "company," "hire," "cost" or a role: <code>virtual assistant for property management company</code>, <code>virtual transaction coordinator for real estate agents</code>, <code>how much does a real estate virtual assistant cost</code>. That's where paid starts.</div>
+        <div class="callout good"><strong>The upside:</strong> job-seeker traffic is a waste for ads, but "job description" content ranks well and doubles as an employer resource. We'll use it on the content side.</div>
+      </div>
+    </div>
+    <p class="fine mt">Source: Google autocomplete, US, Nov 12 2026. Counts exclude ambiguous terms such as "hiring" and "job description."</p>
+  </div>
+</section>
+
+<!-- ══ 5 · BUYERS + COMPETITION ══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">Who buys and who you're up against</div>
+    <h2>Three buyers, each with a moment when they finally ask for help.</h2>
+    <p class="subtitle">People rarely wake up wanting "a virtual assistant." They hit a wall: too many doors, too many leads going cold, too many files in escrow. Ads and content should meet each buyer at that wall.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.15fr 1fr">
+      <div>
+        <table>
+          <thead><tr><th>Buyer</th><th>The wall they hit</th><th>Lead role</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Property management operator</td><td>Portfolio grows past the point where the office keeps up with maintenance calls, renewals and leasing</td><td>Maintenance and leasing coordinators</td></tr>
+            <tr><td class="strong">Brokerage owner or team lead</td><td>Leads go cold, transactions pile up, agents do admin instead of selling</td><td>ISA, transaction coordinator, CRM admin</td></tr>
+            <tr><td class="strong">Investor</td><td>Deal flow depends on calls, skip tracing and comps nobody has time for</td><td>Cold calling, sourcing, acquisitions support</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info"><strong>Start with two, not ten.</strong> The menu lists AirBNB hosts, attorneys, coaches, e-commerce and more. Ad budgets spread across ten audiences learn nothing. We launch with property management and brokerages, then add investors once those two produce signed clients.</div>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th></th><th class="accent">BridgeVA</th><th>Marketplaces</th><th>Managed VA firms</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Examples</td><td>Dedicated VSMs</td><td>Upwork, Fiverr, OnlineJobs.ph</td><td>MyOutDesk, Virtudesk</td></tr>
+            <tr><td class="strong">Real estate only</td><td class="up">Yes</td><td>No</td><td>Partly</td></tr>
+            <tr><td class="strong">Managed and trained</td><td class="up">Yes</td><td>You do it</td><td>Yes</td></tr>
+            <tr><td class="strong">Free replacement</td><td class="up">Yes</td><td>No</td><td>Varies</td></tr>
+            <tr><td class="strong">Price shown</td><td class="down">No</td><td>Yes</td><td>Varies</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>Own the middle:</strong> safer than a marketplace, more real estate–specific than a general VA firm. The message is "a VA who already knows AppFolio and Follow Up Boss, managed for you, replaced free if it isn't a fit."</div>
+      </div>
+    </div>
+    <p class="fine mt">Competitor names from BridgeVA's own compare page. We'll verify competitor terms and pricing before any comparison ad runs.</p>
+  </div>
+</section>
+
+<!-- ══ 6 · RENT TO OWN ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">The model · Rent to own</div>
+    <h2>Rent the demand, learn who signs, then own it.</h2>
+    <p class="subtitle">Google and Meta put BridgeVA in front of buyers this month. Content and brand mentions take longer, but the traffic they earn doesn't bill by the click. Rent to own uses the first to aim the second: we only build content around searches and buyers that have already produced signed clients.</p>
+  </div>
+  <div class="fill">
+    <div class="rto">
+      <div class="phase red">
+        <div class="when">Rent · Month 1 onward</div>
+        <h4>Buy the conversations</h4>
+        <ul class="ul-dash">
+          <li>Google Search on hire-intent terms, with job-seeker terms blocked</li>
+          <li>Meta lead ads offering the outsourcing assessment</li>
+          <li>Founder and client video to warm cold audiences</li>
+          <li>Retargeting everyone who visited pricing, compare or a vertical page</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase accent">
+        <div class="when">Learn · Weekly</div>
+        <h4>Follow leads to signed</h4>
+        <ul class="ul-dash">
+          <li>Which searches and audiences book calls that close</li>
+          <li>Which buyer signs fastest: PM, brokerage or investor</li>
+          <li>Which role sells first: ISA, TC, leasing, maintenance</li>
+          <li>Which hook wins: hours saved, cost vs. hiring, or AI+VA</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase honey">
+        <div class="when">Own · Month 1 onward</div>
+        <h4>Build what ranks</h4>
+        <ul class="ul-dash">
+          <li>ClusterMagic articles on the roles and buyers that signed</li>
+          <li>Brand mentions in "best real estate VA companies" lists</li>
+          <li>Cost, comparison and job-description pages that rank</li>
+          <li>As pages rank, bid less on those same searches</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Why this fits a placement business:</strong> each signed client pays every month for as long as the VA stays. That lifetime value gives paid room to work early. Once we know which searches produce long-term clients, content takes those searches over at a fraction of the cost per client.</div>
+  </div>
+</section>
+
+<!-- ══ 7 · GOOGLE GTM ════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">Rent · Google Ads go-to-market</div>
+    <h2>Google catches the buyer who is already looking.</h2>
+    <p class="subtitle">Search is where hire intent shows up first. Start tight on phrases that only a buyer would type, send each to the matching vertical page, and judge every campaign on qualified calls, not form fills.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Campaign</th><th>Example targets</th><th>Lands on</th><th>Launch</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Search · Property management</td><td><code>virtual assistant for property management company</code> <code>property management virtual assistant services</code> <code>virtual leasing assistant</code></td><td>PM landing page</td><td>Week 2</td></tr>
+        <tr><td class="strong">Search · Agents &amp; brokerages</td><td><code>virtual assistant for real estate agents</code> <code>virtual transaction coordinator for real estate agents</code> <code>virtual isa real estate</code></td><td>Brokerage landing page</td><td>Week 2</td></tr>
+        <tr><td class="strong">Search · Price &amp; comparison</td><td><code>how much does a real estate virtual assistant cost</code> <code>top real estate virtual assistant companies</code></td><td>Pricing / compare page</td><td>Week 3</td></tr>
+        <tr><td class="strong">Search · Brand</td><td><code>bridgeva</code> <code>bridge va</code></td><td>Homepage</td><td>Week 2</td></tr>
+        <tr><td class="strong">Retargeting · Display &amp; YouTube</td><td>Site visitors who didn't book</td><td>Client video, assessment offer</td><td>Week 4</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout"><strong>Negative keywords from day one:</strong> <code>jobs</code> <code>salary</code> <code>hiring remote</code> <code>careers</code> <code>training</code> <code>course</code> <code>free</code> <code>no experience</code> <code>philippines</code> <code>upwork</code>. We review the search-term report weekly and keep adding to the list.</div>
+      <div class="callout info"><strong>Optimize on what makes money:</strong> HubSpot deal stages flow back to Google Ads as offline conversions (booked call, qualified, signed). Bidding then learns from signed clients, not cheap form fills.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · META GTM ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">Rent · Meta go-to-market</div>
+    <h2>Meta reaches the owner who hasn't searched yet.</h2>
+    <p class="subtitle">Most operators don't Google "virtual assistant" until the pain is acute. Meta reaches them earlier with a useful offer instead of a hard "book a call," and builds the warm audience that converts later.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">The offer</div><h4>Lead with the assessment</h4>
+        <ul class="ul-dash">
+          <li>"See how many hours your team could hand off": the outsourcing assessment you already have</li>
+          <li>The AI+VA guide as a second gated offer</li>
+          <li>Instant lead forms with one qualifying question: doors managed, or agents on the team</li>
+          <li>Book-a-call ads only for warm audiences</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">The audiences</div><h4>Owners, not job seekers</h4>
+        <ul class="ul-dash">
+          <li>Broad targeting, steered by creative that names the buyer ("If you manage 200+ doors…")</li>
+          <li>Interest signals around property management software, brokerages and real estate investing, tested against broad</li>
+          <li>HubSpot customer list as a seed and an exclusion</li>
+          <li>Retargeting: site visitors, video viewers, form openers</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">The creative</div><h4>Four angles to test</h4>
+        <ul class="ul-dash">
+          <li><b>Hours back:</b> "Your team gets 20+ hours a week back" (your claim, kept as stated)</li>
+          <li><b>Cost vs. hiring:</b> a full-time VSM next to a local admin salary</li>
+          <li><b>Safer than Upwork:</b> trained, managed, replaced free</li>
+          <li><b>AI+VA:</b> a VA who already works with AI tools</li>
+        </ul></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout warn"><strong>Housing category check:</strong> Meta can treat real-estate-related ads as a special ad category, which limits age, ZIP and lookalike targeting. These ads sell a business service, not housing, but we plan audiences and copy that perform under either setting.</div>
+      <div class="callout info"><strong>Video beats stock:</strong> 30 seconds of Amy explaining how matching works, plus two client clips, will outperform polished graphics. Phone-shot is fine. Real faces are the point.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · FUNNEL + UNIT ECONOMICS ═══════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Measurement · From click to signed client</div>
+    <h2>We'll judge every campaign on signed placements, not leads.</h2>
+    <p class="subtitle">A cheap lead that never books is worthless, and one signed brokerage could be worth more than a year of ad spend. The funnel below gets tracked end to end, and the targets come from your numbers.</p>
+  </div>
+  <div class="fill">
+    <div class="rto four">
+      <div class="phase"><div class="when">Step 1</div><h4>Click</h4><ul class="ul-dash"><li>Google or Meta ad to a vertical page</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="phase"><div class="when">Step 2</div><h4>Lead</h4><ul class="ul-dash"><li>Assessment, guide or form, synced to HubSpot</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="phase"><div class="when">Step 3</div><h4>Advisory call</h4><ul class="ul-dash"><li>Booked and held, flagged qualified or not</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="phase accent"><div class="when">Step 4</div><h4>Signed</h4><ul class="ul-dash"><li>VSM placed, value sent back to both ad platforms</li></ul></div>
+    </div>
+    <div class="two-col mt">
+      <table>
+        <thead><tr><th>Number we need at kickoff</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Monthly fee per VSM, and your margin</td><td>Sets what one placement is worth</td></tr>
+          <tr><td class="strong">Average months a client stays</td><td>Turns monthly margin into lifetime value</td></tr>
+          <tr><td class="strong">Average VSMs per client</td><td>Brokerages and PM firms often add a second hire</td></tr>
+          <tr><td class="strong">Call-to-signed close rate</td><td>Sets the most we can pay for a booked call</td></tr>
+        </tbody>
+      </table>
+      <div>
+        <div class="callout info"><strong>How we set the target:</strong> lifetime margin per client × the share you're willing to spend to acquire one = maximum cost per signed client. Divide by the close rate and that's the maximum cost per booked call. Campaigns that can't reach it after a fair test lose budget to the ones that can.</div>
+        <div class="callout good"><strong>Reporting you'll get:</strong> weekly spend, leads, booked calls and cost per call by campaign; monthly signed clients and cost per client by channel and buyer type.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · KEYWORD STRATEGY ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Keyword strategy</div>
+    <h2>Four keyword groups, each with a job.</h2>
+    <p class="subtitle">Hire-intent terms go to paid first. Question, cost and role terms go to content, where they build rankings and feed AI answers. Every page links back to a vertical landing page and the assessment.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Group</th><th>Example searches</th><th>Intent</th><th>Channel</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Hire a VA</td><td><code>virtual assistant for real estate agents</code> <code>virtual assistant for property management company</code> <code>virtual assistant for real estate broker</code> <code>hire a real estate virtual assistant</code> <code>real estate virtual assistant companies</code></td><td>Buy</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">2 · Hire a role</td><td><code>virtual transaction coordinator for real estate agents</code> <code>virtual isa real estate</code> <code>virtual leasing assistant</code> <code>real estate cold calling virtual assistant</code></td><td>Buy</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">3 · Cost &amp; compare</td><td><code>how much does a real estate virtual assistant cost</code> <code>top real estate virtual assistant companies</code> <code>best virtual assistant for property management</code> <code>ai virtual assistant for real estate agents</code></td><td>Compare</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span><span class="chan bm">Mentions</span></td><td><span class="pill p2">Month 1+</span></td></tr>
+        <tr><td class="strong">4 · What a VA does</td><td><code>what does a real estate virtual assistant do</code> <code>real estate virtual assistant job description</code> <code>property management virtual assistant job description</code> <code>real estate cold caller job description</code></td><td>Learn</td><td><span class="chan seo">SEO</span></td><td><span class="pill p3">Month 2+</span></td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout good"><strong>The fastest content win:</strong> a straight answer to "how much does a real estate virtual assistant cost." No competitor page can be more useful than one with your real price range in it, and it gives the ads a page to send comparison shoppers to.</div>
+      <div class="callout info"><strong>Next step:</strong> the full keyword workbook (search volumes, difficulty and the article each term maps to) comes with month one. Paid search-term data then re-ranks the list every month.</div>
+    </div>
+    <p class="fine mt">Example searches from Google autocomplete, US, Nov 12 2026. Search volumes to follow in the month-one workbook.</p>
+  </div>
+</section>
+
+<!-- ══ 11 · CONTENT PLAN ═════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Own · ClusterMagic content plan</div>
+    <h2>Become the place real estate operators learn how to delegate.</h2>
+    <p class="subtitle">Your Insights page has the right ideas and seven articles. ClusterMagic builds them into full topic clusters by buyer, so Google and AI tools see BridgeVA as the authority on real estate staffing.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Cluster 1 · Property management</div><h4>Scaling without headcount</h4>
+        <ul class="ul-dash">
+          <li>How many doors per property manager before you need help</li>
+          <li>Maintenance coordinator job description (template)</li>
+          <li>What to delegate in AppFolio, Buildium and RentRedi</li>
+          <li>Virtual leasing assistant vs. leasing software</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 2 · Agents &amp; brokerages</div><h4>Selling more, doing less admin</h4>
+        <ul class="ul-dash">
+          <li>Virtual transaction coordinator vs. in-house: cost and workflow</li>
+          <li>ISA scripts and follow-up cadences for Follow Up Boss</li>
+          <li>What a real estate virtual assistant does, by day and week</li>
+          <li>When a team should make its first VA hire</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 3 · Cost, compare &amp; AI</div><h4>The buying decision</h4>
+        <ul class="ul-dash">
+          <li>How much a real estate virtual assistant costs in 2027</li>
+          <li>Managed VA firm vs. Upwork vs. hiring locally</li>
+          <li>AI tools a real estate VA should know</li>
+          <li>Questions to ask before hiring a VA company</li>
+        </ul></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Every article sells, quietly:</strong> each one ends with the matching role, a link to the vertical page and the assessment, so readers can move from learning to booking without hunting for it.</div>
+      <div class="callout warn"><strong>Claims we can back:</strong> articles use your verified numbers and named client results only. As named testimonials and case studies come in, they go straight into the cluster pages.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · BRAND MENTIONS ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">Own · Brand mentions &amp; authority</div>
+    <h2>Get named on the lists buyers and AI tools read.</h2>
+    <p class="subtitle">When a broker asks ChatGPT or Google "what are the best real estate VA companies," the answer comes from list and review articles. If BridgeVA isn't on those lists, it isn't in the answer. Here's the order we'd build in.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Step</th><th>What we do</th><th>Why</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Review footprint</td><td>Pick one review platform, collect named reviews from current clients, link it from the site</td><td>Backs up the "5.0" claim and gives ads and AI tools something to cite</td><td>Month 1</td></tr>
+        <tr><td class="strong">2 · Brand mentions</td><td>Placements in "best virtual assistant companies," "real estate tools" and "property management resources" style posts</td><td>The pages buyers compare on and AI answers pull from</td><td>Month 1+</td></tr>
+        <tr><td class="strong">3 · Software partners</td><td>Listings in the partner or integrations directories of the tools your VAs use (CRM, PM and transaction software)</td><td>Relevant links that also send buyers</td><td>Month 2+</td></tr>
+        <tr><td class="strong">4 · Earned links</td><td>Pitch the job-description templates and cost guide to real estate blogs, podcasts and coaching communities</td><td>Free resources do the outreach work</td><td>Month 3+</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Your coaching network is an asset:</strong> the site says the founders have coached 25,000+ real estate professionals. Coaches, podcasts and events that already know you are the easiest links and mentions to earn.</div>
+      <div class="callout"><strong>What we won't do:</strong> buy private-blog-network links or bulk directory submissions, or post fake reviews. They put the domain at risk and don't move AI answers.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · CASE STUDY (fixed proof) ═════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same ClusterMagic engine we'd run for you, with 4+ years of zero-penalty results across our portfolio.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="images/casestudy-500k.jpg" alt="SEMrush organic traffic chart, 8,500 to 500K+ monthly organic visits over 12 months" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="case-img" style="display:none">[ SEMrush organic-traffic chart ]</div>
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px"><strong>"Their site improves with each Google update."</strong> This client's traffic <em>climbs</em> on update days. That's the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 14 · 90-DAY ROADMAP ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>Fix, launch, learn, then shift budget toward what you own.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Month 1 · Fix &amp; launch</div><h4>Start renting, start building</h4>
+        <ul class="ul-dash">
+          <li>Meta pixel, Conversions API, Google Ads tag and HubSpot stage sync live</li>
+          <li>Price anchor and one consistent set of numbers on the site</li>
+          <li>PM and brokerage landing pages built</li>
+          <li>Google Search live with the negative list (week 2)</li>
+          <li>Meta assessment lead ads live (week 3)</li>
+          <li>First ClusterMagic articles to your team for review</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 2 · Learn</div><h4>Find who signs</h4>
+        <ul class="ul-dash">
+          <li>Search terms cut to those that book qualified calls</li>
+          <li>Creative angle winner picked; new versions of it made</li>
+          <li>Retargeting and price/compare campaigns live</li>
+          <li>First brand mentions placed</li>
+          <li>Articles re-aimed at the roles that sold</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 3 · Shift</div><h4>Own more, rent less</h4>
+        <ul class="ul-dash">
+          <li>Budget moves to the best channel, buyer and role</li>
+          <li>Investor campaign tested if PM and brokerage are profitable</li>
+          <li>Software partner listings and earned-link outreach</li>
+          <li>90-day review: booked calls, signed clients, cost per client, first rankings</li>
+        </ul></div>
+    </div>
+    <div class="callout info mt"><strong>What you'll know by day 90:</strong> your real cost per signed client by channel and buyer, which role to lead with, which Meta angle scales, and which content topics earn the next round of articles.</div>
+  </div>
+</section>
+
+<!-- ══ 15 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="15">
+  <div class="head">
+    <div class="label">Investment · À la carte</div>
+    <h2>Pick the pieces. Rent, own, or both.</h2>
+    <p class="subtitle">No bundle to buy. Each line stands on its own. Ad spend is billed at cost and never folded into our fees.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="align-items:start">
+      <div>
+        <h3><span class="chan paid">Rent</span> Paid media management</h3>
+        <table>
+          <thead><tr><th>Scope</th><th class="num">Fee</th></tr></thead>
+          <tbody>
+            <tr><td>1 channel (Google Ads <em>or</em> Meta), intro pricing</td><td class="num strong">$1,750/mo <span class="dim" style="text-decoration:line-through;font-weight:400">$2,500</span></td></tr>
+            <tr><td>Each additional channel</td><td class="num strong">+$1,000/mo</td></tr>
+            <tr><td>Google + Meta together</td><td class="num strong">$2,750/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Includes strategy and build, tracking and HubSpot conversion sync, landing page guidance, creative, audience targeting, weekly reporting and a monthly strategy call. Ad spend billed at cost.</p>
+      </div>
+      <div>
+        <h3><span class="chan seo">Own</span> ClusterMagic content</h3>
+        <table>
+          <thead><tr><th>Articles/mo</th><th class="num">Monthly</th><th class="num">3-month rate</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">25</td><td class="num">$1,000</td><td class="num">$883/mo</td></tr>
+            <tr><td class="strong">40</td><td class="num">$1,500</td><td class="num">$1,300/mo</td></tr>
+            <tr><td class="strong">50</td><td class="num">$1,750</td><td class="num">$1,533/mo</td></tr>
+            <tr><td class="strong">100</td><td class="num">$3,000</td><td class="num">$2,633/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">1,200–2,000 word articles, published to your site and internally linked. 3-month rate billed as one commitment ($2,650 / $3,900 / $4,600 / $7,900).</p>
+      </div>
+      <div>
+        <h3><span class="chan bm">Own</span> Brand mentions</h3>
+        <table>
+          <thead><tr><th>Package</th><th class="num">Per month</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">2 mentions</td><td class="num">$1,686</td></tr>
+            <tr><td class="strong">3 mentions</td><td class="num">$2,248</td></tr>
+            <tr><td class="strong">5 mentions</td><td class="num">$3,748</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Placements on established DR 30–60 sites with 1,000+ monthly traffic, in list and review-style posts matched to your keywords. Live in about 15–30 days.</p>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Where we'd start:</strong> Google + Meta management at $2,750/mo, since search catches buyers who are ready and Meta builds the pipeline of those who aren't yet. Add 25 ClusterMagic articles a month from day one, and brand mentions once the review footprint is in place.</div>
+  </div>
+</section>
+
+<!-- ══ 16 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide dark" data-screen-label="16">
+  <div class="head">
+    <div class="label">Next steps</div>
+    <h2>Pick your starting pieces and we'll have Google live in two weeks.</h2>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">To get started</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Choose your à la carte lines: paid, content, brand mentions</li>
+          <li style="color:rgba(255,255,255,0.85)">Share access to GA4, Search Console and HubSpot</li>
+          <li style="color:rgba(255,255,255,0.85)">Grant access to Google Ads and Meta Business Manager (or we set them up)</li>
+          <li style="color:rgba(255,255,255,0.85)">Kickoff call to set the cost-per-client target</li>
+        </ul>
+      </div>
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">We'll ask about</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Monthly fee per VSM, margin and average client tenure</li>
+          <li style="color:rgba(255,255,255,0.85)">Where clients come from today and your call close rate</li>
+          <li style="color:rgba(255,255,255,0.85)">Which buyer and role you most want more of</li>
+          <li style="color:rgba(255,255,255,0.85)">Clients willing to give a named review or short video</li>
+          <li style="color:rgba(255,255,255,0.85)">Whether you're ready to show a starting price</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine mt">Data in this deck comes from a review of bridgeva.com and Google autocomplete (Nov 12 2026). Site figures are BridgeVA's own claims; we'll verify traffic and conversions once we have account access.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Rent-to-Own Strategy · Meta &amp; Google GTM</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-bridgeva-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-bridgeva-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
