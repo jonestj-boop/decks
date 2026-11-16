@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FeedingBird · Go-to-Market &amp; Rent-to-Own Plan · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#1E617D; --client-accent-soft:#e6eff3;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#1E617D; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .rto { display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:stretch; }
+  .rto .arrow { display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:var(--et-red); }
+  .chan { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .chan.paid { background:#ffe1e2; color:#c62828; } .chan.seo { background:var(--client-accent-soft); color:var(--client-accent); } .chan.bm { background:#fff0d6; color:#a86a00; }
+  code { font-family:inherit; font-size:12.5px; background:var(--ink-100); padding:2px 7px; border-radius:6px; }
+  @media (max-width:900px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .two-col, .three-col, .case { grid-template-columns:1fr !important; }
+    .rto { grid-template-columns:1fr; } .rto .arrow { transform:rotate(90deg); padding:4px 0; }
+    .bar { grid-template-columns:110px 1fr 46px; }
+    table { font-size:12px; } .dots { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Go-to-market &amp; rent-to-own growth plan · Prepared by EmberTribe</div>
+    <h1>FeedingBird</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:940px">Most American adults don't have a will, and the ones who start looking compare attorneys at $2,000+ against online tools at $99. FeedingBird has the price, the attorney network and a founding team that has built and sold software before. The plan: rent that demand with paid ads, learn which buyers and states convert, then own the searches with content, brand mentions and real links.</p>
+    <div class="meta">
+      <div>Prepared for<b>FeedingBird</b></div>
+      <div>Date<b>November 2026</b></div>
+      <div>Model<b>Rent → Learn → Own</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · SNAPSHOT ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">Where you stand today</div>
+    <h2>A sharp offer on a young domain.</h2>
+    <p class="subtitle">FeedingBird launched in 2026 with four clear plans, one-time pricing and attorney-reviewed documents. Everything a buyer needs to say yes is on the site. What's missing is the traffic, the proof and the search footprint to bring buyers to it.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v accent">$99</div><div class="k">Will Plan, individual (one time). Trust Plan from $299</div></div>
+      <div class="stat"><div class="v">16</div><div class="k">Network attorneys listed, covering 18 states</div></div>
+      <div class="stat"><div class="v honey">3</div><div class="k">Testimonials on site, first names only, no review count</div></div>
+      <div class="stat"><div class="v">~10</div><div class="k">Journal posts since May 2026, most under a one-minute read</div></div>
+      <div class="stat"><div class="v red">51</div><div class="k">State law pages already built (a head start most competitors paid for)</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What's working:</strong> plain pricing that undercuts the category, a will-vs-trust quiz that routes buyers to the right plan, couples pricing, gift cards, a 30-day money-back guarantee, Klarna, and a founding team with real exits in healthcare software. The state law pages are the right SEO structure.</div>
+      <div class="callout"><strong>What isn't yet:</strong> thin social proof, a handful of short journal posts, unsourced headline stats, and a few spots where pages disagree with each other (next slide). A new domain also has little authority, so Google won't rank it for competitive terms on content alone for a while.</div>
+    </div>
+    <p class="fine mt">Source: review of feedingbird.com (home, compare plans, will, trust, FAQ, about, journal, attorney network, state pages, gift cards), Nov 16 2026. We'll add Search Console, GA4 and Semrush data once we have access.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · FIX BEFORE SPENDING ═══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">Pre-launch · Fix before we spend</div>
+    <h2>Eight small fixes that protect every ad dollar.</h2>
+    <p class="subtitle">None of these are big projects. But paid traffic finds every inconsistency, and in a category where trust is the whole sale, a buyer who sees two different attorney prices leaves. We'd clear these in the first two weeks, before budget scales.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>What we found</th><th>Where</th><th>Fix</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Attorney support is priced three ways</td><td>FAQ says +$279, attorney network says $250/hour, plan tables say "Coming soon"</td><td>Pick one offer and one price, show it everywhere</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">Guided support (+$79) is sold and "coming soon"</td><td>FAQ vs. compare-plans and plan tables</td><td>Same: one status, one price</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">Which states are live isn't clear</td><td>Quiz says "Your state is next" for some; state pages list all 51</td><td>A live-states list on the plan pages. Ads target live states only</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">Headline stats have no source</td><td>"3 out of 10 have a will," "18 months" probate, "$2,000 to $5,000+"</td><td>Cite a survey or court source, or soften the wording. Ad platforms and AI tools both reward sourced claims</td><td><span class="pill p1">Week 1</span></td></tr>
+        <tr><td class="strong">Every attorney card has the same quote</td><td>Attorney network</td><td>One real line per attorney, or drop the quote</td><td><span class="pill p2">Week 2</span></td></tr>
+        <tr><td class="strong">Klarna badges link to a "coming soon" page</td><td>Will and trust pages</td><td>Link to how Klarna works at checkout, or remove</td><td><span class="pill p2">Week 2</span></td></tr>
+        <tr><td class="strong">"Founding price" isn't explained</td><td>Will and trust buttons</td><td>Say what it means and when it ends. That's a real urgency hook for ads</td><td><span class="pill p2">Week 2</span></td></tr>
+        <tr><td class="strong">Typo on the homepage</td><td>"singluar purpose"</td><td>Fix</td><td><span class="pill p3">Week 1</span></td></tr>
+      </tbody>
+    </table>
+    <p class="fine mt">Also on the list: confirm the lead form on compare plans submits correctly, and set up purchase tracking from app.feedingbird.com back to GA4, Google Ads and Meta so we can measure cost per plan sold.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · MARKET + COMPETITORS ══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Who buys and who you're up against</div>
+    <h2>People shop for a will when life changes, not when they get around to it.</h2>
+    <p class="subtitle">Nobody wakes up wanting an estate plan. A baby, a wedding, a house, a diagnosis or a parent's death pushes them to search. Each trigger points to a different plan, a different message and a different channel.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.1fr 1fr">
+      <div>
+        <h3>Five buyers, five triggers</h3>
+        <table>
+          <thead><tr><th>Buyer</th><th>Trigger</th><th>Likely plan</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">New parents</td><td>Baby arrives. "Who gets the kids?"</td><td>Will, couple</td></tr>
+            <tr><td class="strong">Homeowners, 35–55</td><td>House closing, property in two states</td><td>Trust, couple</td></tr>
+            <tr><td class="strong">Blended families</td><td>Remarriage, kids from earlier marriages</td><td>Trust</td></tr>
+            <tr><td class="strong">Pre-retirees, 55+</td><td>Retirement, a health scare, watching a friend go through probate</td><td>Trust</td></tr>
+            <tr><td class="strong">Adult children</td><td>Helping a parent get affairs in order. Gift card buyers</td><td>Will or trust, gift</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Where FeedingBird fits</h3>
+        <table>
+          <thead><tr><th>Option</th><th>What the buyer sees</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Local attorney</td><td>Personal, but slow and often $2,000+</td></tr>
+            <tr><td class="strong">Trust &amp; Will, LegalZoom</td><td>Big brands, big ad budgets, higher entry prices</td></tr>
+            <tr><td class="strong">FreeWill, nonprofit tools</td><td>Free basic wills, built around charitable giving</td></tr>
+            <tr><td class="strong accent" style="color:var(--client-accent)">FeedingBird</td><td class="strong">$99 will, $299 trust, attorney network behind it, done in under an hour</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>Don't fight the big brands head-on.</strong> Trust &amp; Will and LegalZoom own "online will" on Google and outspend everyone. FeedingBird wins on the long tail: state searches, life-event questions, "will vs trust", and the price gap.</div>
+      </div>
+    </div>
+    <p class="fine mt">Competitor positioning from their public sites. We'll pull current pricing and ad activity before launch, since both change often.</p>
+  </div>
+</section>
+
+<!-- ══ 5 · RENT TO OWN ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">The model · Rent to own</div>
+    <h2>Rent the traffic, learn who buys, then own it.</h2>
+    <p class="subtitle">Paid ads put FeedingBird in front of buyers this month. Content and links take months to rank, but then the traffic is yours and you stop paying for every click. Rent to own uses the first to aim the second, so we only build content around searches and buyers that have already sold plans.</p>
+  </div>
+  <div class="fill">
+    <div class="rto">
+      <div class="phase red">
+        <div class="when">Rent · Month 1 onward</div>
+        <h4>Buy the clicks</h4>
+        <ul class="ul-dash">
+          <li>Google Search on state, price and will-vs-trust searches in live states</li>
+          <li>Meta to life-event audiences: new parents, new homeowners, 55+</li>
+          <li>Retargeting for quiz takers and plan-page visitors</li>
+          <li>Holiday gift card push, then a New Year "get it done" campaign</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase accent">
+        <div class="when">Learn · Weekly</div>
+        <h4>Keep what sells</h4>
+        <ul class="ul-dash">
+          <li>Cost per plan sold by search term, state and audience</li>
+          <li>Will vs. trust mix, and how many will buyers upgrade</li>
+          <li>Which hook wins: price, probate, kids, or "done in an hour"</li>
+          <li>Cut losers fast, move budget to winners</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase honey">
+        <div class="when">Own · Month 1 onward</div>
+        <h4>Build what ranks</h4>
+        <ul class="ul-dash">
+          <li>ClusterMagic articles on the searches and states that sold</li>
+          <li>Brand mentions in "best online will maker" lists</li>
+          <li>Links from financial planners, realtors and family sites</li>
+          <li>As pages rank, bid less on those same searches</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Why this order matters for a $99–$399 product:</strong> a one-time sale leaves little room for wasted clicks, and the big brands make broad terms expensive. Paid tells us fast which narrow searches and buyers pay back. Content then takes those searches over at a fraction of the cost per sale.</div>
+  </div>
+</section>
+
+<!-- ══ 6 · PAID PLAN ═════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">Rent · Paid media plan</div>
+    <h2>Start narrow, in live states, on the searches closest to a purchase.</h2>
+    <p class="subtitle">Every campaign is judged on plans sold, not clicks. We geo-target only the states where FeedingBird is live and add states as they open.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Campaign</th><th>Targets</th><th>Role</th><th>Launch</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Google Search · Price &amp; state</td><td><code>how much does a will cost in texas</code> <code>online will and trust</code> <code>how to make a will without a lawyer</code> <code>living trust cost</code></td><td>Highest intent. The $99 vs. $2,000 gap does the selling</td><td>Week 2</td></tr>
+        <tr><td class="strong">Google Search · Will vs. trust</td><td><code>will vs trust</code> <code>do i need a trust or a will</code> <code>avoid probate with a trust</code></td><td>Sends people to the quiz, which routes them to the right plan</td><td>Week 2</td></tr>
+        <tr><td class="strong">Google Search · Competitor alternatives</td><td><code>trust and will pricing</code> <code>trust and will vs legalzoom</code> <code>best online will maker</code></td><td>Comparison shoppers who already decided to buy online. Tested carefully, capped</td><td>Week 4</td></tr>
+        <tr><td class="strong">Meta · Life events</td><td>New parents, recently married, recent movers and homeowners, adults 55+, adult children of aging parents</td><td>Most people don't search until something pushes them. Meta finds them first. Short founder and "family fire drill" videos</td><td>Week 3</td></tr>
+        <tr><td class="strong">Meta · Gift cards (seasonal)</td><td>Adult children, holiday and Mother's/Father's Day windows</td><td>"Give your parents the plan they keep putting off." Couple plan gift at $149 or $399</td><td>Dec 1</td></tr>
+        <tr><td class="strong">Meta + Google · Retargeting</td><td>Quiz takers, plan-page visitors, abandoned sign-ups</td><td>Guarantee, attorney review, Klarna, founding price</td><td>Week 3</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Stay on the right side of legal ad rules:</strong> no "replaces a lawyer" or guaranteed-outcome claims. We lead with what's checkable: attorney-reviewed, state-specific documents, one-time price, 30-day money-back guarantee. Claims like "3 in 10 have a will" run only once they're sourced.</div>
+      <div class="callout warn"><strong>Timing works in your favor:</strong> gift card season is two weeks out, and January is when people set "get my affairs in order" goals. Launching paid now means we're learning through the two windows where intent is easiest to buy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 7 · KEYWORD STRATEGY ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">Keyword strategy</div>
+    <h2>Four keyword groups, each with a job.</h2>
+    <p class="subtitle">These come from what people are typing into Google today. Buying terms go to paid first. Question and state terms go to content, where they build rankings and feed AI answers. Every group points back to the quiz or a plan page.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Group</th><th>Example searches</th><th>Intent</th><th>Channel</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Make a will online</td><td><code>online will and trust</code> <code>online will maker</code> <code>how to make a will online</code> <code>how to make a will without a lawyer</code> <code>online trust creation</code> <code>online will and power of attorney</code></td><td>Buy</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">2 · Cost &amp; state</td><td><code>how much does a will cost in georgia</code> <code>how much does a will cost with a lawyer</code> <code>living trust cost</code> <code>avoid probate in texas</code> <code>avoid probate in florida</code></td><td>Compare</td><td><span class="chan paid">Paid</span><span class="chan seo">SEO</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">3 · Will vs. trust</td><td><code>will vs trust</code> <code>will vs trust pros and cons</code> <code>do i need a trust if i have a will</code> <code>do i need a trust for my house</code> <code>living trust vs revocable trust</code></td><td>Learn</td><td><span class="chan seo">SEO</span><span class="chan bm">Mentions</span></td><td><span class="pill p2">Month 1+</span></td></tr>
+        <tr><td class="strong">4 · Life events &amp; comparisons</td><td><code>estate planning for blended families</code> <code>estate planning for seniors</code> <code>estate planning for veterans</code> <code>best online will maker</code> <code>trust and will vs legalzoom</code></td><td>Learn</td><td><span class="chan seo">SEO</span><span class="chan bm">Mentions</span></td><td><span class="pill p3">Month 2+</span></td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout good"><strong>The fastest SEO win:</strong> Google autocomplete fills "how much does a will cost in…" and "avoid probate in…" with state names. You already have 51 state pages. Building out the live-state pages with cost, probate timelines and a plan CTA turns them into the pages that rank.</div>
+      <div class="callout info"><strong>Next step:</strong> the full keyword workbook (search volume, difficulty and the article each term maps to) comes with month one. Paid search-term data then re-ranks the list every month.</div>
+    </div>
+    <p class="fine mt">Example searches from Google autocomplete, US, Nov 16 2026. Volumes and difficulty come with the workbook.</p>
+  </div>
+</section>
+
+<!-- ══ 8 · CONTENT PLAN ══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">Own · ClusterMagic content plan</div>
+    <h2>Turn the Journal into the place families learn estate planning.</h2>
+    <p class="subtitle">The Journal's voice is right: plain language, a real family story, a clear takeaway. It needs depth and volume. ClusterMagic builds four topic clusters with full-length, attorney-reviewed guides, so Google and AI tools see FeedingBird as an authority and not just a checkout page.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="grid-template-columns:repeat(4,1fr)">
+      <div class="pillar"><div class="pn">Cluster 1 · By state</div><h4>Your state's rules</h4>
+        <ul class="ul-dash">
+          <li>How much does a will cost in Texas?</li>
+          <li>How long probate takes in Florida</li>
+          <li>Do you need a witness or notary for a will in Ohio?</li>
+          <li>Community property states and your estate plan</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 2 · Will vs. trust</div><h4>Pick the right plan</h4>
+        <ul class="ul-dash">
+          <li>Will vs. trust: pros, cons and costs</li>
+          <li>Do I need a trust if I own a house?</li>
+          <li>What a pour-over will actually does</li>
+          <li>How to fund a living trust, step by step</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 3 · Life events</div><h4>When life changes</h4>
+        <ul class="ul-dash">
+          <li>Estate planning checklist for new parents</li>
+          <li>Naming a guardian for your kids</li>
+          <li>Estate planning for blended families</li>
+          <li>Special needs trusts, explained</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 4 · The documents</div><h4>POA, health care, more</h4>
+        <ul class="ul-dash">
+          <li>Financial power of attorney: who and when</li>
+          <li>Living will vs. health care directive</li>
+          <li>What happens if you die without a will</li>
+          <li>Online will makers compared</li>
+        </ul></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Every article sells, quietly:</strong> each guide ends with the quiz or the matching plan, and the state articles link to that state's page. Readers decide between will and trust before they ever reach checkout.</div>
+      <div class="callout warn"><strong>Legal accuracy first:</strong> drafts cite statutes and court sources and go to Mario or a network attorney for review before they publish. Every piece keeps your "educational content, not legal advice" line.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 9 · BRAND MENTIONS + LINKS + PARTNERS ═════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Own · Brand mentions, links &amp; partners</div>
+    <h2>Get named in the lists buyers and AI tools read.</h2>
+    <p class="subtitle">When someone asks ChatGPT or Google "what's the best online will maker," the answer comes from comparison articles. FeedingBird isn't in those yet. Getting named there, and earning links from the people who advise families, is how a new domain builds trust fast.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Step</th><th>What we do</th><th>Why</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Brand mentions</td><td>Placements in "best online will makers," "how to make a will for under $100" and "estate planning for new parents" posts on personal finance and family sites</td><td>These are the pages buyers compare on and AI tools quote</td><td>Month 1+</td></tr>
+        <tr><td class="strong">2 · Reviews</td><td>Post-purchase review requests to Trustpilot or Google, and named testimonials on site</td><td>Three first-name quotes won't beat a brand with 10,000 reviews. Paid ads convert better with a rating next to them</td><td>Month 1</td></tr>
+        <tr><td class="strong">3 · Partner links</td><td>Financial advisors, CPAs, realtors and HR benefit providers who refer clients. A referral page and co-branded gift cards</td><td>Relevant links that also send buyers at the moment of a trigger</td><td>Month 2+</td></tr>
+        <tr><td class="strong">4 · Earned links</td><td>Founder story (healthcare software exit to estate planning) and data pieces like state probate timelines, pitched to finance and parenting writers</td><td>Linkable assets do the outreach work</td><td>Month 3+</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>A channel worth testing early:</strong> financial advisors and realtors meet your buyers at the exact trigger moment. A simple partner program (a referral link, a gift-card bulk rate) can become your lowest-cost source of sales.</div>
+      <div class="callout"><strong>What we won't do:</strong> buy PBN links, private blog networks or fake reviews. In a trust category, getting caught costs more than the links were ever worth.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 10 · CASE STUDY (fixed proof) ═════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same ClusterMagic engine we'd run for you, with 4+ years of zero-penalty results across our portfolio.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="images/casestudy-500k.jpg" alt="SEMrush organic traffic chart, 8,500 to 500K+ monthly organic visits over 12 months" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="case-img" style="display:none">[ SEMrush organic-traffic chart ]</div>
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px"><strong>"Their site improves with each Google update."</strong> This client's traffic <em>climbs</em> on update days. That's the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · UNIT ECONOMICS ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Unit economics · Setting the target</div>
+    <h2>Know what a sale is worth before we buy one.</h2>
+    <p class="subtitle">A one-time plan means the first order has to carry most of the ad cost. The table shows the most we could pay per sale and still keep half the revenue. Your real numbers (refund rate, upgrades, add-ons) set the final target at kickoff.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.1fr 1fr">
+      <div>
+        <table>
+          <thead><tr><th>Plan</th><th class="num">Price</th><th class="num">Max cost per sale at 50%</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Will, individual</td><td class="num">$99</td><td class="num">$50</td></tr>
+            <tr><td class="strong">Will, couple</td><td class="num">$149</td><td class="num">$75</td></tr>
+            <tr><td class="strong">Trust, individual</td><td class="num">$299</td><td class="num">$150</td></tr>
+            <tr><td class="strong">Trust, couple</td><td class="num">$399</td><td class="num">$200</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Simple math on list prices, before any promotions. Not a forecast.</p>
+      </div>
+      <div>
+        <div class="callout good"><strong>Raise the order value, and every channel works harder.</strong> Push couples pricing (two plans for $50–$100 more), route quiz takers who need a trust to the Trust Plan, and offer attorney support once it's live. A mix that leans toward trusts roughly doubles what we can pay per sale.</div>
+        <div class="callout warn"><strong>Why trusts lead the paid budget:</strong> at $50 per sale, a $99 will is hard to buy profitably on Google, where legal clicks are expensive. Will searches go mostly to content. Paid aims at trust buyers, couples and the gift card window.</div>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Suggested starting ad spend:</strong> $3,000–$5,000 a month across Google and Meta for the first 90 days, enough to get clean cost-per-sale data in a few live states. Budget then follows whichever state, plan and audience pays back.</div>
+  </div>
+</section>
+
+<!-- ══ 12 · 90-DAY ROADMAP ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>Fix, launch, learn, then shift the budget toward what you own.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Month 1 · Launch</div><h4>Fix the site, start renting</h4>
+        <ul class="ul-dash">
+          <li>Pre-launch fixes cleared (pricing, live states, sourced stats)</li>
+          <li>Purchase tracking from app.feedingbird.com to GA4, Google and Meta</li>
+          <li>Google price, state and will-vs-trust campaigns live</li>
+          <li>Meta life-event tests and gift card push live</li>
+          <li>Review requests turned on</li>
+          <li>First ClusterMagic articles to your attorney for review</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 2 · Learn</div><h4>New Year push</h4>
+        <ul class="ul-dash">
+          <li>January "get it done" campaign on the winning hooks</li>
+          <li>Retargeting on quiz takers and plan visitors</li>
+          <li>Search terms cut to the ones that sell plans</li>
+          <li>First brand mentions placed</li>
+          <li>Live-state pages rebuilt for cost and probate searches</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 3 · Shift</div><h4>Own more, rent less</h4>
+        <ul class="ul-dash">
+          <li>Budget moves to the best state, plan and audience</li>
+          <li>Partner pilot with advisors or realtors</li>
+          <li>Internal links across every cluster</li>
+          <li>90-day review: plans sold, cost per sale, first rankings</li>
+        </ul></div>
+    </div>
+    <div class="callout info mt"><strong>What you'll know by day 90:</strong> your real cost per plan sold by state, search term and audience; your will-to-trust mix; which life event to scale; and the first rankings from content you own.</div>
+  </div>
+</section>
+
+<!-- ══ 13 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">Investment · À la carte</div>
+    <h2>Pick the pieces. Rent, own, or both.</h2>
+    <p class="subtitle">No bundle required. Each line stands on its own. Ad spend is billed at cost and never folded into our fees.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="align-items:start">
+      <div>
+        <h3><span class="chan paid">Rent</span> Paid media management</h3>
+        <table>
+          <thead><tr><th>Scope</th><th class="num">Fee</th></tr></thead>
+          <tbody>
+            <tr><td>Google Ads + Meta, both channels, intro pricing</td><td class="num strong">$1,750/mo <span class="dim" style="text-decoration:line-through;font-weight:400">$2,750</span></td></tr>
+            <tr><td>Suggested ad spend, billed at cost</td><td class="num strong">$3,000–$5,000/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Includes strategy and build, conversion tracking, creative, audience targeting, the seasonal gift card campaign, weekly reporting and a monthly strategy call.</p>
+      </div>
+      <div>
+        <h3><span class="chan seo">Own</span> ClusterMagic content</h3>
+        <table>
+          <thead><tr><th>Articles/mo</th><th class="num">Monthly</th><th class="num">3-month rate</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">25</td><td class="num">$1,000</td><td class="num">$883/mo</td></tr>
+            <tr><td class="strong">40</td><td class="num">$1,500</td><td class="num">$1,300/mo</td></tr>
+            <tr><td class="strong">50</td><td class="num">$1,750</td><td class="num">$1,533/mo</td></tr>
+            <tr><td class="strong">100</td><td class="num">$3,000</td><td class="num">$2,633/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">1,200–2,000 word articles, published to Webflow and internally linked. 3-month rate billed as one commitment ($2,650 / $3,900 / $4,600 / $7,900).</p>
+      </div>
+      <div>
+        <h3><span class="chan bm">Own</span> Brand mentions</h3>
+        <table>
+          <thead><tr><th>Package</th><th class="num">Per month</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">2 mentions</td><td class="num">$1,686</td></tr>
+            <tr><td class="strong">3 mentions</td><td class="num">$2,248</td></tr>
+            <tr><td class="strong">5 mentions</td><td class="num">$3,748</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Placements on established DR 30–60 sites with 1,000+ monthly traffic, in list and review-style posts matched to your keywords. Live in about 15–30 days.</p>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Where we'd start:</strong> Google + Meta management at the $1,750 intro rate with $3,000–$5,000/mo in ad spend, plus 50 ClusterMagic articles a month ($1,533/mo on the 3-month rate, about $30 an article) and 2 brand mentions ($1,686/mo) to get FeedingBird into the "best online will maker" lists. That's $4,969/mo in fees. If budget is tight, start with paid plus 25 articles ($2,633/mo) and add mentions in month two.</div>
+  </div>
+</section>
+
+<!-- ══ 14 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide dark" data-screen-label="14">
+  <div class="head">
+    <div class="label">Next steps</div>
+    <h2>Pick your starting pieces and we'll be live before gift card season.</h2>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">To get started</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Choose your à la carte lines: paid, content, brand mentions</li>
+          <li style="color:rgba(255,255,255,0.85)">Share read access to GA4, Search Console and Webflow</li>
+          <li style="color:rgba(255,255,255,0.85)">Grant access to Google Ads and Meta Business Manager</li>
+          <li style="color:rgba(255,255,255,0.85)">Kickoff call to set the cost-per-sale target</li>
+        </ul>
+      </div>
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">We'll ask about</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Which states are live today, and the rollout order</li>
+          <li style="color:rgba(255,255,255,0.85)">Current sales, will-to-trust mix and refund rate</li>
+          <li style="color:rgba(255,255,255,0.85)">Monthly ad budget and how long the founding price runs</li>
+          <li style="color:rgba(255,255,255,0.85)">Status of guided and attorney support add-ons</li>
+          <li style="color:rgba(255,255,255,0.85)">Who reviews legal content before it publishes</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine mt">Data in this deck comes from a review of feedingbird.com and Google autocomplete (Nov 16 2026). Nothing here is legal advice.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Go-to-Market &amp; Rent-to-Own Plan</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-feedingbird-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-feedingbird-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
