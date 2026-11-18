@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ayoub N&amp;H CRO Implementation Report · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#00818D; --client-accent-soft:#e3f4f5;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#1f8a4c; --good-bar:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red-deep); text-decoration:none; } a:hover { color:var(--et-black); }
+
+  .shell { display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); }
+
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.75; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.85); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.8); line-height:1.6; }
+
+  main { padding:0; min-width:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .label { color:var(--et-red-deep); }
+  .masthead h1 { color:var(--et-black); max-width:820px; }
+  .masthead .subtitle { color:var(--ink-500); max-width:680px; }
+  .masthead .meta { display:flex; flex-wrap:wrap; gap:16px 40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:var(--et-black); font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red-deep); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:34px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); white-space:nowrap; }
+  @media (max-width:1180px) { .stats { grid-template-columns:repeat(2,1fr); } }
+  .stat .v small { font-size:18px; color:var(--ink-500); font-weight:600; }
+  .stat .v.red{color:var(--et-red-deep);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* Before / after speed cards */
+  .speed { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:22px 0 8px; }
+  .sp { border:1px solid var(--border); border-radius:14px; padding:22px; }
+  .sp .pg { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-500); margin-bottom:14px; }
+  .sp .ba { display:flex; align-items:baseline; gap:10px; }
+  .sp .b4 { font-size:22px; font-weight:700; color:var(--ink-300); text-decoration:line-through; text-decoration-thickness:2px; }
+  .sp .arrow { color:var(--ink-500); font-size:18px; }
+  .sp .af { font-size:44px; font-weight:700; line-height:1; color:var(--et-black); letter-spacing:-0.02em; }
+  .sp .gain { display:inline-block; margin-top:10px; font-size:12px; font-weight:700; color:var(--good); background:#e4f6ec; padding:3px 10px; border-radius:20px; }
+  .sp .cap { font-size:12.5px; color:var(--ink-500); margin-top:10px; }
+
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good-bar);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#8a5f00;}
+
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .pill.live{background:#e4f6ec;color:#1a7a43;} .pill.ready{background:#fff0d6;color:#8a5600;} .pill.prog{background:var(--ink-100);color:var(--ink-600);}
+
+  .tablewrap { overflow-x:auto; margin:14px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .dim{color:var(--ink-500);}
+  td.code { font-weight:700; color:var(--ink-500); white-space:nowrap; font-size:13px; }
+
+  /* Before / now copy comparison */
+  .swap { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--border); border-radius:14px; overflow:hidden; margin:14px 0 22px; }
+  .swap > div { padding:20px 22px; }
+  .swap .was { background:var(--ink-50); }
+  .swap .now { background:#fff; border-left:3px solid var(--client-accent); }
+  .swap .tag { font-weight:700; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:8px; }
+  .swap .was .tag { color:var(--ink-500); } .swap .now .tag { color:var(--client-accent); }
+  .swap .was p { color:var(--ink-500); margin:0; font-size:15px; }
+  .swap .now p { color:var(--et-black); margin:0; font-size:16px; font-weight:600; line-height:1.45; }
+  .swap .where { grid-column:1 / -1; padding:10px 22px; background:var(--et-black); color:#fff; font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; }
+
+  .copy { font-weight:600; color:var(--et-black); }
+  a.ext { color:var(--et-red-deep); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:3px; }
+  a.ext:hover { color:var(--et-black); }
+  a.ext::after { content:"\00a0↗"; font-size:0.85em; }
+  .where a.ext, .sp .pg a.ext { color:inherit; }
+  .sp .retest { display:block; font-size:12px; margin-top:8px; }
+
+  .bars { display:flex; flex-direction:column; gap:10px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:150px 1fr 70px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--good-bar); } .bar .bf.honey{background:var(--et-honey);} .bar .bf.grey{background:var(--ink-300);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .step p { margin:6px 0 0; font-size:15px; color:var(--ink-600); }
+
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.78); max-width:640px; }
+  .cta .label { color:var(--et-honey); }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; padding:22px 16px; }
+    aside .doc-type { margin-bottom:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside nav a { padding:6px 10px; font-size:12.5px; }
+    aside .foot { display:none; }
+    .block, .masthead, .cta { padding:44px 16px; }
+    h1 { font-size:36px; } h2 { font-size:26px; }
+    .stats { grid-template-columns:repeat(2,1fr); gap:12px; }
+    .stat { padding:18px 16px; } .stat .v { font-size:26px; white-space:nowrap; } .stat .v small { font-size:15px; }
+    .speed { grid-template-columns:1fr; }
+    .swap { grid-template-columns:1fr; }
+    .swap .now { border-left:none; border-top:3px solid var(--client-accent); }
+    .bar { grid-template-columns:96px 1fr 56px; gap:8px; }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">CRO Implementation Report</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe<br>for Ayoub N&amp;H · November 2026</div>
+  </aside>
+
+  <main>
+    <!-- MASTHEAD -->
+    <section class="masthead" id="top">
+      <div class="label">CRO implementation report</div>
+      <h1>Ayoub N&amp;H: what we changed on ayoubnh.com</h1>
+      <p class="subtitle">In June we audited every page in your lead path and found 18 fixes. This report shows what's live, how much faster the site loads, and what's left before we hand off.</p>
+      <div class="meta">
+        <div>Prepared for<b>Andrew &amp; Kris Ayoub</b></div>
+        <div>Date<b>November 2026</b></div>
+        <div>Scope<b>18 items from the CRO workbook</b></div>
+        <div>Speed data<b>Google PageSpeed, Nov 18</b></div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="block" id="summary" data-nav="Summary">
+      <div class="label">Summary</div>
+      <h2>Faster pages, clearer trust, easier forms</h2>
+      <p class="lede">Twelve of the 18 fixes are live on your site today. Three more are built and waiting on your sign-off. Your contact page went from one of the slowest on the site to one of the fastest.</p>
+      <div class="stats">
+        <div class="stat"><div class="v good">12<small> / 18</small></div><div class="k">Fixes live on ayoubnh.com</div></div>
+        <div class="stat"><div class="v">3</div><div class="k">Built and ready for your approval</div></div>
+        <div class="stat"><div class="v accent">36 → 84</div><div class="k">Contact page mobile speed score</div></div>
+        <div class="stat"><div class="v good">0 ms</div><div class="k">Page freeze time on all three key pages (was up to 1,020 ms)</div></div>
+      </div>
+      <h3>What changed, in plain terms</h3>
+      <ul class="body">
+        <li>Your homepage, carpet page and contact page load faster and no longer freeze while a visitor tries to tap.</li>
+        <li>Every service page now leads with who you are: family-owned since 1991, IICRC certified, 35 years in Maryland, DC and Virginia.</li>
+        <li>The contact form asks for less, says what the visitor gets, and lets them pick more than one service.</li>
+        <li>Current Offers sits in your main navigation, and service pages point visitors to the related service they might want instead.</li>
+      </ul>
+    </section>
+
+    <!-- SPEED -->
+    <section class="block" id="speed" data-nav="Site speed">
+      <div class="label">Site speed · C-03 · C-04 · C-05 · H-01</div>
+      <h2>Mobile speed scores, before and after</h2>
+      <p>Google scores page speed from 0 to 100. Under 50 counts as poor, 50 to 89 needs work, and 90+ is good. In June all three pages scored under 50 on mobile. We swapped your caching setup for LiteSpeed Cache, cleaned up unused Elementor code across the site, and tuned the three pages your visitors land on most.</p>
+      <div class="speed">
+        <div class="sp"><div class="pg"><a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">Contact page</a></div><div class="ba"><span class="b4">36</span><span class="arrow">→</span><span class="af">84</span></div><span class="gain">+48 points</span><div class="cap">Desktop: 53 → 95</div><a class="ext retest" href="https://pagespeed.web.dev/analysis?url=https://ayoubnh.com/contact-us/&form_factor=mobile" target="_blank" rel="noopener">Run the test yourself</a></div>
+        <div class="sp"><div class="pg"><a class="ext" href="https://ayoubnh.com/" target="_blank" rel="noopener">Homepage</a></div><div class="ba"><span class="b4">45</span><span class="arrow">→</span><span class="af">74</span></div><span class="gain">+29 points</span><div class="cap">Desktop: 45 → 86</div><a class="ext retest" href="https://pagespeed.web.dev/analysis?url=https://ayoubnh.com/&form_factor=mobile" target="_blank" rel="noopener">Run the test yourself</a></div>
+        <div class="sp"><div class="pg"><a class="ext" href="https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/" target="_blank" rel="noopener">Carpet cleaning page</a></div><div class="ba"><span class="b4">45</span><span class="arrow">→</span><span class="af">74</span></div><span class="gain">+29 points</span><div class="cap">Desktop: 67 → 86</div><a class="ext retest" href="https://pagespeed.web.dev/analysis?url=https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/&form_factor=mobile" target="_blank" rel="noopener">Run the test yourself</a></div>
+      </div>
+
+      <h3>The numbers behind the score (mobile)</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Page</th><th class="num">Main content loads (June)</th><th class="num">Now</th><th class="num">Page freeze (June)</th><th class="num">Now</th></tr></thead>
+          <tbody>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">Contact page</a></td><td class="num dim">7.7s</td><td class="num up">4.3s</td><td class="num dim">1,020 ms</td><td class="num up">0 ms</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/" target="_blank" rel="noopener">Homepage</a></td><td class="num dim">15.3s</td><td class="num up">11.3s</td><td class="num dim">530 ms</td><td class="num up">0 ms</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/" target="_blank" rel="noopener">Carpet cleaning page</a></td><td class="num dim">11.6s</td><td class="num">11.2s</td><td class="num dim">460 ms</td><td class="num up">0 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dim" style="font-size:13px">"Main content loads" is Google's Largest Contentful Paint. "Page freeze" is Total Blocking Time, how long the page ignores taps while it loads. June figures come from the CRO audit. November figures are from Google PageSpeed Insights on Nov 18, 2026. Scores move a few points between runs.</p>
+
+      <div class="callout good"><strong>Why the freeze time matters:</strong> a phone visitor who taps "Call" or "Get a Quote" while the page is frozen gets no response. On the contact page that delay was over a full second. It's now zero on all three pages.</div>    </section>
+
+    <!-- TRUST -->
+    <section class="block" id="trust" data-nav="Trust & messaging">
+      <div class="label">Trust &amp; messaging · H-03 · H-04 · H-05 · H-10 · M-01</div>
+      <h2>Your credentials, where visitors decide</h2>
+      <p>The audit found your strongest selling points, 35 years, family ownership and IICRC certification, mostly lived on the About page. Most visitors never see that page. These changes put them on the pages people land on.</p>
+
+      <div class="swap">
+        <div class="where"><a class="ext" href="https://ayoubnh.com/" target="_blank" rel="noopener">Homepage hero</a> · H-03</div>
+        <div class="was"><div class="tag">Before</div><p>Rotating banner led with discounts and offers.</p></div>
+        <div class="now"><div class="tag">Now live</div><p>Maryland, DC &amp; Virginia's Trusted Carpet, Rug &amp; Drapery Cleaners. IICRC Certified, Family-Owned for 35 Years.</p></div>
+      </div>
+
+      <div class="swap">
+        <div class="where">Trust bar on <a class="ext" href="https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/" target="_blank" rel="noopener">service pages</a> + <a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">contact page</a> · H-04</div>
+        <div class="was"><div class="tag">Before</div><p>No credentials shown on service pages.</p></div>
+        <div class="now"><div class="tag">Now live</div><p>Family-Owned Since 1991 · IICRC Certified · 35+ Years Serving Maryland, DC &amp; Virginia</p></div>
+      </div>
+
+      <div class="swap">
+        <div class="where">Family story on <a class="ext" href="https://ayoubnh.com/cleaning/oriental-area-rug-cleaning/" target="_blank" rel="noopener">service pages</a> + <a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">contact page</a> · H-10</div>
+        <div class="was"><div class="tag">Before</div><p>Only on the About page.</p></div>
+        <div class="now"><div class="tag">Now live</div><p>Family-owned since 1991, now run by the second generation. For 35 years, the Ayoub family has cleaned carpets, rugs, and drapery across Maryland, DC, and Virginia.</p></div>
+      </div>
+
+      <h3>Service-page subheadlines · M-01</h3>
+      <p>Each main service page now opens with the result the customer is after.</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Page</th><th>New subheadline (live)</th></tr></thead>
+          <tbody>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/drapery-cleaning/" target="_blank" rel="noopener">Drapery cleaning</a></td><td class="copy">Restore your window treatments to like-new condition.</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/" target="_blank" rel="noopener">Wall-to-wall carpet</a></td><td class="copy">A deep clean that lifts set-in stains and odor.</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/oriental-area-rug-cleaning/" target="_blank" rel="noopener">Oriental &amp; area rugs</a></td><td class="copy">Gentle, fiber-safe cleaning for delicate and antique rugs.</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/furniture-cleaning/" target="_blank" rel="noopener">Furniture cleaning</a></td><td class="copy">Refresh your sofas and chairs and bring them back to life.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The IICRC certification badge (H-05) is also now on your service pages.</p>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="block" id="contact" data-nav="Contact page & form">
+      <div class="label">Contact page &amp; form · C-03 · H-07 · M-02</div>
+      <h2>A form that's easier to finish</h2>
+      <p>The contact page is where a visitor turns into a lead, so we changed the copy, the fields and the service menu.</p>
+
+      <div class="swap">
+        <div class="where"><a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">Contact page</a> headline and button · C-03</div>
+        <div class="was"><div class="tag">Before</div><p>Generic headline and a "Submit" button.</p></div>
+        <div class="now"><div class="tag">Now live</div><p>Get Your Free Cleaning Estimate. We'll Respond Within 24 Hours.<br>Button: Get My Free Estimate</p></div>
+      </div>
+
+      <h3>Form fields · H-07</h3>
+      <p>See it live on the <a class="ext" href="https://ayoubnh.com/contact-us/" target="_blank" rel="noopener">contact page</a>.</p>
+      <ul class="body">
+        <li>Removed the required "How did you hear about us?" question.</li>
+        <li>Kept Zip Code, as you asked, so your team can confirm service area.</li>
+      </ul>
+
+      <h3>Service menu · M-02</h3>
+      <p>Renamed to match how you describe your services, and switched to a menu where customers can pick more than one service at once:</p>
+      <ul class="body">
+        <li>In-Home Carpet Cleaning</li>
+        <li>Off-Site Area Rug Cleaning</li>
+        <li>Drapery Cleaning · Furniture Cleaning · Tile and Grout Cleaning</li>
+        <li>Hardwood Refinishing · New Carpet/Flooring · Repair · Other</li>
+      </ul>
+    </section>
+
+    <!-- OFFERS -->
+    <section class="block" id="offers" data-nav="Offers & cross-links">
+      <div class="label">Offers &amp; cross-links · H-09</div>
+      <h2>Getting more visitors to your offers</h2>
+      <p>Your coupons page got about 890 visits in 90 days with no link in the main menu. People were finding it on their own.</p>
+      <ul class="body">
+        <li><strong><a class="ext" href="https://ayoubnh.com/coupons/" target="_blank" rel="noopener">Current Offers</a></strong> is now a top-level button in your main navigation, on every page.</li>
+        <li>A <span class="copy">"Save up to 25% on your first cleaning"</span> callout now appears on your key service pages.</li>
+      </ul>
+      <h3>Service cross-links</h3>
+      <p>Working with your team, we added banners that send a visitor to the service they may have meant, using Kris's wording:</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>On this page</th><th>The banner says</th></tr></thead>
+          <tbody>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/oriental-area-rug-cleaning/" target="_blank" rel="noopener">Oriental &amp; area rug cleaning</a></td><td class="copy">Searching for In-Home Carpet Cleaning Services Instead?</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/wall-to-wall-carpet-cleaning/" target="_blank" rel="noopener">Wall-to-wall carpet cleaning</a></td><td class="copy">Searching for off-site rug cleaning instead?</td></tr>
+            <tr><td class="strong"><a class="ext" href="https://ayoubnh.com/cleaning/drapery-cleaning/" target="_blank" rel="noopener">Drapery cleaning</a></td><td class="copy">Searching for Area Rug or Carpet Cleaning Services?</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- NEXT UP -->
+    <section class="block" id="pending" data-nav="Ready & in progress">
+      <div class="label">Ready &amp; in progress</div>
+      <h2>What's left before handoff</h2>
+
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Built and waiting on your approval</h3></div>
+        <ul class="body" style="margin-top:12px">
+          <li><strong>New drapery landing page (C-02).</strong> <a class="ext" href="https://ayoubnh.com/cleaning/drapery-cleaning-new/" target="_blank" rel="noopener">Preview the draft</a>. Above-the-fold estimate button, a sticky "Free Drapery Cleaning Estimate" bar with your phone number, your customer testimonials and a drapery FAQ. Final design review is underway before it replaces the current page.</li>
+          <li><strong>New pets landing page (H-02).</strong> <a class="ext" href="https://ayoubnh.com/pets-new/" target="_blank" rel="noopener">Preview the draft</a>. New headline, "Pet Stain &amp; Odor Removal That Actually Works," built from the pet-owner messaging you sent, plus pet-owner testimonials. Also in final design review.</li>
+          <li><strong>Seasonal booking banner (M-03).</strong> Built to switch copy on its own by date, so nobody has to update it. Ready to turn on with the winter message: "Holiday booking fills quickly, secure your appointment before your guests arrive."</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>In progress</h3></div>
+        <ul class="body" style="margin-top:12px">
+          <li><strong>Starting prices before the form (H-08).</strong> Approved. Each service page will show its own starting price from the list Kris sent, like rug cleaning from $4.49 per square foot and drapery from $12 per pleat.</li>
+          <li><strong>Live Google reviews badge (H-06).</strong> The review plugin is installed. It needs to be connected to your Google Business Profile to pull your live rating and review count.</li>
+          <li><strong>Schedule Online tracking (C-01).</strong> Setting up GA4 tracking on the ServiceTitan scheduler so online bookings count as conversions alongside calls and forms.</li>
+        </ul>
+      </div>
+
+      <div class="callout info"><strong>Why tracking matters:</strong> right now calls and form fills are measured, but online bookings through the scheduler aren't. Once C-01 is live, you'll see the full picture of how many leads each page produces.</div>
+    </section>
+
+    <!-- TRACKER -->
+    <section class="block" id="tracker" data-nav="All 18 items">
+      <div class="label">Item tracker</div>
+      <h2>All 18 workbook items</h2>
+      <div class="bars">
+        <div class="bar"><div class="bl">Live</div><div class="bt"><div class="bf" style="width:66.7%"></div></div><div class="bv">12</div></div>
+        <div class="bar"><div class="bl">Ready to approve</div><div class="bt"><div class="bf honey" style="width:16.7%"></div></div><div class="bv">3</div></div>
+        <div class="bar"><div class="bl">In progress</div><div class="bt"><div class="bf grey" style="width:16.7%"></div></div><div class="bv">3</div></div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>Item</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="code">C-01</td><td>Track the Schedule Online popup in GA4</td><td><span class="pill prog">In progress</span></td></tr>
+            <tr><td class="code">C-02</td><td>Drapery page: above-the-fold CTA + sticky bar</td><td><span class="pill ready">Ready to approve</span></td></tr>
+            <tr><td class="code">C-03</td><td>Contact page headline, button + speed</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">C-04</td><td>Homepage mobile speed</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">C-05</td><td>Carpet page speed + layout shift</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-01</td><td>Sitewide Elementor performance cleanup</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-02</td><td>Optimize the /pets landing page</td><td><span class="pill ready">Ready to approve</span></td></tr>
+            <tr><td class="code">H-03</td><td>Credential-led homepage hero</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-04</td><td>Sitewide trust bar</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-05</td><td>IICRC badge on service pages</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-06</td><td>Live Google reviews + verified count</td><td><span class="pill prog">In progress</span></td></tr>
+            <tr><td class="code">H-07</td><td>Streamline the contact form</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-08</td><td>Starting prices before the form</td><td><span class="pill prog">In progress</span></td></tr>
+            <tr><td class="code">H-09</td><td>Current Offers in navigation + promo callouts</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">H-10</td><td>Family story on service + contact pages</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">M-01</td><td>Service-page benefit subheadlines</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">M-02</td><td>Contact form service menu</td><td><span class="pill live">Live</span></td></tr>
+            <tr><td class="code">M-03</td><td>Seasonal booking banner</td><td><span class="pill ready">Ready to approve</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="next" data-nav="Next steps">
+      <div class="label">Next steps</div>
+      <h2>Let's walk through it together</h2>
+      <p>At our handoff meeting we'll go through each change live on your site, get your sign-off on the drapery page, pets page and seasonal banner, and set a date to review how leads have moved since launch.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => {
+    const a = document.createElement('a');
+    a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav');
+    toc.appendChild(a);
+  });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
