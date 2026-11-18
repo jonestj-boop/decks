@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe App · Rent-to-Own Growth Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#1249a1; --client-accent-soft:#e7eefa;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#1249a1; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+  .ul-dash { list-style:none; }
+  .ul-dash li { font-size:14px; line-height:1.55; padding-left:22px; position:relative; color:var(--ink-700); margin-bottom:7px; }
+  .ul-dash li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .phase { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:22px 22px 18px; }
+  .phase .when { font-weight:700; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-red); margin-bottom:8px; }
+  .phase h4 { font-weight:700; font-size:20px; margin-bottom:6px; letter-spacing:-0.01em; }
+  .phase .ul-dash li { font-size:13px; margin-bottom:5px; }
+  .phase.accent { border-top:4px solid var(--client-accent); }
+  .phase.red { border-top:4px solid var(--et-red); }
+  .phase.honey { border-top:4px solid var(--et-honey); }
+  .rto { display:grid; grid-template-columns:1fr 34px 1fr 34px 1fr; align-items:stretch; }
+  .rto .arrow { display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:700; color:var(--et-red); }
+  .chan { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .chan.paid { background:#ffe1e2; color:#c62828; } .chan.seo { background:var(--client-accent-soft); color:var(--client-accent); } .chan.bm { background:#fff0d6; color:#a86a00; }
+  code { font-family:inherit; font-size:12.5px; background:var(--ink-100); padding:2px 7px; border-radius:6px; }
+  @media (max-width:900px) {
+    :root { --pad-x:20px; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .two-col, .three-col, .case { grid-template-columns:1fr !important; }
+    .rto { grid-template-columns:1fr; } .rto .arrow { transform:rotate(90deg); padding:4px 0; }
+    .bar { grid-template-columns:110px 1fr 46px; }
+    table { font-size:12px; } .dots { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Rent-to-own growth strategy · Prepared by EmberTribe</div>
+    <h1>Safe App</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:940px">Merchants searching for help with chargebacks are a small, valuable group, and right now none of them find Safe. The plan: rent the few searches that matter with paid ads, learn which ones turn into connected stores, then own them with content, brand mentions and a place in the answers AI tools give.</p>
+    <div class="meta">
+      <div>Prepared for<b>Safe App</b></div>
+      <div>Date<b>November 2026</b></div>
+      <div>Model<b>Rent → Learn → Own</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · SNAPSHOT ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">Where you stand today</div>
+    <h2>A sharper offer than the big names, and almost no one sees it.</h2>
+    <p class="subtitle">Safe charges 20% only on chargebacks you win, does the casework for the merchant, and is built by people with 20 years in payments and risk. Search barely knows the company exists yet, and no ads are running.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v red">74</div><div class="k">Est. monthly organic visits (US), almost all from name lookalikes</div></div>
+      <div class="stat"><div class="v">77</div><div class="k">Keywords ranking, 1 in the top 3</div></div>
+      <div class="stat"><div class="v red">0</div><div class="k">Paid search keywords or ad traffic</div></div>
+      <div class="stat"><div class="v honey">~150</div><div class="k">Blog posts published, with little ranking to show for them</div></div>
+      <div class="stat"><div class="v accent">0</div><div class="k">Reviews on the Shopify app listing, live since May 2025</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>What's working:</strong> a clear price story (20% when you win, $0 when you lose, vs. 25% at Chargeflow), live Stripe and Shopify connections, a Stopper alert product at $29 per alert, an llms.txt file for AI crawlers, and a large library of chargeback content to build on.</div>
+      <div class="callout"><strong>What isn't:</strong> the organic traffic you do get is people looking for other apps with "safe" in the name. The blog isn't ranking for merchant searches, about 4 in 10 backlinks are spam you didn't ask for, and the Shopify listing has no reviews next to competitors with hundreds.</div>
+    </div>
+    <p class="fine mt">Sources: Semrush Domain Overview, US desktop, Nov 18 2026; safe.app pricing, compare and blog pages; Shopify App Store listing, Nov 18 2026. Semrush figures are estimates; we'll confirm against Search Console and GA4 once we have access.</p>
+  </div>
+</section>
+
+<!-- ══ 3 · RANKINGS ══════════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">Search visibility</div>
+    <h2>The traffic you get today belongs to someone else's app.</h2>
+    <p class="subtitle">Your top keywords are "safew app", "safe app" and "app safe". Those are people looking for a messaging app or a personal safety app, not a merchant fighting a dispute. Semrush even lists your top "competitors" as safe-app sites in Singapore, Slovenia and Norway.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.2fr 1fr">
+      <div>
+        <table>
+          <thead><tr><th>Keyword</th><th class="num">Position</th><th class="num">US volume / mo</th><th>Read</th></tr></thead>
+          <tbody>
+            <tr><td>safew app</td><td class="num">4</td><td class="num">720</td><td class="dim">Different app</td></tr>
+            <tr><td>safe app</td><td class="num">4</td><td class="num">480</td><td class="dim">Name collision</td></tr>
+            <tr><td>app safe</td><td class="num">4</td><td class="num">210</td><td class="dim">Name collision</td></tr>
+            <tr><td>safeapp</td><td class="num">2</td><td class="num">90</td><td class="dim">Name collision</td></tr>
+            <tr><td class="strong">Any chargeback search</td><td class="num">—</td><td class="num">—</td><td><span class="pill p1">Not on page one</span></td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>Branded traffic: 0%.</strong> Semrush attributes none of your traffic to people searching for Safe the chargeback service. A generic brand name means you have to be found by what merchants search for, not by your name.</div>
+      </div>
+      <div>
+        <div class="chart-wrap">
+          <div class="fine" style="margin-bottom:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Keywords by Google position</div>
+          <div class="bars" style="margin:0">
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">1–3</div><div class="bt"><div class="bf" style="width:5%"></div></div><div class="bv">1</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">4–10</div><div class="bt"><div class="bf" style="width:18%"></div></div><div class="bv">4</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">11–20</div><div class="bt"><div class="bf honey" style="width:45%"></div></div><div class="bv">10</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">21–30</div><div class="bt"><div class="bf honey" style="width:100%"></div></div><div class="bv">22</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">31–50</div><div class="bt"><div class="bf red" style="width:100%"></div></div><div class="bv">22</div></div>
+            <div class="bar" style="grid-template-columns:90px 1fr 30px"><div class="bl">51–100</div><div class="bt"><div class="bf red" style="width:59%"></div></div><div class="bv">13</div></div>
+          </div>
+        </div>
+        <div class="callout info"><strong>32 keywords sit on pages two and three.</strong> Some of those will be blog posts close to breaking through. Once we have Search Console, those are the first pages we push with internal links and updates.</div>
+      </div>
+    </div>
+    <p class="fine mt">Source: Semrush organic keywords and competitors, US, Nov 18 2026.</p>
+  </div>
+</section>
+
+<!-- ══ 4 · CONTENT + AUTHORITY ═══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Content &amp; authority · Red flags</div>
+    <h2>Lots of content, little trust behind it.</h2>
+    <p class="subtitle">You've published roughly 150 blog posts and 17 guides. The topics are right. What's missing is structure and authority: pages that overlap each other, and a link profile padded with spam that Google ignores.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div>
+        <h3>What we saw on the blog</h3>
+        <ul class="ul-dash">
+          <li>Several near-identical posts on the same day, such as multiple "hidden costs of Stripe chargebacks" articles. Pages like that compete with each other, and often none of them ranks.</li>
+          <li>Titles that still say "in 2024" on posts published in 2025 and 2026</li>
+          <li>Most posts dated Dec 2025 to Apr 2026, then publishing slows to a stop in July</li>
+          <li>No clear hub pages tying posts into topics (Stripe disputes, Shopify disputes, PayPal, friendly fraud)</li>
+        </ul>
+        <div class="callout info"><strong>Good news:</strong> this is a fix, not a rebuild. Merging the duplicates, refreshing the dates and adding hub pages gives the existing library a real chance to rank before a single new article goes live.</div>
+      </div>
+      <div>
+        <h3>Top anchor text pointing to safe.app</h3>
+        <table>
+          <thead><tr><th>Anchor</th><th class="num">Share</th></tr></thead>
+          <tbody>
+            <tr><td>"safe.app"</td><td class="num">44%</td></tr>
+            <tr><td>"trusted contextual link placements for safe.app to boost domain authority…"</td><td class="num down">22%</td></tr>
+            <tr><td>"high quality dofollow backlinks da 50 pa 40 premium pbn network service…"</td><td class="num down">18%</td></tr>
+            <tr><td>"niche edits led to a 50% increase in traffic for safe.app…"</td><td class="num down">4%</td></tr>
+          </tbody>
+        </table>
+        <div class="callout"><strong>About 44% of anchors are link-seller ad copy</strong> from sites like 8pw.ru and takes.homes. The links that actually carry weight today are the Shopify App Store listing and a Stytch customer list.</div>
+      </div>
+    </div>
+    <p class="fine mt">Sources: safe.app/blog and /resources listings, Nov 18 2026; Semrush Backlinks (486 backlinks, 346 referring domains).</p>
+  </div>
+</section>
+
+<!-- ══ 5 · MARKET + COMPETITORS ══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">Who buys and who you're up against</div>
+    <h2>The buyer searches right after a dispute lands, or right after one is lost.</h2>
+    <p class="subtitle">Merchants rarely shop for chargeback help ahead of time. They search when a Stripe or Shopify dispute email shows up, when a fee hits, or when their dispute rate gets a warning. That moment is narrow, and it's where Safe has to show up.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1fr 1.1fr">
+      <div>
+        <h3>Three buyers, three moments</h3>
+        <table>
+          <thead><tr><th>Buyer</th><th>When they search</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Shopify store owner</td><td>First real dispute on a high-ticket order, searching "shopify chargeback" or "how to win a chargeback shopify"</td></tr>
+            <tr><td class="strong">Stripe / SaaS operator</td><td>Subscription disputes piling up, searching "stripe dispute fees" or "stripe dispute prevention"</td></tr>
+            <tr><td class="strong">Switcher</td><td>Already using a tool, unhappy with the fee or win rate, searching "chargeflow alternative" or "best chargeback app"</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info"><strong>Your blog already leans toward high-ticket sellers</strong> (drones, cameras, gaming PCs). That's a smart niche: one won dispute on a $2,000 order is worth $400 to Safe. We'd build the paid tests around it.</div>
+      </div>
+      <div>
+        <h3>How Safe compares</h3>
+        <table>
+          <thead><tr><th></th><th class="accent">Safe</th><th>Chargeflow</th><th>Disputifier</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Fee on wins</td><td class="up">20%</td><td>25%*</td><td class="dim">Check</td></tr>
+            <tr><td class="strong">Fee on losses</td><td class="up">$0</td><td class="dim">Check</td><td class="dim">Check</td></tr>
+            <tr><td class="strong">Prevention alerts</td><td>Stopper, $29/alert</td><td>Yes</td><td>Yes</td></tr>
+            <tr><td class="strong">Shopify reviews</td><td class="down">0</td><td class="dim">Check</td><td>139 (4.6★)</td></tr>
+            <tr><td class="strong">Who does the work</td><td>Safe's team</td><td class="dim">Automated</td><td class="dim">Automated</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><strong>One message, everywhere.</strong> The Shopify listing calls Disputer "fully automated" while the site says a team handles every case. Done-for-you is the stronger story against Chargeflow and Disputifier, so the listing, ads and articles should all say the same thing.</div>
+      </div>
+    </div>
+    <p class="fine mt">*Chargeflow fee as stated on safe.app/compare. Disputifier rating from the Shopify App Store, Nov 18 2026. Cells marked "Check" we'll confirm before any comparison runs in ads or content. Also in the field: Justt, Chargebacks911, Chargeback Gurus, Midigator/Kount.</p>
+  </div>
+</section>
+
+<!-- ══ 6 · RENT TO OWN ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">The model · Rent to own</div>
+    <h2>Low volume means every search has to earn its place.</h2>
+    <p class="subtitle">Chargeback searches are small in number and high in value. We don't guess which ones to build content around. We rent each keyword with a fixed test budget, see whether it produces connected stores, and only then invest in owning it.</p>
+  </div>
+  <div class="fill">
+    <div class="rto">
+      <div class="phase red">
+        <div class="when">Rent · Month 1 onward</div>
+        <h4>Test the keywords</h4>
+        <ul class="ul-dash">
+          <li>Exact and phrase match on 20–30 merchant-intent searches</li>
+          <li>Each keyword gets a set test budget and a pass/fail line</li>
+          <li>Landing pages built for Shopify, Stripe and switchers</li>
+          <li>Meta retargeting for everyone who visits or reads a guide</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase accent">
+        <div class="when">Learn · Weekly</div>
+        <h4>Keep what converts</h4>
+        <ul class="ul-dash">
+          <li>Which searches lead to a connected Stripe or Shopify account</li>
+          <li>Which merchants are worth the most: dispute volume and order size</li>
+          <li>Which hook wins: 20% fee, $0 if you lose, or "we do the work"</li>
+          <li>Kill keywords that miss the line, move budget to winners</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase honey">
+        <div class="when">Own · Month 1 onward</div>
+        <h4>Buy the keyword outright</h4>
+        <ul class="ul-dash">
+          <li>Every winning keyword gets a ClusterMagic page built to rank for it</li>
+          <li>Brand mentions in the "best chargeback app" lists AI tools read</li>
+          <li>Top-of-funnel guides that fill the retargeting pool</li>
+          <li>As pages rank, bids on those terms come down</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Why this works for a success-fee business:</strong> your revenue per merchant depends on how many disputes they win, not on a sign-up. Paid data tells us fast which searches bring merchants with real dispute volume. Content then takes over those searches, and you stop paying per click for buyers you already know convert.</div>
+  </div>
+</section>
+
+<!-- ══ 7 · PAID PLAN (RENT) ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="07">
+  <div class="head">
+    <div class="label">Rent · Paid media plan</div>
+    <h2>Be there the minute a dispute email lands.</h2>
+    <p class="subtitle">Start with the searches closest to "I need help with this chargeback now." Every campaign is judged on connected accounts and the fees they generate, not on clicks.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Campaign</th><th>Example keywords / targets</th><th>Role</th><th>Launch</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Google Search · Platform</td><td><code>shopify chargeback protection</code> <code>stripe dispute protection</code> <code>chargeback protection paypal</code> <code>shopify chargeback dispute</code></td><td>Highest intent. Merchants on the exact platforms you connect to.</td><td>Week 1</td></tr>
+        <tr><td class="strong">Google Search · Category</td><td><code>chargeback management services</code> <code>chargeback prevention alerts</code> <code>best chargeback app for shopify</code> <code>chargeback management companies</code></td><td>Merchants comparing options. Splits Disputer and Stopper traffic.</td><td>Week 1</td></tr>
+        <tr><td class="strong">Google Search · Switchers</td><td><code>chargeflow alternative</code> plus competitor-name searches, where policy allows</td><td>Lead with 20% vs. 25% and done-for-you</td><td>Week 2</td></tr>
+        <tr><td class="strong">Meta · Prospecting</td><td>Small business owners with interests in Shopify, Stripe and ecommerce tools; lookalikes from connected merchants once we have them</td><td>Volume is low on search, so Meta finds merchants before they're desperate</td><td>Week 3</td></tr>
+        <tr><td class="strong">Meta + Google · Retargeting</td><td>Site visitors and guide readers</td><td>Customer results, the $0-if-you-lose promise, and a 60-second connect</td><td>Week 3</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout"><strong>The trap in this category:</strong> Google's top suggestion for "how to win a chargeback" ends with <em>"as a customer."</em> Half the people searching chargeback terms are cardholders trying to get money back. A tight negative keyword list (customer, consumer, credit card, bank, reddit) protects the budget from day one.</div>
+      <div class="callout warn"><strong>Set the target before we spend:</strong> we'll work back from your average first-year fees per merchant to a maximum cost per connected account. If a keyword can't hit it after a fair test, it's cut.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 8 · KEYWORD STRATEGY ══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="08">
+  <div class="head">
+    <div class="label">Keyword strategy</div>
+    <h2>Four keyword groups, each with a job.</h2>
+    <p class="subtitle">These come from what merchants are typing into Google today. Buying terms are rented first. Question and how-to terms go to content, where they build rankings and feed AI answers. Every page links back to Disputer or Stopper.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Group</th><th>Example searches</th><th>Intent</th><th>Channel</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Platform protection</td><td><code>shopify chargeback protection</code> <code>chargeback protection stripe</code> <code>chargeback protection paypal</code> <code>stripe dispute prevention</code> <code>chargeback alerts shopify</code> <code>stripe chargeback alerts</code></td><td>Buy</td><td><span class="chan paid">Rent</span><span class="chan seo">Own</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">2 · Category &amp; comparison</td><td><code>chargeback management software</code> <code>chargeback management services</code> <code>best chargeback protection</code> <code>best chargeback app for shopify</code> <code>chargeback prevention companies</code> <code>chargeflow alternative</code></td><td>Compare</td><td><span class="chan paid">Rent</span><span class="chan bm">Mentions</span><span class="chan seo">Own</span></td><td><span class="pill p1">Now</span></td></tr>
+        <tr><td class="strong">3 · Fighting a dispute</td><td><code>how to win a chargeback as a merchant</code> <code>how to win a chargeback shopify</code> <code>stripe dispute process</code> <code>stripe dispute evidence</code> <code>paypal dispute evidence</code> <code>shopify chargeback dispute</code></td><td>Learn</td><td><span class="chan seo">Own</span></td><td><span class="pill p2">Month 1+</span></td></tr>
+        <tr><td class="strong">4 · Costs &amp; fraud basics</td><td><code>stripe dispute fees</code> <code>shopify chargeback fee</code> <code>chargeback fee for merchant</code> <code>shopify chargeback rate</code> <code>friendly fraud chargebacks</code> <code>chargeback management guidelines for visa merchants</code></td><td>Learn</td><td><span class="chan seo">Own</span></td><td><span class="pill p3">Month 2+</span></td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Group 3 is where the blog already plays.</strong> You have posts on Stripe, Shopify and PayPal disputes. Consolidating them into one strong guide per platform is the quickest organic win available.</div>
+      <div class="callout info"><strong>Next step:</strong> the full workbook (search volume, difficulty, cost per click and the page each term maps to) comes with month one. Paid search term data then re-ranks the list every month.</div>
+    </div>
+    <p class="fine mt">Example searches from Google autocomplete, Nov 18 2026. Volumes and CPCs to follow in the keyword workbook.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · AI VISIBILITY ═════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Brand visibility in AI answers</div>
+    <h2>When a merchant asks ChatGPT for a chargeback tool, Safe should be in the list.</h2>
+    <p class="subtitle">More merchants now ask ChatGPT, Gemini, Perplexity or Google's AI Overview instead of clicking through ten results. Those tools build their answers from list articles, reviews and comparison pages. With a generic name and zero reviews, Safe is easy to leave out.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.1fr 1fr">
+      <div>
+        <h3>Prompts we'll track from week one</h3>
+        <table>
+          <thead><tr><th>Prompt</th><th>What wins it</th></tr></thead>
+          <tbody>
+            <tr><td>"Best chargeback protection app for Shopify"</td><td>Brand mentions in list posts, Shopify reviews</td></tr>
+            <tr><td>"Chargeflow alternatives"</td><td>Comparison pages, brand mentions</td></tr>
+            <tr><td>"Chargeback service that only charges if you win"</td><td>Consistent 20% / $0 wording across the web</td></tr>
+            <tr><td>"How do I fight a Stripe dispute?"</td><td>A clear, current guide on safe.app</td></tr>
+            <tr><td>"What are chargeback prevention alerts?"</td><td>Stopper explainer plus third-party mentions</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">We'll run a baseline across ChatGPT, Gemini, Perplexity and Google AI Overviews before launch, then report monthly on which prompts name Safe.</p>
+      </div>
+      <div>
+        <h3>How we get Safe named</h3>
+        <ul class="ul-dash">
+          <li><b>Brand mentions:</b> placements in "best chargeback tools" and "how to handle Shopify disputes" style posts on established sites</li>
+          <li><b>Entity clarity:</b> always "Safe App, chargeback recovery for Stripe and Shopify", never bare "Safe", so AI tools stop confusing you with safety apps</li>
+          <li><b>Comparison pages:</b> your /compare pages, kept factual and current</li>
+          <li><b>Reviews:</b> an ask to every merchant after their first win. Zero reviews is the easiest gap to close</li>
+          <li><b>llms.txt:</b> you already have one. We keep it in sync with pricing and products</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Fix the details AI tools repeat:</strong> today the site lists PayPal as available on one page and leaves it off others, the company name appears as both LLC and Inc, and Stopper is priced "per alert you get" in one place and "per alert handled" in another. AI answers pick up those mismatches. We'll flag each one for your team.</div>
+  </div>
+</section>
+
+<!-- ══ 10 · CONTENT PLAN (OWN) ═══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Own · ClusterMagic top-of-funnel content</div>
+    <h2>Become the place merchants learn how disputes work.</h2>
+    <p class="subtitle">Most merchants don't know they need Safe until they understand what a chargeback costs them. ClusterMagic organizes informational content into four topic clusters, with each article pointing readers to Disputer or Stopper, and every reader added to the retargeting pool.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="grid-template-columns:repeat(4,1fr)">
+      <div class="pillar"><div class="pn">Cluster 1 · Platforms</div><h4>Stripe, Shopify, PayPal</h4>
+        <ul class="ul-dash">
+          <li>Stripe dispute process, step by step</li>
+          <li>Shopify chargeback fees and how they add up</li>
+          <li>What to send PayPal when a buyer files a claim</li>
+          <li>Inquiry vs. chargeback: what changes</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 2 · Winning disputes</div><h4>Evidence &amp; reason codes</h4>
+        <ul class="ul-dash">
+          <li>How to build a dispute evidence packet</li>
+          <li>"Item not received" disputes: what wins</li>
+          <li>Reason codes explained by card network</li>
+          <li>What an ARN number is and how to use it</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 3 · Prevention</div><h4>Stop disputes early</h4>
+        <ul class="ul-dash">
+          <li>How chargeback alerts work</li>
+          <li>Friendly fraud: spotting it before it costs you</li>
+          <li>Descriptors that cut "I don't recognize this" disputes</li>
+          <li>Keeping your dispute rate under network limits</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Cluster 4 · High-ticket sellers</div><h4>Your best-fit merchants</h4>
+        <ul class="ul-dash">
+          <li>Chargebacks on electronics and drones</li>
+          <li>Shipping proof that holds up in a dispute</li>
+          <li>Subscription disputes for SaaS teams</li>
+          <li>Choosing a chargeback service: questions to ask</li>
+        </ul></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Clean up first, then publish:</strong> month one starts by merging duplicate posts and updating old dates, so new ClusterMagic articles strengthen the library instead of adding to the overlap.</div>
+      <div class="callout warn"><strong>Accuracy matters in payments:</strong> fee figures, network rules and timelines get cited to Stripe, Shopify, Visa and Mastercard sources, and your team signs off before anything publishes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · BRAND MENTIONS + LINKS ═══════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Own · Brand mentions &amp; authority</div>
+    <h2>Get named in the lists merchants and AI tools trust.</h2>
+    <p class="subtitle">A young domain in fintech needs trust signals. They come from relevant sites naming and linking to you. Here's the order we'd build them in.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Step</th><th>What we do</th><th>Why</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">1 · Clean up</td><td>Domain-level disavow for the spam networks behind the link-seller anchors, plus a monthly check for new ones</td><td>Keeps spam from defining the profile while real links come in</td><td>Month 1</td></tr>
+        <tr><td class="strong">2 · Brand mentions</td><td>Placements in "best chargeback protection" and "how to handle Shopify disputes" style posts on established business and ecommerce blogs</td><td>These are the pages AI tools pull answers from</td><td>Month 1+</td></tr>
+        <tr><td class="strong">3 · Partner listings</td><td>Stripe and Shopify partner directories, payments tool roundups, and app comparison sites</td><td>Relevant links that also send merchants</td><td>Month 2+</td></tr>
+        <tr><td class="strong">4 · Earned links</td><td>Pitch your guides and dispute data to ecommerce newsletters and podcasts as founder expertise (20 years in payments is a story)</td><td>Expert content does the outreach work</td><td>Month 3+</td></tr>
+      </tbody>
+    </table>
+    <div class="two-col mt">
+      <div class="callout info"><strong>Why brand mentions come first:</strong> when a merchant asks "what's the best chargeback app for Shopify," the answer comes from list articles. Being named in those lists puts Safe in the answer next to Chargeflow and Disputifier.</div>
+      <div class="callout"><strong>What we won't do:</strong> buy PBN links or bulk directory submissions. That's the kind of link already sitting in your profile, and it's part of why 346 referring domains haven't moved rankings.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · CASE STUDY (fixed proof) ═════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">Case study · Flagship client</div>
+    <h2>From 8,500 monthly visits to 500,000.</h2>
+  </div>
+  <p class="subtitle" style="margin-bottom:20px;max-width:1000px">Anonymized client (under NDA). Started at 8,500 monthly organic visitors. Twelve months later: half a million per month, still climbing. The same ClusterMagic engine we'd run for you, with 4+ years of zero-penalty results across our portfolio.</p>
+  <div class="case">
+    <div>
+      <img class="case-shot" src="images/casestudy-500k.jpg" alt="SEMrush organic traffic chart, 8,500 to 500K+ monthly organic visits over 12 months" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+      <div class="case-img" style="display:none">[ SEMrush organic-traffic chart ]</div>
+      <p class="case-cap">Live SEMrush data: organic traffic and keywords climbing together, the signature of a compounding content engine.</p>
+    </div>
+    <div>
+      <div class="case-stat"><div class="n">500,000+</div><div class="l">Monthly organic visits today (~59× growth)</div></div>
+      <div class="case-stat"><div class="n">12 months</div><div class="l">From 8,500 to half a million, start to today</div></div>
+      <div class="case-stat"><div class="n">$20M</div><div class="l">Series A raised. Search traffic was a key board narrative</div></div>
+      <div class="case-stat"><div class="n">~$2M</div><div class="l">Annual value from impression share alone (per their CMO)</div></div>
+      <div class="callout good" style="margin-top:12px"><strong>"Their site improves with each Google update."</strong> This client's traffic <em>climbs</em> on update days. That's the difference between content built on entities and content built on prompts, and why ClusterMagic has 0 algorithm penalties across 4+ years.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · 90-DAY ROADMAP ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">The first 90 days</div>
+    <h2>Test, learn, then shift the budget toward what you own.</h2>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Month 1 · Launch</div><h4>Start renting, start building</h4>
+        <ul class="ul-dash">
+          <li>Conversion tracking on connected accounts, end to end</li>
+          <li>Google Search platform and category campaigns live</li>
+          <li>Negative keyword list built before the first click</li>
+          <li>AI visibility baseline across 4 tools</li>
+          <li>Duplicate blog posts merged, dates refreshed</li>
+          <li>Disavow file submitted</li>
+          <li>First ClusterMagic articles to your team for review</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 2 · Learn</div><h4>Find the winning keywords</h4>
+        <ul class="ul-dash">
+          <li>Keywords that missed the line cut, budget moved</li>
+          <li>Switcher campaign and Meta retargeting added</li>
+          <li>First brand mentions placed</li>
+          <li>Articles aimed at the keywords that converted</li>
+          <li>Shopify review ask live for new wins</li>
+        </ul></div>
+      <div class="pillar"><div class="pn">Month 3 · Shift</div><h4>Own more, rent less</h4>
+        <ul class="ul-dash">
+          <li>Budget concentrated on the best keyword groups</li>
+          <li>Partner-directory and roundup outreach</li>
+          <li>Hub pages linking every cluster</li>
+          <li>90-day review: connected accounts, cost per account, AI prompt wins</li>
+        </ul></div>
+    </div>
+    <div class="callout info mt"><strong>What you'll know by day 90:</strong> which keywords bring merchants with real dispute volume and what each one costs, which pitch wins, which AI prompts now name Safe, and which topics earn the next round of content.</div>
+  </div>
+</section>
+
+<!-- ══ 14 · INVESTMENT ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="head">
+    <div class="label">Investment · À la carte</div>
+    <h2>Pick the pieces. Rent, own, or both.</h2>
+    <p class="subtitle">No bundle required. Each line stands on its own. Ad spend is billed at cost and never folded into our fees.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col" style="align-items:start">
+      <div>
+        <h3><span class="chan paid">Rent</span> Paid media management</h3>
+        <table>
+          <thead><tr><th>Scope</th><th class="num">Fee</th></tr></thead>
+          <tbody>
+            <tr><td>Google Ads + Meta, intro pricing</td><td class="num strong">$1,750/mo <span class="dim" style="text-decoration:line-through;font-weight:400">$2,750</span></td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Includes strategy and build, keyword testing, landing page recommendations, creative, audience targeting, weekly reporting and a monthly strategy call. Ad spend billed at cost.</p>
+      </div>
+      <div>
+        <h3><span class="chan seo">Own</span> ClusterMagic content</h3>
+        <table>
+          <thead><tr><th>Articles/mo</th><th class="num">Monthly</th><th class="num">3-month rate</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">25</td><td class="num">$1,000</td><td class="num">$883/mo</td></tr>
+            <tr><td class="strong">40</td><td class="num">$1,500</td><td class="num">$1,300/mo</td></tr>
+            <tr><td class="strong">50</td><td class="num">$1,750</td><td class="num">$1,533/mo</td></tr>
+            <tr><td class="strong">100</td><td class="num">$3,000</td><td class="num">$2,633/mo</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">1,200–2,000 word articles, published and internally linked. 3-month rate billed as one commitment ($2,650 / $3,900 / $4,600 / $7,900).</p>
+      </div>
+      <div>
+        <h3><span class="chan bm">Own</span> Brand mentions</h3>
+        <table>
+          <thead><tr><th>Package</th><th class="num">Per month</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">2 mentions</td><td class="num">$1,686</td></tr>
+            <tr><td class="strong">3 mentions</td><td class="num">$2,248</td></tr>
+            <tr><td class="strong">5 mentions</td><td class="num">$3,748</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Placements on established DR 30–60 sites with 1,000+ monthly traffic, in list and review-style posts matched to your keywords. Live in about 15–30 days.</p>
+      </div>
+    </div>
+    <div class="callout info mt"><strong>Where we'd start:</strong> Google + Meta management at the $1,750 intro rate with a $2,000–$3,000/mo test budget, ClusterMagic at 40 articles a month ($1,300/mo on the 3-month rate), and 3 brand mentions a month ($2,248) aimed at the "best chargeback app" prompts. That's $5,298/mo in fees plus ad spend. If budget is tight, drop to 25 articles and 2 mentions ($4,319/mo).</div>
+  </div>
+</section>
+
+<!-- ══ 15 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide dark" data-screen-label="15">
+  <div class="head">
+    <div class="label">Next steps</div>
+    <h2>Pick your starting pieces and we'll have the first keyword tests live in two weeks.</h2>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">To get started</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Choose your à la carte lines: paid, content, brand mentions</li>
+          <li style="color:rgba(255,255,255,0.85)">Share read access to GA4 and Search Console</li>
+          <li style="color:rgba(255,255,255,0.85)">Grant access to Google Ads and Meta Business Manager</li>
+          <li style="color:rgba(255,255,255,0.85)">Kickoff call to set the cost-per-account target</li>
+        </ul>
+      </div>
+      <div class="cta-box" style="background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)">
+        <h3 style="color:#fff">We'll ask about</h3>
+        <ul class="cta-bullets" style="margin-top:6px">
+          <li style="color:rgba(255,255,255,0.85)">Average fees per merchant in year one, and your win rate</li>
+          <li style="color:rgba(255,255,255,0.85)">Which merchants you want more of: Shopify, Stripe, SaaS, high-ticket</li>
+          <li style="color:rgba(255,255,255,0.85)">Monthly ad budget and what counts as a conversion</li>
+          <li style="color:rgba(255,255,255,0.85)">Disputer vs. Stopper: which to lead with</li>
+          <li style="color:rgba(255,255,255,0.85)">Who approves fee and compliance claims in ads and articles</li>
+        </ul>
+      </div>
+    </div>
+    <p class="fine mt">Data in this deck comes from Semrush (Nov 18 2026), Google autocomplete, the Shopify App Store and a review of safe.app.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Rent-to-Own Strategy</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-safe-app-deck-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-safe-app-deck-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
