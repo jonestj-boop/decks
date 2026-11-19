@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe App · Organic &amp; AI Visibility Playbook · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#1249a1; --client-accent-soft:#e7eefa;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --sidebar:264px; --maxw:820px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; color:var(--ink-700);
+         background:var(--surface); -webkit-font-smoothing:antialiased; line-height:1.6; }
+  a { color:var(--et-red); text-decoration:none; } a:hover { color:var(--et-red-deep); }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .shell { display:grid; grid-template-columns:var(--sidebar) 1fr; }
+
+  /* ── SIDEBAR ───────────────────────────────────────────────────────── */
+  aside { position:sticky; top:0; align-self:start; height:100vh; background:var(--et-red);
+          color:#fff; padding:34px 26px; display:flex; flex-direction:column; }
+  aside .brand { display:flex; align-items:center; gap:8px; font-weight:700; font-size:13px;
+                 letter-spacing:0.12em; text-transform:uppercase; margin-bottom:4px; }
+  aside .brand b { color:var(--et-black); }
+  aside .doc-type { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-black); opacity:0.7; margin-bottom:34px; }
+  aside nav { display:flex; flex-direction:column; gap:2px; }
+  aside nav a { color:rgba(255,255,255,0.72); font-size:13.5px; padding:8px 12px; border-radius:8px;
+                border-left:2px solid transparent; transition:all .15s; }
+  aside nav a:hover { color:#fff; background:rgba(0,0,0,0.12); }
+  aside nav a.active { color:#fff; font-weight:700; border-left-color:var(--et-black); background:rgba(0,0,0,0.16); }
+  aside .foot { margin-top:auto; font-size:11px; color:rgba(255,255,255,0.6); line-height:1.6; }
+
+  /* ── MAIN ──────────────────────────────────────────────────────────── */
+  main { padding:0; }
+  .block { padding:72px 64px; border-bottom:1px solid var(--border); max-width:calc(var(--maxw) + 128px); }
+  .block > * { max-width:var(--maxw); }
+
+  /* ── MASTHEAD ──────────────────────────────────────────────────────── */
+  .masthead { background:var(--surface); color:var(--et-black); max-width:none; padding:88px 64px; border-bottom:4px solid var(--et-red); }
+  .masthead .client-logo { max-height:46px; max-width:200px; margin-bottom:30px; object-fit:contain; }
+  .masthead .label { color:var(--et-red); }
+  .masthead h1 { color:var(--et-black); }
+  .masthead .subtitle { color:var(--ink-500); }
+  .masthead .meta { display:flex; gap:40px; margin-top:34px; font-size:13px; color:var(--ink-500); }
+  .masthead .meta b { display:block; color:#fff; font-weight:700; margin-top:3px; font-size:14.5px; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:14px; }
+  h1 { font-weight:700; font-size:52px; line-height:1.03; letter-spacing:-0.02em; margin-bottom:18px; color:var(--et-black); }
+  h2 { font-weight:700; font-size:32px; line-height:1.12; letter-spacing:-0.015em; margin-bottom:16px; color:var(--et-black); }
+  h3 { font-weight:700; font-size:19px; margin:26px 0 10px; color:var(--et-black); }
+  .subtitle { font-size:18px; line-height:1.55; color:var(--ink-500); }
+  p { font-size:16px; margin-bottom:14px; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-600); margin-bottom:20px; }
+  ul.body, ol.body { margin:0 0 16px 0; padding:0; list-style:none; }
+  ul.body li { font-size:16px; line-height:1.7; padding-left:22px; position:relative; margin-bottom:6px; }
+  ul.body li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+
+  /* ── STAT ROW ──────────────────────────────────────────────────────── */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin:8px 0 4px; }
+  .stat { background:var(--subtle); border-radius:14px; padding:22px; }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; color:var(--et-black); }
+  .stat .v.red{color:var(--et-red);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);}
+  .stat .k { font-size:12.5px; color:var(--ink-500); margin-top:8px; line-height:1.4; }
+
+  /* ── SCORE GAUGE (CRO audit) ───────────────────────────────────────── */
+  .score { display:flex; align-items:center; gap:26px; background:var(--subtle); border-radius:16px; padding:26px 30px; margin:10px 0; }
+  .score .ring { --p:64; width:104px; height:104px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--et-red) calc(var(--p)*1%), var(--ink-200) 0); display:flex; align-items:center; justify-content:center; }
+  .score .ring::after { content:""; position:absolute; }
+  .score .ring b { width:78px; height:78px; background:var(--surface); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:700; color:var(--et-black); }
+  .score .st h3 { margin:0 0 4px; } .score .st p { margin:0; color:var(--ink-500); font-size:14.5px; }
+
+  /* ── FINDINGS (numbered) ───────────────────────────────────────────── */
+  .finding { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:22px 0; border-top:1px solid var(--border); }
+  .finding:first-of-type { border-top:none; }
+  .finding .fn { font-weight:700; font-size:22px; color:var(--et-red); line-height:1; }
+  .finding h3 { margin:0 0 6px; font-size:19px; }
+  .finding p { margin:0 0 8px; font-size:15px; color:var(--ink-600); }
+  .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:16px 20px; border-radius:0 10px 10px 0; margin:16px 0; font-size:15px; line-height:1.6; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info{border-color:var(--client-accent);background:var(--client-accent-soft);} .callout.info strong{color:var(--client-accent);}
+  .callout.good{border-color:var(--good);background:#e9f9f0;} .callout.good strong{color:var(--good);}
+  .callout.warn{border-color:var(--warn);background:#fff8e8;} .callout.warn strong{color:#9a6a00;}
+
+  /* ── PILLS / PRIORITY ──────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .pill.eff{background:var(--ink-100);color:var(--ink-600);}
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:14px 0; }
+  th { text-align:left; padding:11px 14px; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:#fff; background:var(--et-black); }
+  th.accent{background:var(--client-accent);} th.red{background:var(--et-red);}
+  td { padding:11px 14px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .num { text-align:right; font-variant-numeric:tabular-nums; } .strong{font-weight:700;}
+  .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:14px 0; }
+  .bar { display:grid; grid-template-columns:180px 1fr 62px; align-items:center; gap:14px; }
+  .bar .bl { font-size:13.5px; text-align:right; } .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); } .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13.5px; font-weight:700; }
+
+  /* ── FIGURE PLACEHOLDER ────────────────────────────────────────────── */
+  .figure { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:220px;
+            display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:24px; margin:16px 0; }
+
+  /* ── STEP / WORKBOOK ITEM ──────────────────────────────────────────── */
+  .step { border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin:14px 0; }
+  .step .sh { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .step .sn { width:30px; height:30px; flex:none; background:var(--et-red); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  .step h3 { margin:0; }
+  .checklist { list-style:none; margin:10px 0 0; }
+  .checklist li { font-size:15px; padding:6px 0 6px 30px; position:relative; border-top:1px solid var(--border); }
+  .checklist li:first-child { border-top:none; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; color:var(--ink-300); font-size:18px; top:5px; }
+
+  /* ── CTA STRIP ─────────────────────────────────────────────────────── */
+  .cta { background:var(--et-black); color:#fff; max-width:none; padding:64px; }
+  .cta h2 { color:#fff; } .cta p { color:rgba(255,255,255,0.7); }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:15px 34px; border-radius:10px; margin-top:14px; }
+  .btn:hover { background:var(--et-red-deep); color:#fff; }
+
+  @media (max-width:900px) {
+    .shell { grid-template-columns:1fr; }
+    aside { position:static; height:auto; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
+    aside nav { flex-direction:row; flex-wrap:wrap; } aside .foot { display:none; }
+    .block, .masthead, .cta { padding:48px 28px; } .stats { grid-template-columns:repeat(2,1fr); }
+  }
+  @media print {
+    .shell { grid-template-columns:1fr; } aside { display:none; }
+    .block { page-break-inside:avoid; border-bottom:none; }
+  }
+  .masthead .meta b { color:var(--et-black); }
+  .kpi td:first-child { width:38%; }
+  code { font-family:inherit; font-size:13.5px; background:var(--ink-100); padding:2px 7px; border-radius:6px; }
+  .small { font-size:13px; }
+  .stats.three { grid-template-columns:repeat(3,1fr); }
+  @media (max-width:900px) { .stats.three { grid-template-columns:1fr; } table { font-size:13px; } .block { overflow-x:auto; } }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside>
+    <div class="brand"><span><b>ember</b>tribe</span></div>
+    <div class="doc-type">Organic &amp; AI playbook</div>
+    <nav id="toc"></nav>
+    <div class="foot">Prepared by EmberTribe for Safe App<br>Search Console data through Nov 18, 2026</div>
+  </aside>
+
+  <main>
+    <section class="masthead" id="top">
+      <div class="label">Organic search &amp; AI visibility playbook</div>
+      <h1>Safe App<br>organic &amp; AI playbook</h1>
+      <p class="subtitle">What Google Search Console says about safe.app today, and the order we'd fix it in so merchants searching for chargeback help, and the AI tools they ask, find Safe.</p>
+      <div class="meta">
+        <div>Prepared for<b>Safe App</b></div>
+        <div>Date<b>November 19, 2026</b></div>
+        <div>Data<b>Search Console, last 90 days</b></div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section class="block" id="summary" data-nav="Summary">
+      <div class="label">Summary</div>
+      <h2>Google already shows Safe for chargeback searches. Nobody clicks.</h2>
+      <p class="lede">Over the last 90 days safe.app showed up 28,709 times in Google and earned 570 clicks. Almost every click came from people looking for a different "safe" app. Merchant searches produced thousands of impressions and close to zero visits.</p>
+      <div class="stats">
+        <div class="stat"><div class="v red">99.6%</div><div class="k">Of reported search clicks came from "safe app" lookalike searches</div></div>
+        <div class="stat"><div class="v accent">10,516</div><div class="k">Impressions on chargeback reason code searches, 0 clicks</div></div>
+        <div class="stat"><div class="v">92 / 98</div><div class="k">Blog posts that got impressions but no clicks</div></div>
+        <div class="stat"><div class="v red">ai-input=no</div><div class="k">What robots.txt tells AI tools about using your pages in answers</div></div>
+      </div>
+      <div class="callout good"><strong>The good news:</strong> Google already tests your pages for hundreds of merchant searches, mostly on pages two and three. You don't need traffic from nothing. You need pages strong enough to move from position 22 to the top 5.</div>
+      <h3>The five moves, in order</h3>
+      <ul class="body">
+        <li><b>Let AI tools use your content.</b> One line in robots.txt is telling ChatGPT, Claude, Perplexity and Google's AI features not to use safe.app in answers.</li>
+        <li><b>Merge the duplicates.</b> 17 pages about reason codes and 11 about "hidden costs" compete with each other. Fold them into a few strong pages.</li>
+        <li><b>Build the reason code library.</b> It's your biggest proven demand: 421 searches and 10.5K impressions in 90 days.</li>
+        <li><b>Give buyers a page to land on.</b> Searches like "automated dispute resolution software" already reach page one, but there's no page built to win them.</li>
+        <li><b>Get named off-site.</b> Brand mentions, reviews and comparison pages are what AI answers pull from.</li>
+      </ul>
+    </section>
+
+    <!-- WHAT GSC SHOWS -->
+    <section class="block" id="data" data-nav="What the data shows">
+      <div class="label">Search Console · Aug 20 to Nov 18, 2026</div>
+      <h2>Where the impressions and clicks come from</h2>
+      <p>We grouped every query Google reported into topics. The pattern is clear: the brand-lookalike searches bring the clicks, and the chargeback topics bring impressions you aren't converting into visits.</p>
+      <table>
+        <thead><tr><th>Topic</th><th class="num">Queries</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Avg. position</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Chargeback reason codes</td><td class="num">421</td><td class="num">10,516</td><td class="num down">0</td><td class="num">22.9</td></tr>
+          <tr><td class="strong">"Safe app" and lookalikes</td><td class="num">105</td><td class="num">8,851</td><td class="num">488</td><td class="num">6.0</td></tr>
+          <tr><td class="strong">Prevention, fees, rates (general)</td><td class="num">153</td><td class="num">894</td><td class="num">1</td><td class="num">26.9</td></tr>
+          <tr><td class="strong">Software and services (buyers)</td><td class="num">52</td><td class="num">542</td><td class="num down">0</td><td class="num">19.5</td></tr>
+          <tr><td class="strong">Stripe</td><td class="num">74</td><td class="num">504</td><td class="num">0</td><td class="num">43.6</td></tr>
+          <tr><td class="strong">PayPal and eBay</td><td class="num">94</td><td class="num">252</td><td class="num">1</td><td class="num">33.4</td></tr>
+          <tr><td class="strong">Shopify</td><td class="num">34</td><td class="num">246</td><td class="num">0</td><td class="num">44.4</td></tr>
+        </tbody>
+      </table>
+      <p class="dim small">Google hides some low-volume queries for privacy, so query totals (490 clicks) are lower than page totals (570 clicks).</p>
+
+      <h3>Monthly clicks and impressions, all pages</h3>
+      <div class="bars">
+        <div class="bar"><div class="bl">Mar 2026</div><div class="bt"><div class="bf" style="width:35%"></div></div><div class="bv">80</div></div>
+        <div class="bar"><div class="bl">Apr</div><div class="bt"><div class="bf" style="width:34%"></div></div><div class="bv">78</div></div>
+        <div class="bar"><div class="bl">May</div><div class="bt"><div class="bf" style="width:43%"></div></div><div class="bv">99</div></div>
+        <div class="bar"><div class="bl">Jun</div><div class="bt"><div class="bf" style="width:42%"></div></div><div class="bv">96</div></div>
+        <div class="bar"><div class="bl">Jul</div><div class="bt"><div class="bf" style="width:49%"></div></div><div class="bv">113</div></div>
+        <div class="bar"><div class="bl">Aug</div><div class="bt"><div class="bf" style="width:71%"></div></div><div class="bv">163</div></div>
+        <div class="bar"><div class="bl">Sep</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">229</div></div>
+        <div class="bar"><div class="bl">Oct</div><div class="bt"><div class="bf" style="width:83%"></div></div><div class="bv">191</div></div>
+        <div class="bar"><div class="bl">Nov 1–18</div><div class="bt"><div class="bf honey" style="width:35%"></div></div><div class="bv">81</div></div>
+      </div>
+      <p>Impressions rose from about 5,400 in March to 8,285 in October, so Google is showing the site more. Clicks haven't kept pace, because the extra impressions are on pages sitting around position 20 where almost nobody clicks.</p>
+      <div class="callout info"><strong>Two more tells:</strong> mobile gets 72% of clicks but only 37% of impressions, which fits people hunting for a phone app called Safe. And India sends more clicks (112) than the US (86), even though the US gets ten times the impressions. The current clicks aren't merchants.</div>
+    </section>
+
+    <!-- AI VISIBILITY -->
+    <section class="block" id="ai" data-nav="AI visibility">
+      <div class="label">AI visibility</div>
+      <h2>Your robots.txt asks AI tools to leave Safe out of their answers</h2>
+      <p>Every crawler entry in safe.app/robots.txt, including GPTBot, OAI-SearchBot, Claude-Web, anthropic-ai, Google-Extended and Applebot-Extended, carries this line:</p>
+      <p><code>Content-Signal: ai-train=no, search=yes, ai-input=no</code></p>
+      <p><b>ai-input=no</b> is a request not to use your pages as source material for AI-generated answers. That's the exact job we want ChatGPT, Perplexity and Google's AI Overviews to do with your guides. When we asked ChatGPT for the best chargeback protection app for Shopify on Nov 18, it named Chargeflow, Disputifier and Signifyd. Safe wasn't in the answer.</p>
+      <div class="callout"><strong>Fix this first:</strong> change it to <code>ai-train=no, search=yes, ai-input=yes</code>. You keep blocking model training and allow AI tools to quote and link you. It's a five-minute change and it unblocks everything else in this section.</div>
+
+      <h3>The AI visibility checklist</h3>
+      <table>
+        <thead><tr><th>Lever</th><th>What to do</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Content signals</td><td>Set <code>ai-input=yes</code> for every crawler in robots.txt</td><td>Safe</td></tr>
+          <tr><td class="strong">Entity clarity</td><td>Always say "Safe App, chargeback recovery for Stripe and Shopify" in titles, schema, profiles and listings. Never bare "Safe". Add <code>sameAs</code> links (Shopify listing, LinkedIn, app stores) to the Organization schema</td><td>Both</td></tr>
+          <tr><td class="strong">Consistent facts</td><td>One answer everywhere for PayPal support, company name (LLC vs. Inc), and how Stopper alerts are billed. AI tools repeat whichever version they find</td><td>Safe</td></tr>
+          <tr><td class="strong">Answer-first pages</td><td>Open every guide with a two-sentence direct answer, then the detail. That's the passage AI tools lift</td><td>EmberTribe</td></tr>
+          <tr><td class="strong">Brand mentions</td><td>Placements in "best chargeback protection" and "how to handle Shopify disputes" list posts on established sites</td><td>EmberTribe</td></tr>
+          <tr><td class="strong">Reviews</td><td>Ask every merchant for a Shopify review after their first win. ChatGPT quoted competitors' ratings (436 and 139 reviews). Safe has 0</td><td>Safe</td></tr>
+          <tr><td class="strong">Comparison pages</td><td>Keep /compare pages factual and dated. Add Disputifier and Signifyd, since ChatGPT names them</td><td>Both</td></tr>
+          <tr><td class="strong">llms.txt</td><td>Already live. Update it whenever pricing or integrations change</td><td>Safe</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Prompts we'll track monthly</h3>
+      <p>Baseline in week one across ChatGPT, Gemini, Perplexity and Google AI Overviews, then a monthly scorecard of which prompts name Safe and which sources they cite.</p>
+      <ul class="body">
+        <li>Best chargeback protection app for Shopify</li>
+        <li>Chargeflow alternatives</li>
+        <li>Chargeback service that only charges if you win</li>
+        <li>How do I fight a Stripe dispute?</li>
+        <li>What does PayPal chargeback reason code 83 mean?</li>
+        <li>What are chargeback prevention alerts and are they worth it?</li>
+        <li>Automated dispute resolution software for ecommerce</li>
+      </ul>
+    </section>
+
+    <!-- CONSOLIDATION -->
+    <section class="block" id="consolidate" data-nav="Merge duplicates">
+      <div class="label">Fix 1 · Consolidation</div>
+      <h2>28 pages are fighting over two topics</h2>
+      <p>Google can't tell which of your pages to rank when many say the same thing, so it ranks none of them well. Your top page by impressions is a 604-word reason code overview at position 22. Fifteen other reason code posts split the signal with it.</p>
+      <h3>Reason codes: 17 pages, 11,628 impressions, 2 clicks</h3>
+      <table>
+        <thead><tr><th>Page</th><th class="num">Impr.</th><th class="num">Pos.</th></tr></thead>
+        <tbody>
+          <tr><td>chargeback-reason-codes-unveiled-mastering-dispute-resolution</td><td class="num">9,320</td><td class="num">22.1</td></tr>
+          <tr><td>understanding-paypal-chargeback-reason-codes-and-what-they-mean-for-your-store</td><td class="num">878</td><td class="num">9.0</td></tr>
+          <tr><td>decoding-visas-latest-chargeback-reason-code-updates-for-stripe-merchants</td><td class="num">355</td><td class="num">27.3</td></tr>
+          <tr><td>breaking-down-visa-and-mastercard-reason-codes-for-stripe-merchants</td><td class="num">243</td><td class="num">47.6</td></tr>
+          <tr><td>demystifying-visa-and-mastercard-chargeback-reason-code-updates-for-2024</td><td class="num">232</td><td class="num">22.9</td></tr>
+          <tr><td>breaking-down-paypal-chargeback-reason-codes-what-every-merchant-must-know</td><td class="num">228</td><td class="num">28.0</td></tr>
+          <tr><td class="dim">+ 10 more Stripe, PayPal and Visa reason code posts, and /resources/guide-reason-codes</td><td class="num dim">372</td><td class="num dim">6–70</td></tr>
+        </tbody>
+      </table>
+      <h3>Hidden costs: 11 pages, 666 impressions, 1 click</h3>
+      <p>Variations like "the hidden costs of chargebacks on Stripe and how to minimize them", "...and how to recover them efficiently" and "...for Stripe merchants and how to avoid them" all target the same search.</p>
+      <div class="callout warn"><strong>The fix:</strong> pick one URL per topic, merge the best material into it, and 301-redirect the rest. Remove "2024" from titles and slugs and show a real updated date. Expect a short dip, then the merged page picks up the combined signal.</div>
+      <h3>Other technical cleanup</h3>
+      <ul class="body">
+        <li><b>App pages in Google:</b> app.safe.app URLs with long consent parameters are showing in search. Add <code>noindex</code> to the app subdomain.</li>
+        <li><b>Two sitemaps:</b> both safe.app and www.safe.app sitemaps are submitted. Keep the www one, since safe.app redirects to it.</li>
+        <li><b>Dates:</b> posts show the same published and modified date. Update <code>dateModified</code> when a page is actually revised.</li>
+        <li><b>Disavow:</b> file a domain-level disavow for the link-seller networks behind about 44% of your backlink anchors.</li>
+      </ul>
+    </section>
+
+    <!-- REASON CODES -->
+    <section class="block" id="reason-codes" data-nav="Reason code library">
+      <div class="label">Fix 2 · Your biggest proven demand</div>
+      <h2>Build the reason code library merchants are already searching for</h2>
+      <p>Merchants look up the exact code on their dispute notice: "chargeback reason code 83", "paypal chargeback reason code 30", "mastercard 4808". Google reported 421 of these searches in 90 days. Your overview page can't answer a specific code, so it sits at position 22.</p>
+      <table>
+        <thead><tr><th>Search</th><th class="num">Impr. (90d)</th><th class="num">Pos.</th></tr></thead>
+        <tbody>
+          <tr><td>chargeback reason codes</td><td class="num">286</td><td class="num">30.3</td></tr>
+          <tr><td>dispute reason codes</td><td class="num">196</td><td class="num">29.0</td></tr>
+          <tr><td>visa / mastercard chargeback reason codes</td><td class="num">230</td><td class="num">26–28</td></tr>
+          <tr><td>chargeback reason code 76</td><td class="num">98</td><td class="num">20.6</td></tr>
+          <tr><td>chargeback reason code 83</td><td class="num">95</td><td class="num">22.6</td></tr>
+          <tr><td>paypal chargeback reason code 83</td><td class="num">67</td><td class="num">14.6</td></tr>
+          <tr><td>paypal chargeback reason code 30</td><td class="num">64</td><td class="num">11.5</td></tr>
+          <tr><td>paypal chargeback reason code 37</td><td class="num">61</td><td class="num">12.7</td></tr>
+          <tr><td>chargeback reason code 4808</td><td class="num">71</td><td class="num">23.8</td></tr>
+        </tbody>
+      </table>
+      <h3>Library structure</h3>
+      <ul class="body">
+        <li><b>One hub:</b> "Chargeback reason codes: every code, by network". This becomes the merged destination for the 17 overlapping pages.</li>
+        <li><b>Network pages:</b> Visa, Mastercard, PayPal, Amex, Discover, Stripe and Shopify. Each has a full code table with plain-English meaning.</li>
+        <li><b>Code pages</b> for the codes with real search demand, starting with the PayPal codes already on page two. Each one covers what the code means, the deadline, the evidence that wins, and a sample response. Every page links to Disputer.</li>
+      </ul>
+      <div class="callout info"><strong>Why this works for AI too:</strong> "What does reason code 83 mean?" is exactly the kind of question people ask ChatGPT. A clean, specific, current page per code is the source those answers cite.</div>
+      <div class="callout warn"><strong>Quality bar:</strong> each code page needs its own substance, from the evidence checklist to the deadline to a sample response. Hundreds of thin pages with a swapped number would repeat the duplicate-content problem. We'd publish in waves, ordered by Search Console demand.</div>
+    </section>
+
+    <!-- MONEY PAGES -->
+    <section class="block" id="money-pages" data-nav="Buyer pages">
+      <div class="label">Fix 3 · Pages that convert</div>
+      <h2>Give the buyers a page to land on</h2>
+      <p>The searches closest to a purchase already get impressions, and some sit on page one, but they land on blog posts or nowhere. Each needs a dedicated page that explains the service and gets the merchant to connect.</p>
+      <table>
+        <thead><tr><th>Search</th><th class="num">Impr.</th><th class="num">Pos.</th><th>Page to build</th></tr></thead>
+        <tbody>
+          <tr><td>automated dispute resolution software</td><td class="num">89</td><td class="num">9.7</td><td>Chargeback management software (Disputer)</td></tr>
+          <tr><td>automated dispute management software / systems</td><td class="num">105</td><td class="num">22</td><td>Same page, H2 sections</td></tr>
+          <tr><td>chargeback prevention</td><td class="num">119</td><td class="num">25.3</td><td>Chargeback prevention alerts (Stopper)</td></tr>
+          <tr><td>chargeback protection ecommerce / for merchants</td><td class="num">55</td><td class="num">26–34</td><td>Chargeback protection for ecommerce</td></tr>
+          <tr><td>stripe chargeback protection / prevention</td><td class="num">34</td><td class="num">36–38</td><td>Stripe integration page, rebuilt as a landing page</td></tr>
+          <tr><td>shopify chargeback fee / rate</td><td class="num">63</td><td class="num">52–57</td><td>Shopify integration page plus a fees guide</td></tr>
+          <tr><td>best chargeback protection</td><td class="num">20</td><td class="num">36.6</td><td>Comparison hub on /compare</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><strong>Fix the message first:</strong> the Shopify App Store listing calls Disputer "fully automated" while the site says a team handles each case. Done-for-you is the edge over Chargeflow and Disputifier, which both charge on wins too. Every buyer page should lead with it.</div>
+      <p>These pages are also where paid search traffic lands. Andres's paid tests will show which of these searches bring connected accounts, and those pages get priority for links and brand mentions. That's the rent-to-own loop.</p>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="block" id="content" data-nav="Top-of-funnel content">
+      <div class="label">Fix 4 · Top-of-funnel content</div>
+      <h2>Write fewer, better guides, organized by topic</h2>
+      <p>146 blog URLs have appeared in search since February, and Google sent the blog 9 clicks in the last 90 days. More posts won't fix that. New content should fill clear gaps inside four topic clusters, each anchored by a hub page.</p>
+      <table>
+        <thead><tr><th>Cluster</th><th>Hub</th><th>Gaps to fill first</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Reason codes</td><td>Every code, by network</td><td>Network tables, top PayPal and Visa code pages</td></tr>
+          <tr><td class="strong">Platforms</td><td>Disputes on Stripe, Shopify and PayPal</td><td>Stripe dispute process, Shopify chargeback fees and rate limits, PayPal claim vs. chargeback</td></tr>
+          <tr><td class="strong">Prevention</td><td>How to prevent chargebacks</td><td>How alerts work, descriptors, friendly fraud, network rate thresholds</td></tr>
+          <tr><td class="strong">Costs</td><td>What a chargeback really costs</td><td>One merged hidden-costs guide, fee tables by processor</td></tr>
+        </tbody>
+      </table>
+      <p>Answer-first format, one primary search per page, internal links up to the hub and across to the buyer page, and citations to Visa, Mastercard, Stripe, Shopify and PayPal documentation. Your team approves fee and rule claims before anything publishes.</p>
+    </section>
+
+    <!-- 90 DAYS -->
+    <section class="block" id="roadmap" data-nav="90-day plan">
+      <div class="label">Sequence</div>
+      <h2>The first 90 days</h2>
+      <div class="step">
+        <div class="sh"><span class="sn">1</span><h3>Weeks 1–2: unblock and clean up</h3></div>
+        <ul class="checklist">
+          <li>robots.txt set to <code>ai-input=yes</code></li>
+          <li>AI prompt baseline across 4 tools</li>
+          <li>Merge plan for the 17 reason code and 11 hidden-cost pages, redirect map approved</li>
+          <li>noindex on app.safe.app, duplicate sitemap removed</li>
+          <li>Disavow file submitted</li>
+          <li>One consistent answer for PayPal, company name and Stopper billing</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">2</span><h3>Weeks 3–6: build the pages that matter</h3></div>
+        <ul class="checklist">
+          <li>Reason code hub live, duplicates redirected into it</li>
+          <li>Visa, Mastercard and PayPal network pages</li>
+          <li>Chargeback management software page and Stopper prevention page</li>
+          <li>Shopify review ask added after each won case</li>
+          <li>First brand mentions placed</li>
+        </ul>
+      </div>
+      <div class="step">
+        <div class="sh"><span class="sn">3</span><h3>Weeks 7–12: expand on what's working</h3></div>
+        <ul class="checklist">
+          <li>Code pages in waves, ordered by Search Console demand</li>
+          <li>Platform and prevention cluster guides</li>
+          <li>Comparison pages for Disputifier and Signifyd</li>
+          <li>Pages that convert from paid search get priority for links</li>
+          <li>Day-90 review against the scorecard below</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- KPIs -->
+    <section class="block" id="measure" data-nav="Scorecard">
+      <div class="label">How we'll measure it</div>
+      <h2>The scorecard</h2>
+      <table class="kpi">
+        <thead><tr><th>Metric</th><th>Today (last 90 days)</th><th>What good looks like at day 90</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Clicks from chargeback searches</td><td>About 2 among reported queries</td><td>Steady weekly clicks, led by reason codes</td></tr>
+          <tr><td class="strong">Reason code avg. position</td><td>22.9</td><td>Hub and top code pages on page one</td></tr>
+          <tr><td class="strong">Pages competing per topic</td><td>17 (reason codes), 11 (hidden costs)</td><td>1 hub each</td></tr>
+          <tr><td class="strong">AI prompts that name Safe</td><td>0 of 1 tested</td><td>Tracked monthly across 7 prompts and 4 tools</td></tr>
+          <tr><td class="strong">Shopify reviews</td><td>0</td><td>A steady flow from merchants after each win</td></tr>
+          <tr><td class="strong">Organic sign-ups</td><td>Not tracked yet</td><td>Connected accounts attributed to organic in GA4</td></tr>
+        </tbody>
+      </table>
+      <p class="dim small">We don't promise positions or dates. Google decides rankings. What we commit to is the work, the order and the reporting, and we cut what doesn't move.</p>
+    </section>
+
+    <section class="cta" id="next">
+      <div class="label" style="color:var(--et-honey)">Next steps</div>
+      <h2>Start with the five-minute fix</h2>
+      <p>Change the robots.txt line this week. Andres's Meta audit covers the paid side. We'll bring the redirect map and the reason code hub outline to the next call.</p>
+      <a class="btn" href="https://decks.embertribe.com/safe-app">See the full rent-to-own plan →</a>
+    </section>
+  </main>
+</div>
+
+<script>
+  const toc = document.getElementById('toc');
+  const secs = [...document.querySelectorAll('section[data-nav]')];
+  secs.forEach(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.textContent = s.getAttribute('data-nav'); toc.appendChild(a); });
+  const links = [...toc.children];
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)); });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
