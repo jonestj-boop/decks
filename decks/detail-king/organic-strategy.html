@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail King · Organic &amp; AI Search Strategy · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#B07D00; --client-accent-soft:#fdf4dc;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#2F5D7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:var(--bl,200px) 1fr 76px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue — fits ~40 rows with internal scroll */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"—"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+</style>
+<body>
+
+<!-- ══ 1 · COVER ═════════════════════════════════════════════════════════ -->
+<section class="slide cover active" data-screen-label="01">
+  <div>
+    <div class="accent-rule"></div>
+    <div class="label">Organic &amp; AI search strategy · Prepared by EmberTribe</div>
+    <h1>Own your best sellers.<br>Stop renting them.</h1>
+    <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px">How you move more of your top-selling product searches from paid clicks to free rankings and AI recommendations.</p>
+    <div class="meta">
+      <div>Prepared for<b>Jason Fung, Detail King</b></div>
+      <div>Date<b>November 2026</b></div>
+      <div>Data<b>Search Console · Google Ads · Shopify</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE SHORT VERSION ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="02">
+  <div class="head">
+    <div class="label">The short version</div>
+    <h2>Your ads are carrying searches your site almost wins on its own.</h2>
+    <p class="subtitle">We matched your top 50 best sellers against three months of Search Console and Google Ads data. Many of them sit just outside the top three organically, and ads are covering the gap.</p>
+  </div>
+  <div class="fill">
+    <div class="stats">
+      <div class="stat"><div class="v red">51%</div><div class="k">Of search-term ad spend goes to searches where you already rank 4–10 organically ($14,155 in 3 months)</div></div>
+      <div class="stat"><div class="v accent">7–10</div><div class="k">The most common range where your best sellers rank for their own product name</div></div>
+      <div class="stat"><div class="v">−48%</div><div class="k">Organic clicks, Aug–Oct 2026 vs. the same months in 2025</div></div>
+    </div>
+    <div class="three-col mt" style="grid-template-columns:repeat(4,1fr)">
+      <div class="pillar"><div class="pn">Step 01</div><h4>One page per search</h4><p>Stop your own pages from competing with each other for Mytee, Tornador and Rupes searches.</p></div>
+      <div class="pillar"><div class="pn">Step 02</div><h4>Build authority</h4><p>Targeted backlinks to best-seller pages, plus digital PR coverage that lifts the whole site.</p></div>
+      <div class="pillar"><div class="pn">Step 03</div><h4>Get named by AI</h4><p>Show up in the articles ChatGPT and Google's AI read when they recommend where to buy.</p></div>
+      <div class="pillar"><div class="pn">Step 04</div><h4>Shift the ad budget</h4><p>As each search reaches the top three, test lower bids there and move the money to new customers.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3 · WHAT CHANGED ══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="03">
+  <div class="head">
+    <div class="label">What changed in search</div>
+    <h2>You're showing up in fewer searches, and getting fewer clicks.</h2>
+    <p class="subtitle">Organic clicks halved year over year. Most of that came from appearing in fewer searches, and several best sellers slipped a few positions. Even where your position barely moved, clicks fell by a third. AI answers in Google and ChatGPT are a likely part of that.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col" style="grid-template-columns:1.4fr 1fr">
+      <div class="chart-wrap">
+        <div class="fine" style="margin-bottom:6px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Monthly organic clicks · detailking.com</div>
+        <svg viewBox="0 0 520 220" width="100%" style="display:block" role="img" aria-label="Monthly organic clicks fell from 21,978 in August 2025 to 8,303 in October 2026">
+          <g stroke="rgba(0,0,0,0.08)" stroke-width="1"><line x1="46" y1="180" x2="505" y2="180"/><line x1="46" y1="116" x2="505" y2="116"/><line x1="46" y1="52" x2="505" y2="52"/></g>
+          <g fill="#6b6b6b" font-size="11" font-family="Quatro"><text x="40" y="184" text-anchor="end">0K</text><text x="40" y="120" text-anchor="end">10K</text><text x="40" y="56" text-anchor="end">20K</text><text x="46" y="200" text-anchor="middle">Jul '25</text><text x="230" y="200" text-anchor="middle">Jan '26</text><text x="505" y="200" text-anchor="middle">Oct</text></g>
+          <polyline fill="none" stroke="var(--client-accent)" stroke-width="3" stroke-linejoin="round" points="46,46 77,39 107,54 138,86 168,96 199,103 230,91 260,83 291,49 321,67 352,76 383,93 413,97 444,105 474,121 505,127"/>
+          <circle cx="77" cy="39" r="4.5" fill="var(--client-accent)"/><circle cx="505" cy="127" r="5" fill="#FF333C"/>
+          <g font-family="Quatro" font-weight="700" font-size="12"><text x="77" y="29" text-anchor="middle" fill="#303030">21,978</text><text x="505" y="115" text-anchor="end" fill="#FF333C">8,303</text></g>
+        </svg>
+      </div>
+      <div>
+        <div class="stats" style="flex-direction:column">
+          <div class="stat"><div class="v">56,295 → 29,279</div><div class="k">Organic clicks, Aug–Oct 2025 vs. Aug–Oct 2026</div></div>
+          <div class="stat"><div class="v red">−50%</div><div class="k">Search impressions over the same months (6.63M → 3.29M)</div></div>
+          <div class="stat"><div class="v red">−34%</div><div class="k">Clicks on 2,091 page-one searches where your position moved one spot or less</div></div>
+        </div>
+        <p class="fine" style="margin-top:10px">Part of the impression drop reflects a September 2025 change in how Google counts impressions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4 · YOUR BEST SELLERS TODAY ═══════════════════════════════════════ -->
+<section class="slide" data-screen-label="04">
+  <div class="head">
+    <div class="label">Your best sellers today</div>
+    <h2>Many of your top products sit just below the top three.</h2>
+    <p class="subtitle">Ten of your best sellers and their Google position when someone searches the product by name. Ranked by 2026 units sold. Spring is Mar 16 – Jun 14; now is Aug 10 – Nov 8.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Product</th><th class="num">2026 units</th><th>Search</th><th class="num">Spring</th><th class="num">Now</th><th class="num">Organic clicks (90 days)</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Koch-Chemie Protector Wax</td><td class="num">1,603</td><td class="dim">koch chemie protector wax</td><td class="num">7.6</td><td class="num down">10.4</td><td class="num">70</td></tr>
+        <tr><td class="strong">Koch-Chemie Green Star</td><td class="num">1,067</td><td class="dim">koch chemie green star</td><td class="num">6.4</td><td class="num down">8.4</td><td class="num">74</td></tr>
+        <tr><td class="strong">Koch-Chemie Pol Star</td><td class="num">591</td><td class="dim">koch chemie pol star</td><td class="num">5.2</td><td class="num down">8.5</td><td class="num">101</td></tr>
+        <tr><td class="strong">Mytee Lite III 8070</td><td class="num">417</td><td class="dim">mytee 8070</td><td class="num">7.9</td><td class="num down">8.5</td><td class="num">99</td></tr>
+        <tr><td class="strong">Koch-Chemie Hydro Foam Sealant</td><td class="num">371</td><td class="dim">koch chemie hydro foam sealant</td><td class="num">8.6</td><td class="num down">10.1</td><td class="num">38</td></tr>
+        <tr><td class="strong">P&amp;S XPRESS Interior Cleaner</td><td class="num">350</td><td class="dim">p&amp;s xpress interior cleaner</td><td class="num">4.7</td><td class="num">4.8</td><td class="num">107</td></tr>
+        <tr><td class="strong">Tornador Mini Z-007</td><td class="num">340</td><td class="dim">tornador mini</td><td class="num">14.0</td><td class="num up">7.9</td><td class="num">42</td></tr>
+        <tr><td class="strong">Koch-Chemie Gummifix</td><td class="num">278</td><td class="dim">koch chemie gummifix</td><td class="num">5.5</td><td class="num down">9.3</td><td class="num">17</td></tr>
+        <tr><td class="strong">P&amp;S Brake Buster</td><td class="num">221</td><td class="dim">p&amp;s brake buster</td><td class="num">9.2</td><td class="num up">8.6</td><td class="num">52</td></tr>
+        <tr><td class="strong">Black Carpet Dye</td><td class="num">160</td><td class="dim">black carpet dye</td><td class="num">4.4</td><td class="num down">6.4</td><td class="num">149</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info mt"><strong>Why position 3 vs. 8 matters:</strong> on your site this year, non-branded searches in the top three get about twice the click rate of positions 7–10 (1.1% vs. 0.5%).</div>
+  </div>
+</section>
+
+<!-- ══ 5 · RENTING VS OWNING ═════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="05">
+  <div class="head">
+    <div class="label">Where the ad money goes</div>
+    <h2>Half your search ad spend goes to searches where you're already on page one.</h2>
+    <p class="subtitle">Google Ads search terms, Aug 10 – Nov 17, 2026, grouped by where you rank for the same search organically. Covers the $27,587 in spend that Google ties to a search term.</p>
+  </div>
+  <div class="fill">
+    <div class="bars" style="--bl:260px">
+      <div class="bar"><div class="bl">Organic 1–3</div><div class="bt"><div class="bf" style="width:4.6%"></div></div><div class="bv">$654</div></div>
+      <div class="bar"><div class="bl"><strong>Organic 4–10</strong></div><div class="bt"><div class="bf red" style="width:100%"></div></div><div class="bv">$14,155</div></div>
+      <div class="bar"><div class="bl">Organic 11–20</div><div class="bt"><div class="bf" style="width:33%"></div></div><div class="bv">$4,717</div></div>
+      <div class="bar"><div class="bl">Organic 21+</div><div class="bt"><div class="bf" style="width:8.2%"></div></div><div class="bv">$1,166</div></div>
+      <div class="bar"><div class="bl">Not ranking organically</div><div class="bt"><div class="bf" style="width:35%"></div></div><div class="bv">$4,944</div></div>
+      <div class="bar"><div class="bl">Branded ("detail king")</div><div class="bt"><div class="bf honey" style="width:14%"></div></div><div class="bv">$1,951</div></div>
+    </div>
+    <div class="two-col mt">
+      <div class="callout good"><strong>Very little overlaps with what you already own.</strong> Only 2% of spend goes to non-branded searches you already rank top three for.</div>
+      <div class="callout"><strong>The opportunity.</strong> The $14,155 bucket returns $4.87 per $1, below your account average of $6.41. Every search that moves into the top three is one where ads can do less.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6 · WHERE ADS CARRY THE LOAD ══════════════════════════════════════ -->
+<section class="slide" data-screen-label="06">
+  <div class="head">
+    <div class="label">Where ads carry the load</div>
+    <h2>The same products show up on both lists.</h2>
+    <p class="subtitle">Ad spend and organic results on the same search terms, Aug–Nov 2026. Organic clicks here count only the searches you also buy ads for. Most of these products are on your top-50 list.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Product group</th><th class="num">Ad spend</th><th class="num">Ad revenue</th><th class="num">ROAS</th><th class="num">Organic position</th><th class="num">Organic clicks</th><th class="num">Organic impressions</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Mytee 8070</td><td class="num">$2,064</td><td class="num">$11,127</td><td class="num">5.4</td><td class="num">7.0</td><td class="num">99</td><td class="num">11,306</td></tr>
+        <tr><td class="strong">Mytee brand searches</td><td class="num">$1,580</td><td class="num">$6,458</td><td class="num">4.1</td><td class="num">7.6</td><td class="num">41</td><td class="num">19,323</td></tr>
+        <tr><td class="strong">Tornador</td><td class="num">$1,046</td><td class="num">$6,744</td><td class="num">6.4</td><td class="num">8.8</td><td class="num">230</td><td class="num">49,195</td></tr>
+        <tr><td class="strong">"Koch Chemie" brand searches</td><td class="num">$1,111</td><td class="num">$4,462</td><td class="num">4.0</td><td class="num">9.1</td><td class="num">46</td><td class="num">19,775</td></tr>
+        <tr><td class="strong">Koch Protector Wax</td><td class="num">$534</td><td class="num">$7,061</td><td class="num">13.2</td><td class="num">9.6</td><td class="num">36</td><td class="num">4,504</td></tr>
+        <tr><td class="strong">Koch Green Star</td><td class="num">$479</td><td class="num">$6,123</td><td class="num">12.8</td><td class="num">7.4</td><td class="num">10</td><td class="num">7,108</td></tr>
+        <tr><td class="strong">Koch Pol Star</td><td class="num">$345</td><td class="num">$2,018</td><td class="num">5.8</td><td class="num">8.0</td><td class="num">33</td><td class="num">8,441</td></tr>
+        <tr><td class="strong">Rupes pads</td><td class="num">$338</td><td class="num">$1,083</td><td class="num">3.2</td><td class="num">10.0</td><td class="num">3</td><td class="num">841</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info mt"><strong>Example:</strong> on the Green Star searches you buy ads for, your page showed up 7,108 times and earned 10 free clicks. Ads fill the gap at a good return, but you pay for every one of those sales.</div>
+  </div>
+</section>
+
+<!-- ══ 8 · DIVIDER ═══════════════════════════════════════════════════════ -->
+<section class="slide divider" data-screen-label="08">
+  <div style="text-align:left">
+    <div class="label">The plan</div>
+    <h1 style="font-size:96px;letter-spacing:-0.03em;margin-bottom:18px">Four moves.</h1>
+    <p class="subtitle" style="font-size:21px;max-width:820px">In order. The first needs no outside spend and is where we'd start.</p>
+  </div>
+</section>
+
+<!-- ══ 9 · STEP 1 · ONE PAGE PER SEARCH ══════════════════════════════════ -->
+<section class="slide" data-screen-label="09">
+  <div class="head">
+    <div class="label">Step 01 · One page per search</div>
+    <h2>Your own pages are competing with each other.</h2>
+    <p class="subtitle">When two or three Detail King pages target the same search, Google splits the credit and none of them ranks well. Pick one page per search, point the others to it, and every link we build later lands in one place.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Search</th><th>Pages competing today</th><th class="num">Organic position</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">mytee / mytee extractor</td><td>Mytee brand hub page + Mytee extractors collection</td><td class="num">7.4–7.9</td><td>Make one the lead page; link the other to it</td></tr>
+        <tr><td class="strong">tornador</td><td>An older blog guide outranks the product pages and the Tornadors collection</td><td class="num">9.8</td><td>Point the guide's authority to the collection</td></tr>
+        <tr><td class="strong">rupes pads</td><td>A Rupes pads hub page + two Rupes pad collections</td><td class="num">16–29</td><td>Consolidate into one Rupes pads page</td></tr>
+        <tr><td class="strong">koch chemie</td><td>Brand collection, with individual products also showing up</td><td class="num">9.1</td><td>Strengthen internal links into the collection</td></tr>
+      </tbody>
+    </table>
+    <div class="callout good mt"><strong>Timeline and cost:</strong> about 2–4 weeks of setup with your team, no outside spend. Consolidating pages like this can move rankings within a month or two, because it concentrates authority the site already has.</div>
+  </div>
+</section>
+
+<!-- ══ 10 · STEP 2 · BUILD AUTHORITY ═════════════════════════════════════ -->
+<section class="slide" data-screen-label="10">
+  <div class="head">
+    <div class="label">Step 02 · Build authority</div>
+    <h2>Point outside links at the pages ads are propping up.</h2>
+    <p class="subtitle">We picked targets by three things: how much you sell, how much you spend in ads on the search, and how close the page already is to the top three. Links go to the exact page that should rank, using the product name people search. We'll confirm final targets with a link-gap report first.</p>
+  </div>
+  <div class="fill">
+    <table>
+      <thead><tr><th>Priority</th><th>Target page</th><th class="num">Organic position</th><th class="num">Ad spend (3 mo)</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill p1">Tier 1</span></td><td class="strong">Mytee Lite III 8070 + Mytee lead page</td><td class="num">7.0–7.6</td><td class="num">$3,644</td><td>Biggest ad spend on any product line</td></tr>
+        <tr><td><span class="pill p1">Tier 1</span></td><td class="strong">Koch Chemie collection</td><td class="num">9.1</td><td class="num">$1,111</td><td>19,775 impressions, 46 clicks; lifts all seven Koch best sellers</td></tr>
+        <tr><td><span class="pill p1">Tier 1</span></td><td class="strong">Protector Wax · Green Star · Pol Star</td><td class="num">7.4–9.6</td><td class="num">$1,358</td><td>Your #1, #2 and #4 sellers; converting well on ads, little free traffic on those searches</td></tr>
+        <tr><td><span class="pill p1">Tier 1</span></td><td class="strong">Tornador collection + Tornador Mini</td><td class="num">7.9–9.8</td><td class="num">$1,046</td><td>49,000+ impressions across Tornador searches</td></tr>
+        <tr><td><span class="pill p2">Tier 2</span></td><td class="strong">Rupes polishers + Rupes pads pages</td><td class="num">10–11</td><td class="num">$1,882</td><td>Strong ad demand; organic barely visible today</td></tr>
+        <tr><td><span class="pill p2">Tier 2</span></td><td class="strong">Gentle Snow Foam · Hydro Foam · Gummifix · Carpet Bomber</td><td class="num">5–10</td><td class="num">$271</td><td>Steady sellers sitting at positions 5–10</td></tr>
+      </tbody>
+    </table>
+    <div class="callout info mt"><strong>Three kinds of links:</strong> targeted backlinks from relevant automotive, detailing and small-business sites; brand mentions (articles that name Detail King as a place to buy, usually with a link back); and digital PR coverage, on the next slide. The first two point at the pages in this table.</div>
+  </div>
+</section>
+
+<!-- ══ 10b · STEP 2 · DIGITAL PR ══════════════════════════════════════════ -->
+<section class="slide" data-screen-label="10b">
+  <div class="head">
+    <div class="label">Step 02 · Digital PR</div>
+    <h2>Earn press coverage that lifts the whole site.</h2>
+    <p class="subtitle">Digital PR means pitching journalists who are looking for expert sources, then earning a mention and a link in the story. These are real editorial articles on established news and lifestyle sites, which carry more weight with Google and AI tools than standard link placements.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div>
+        <h3>What a campaign includes</h3>
+        <ul class="cta-bullets" style="margin-top:4px">
+          <li style="font-size:14.5px;line-height:1.7">10 editorial placements per campaign, landed over about 45 days</li>
+          <li style="font-size:14.5px;line-height:1.7">Story angles built around your expertise, pitched to relevant journalists</li>
+          <li style="font-size:14.5px;line-height:1.7">Links back to detailking.com using your brand name</li>
+          <li style="font-size:14.5px;line-height:1.7">Any placement that drops in the first 12 months gets replaced</li>
+          <li style="font-size:14.5px;line-height:1.7">From you: a spokesperson, a short bio and topics to steer toward</li>
+        </ul>
+        <div class="callout info" style="margin-top:14px"><strong>Why it helps your product pages:</strong> press links build authority for the whole domain. That authority flows from the homepage through your collections to the product pages, so it supports the targeted links on the previous slide.</div>
+      </div>
+      <div>
+        <h3>Angles your search data already supports</h3>
+        <table>
+          <thead><tr><th>Story angle</th><th>Demand we see</th></tr></thead>
+          <tbody>
+            <tr><td class="strong">Starting a detailing business<div class="sub-td">In business since 1999, with your own training programs</div></td><td>"how to start a car detailing business," "how much do car detailers make": 4,000+ impressions</td></tr>
+            <tr><td class="strong">Getting bad smells out of a car<div class="sub-td">Seasonal consumer tips</div></td><td>"how to get milk smell out of car" and related searches: 6,000+ impressions</td></tr>
+            <tr><td class="strong">Mobile detailing and water use<div class="sub-td">Equipment and small-business angle</div></td><td>Water tank and reclamation searches are some of your strongest pages</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn" style="margin-top:14px"><strong>What to expect:</strong> journalists choose what they cover, so we can't promise specific publications. The campaign guarantees the number of placements, not where they land.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 11 · STEP 3 · AI VISIBILITY ═══════════════════════════════════════ -->
+<section class="slide" data-screen-label="11">
+  <div class="head">
+    <div class="label">Step 03 · Get recommended by AI</div>
+    <h2>Your ChatGPT ads pay for the spot next to the answer. Mentions aim to get you into it.</h2>
+    <p class="subtitle">When someone asks ChatGPT or Google's AI for the best carpet extractor or detailing supplies, the answer names stores. Which stores comes from what other sites say about them.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div>
+        <table>
+          <thead><tr><th>Search</th><th class="num">Impressions</th><th class="num">Position</th><th class="num">Clicks</th></tr></thead>
+          <tbody>
+                        <tr><td class="strong">best tools for car interior cleaning</td><td class="num">6,847</td><td class="num">6.1</td><td class="num down">0</td></tr>
+            <tr><td class="strong">how to start detailing</td><td class="num">6,966</td><td class="num">5.6</td><td class="num down">2</td></tr>
+            <tr><td class="strong">best microfiber towels for detailing</td><td class="num">3,449</td><td class="num">10.1</td><td class="num down">0</td></tr>
+            <tr><td class="strong">best car detailing products</td><td class="num">3,096</td><td class="num">10.8</td><td class="num">20</td></tr>
+            <tr><td class="strong">how to start a car detailing business</td><td class="num">2,916</td><td class="num">5.4</td><td class="num">18</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">Last 90 days. You rank on or near page one for all of these, and together they sent 40 clicks from more than 23,000 impressions.</p>
+      </div>
+      <div>
+        <div class="callout"><strong>Ads run while the budget runs.</strong> At $25/day, ChatGPT ads cover one platform. Mentions can shape answers in ChatGPT, Google's AI, Gemini and Perplexity, and the articles stay published.</div>
+        <div class="callout info"><strong>"Best" questions get answered with store and product names.</strong> "Best tools for car interior cleaning" showed your page 6,847 times at position 6 and sent zero clicks. Being named in the articles AI reads is how a store gets into that kind of answer.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 12 · STEP 4 · SHIFT THE BUDGET ════════════════════════════════════ -->
+<section class="slide" data-screen-label="12">
+  <div class="head">
+    <div class="label">Step 04 · Shift the ad budget</div>
+    <h2>As rankings climb, ads move to new customers.</h2>
+    <p class="subtitle">Ads keep doing the heavy lifting for new-customer growth. The change is that they stop paying for clicks you can earn for free.</p>
+  </div>
+  <div class="fill">
+    <div class="two-col">
+      <div>
+        <h3>First searches to watch</h3>
+        <table>
+          <thead><tr><th>Search group</th><th class="num">Organic position</th><th class="num">Ad spend (3 mo)</th></tr></thead>
+          <tbody>
+            <tr><td>Mytee 8070</td><td class="num">7.0</td><td class="num">$2,064</td></tr>
+            <tr><td>Koch Green Star</td><td class="num">7.4</td><td class="num">$479</td></tr>
+            <tr><td>Mytee brand searches</td><td class="num">7.6</td><td class="num">$1,580</td></tr>
+            <tr><td>Koch Pol Star</td><td class="num">8.0</td><td class="num">$345</td></tr>
+            <tr><td>Tornador</td><td class="num">8.8</td><td class="num">$1,046</td></tr>
+          </tbody>
+        </table>
+        <p class="fine" style="margin-top:8px">The pages closest to the top three, where a ranking gain is most likely to show up first.</p>
+      </div>
+      <div>
+        <h3>Later: lower bids as pages reach the top three</h3>
+        <div class="callout good"><strong>The rule:</strong> once a product holds a top-three organic spot for a month, we test lower bids on that search and watch total sales. If sales hold, the savings move to new-customer campaigns.</div>
+        <div class="callout info"><strong>Keep the winners running.</strong> Protector Wax and Green Star return about 13x on ads. Top-three organic rankings there should add sales on top of the ads.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 13 · WHAT TO EXPECT ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="13">
+  <div class="head">
+    <div class="label">What to expect</div>
+    <h2>What the next six months look like.</h2>
+    <p class="subtitle">Links take time to be found and counted. Their effect tends to last longer than ad clicks, which stop when spend stops.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="pillar"><div class="pn">Weeks 1–4</div><h4>Page fixes</h4><p>One lead page per search for Mytee, Tornador, Rupes and Koch Chemie. Link-gap report, tracking baseline for every target search, and a digital PR spokesperson and angles agreed.</p></div>
+      <div class="pillar"><div class="pn">Months 2–3</div><h4>Links go live</h4><p>First backlinks and brand mentions published to Tier 1 pages. The first digital PR campaign lands its placements over about 45 days. Early movement usually shows on the closest pages first, the ones already at 7–8.</p></div>
+      <div class="pillar"><div class="pn">Months 4–6</div><h4>Rankings move, ads adjust</h4><p>Tier 1 pages climbing toward the top three. Bid tests start on searches that hold. Tier 2 pages get their links.</p></div>
+    </div>
+    <div class="callout warn mt"><strong>What's realistic.</strong> These are other brands' products, so the manufacturer's site and Amazon often hold positions 1–2. The goal is to move Tier 1 pages from 7–10 into the top three to five. On this year's data, a top-three spot gets about twice the click rate of positions 7–10. Position 1 won't be possible on every search.</div>
+  </div>
+</section>
+
+<!-- ══ 14 · HOW WE MEASURE ═══════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="14">
+  <div class="head">
+    <div class="label">How we'll measure it</div>
+    <h2>One scorecard, every month.</h2>
+    <p class="subtitle">We track the same list of best-seller searches from day one, so you can see exactly what moved and what it saved.</p>
+  </div>
+  <div class="fill">
+    <div class="three-col">
+      <div class="stat"><div class="v accent">Position</div><div class="k">Organic ranking for each target search, from Search Console</div></div>
+      <div class="stat"><div class="v accent">Free clicks</div><div class="k">Organic clicks to each best-seller page and collection</div></div>
+      <div class="stat"><div class="v accent">Ad spend</div><div class="k">What Google Ads spends on the same searches, from the search terms report</div></div>
+    </div>
+    <div class="callout good mt"><strong>What success looks like:</strong> you pay less in ads on your own best sellers, while total sales on those products hold or grow.</div>
+  </div>
+</section>
+
+<!-- ══ 15 · NEXT STEPS ═══════════════════════════════════════════════════ -->
+<section class="slide" data-screen-label="15">
+  <div class="fill" style="align-items:flex-start">
+    <div class="label">Next steps</div>
+    <h2>Start with the free wins, then build.</h2>
+    <div class="cta-box">
+      <p style="color:var(--ink-500);font-size:17px;line-height:1.6">What we'd do first:</p>
+      <ul class="cta-bullets">
+        <li>Agree on one lead page each for Mytee, Tornador, Rupes pads and Koch Chemie</li>
+        <li>Review the rewritten product titles and roll back any that cost rankings</li>
+        <li>Pick a spokesperson and story angles for the first digital PR campaign</li>
+        <li>Confirm the Tier 1 target list and set the tracking baseline</li>
+        <li>Choose a scope for links, brand mentions and digital PR for the first 90 days</li>
+      </ul>
+      <a class="btn" href="mailto:tj@embertribe.com">Talk it through with TJ →</a>
+    </div>
+    <p class="fine mt">Sources: Google Search Console (detailking.com), Google Ads search terms report Aug 10 – Nov 17 2026, Detail King 2026 top-50 sales by variant.</p>
+  </div>
+</section>
+
+<!-- ══ NAV ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Detail King · Organic Strategy</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl">
+    <button id="prev" aria-label="Previous">‹</button>
+    <span id="count">1 / 1</span>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-dk-organic-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button') || e.target.closest('.mtab')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  // month tabs inside the articles slide
+  document.querySelectorAll('.mtab').forEach(tab => {
+    tab.addEventListener('click', e => {
+      e.stopPropagation();
+      const target = tab.getAttribute('data-mtarget');
+      const slide = tab.closest('.slide');
+      slide.querySelectorAll('.mtab').forEach(t => t.classList.toggle('is-active', t === tab));
+      slide.querySelectorAll('.month-block').forEach(b => b.classList.toggle('is-active', b.getAttribute('data-month') === target));
+    });
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-dk-organic-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</body>
+</html>
