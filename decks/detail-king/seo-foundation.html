@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail King SEO Foundation · EmberTribe</title>
+<style>
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+  @font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+
+  :root {
+    --et-red:#FF333C; --et-red-deep:#E62831; --et-black:#000000; --et-honey:#FFB000; --et-white:#FFFFFF;
+    --client-accent:#3d4752; --client-accent-soft:#eceef1; --client-aqua:#8a95a3;
+    --ink-700:#303030; --ink-600:#474747; --ink-500:#6b6b6b; --ink-300:#c4c4c4; --ink-200:#DFDFDF;
+    --ink-100:#efefef; --ink-50:#f7f7f7;
+    --surface:#FFFFFF; --subtle:#f7f7f7; --border:#e7e7e7;
+    --good:#2FC171; --warn:#FFB000; --bad:#FF333C;
+    --kd-ve:#2FC171; --kd-e:#7DBB3F; --kd-m:#FFB000; --kd-h:#F7772E; --kd-vh:#FF333C;
+    --pillar-1:#FF333C; --pillar-2:#2F5D7C; --pillar-3:#FFB000; --pillar-4:#474747;
+    --nav-h:56px; --pad-x:80px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; background:var(--et-black); color:var(--et-black); -webkit-font-smoothing:antialiased; }
+
+  /* ── SLIDE SHELL ───────────────────────────────────────────────────── */
+  .slide { position:absolute; inset:0 0 var(--nav-h) 0; display:none; flex-direction:column;
+           padding:48px var(--pad-x) 38px; background:var(--surface); overflow-y:auto; }
+  .slide.active { display:flex; }
+  .slide.dark { background:var(--et-black); color:var(--et-white); }
+  .slide.divider { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.divider::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.divider > * { position:relative; z-index:1; }
+  .slide.cover { background:var(--et-red); color:var(--et-white); justify-content:center; overflow:hidden; }
+  .slide.cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+  .slide.cover > div { position:relative; z-index:1; }
+
+  /* ── TYPE ──────────────────────────────────────────────────────────── */
+  .label { font-weight:700; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--et-red); margin-bottom:12px; }
+  .slide.dark .label { color:var(--et-honey); }
+  .slide.divider .label, .slide.cover .label { color:var(--et-black); }
+  .slide.divider .subtitle { color:rgba(255,255,255,0.9); }
+  h1 { font-weight:700; font-size:60px; line-height:1.02; letter-spacing:-0.02em; margin-bottom:16px; }
+  h2 { font-weight:700; font-size:34px; line-height:1.1; letter-spacing:-0.015em; margin-bottom:10px; max-width:1120px; }
+  h3 { font-weight:700; font-size:18px; margin-bottom:8px; }
+  .subtitle { font-size:17px; line-height:1.5; color:var(--ink-500); max-width:960px; }
+  .slide.dark .subtitle { color:rgba(255,255,255,0.62); }
+  .cover .accent-rule { width:64px; height:5px; background:var(--et-black); margin-bottom:24px; }
+  .cover .meta { display:flex; gap:34px; margin-top:38px; font-size:13.5px; color:rgba(255,255,255,0.82); }
+  .cover .meta b { display:block; color:var(--et-white); font-weight:700; margin-top:3px; font-size:15px; }
+  .fine { font-size:12px; color:var(--ink-500); } .slide.dark .fine { color:rgba(255,255,255,0.4); }
+  .head { margin-bottom:18px; }
+  em { font-style:italic; }
+
+  /* ── LAYOUT ────────────────────────────────────────────────────────── */
+  .fill { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:30px; align-items:start; }
+  .three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .mt { margin-top:22px; }
+
+  /* ── STATS ─────────────────────────────────────────────────────────── */
+  .stats { display:flex; gap:16px; flex-wrap:wrap; }
+  .stat { background:var(--subtle); border-radius:14px; padding:20px; flex:1; min-width:160px; }
+  .slide.dark .stat { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); }
+  .stat .v { font-weight:700; font-size:36px; line-height:1; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
+  .stat .v.red{color:var(--et-red);} .stat .v.honey{color:var(--et-honey);} .stat .v.accent{color:var(--client-accent);} .stat .v.good{color:var(--good);} .stat .v.bad{color:var(--bad);}
+  .slide.dark .stat .v { color:var(--et-white); } .slide.dark .stat .v.honey{color:var(--et-honey);}
+  .stat .k { font-size:12px; color:var(--ink-500); margin-top:7px; line-height:1.4; }
+  .slide.dark .stat .k { color:rgba(255,255,255,0.55); }
+
+  /* ── CALLOUT ───────────────────────────────────────────────────────── */
+  .callout { border-left:3px solid var(--et-red); background:#fff5f5; padding:13px 17px; border-radius:0 10px 10px 0; font-size:14px; line-height:1.55; margin:10px 0; }
+  .callout strong { color:var(--et-red-deep); }
+  .callout.info { border-color:var(--client-accent); background:var(--client-accent-soft); } .callout.info strong{color:var(--client-accent);}
+  .callout.good { border-color:var(--good); background:#e9f9f0; } .callout.good strong{color:var(--good);}
+  .callout.warn { border-color:var(--warn); background:#fff8e8; } .callout.warn strong{color:#9a6a00;}
+  .slide.dark .callout { background:rgba(255,255,255,0.06); border-color:var(--et-honey); color:rgba(255,255,255,0.85); }
+  .slide.dark .callout strong { color:var(--et-honey); }
+
+  /* ── TABLE ─────────────────────────────────────────────────────────── */
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:6px 0; }
+  th { text-align:left; padding:10px 13px; font-weight:700; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--et-white); background:var(--et-black); }
+  th.accent { background:var(--client-accent); } th.red { background:var(--et-red); }
+  th.num, td.num { text-align:right; font-variant-numeric:tabular-nums; }
+  td { padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tbody tr:last-child td { border-bottom:none; }
+  tbody tr:nth-child(even) td { background:var(--ink-50); }
+  .strong{font-weight:700;} .up{color:var(--good);font-weight:700;} .down{color:var(--bad);font-weight:700;} .dim{color:var(--ink-500);}
+  .sub-td { font-size:10.5px; color:var(--ink-500); }
+
+  /* ── PILLS ─────────────────────────────────────────────────────────── */
+  .pill { display:inline-block; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+  .pill.p1{background:#ffe1e2;color:#c62828;} .pill.p2{background:#fff0d6;color:#a86a00;} .pill.p3{background:#e4f6ec;color:#1f8a4c;}
+  .kd-pill { display:inline-block; min-width:32px; text-align:center; padding:2px 8px; border-radius:20px; color:#fff; font-weight:700; font-size:12.5px; font-variant-numeric:tabular-nums; }
+  .kd-pill.ve{background:var(--kd-ve);} .kd-pill.e{background:var(--kd-e);} .kd-pill.m{background:var(--kd-m);color:#000;} .kd-pill.h{background:var(--kd-h);} .kd-pill.vh{background:var(--kd-vh);}
+  .chip { display:inline-block; font-size:10px; padding:2px 8px; border-radius:20px; font-weight:700; margin-right:5px; }
+  .chip.pillar { color:#fff; } .chip.funnel { background:var(--ink-100); color:var(--ink-600); } .chip.intent { background:#fff4e0; color:#9a6a00; }
+
+  /* ── BARS ──────────────────────────────────────────────────────────── */
+  .bars { display:flex; flex-direction:column; gap:9px; margin:12px 0; }
+  .bar { display:grid; grid-template-columns:200px 1fr 66px; align-items:center; gap:12px; }
+  .bar .bl { font-size:13px; text-align:right; }
+  .bar .bt { height:24px; background:var(--ink-100); border-radius:6px; overflow:hidden; }
+  .slide.dark .bar .bt { background:rgba(255,255,255,0.08); }
+  .bar .bf { height:100%; border-radius:6px; background:var(--client-accent); }
+  .bar .bf.red{background:var(--et-red);} .bar .bf.honey{background:var(--et-honey);}
+  .bar .bv { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  /* ── CHART WRAP ────────────────────────────────────────────────────── */
+  .chart-wrap { background:var(--subtle); border-radius:14px; padding:20px 22px; }
+  .slide.dark .chart-wrap { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+  .legend { display:flex; gap:18px; margin-top:10px; font-size:12px; color:var(--ink-500); }
+  .slide.dark .legend { color:rgba(255,255,255,0.6); }
+  .legend i { display:inline-block; width:12px; height:3px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+
+  /* ── PILLARS ───────────────────────────────────────────────────────── */
+  .pillar { background:var(--subtle); border:1px solid var(--border); border-radius:16px; padding:26px 24px; }
+  .pillar .pn { font-weight:700; font-size:12px; letter-spacing:0.1em; color:var(--et-red); margin-bottom:12px; text-transform:uppercase; }
+  .pillar h4 { font-weight:700; font-size:22px; margin-bottom:9px; letter-spacing:-0.01em; }
+  .pillar p { font-size:14px; line-height:1.55; color:var(--ink-500); }
+
+  /* ── PAGESPEED SCORE ───────────────────────────────────────────────── */
+  .score-cards { display:flex; gap:16px; }
+  .score-card { background:var(--subtle); border-radius:14px; padding:18px 22px; text-align:center; min-width:150px; }
+  .score-card .sc-cap { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:6px; }
+  .score-card .sc-v { font-weight:700; font-size:44px; line-height:1; font-variant-numeric:tabular-nums; }
+  .score-card .sc-v.bad{color:var(--bad);} .score-card .sc-v.warn{color:#e0930a;} .score-card .sc-v.good{color:var(--good);}
+  .score-card .sc-l { font-size:11px; color:var(--ink-500); margin-top:5px; }
+
+  /* ── CASE STUDY ────────────────────────────────────────────────────── */
+  .case { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; align-items:start; }
+  .case-shot { width:100%; display:block; border-radius:10px; border:1px solid var(--border); }
+  .case-img { background:var(--ink-100); border:1px dashed var(--ink-300); border-radius:12px; min-height:280px; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; color:var(--ink-500); font-size:13px; text-align:center; padding:20px; }
+  .case-cap { font-size:11.5px; color:var(--ink-500); margin-top:9px; text-align:center; }
+  .case-stat { background:var(--subtle); border-left:3px solid var(--client-accent); padding:12px 15px; border-radius:0 8px 8px 0; margin-bottom:9px; }
+  .case-stat .n { font-weight:700; font-size:24px; color:var(--client-accent); letter-spacing:-0.01em; }
+  .case-stat .l { font-size:11.5px; color:var(--ink-500); margin-top:2px; line-height:1.4; }
+
+  /* ── MONTH TABS (articles slide) ───────────────────────────────────── */
+  .mtabs { display:flex; gap:7px; flex-wrap:wrap; margin:6px 0 16px; }
+  .mtab { font-family:inherit; display:flex; flex-direction:column; align-items:flex-start; background:var(--surface);
+          border:1px solid var(--border); border-radius:9px; padding:7px 14px; cursor:pointer; color:var(--ink-700); transition:all .15s; }
+  .mtab:hover { border-color:var(--et-red); }
+  .mtab.is-active { background:var(--et-red); border-color:var(--et-red); color:#fff; }
+  .mtab .mt-n { font-weight:700; font-size:13.5px; }
+  .mtab .mt-c { font-size:10px; opacity:0.8; margin-top:1px; text-transform:uppercase; letter-spacing:0.04em; }
+  .month-block { display:none; } .month-block.is-active { display:flex; flex-direction:column; flex:1; min-height:0; }
+  /* compact, scrollable article queue */
+  .articles-scroll { flex:1; min-height:0; overflow-y:auto; border:1px solid var(--border); border-radius:10px; }
+  .articles-scroll table { margin:0; font-size:12.5px; }
+  .articles-scroll thead th { position:sticky; top:0; z-index:1; padding:8px 12px; font-size:9.5px; }
+  .articles-scroll td { padding:6px 12px; }
+  .articles-scroll .strong { margin-bottom:3px; }
+  .articles-scroll .chip { font-size:9px; padding:1px 6px; margin-right:3px; }
+  .articles-scroll .kd-pill { font-size:11px; min-width:28px; padding:1px 6px; }
+  .articles-scroll .kw code { font-size:11px; padding:2px 6px; }
+
+  /* ── CTA ───────────────────────────────────────────────────────────── */
+  .cta-box { background:var(--subtle); border:1px solid var(--border); border-radius:18px; padding:32px 36px; max-width:780px; }
+  .cta-bullets { list-style:none; margin:14px 0 0; }
+  .cta-bullets li { font-size:16px; line-height:1.9; padding-left:26px; position:relative; color:var(--ink-700); }
+  .cta-bullets li::before { content:"\2013"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .btn { display:inline-block; background:var(--et-red); color:#fff; font-weight:700; font-size:16px; padding:14px 32px; border-radius:10px; text-decoration:none; margin-top:20px; transition:background .18s; }
+  .btn:hover { background:var(--et-red-deep); }
+  a { color:var(--et-red); } a:hover { color:var(--et-red-deep); }
+
+  /* ── DIVIDER ───────────────────────────────────────────────────────── */
+  .divider .idx { font-weight:700; font-size:130px; line-height:0.9; color:var(--et-white); letter-spacing:-0.04em; }
+  .divider .rule { width:80px; height:4px; background:var(--et-black); margin:20px 0; }
+
+  /* ── NAV ───────────────────────────────────────────────────────────── */
+  #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:#050505; border-top:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:space-between; padding:0 26px; z-index:100; user-select:none; }
+  #nav .brand { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+  #nav .brand b { color:var(--et-red); }
+  #nav .ctrl { display:flex; align-items:center; gap:16px; }
+  #nav button { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); color:#fff; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:background .15s; }
+  #nav button:hover { background:rgba(255,255,255,0.2); }
+  #count { font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); min-width:56px; text-align:center; }
+  .dots { display:flex; gap:5px; flex-wrap:wrap; max-width:420px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.18); cursor:pointer; transition:background .15s; }
+  .dot.active { background:var(--et-honey); }
+
+  @media print {
+    @page{size:landscape;margin:0.35in;}
+    html,body{overflow:visible;height:auto;background:#fff;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .slide{display:flex!important;position:relative;inset:auto;height:auto;min-height:0;overflow:visible;page-break-after:always;break-after:page;}
+    .slide:last-child{page-break-after:auto;break-after:auto;}
+    .slide table,.two-col,.month-block{break-inside:avoid;page-break-inside:avoid;}
+    #nav{display:none;}
+    .month-block{display:block!important;margin-bottom:14px;}
+    .articles-scroll{overflow:visible;height:auto!important;max-height:none!important;}
+  }
+
+  .cover-logo { display:inline-block; background:#fff; border-radius:10px; padding:10px 14px; margin-bottom:30px; }
+  .cover-logo img { height:34px; display:block; }
+  .cover .stats { margin-top:34px; max-width:1100px; }
+  .cover .stat { background:rgba(0,0,0,0.14); border:1px solid rgba(255,255,255,0.18); }
+  .cover .stat .v { color:#fff; } .cover .stat .k { color:rgba(255,255,255,0.85); }
+  .src { font-size:11px; color:var(--ink-500); margin-top:10px; }
+  .slide.dark .src { color:rgba(255,255,255,0.4); }
+  .four-col { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .rm-col { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:18px 18px 14px; }
+  .rm-col .rm-m { font-weight:700; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--et-honey); }
+  .rm-col h4 { font-size:19px; font-weight:700; margin:6px 0 10px; color:#fff; }
+  .rm-col ul { list-style:none; }
+  .rm-col li { font-size:12.5px; line-height:1.45; color:rgba(255,255,255,0.78); padding-left:16px; position:relative; margin-bottom:6px; }
+  .rm-col li::before { content:"\2013"; position:absolute; left:0; color:var(--et-red); }
+  .rm-col .rm-sec { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.45); margin:10px 0 5px; }
+  ul.dash { list-style:none; }
+  ul.dash li { font-size:14px; line-height:1.5; padding-left:18px; position:relative; margin-bottom:7px; color:var(--ink-700); }
+  ul.dash li::before { content:"\2013"; position:absolute; left:0; color:var(--et-red); font-weight:700; }
+  .slide.dark ul.dash li { color:rgba(255,255,255,0.8); }
+  .tag { display:inline-block; font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; padding:2px 8px; border-radius:20px; background:var(--ink-100); color:var(--ink-600); }
+  .tag.new { background:#e4f6ec; color:#1f8a4c; } .tag.upd { background:#fff0d6; color:#a86a00; } .tag.hub { background:var(--et-black); color:#fff; }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:13.5px; }
+  .kv b { font-weight:700; }
+  .status-ok { color:var(--good); font-weight:700; } .status-bad { color:var(--bad); font-weight:700; } .status-warn { color:#c98500; font-weight:700; }
+  .mini th { font-size:9.5px; padding:7px 10px; } .mini td { padding:7px 10px; font-size:12.5px; }
+  .lab-field { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .hubgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .hubhead { background:var(--client-accent); color:#fff; border-radius:14px; padding:14px 16px; text-align:center; }
+  .hubsub { font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--et-honey); }
+  .hubname { font-size:20px; font-weight:700; margin-top:3px; }
+  .huburl { font-size:11.5px; color:rgba(255,255,255,0.7); margin-top:2px; }
+  .hubstem { width:2px; height:14px; background:var(--ink-300); margin:0 auto; }
+  .spokes { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; border-top:2px solid var(--ink-300); padding-top:12px; }
+  .spk { font-size:11.5px; background:#fff; border:1px solid var(--ink-200); border-radius:20px; padding:4px 10px; color:var(--ink-700); }
+  /* flow / board / gantt / workflow / trust visuals */
+  .flow { display:grid; grid-template-columns:repeat(5,1fr); gap:0; align-items:stretch; }
+  .fnode { position:relative; background:#fff; border:1px solid var(--ink-200); border-top:5px solid var(--ink-300); border-radius:12px; padding:14px 14px 12px; margin-right:26px; display:flex; flex-direction:column; }
+  .fnode:last-child { margin-right:0; }
+  .fnode:not(:last-child)::after { content:""; position:absolute; right:-21px; top:44%; border:8px solid transparent; border-left:12px solid var(--ink-300); }
+  .fnode.ok { border-top-color:var(--good); } .fnode.bad { border-top-color:var(--bad); } .fnode.warn { border-top-color:var(--warn); }
+  .fnode .fn-step { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-500); }
+  .fnode h4 { font-size:16px; font-weight:700; margin:3px 0 6px; }
+  .fnode .fn-st { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+  .fnode p { font-size:12.5px; line-height:1.45; color:var(--ink-600); flex:1; }
+  .fnode .fn-next { margin-top:8px; padding-top:8px; border-top:1px dashed var(--ink-200); font-size:11.5px; color:var(--ink-700); }
+  .fnode .fn-next b { color:var(--client-accent); }
+  .flow-out { margin-top:14px; display:flex; align-items:center; gap:14px; background:var(--client-accent); color:#fff; border-radius:12px; padding:12px 18px; font-size:14px; }
+  .flow-out .big { font-size:30px; font-weight:700; color:var(--et-honey); white-space:nowrap; }
+  .board { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .bcol h4 { font-size:12px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-500); margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid var(--et-black); }
+  .bcard { display:grid; grid-template-columns:74px 1fr; gap:2px 10px; background:#fff; border:1px solid var(--ink-200); border-left:4px solid var(--ink-300); border-radius:10px; padding:9px 12px; margin-bottom:8px; }
+  .bcard.p1 { border-left-color:#c62828; } .bcard.p2 { border-left-color:#e09a00; } .bcard.p3 { border-left-color:#1f8a4c; }
+  .bcard .bn { grid-row:span 2; font-size:24px; font-weight:700; line-height:1.1; color:var(--et-black); }
+  .bcard .bn small { display:block; font-size:9.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-500); }
+  .bcard .bt2 { font-size:13px; font-weight:700; line-height:1.3; }
+  .bcard .bf2 { font-size:11.5px; line-height:1.35; color:var(--ink-500); }
+  .gantt { display:grid; grid-template-columns:270px repeat(6,1fr); border:1px solid var(--ink-200); border-radius:12px; overflow:hidden; font-size:12px; }
+  .gantt > div { padding:8px 10px; border-bottom:1px solid var(--ink-100); display:flex; align-items:center; }
+  .gantt .gh { background:var(--et-black); color:#fff; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; justify-content:center; }
+  .gantt .gh:first-child { justify-content:flex-start; }
+  .gantt .gl { flex-direction:column; align-items:flex-start; justify-content:center; }
+  .gantt .gl b { font-size:13px; } .gantt .gl span { font-size:10.5px; color:var(--ink-500); line-height:1.3; }
+  .gantt .gc { padding:8px 4px; }
+  .gbar { width:100%; border-radius:7px; padding:6px 8px; font-size:11px; font-weight:700; color:#fff; background:var(--client-accent); line-height:1.25; }
+  .gbar.top { background:var(--et-red); } .gbar.soft { background:var(--client-accent-soft); color:var(--client-accent); } .gbar.dash { background:transparent; border:1.5px dashed var(--ink-300); color:var(--ink-500); font-weight:600; }
+  .gbar.later { background:var(--ink-200); color:var(--ink-700); }
+  .wf { display:grid; grid-template-columns:repeat(5,1fr); gap:0; margin-bottom:16px; counter-reset:wf; }
+  .wfs { position:relative; background:var(--subtle); border-radius:12px; padding:12px 14px; margin-right:22px; }
+  .wfs:last-child { margin-right:0; }
+  .wfs:not(:last-child)::after { content:"→"; position:absolute; right:-18px; top:50%; transform:translateY(-50%); font-weight:700; color:var(--et-red); font-size:16px; }
+  .wfs .wn { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--et-red); }
+  .wfs b { display:block; font-size:14.5px; margin:2px 0 3px; } .wfs span { font-size:11.5px; line-height:1.4; color:var(--ink-500); display:block; }
+  .trust { display:grid; grid-template-columns:1.25fr 60px 1fr 60px 1fr; align-items:center; }
+  .tgroup { background:#fff; border:1px solid var(--ink-200); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+  .tgroup h5 { font-size:10.5px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-500); margin-bottom:7px; }
+  .tchip { display:block; font-size:12.5px; line-height:1.35; padding:6px 10px; margin-bottom:5px; border-radius:8px; background:var(--ink-50); border-left:3px solid var(--client-accent); }
+  .tgroup.off .tchip { border-left-color:var(--et-red); }
+  .tarrow { text-align:center; font-size:30px; color:var(--ink-300); font-weight:700; }
+  .tbox { border-radius:14px; padding:18px; text-align:center; }
+  .tbox.mid { background:var(--client-accent); color:#fff; } .tbox.mid b { font-size:18px; display:block; margin-bottom:6px; } .tbox.mid span { font-size:12.5px; color:rgba(255,255,255,0.8); display:block; line-height:1.5; }
+  .tbox.end { background:#fff8e8; border:2px solid var(--et-honey); } .tbox.end b { font-size:18px; display:block; margin-bottom:6px; } .tbox.end span { font-size:12.5px; color:var(--ink-600); display:block; line-height:1.5; }
+  .tbox .tbig { font-size:34px; font-weight:700; color:var(--et-red); line-height:1.1; margin-top:8px; }
+  .pairbars .pr { display:grid; grid-template-columns:140px 1fr; gap:4px 12px; align-items:center; margin-bottom:12px; }
+  .pairbars .pl { font-size:13px; font-weight:700; grid-row:span 2; } .pairbars .pl small { display:block; font-size:10.5px; font-weight:400; color:var(--ink-500); }
+  .pairbars .pb { display:flex; align-items:center; gap:8px; font-size:11.5px; font-weight:700; }
+  .pairbars .pb i { display:block; height:16px; border-radius:4px; }
+  .lflow { display:grid; grid-template-columns:1.2fr 18px 1.1fr 18px 0.95fr; gap:6px 0; align-items:stretch; font-size:12px; }
+  .lflow .lh { font-size:9.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); padding:0 8px 2px; }
+  .lflow .lc { background:var(--subtle); border-radius:8px; padding:7px 9px; line-height:1.35; }
+  .lflow .lc.pg { background:var(--client-accent-soft); color:var(--client-accent); font-weight:700; font-family:ui-monospace,Menlo,monospace; font-size:11px; display:flex; align-items:center; }
+  .lflow .la { color:var(--et-red); font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .heat td.hc { text-align:center; font-weight:700; font-size:12.5px; }
+  .heat td.h1 { background:#1f8a4c !important; color:#fff; } .heat td.h2 { background:#7fd1a2 !important; color:#0d3d22; } .heat td.h3 { background:#ffe3a3 !important; color:#6b4a00; } .heat td.h4 { background:#ffd0d1 !important; color:#8a1c1f; } .heat td.h0 { background:var(--ink-100) !important; color:var(--ink-500); font-weight:400; }
+  .heat th.hc { text-align:center; }
+  .ccards { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .ccard { background:#fff; border:1px solid var(--ink-200); border-radius:12px; padding:14px 16px; border-top:5px solid var(--ink-300); }
+  .ccard.tf { border-top-color:var(--client-accent); background:var(--client-accent-soft); }
+  .ccard h4 { font-size:17px; font-weight:700; margin-bottom:2px; } .ccard .cs { font-size:10.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-500); margin-bottom:8px; }
+  .ccard .cbig { font-size:28px; font-weight:700; line-height:1.05; } .ccard .cbl { font-size:11.5px; color:var(--ink-500); margin-bottom:8px; }
+  .ccard ul { list-style:none; } .ccard li { font-size:12.5px; line-height:1.4; padding-left:14px; position:relative; margin-bottom:4px; color:var(--ink-700); }
+  .ccard li::before { content:"·"; position:absolute; left:2px; font-weight:700; color:var(--et-red); }
+  .donut { display:flex; align-items:center; gap:10px; }
+  @media (max-width: 900px) {
+    .flow, .board, .wf, .trust, .lflow { grid-template-columns:1fr !important; }
+    .fnode, .wfs { margin-right:0; margin-bottom:10px; } .fnode::after, .wfs::after { display:none; }
+    .gantt { grid-template-columns:150px repeat(6,minmax(48px,1fr)); overflow-x:auto; }
+    .tarrow, .lflow .la { transform:rotate(90deg); }
+  }
+  @media (max-width: 900px) {
+    :root { --pad-x:22px; }
+    .two-col, .three-col, .four-col, .lab-field, .case, .hubgrid { grid-template-columns:1fr !important; }
+    .two-col > *, .three-col > *, .four-col > *, .lab-field > * { min-width:0; }
+    .bar { grid-template-columns:110px 1fr 56px !important; }
+    h1 { font-size:40px; } h2 { font-size:26px; }
+    .bar { grid-template-columns:110px 1fr 56px; }
+    .slide { overflow-x:hidden; padding-top:28px; }
+    .slide > *, .fill > * { min-width:0; max-width:100%; }
+    .subtitle, h2 { max-width:100%; }
+    .slide table { display:block; overflow-x:auto; max-width:100%; }
+    .articles-scroll table { display:table; }
+    .dots, #nav .brand { display:none; }
+    .stat .v { font-size:28px; }
+    .divider .idx { font-size:80px; }
+    .rm-col, .pillar { padding:16px; }
+  }
+</style>
+
+</head>
+<body>
+<!-- 01 -->
+<section class="slide cover active" data-screen-label="01">
+<div>
+  <div class="cover-logo"><img src="../images/embertribe-logo.svg" alt="EmberTribe"></div>
+  <div class="accent-rule"></div>
+  <div class="label">SEO Foundation · Prepared by EmberTribe · November 2026</div>
+  <h1>Detail King</h1>
+  <p class="subtitle" style="color:rgba(255,255,255,0.92);font-size:20px;max-width:1000px">Your collection pages showed up in Google 1.1 million times in the last 90 days, and fewer than 1 in 100 of those searchers clicked through. The product pages are being rewritten. This is the plan for the structure around them.</p>
+  <div class="stats">
+    <div class="stat"><div class="v">11,326</div><div class="k">Organic sessions in October 2026, down from 25,550 in March (GA4)</div></div>
+    <div class="stat"><div class="v">62</div><div class="k">Collections already on Google's page 1 or 2, with 987,223 impressions and 0.8% clicked in 90 days</div></div>
+    <div class="stat"><div class="v">267</div><div class="k">Searches where two or more of your own pages compete for the same spot</div></div>
+    <div class="stat"><div class="v">~13,000</div><div class="k">Month 12 base case, organic sessions a month, from the collection work alone</div></div>
+  </div>
+  <div class="meta"><div>Prepared for<b>Detail King</b></div><div>Data<b>GA4, Search Console and Shopify through Nov 17, 2026; SEMrush Nov 18, 2026</b></div><div>Scope<b>Site structure, collections, technical SEO</b></div></div>
+</div>
+</section>
+
+<!-- 02 -->
+<section class="slide divider" data-screen-label="02">
+<div><div class="label">Section 01</div><div class="idx">01</div><div class="rule"></div>
+<h1 style="font-size:72px">Where we start</h1><p class="subtitle" style="font-size:20px;max-width:820px">Thirteen months of organic traffic, where Google sends people on your site, and which of those visits turn into orders.</p></div>
+</section>
+
+<!-- 03 -->
+<section class="slide" data-screen-label="03">
+<div class="head"><div class="label">Why traffic dropped · Search Console</div>
+<h2>Traffic fell in three places, for three different reasons.</h2>
+<p class="subtitle">Google clicks went from 14,701 in October 2025 to 8,303 in October 2026. Comparing the same month a year apart takes the slow season out of the picture.</p></div>
+<div class="two-col" style="grid-template-columns:1fr 1.5fr">
+  <div>
+    <h3>Where the 6,398 lost clicks came from</h3>
+    <div class="bars">
+      <div class="bar"><div class="bl">Collection pages</div><div class="bt"><div class="bf red" style="width:100%"></div></div><div class="bv">−3,592</div></div>
+      <div class="bar"><div class="bl">blog.detailking.com</div><div class="bt"><div class="bf honey" style="width:65.8%"></div></div><div class="bv">−2,363</div></div>
+      <div class="bar"><div class="bl">Product pages and other</div><div class="bt"><div class="bf" style="width:12.3%"></div></div><div class="bv">−443</div></div>
+    </div>
+    <p class="fine">Collections were 56% of the loss, the blog 37%, everything else 7%.</p>
+    <div class="callout good" style="margin-top:14px"><strong>Ruled out.</strong> Brand demand: clicks on searches for "detail king" nearly doubled, 427 to 841 in October. Tracking: Search Console is Google's own click count, so ad attribution doesn't touch it, and Google's 2025 change to impression counting affects impressions, not clicks.</div>
+  </div>
+  <div>
+    <h3>What happened, and when</h3>
+    <table class="mini">
+      <thead><tr><th>Area</th><th>What changed</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="strong">Collections</td><td>Weekly clicks slid from about 2,000 in early March to 1,400 by late May and 1,000 by late June, after Google's core updates of Mar 27 – Apr 8 and May 21 – Jun 2. The slide continued into the fall.</td><td>Core updates reward pages that answer the search. 188 of 288 collections have no description and 267 searches split between two of your pages, which left them exposed. This roadmap targets both.</td></tr>
+        <tr><td class="strong">Blog</td><td>A steady decline, then the steepest drop from Aug 3 to Aug 31 (about 640 to 350 clicks a week), overlapping Google's Aug 18–21 spam update.</td><td>Most blog traffic is how-to questions that Google's AI answers now handle on the results page. The blog earned no orders, so the revenue impact is small.</td></tr>
+        <tr><td class="strong">Product listings</td><td>Clicks from product results in Google fell from about 280 a week to 215 in June, when the product feed app changed, and to about 100 a week in September.</td><td>Products missing from the feed can't show in those results. Worth confirming the feed is complete, since it affects ads and these free results alike.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<p class="src">Sources: Search Console (sc-domain:detailking.com), clicks by month and by week, October 2025 and October 2026; Google Search Status Dashboard for update dates. Updates line up with the drops in time; Google doesn't confirm which sites an update affects.</p>
+</section>
+
+<section class="slide" data-screen-label="04">
+<div class="head"><div class="label">Baseline · GA4</div>
+<h2>Organic traffic peaked in March, then fell every month to 11,326 in October.</h2>
+<p class="subtitle">Monthly sessions from the Organic Search channel in your GA4 property. October 2026 is 53% below October 2025, so this is more than the usual slow season.</p></div>
+<div class="two-col" style="grid-template-columns:1.6fr 1fr">
+  <div class="chart-wrap"><div class="fine" style="margin-bottom:6px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase">Organic sessions · Oct 2025 to Oct 2026</div>
+  <svg viewBox="0 0 680 230" width="100%" style="display:block" role="img" aria-label="GA4 organic sessions by month, October 2025 to October 2026">
+    <g stroke="rgba(0,0,0,0.08)" stroke-width="1"><line x1="56" y1="190" x2="650" y2="190"/><line x1="56" y1="133.3" x2="650" y2="133.3"/><line x1="56" y1="76.7" x2="650" y2="76.7"/><line x1="56" y1="20" x2="650" y2="20"/></g>
+    <g fill="#6b6b6b" font-size="11" font-family="Quatro" text-anchor="end"><text x="48" y="194">0</text><text x="48" y="137.3">10K</text><text x="48" y="80.7">20K</text><text x="48" y="24">30K</text></g>
+    <polygon points="60,190 60,53.7 108.3,97.3 156.7,101.9 205,91.1 253.3,87.2 301.7,45.2 350,64.1 398.3,72 446.7,90.2 495,96.3 543.3,104.8 591.7,121.6 640,125.8 640,190" fill="rgba(61,71,82,0.12)"/>
+    <polyline fill="none" stroke="#3d4752" stroke-width="3" points="60,53.7 108.3,97.3 156.7,101.9 205,91.1 253.3,87.2 301.7,45.2 350,64.1 398.3,72 446.7,90.2 495,96.3 543.3,104.8 591.7,121.6 640,125.8"/>
+    <g fill="#3d4752"><circle cx="60" cy="53.7" r="3.5"/><circle cx="108.3" cy="97.3" r="3.5"/><circle cx="156.7" cy="101.9" r="3.5"/><circle cx="205" cy="91.1" r="3.5"/><circle cx="253.3" cy="87.2" r="3.5"/><circle cx="301.7" cy="45.2" r="3.5"/><circle cx="350" cy="64.1" r="3.5"/><circle cx="398.3" cy="72" r="3.5"/><circle cx="446.7" cy="90.2" r="3.5"/><circle cx="495" cy="96.3" r="3.5"/><circle cx="543.3" cy="104.8" r="3.5"/><circle cx="591.7" cy="121.6" r="3.5"/></g>
+    <circle cx="640" cy="125.8" r="4.5" fill="#FF333C"/>
+    <g fill="#6b6b6b" font-size="10.5" font-family="Quatro" text-anchor="middle"><text x="60" y="208">Oct</text><text x="108.3" y="208">Nov</text><text x="156.7" y="208">Dec</text><text x="205" y="208">Jan</text><text x="253.3" y="208">Feb</text><text x="301.7" y="208">Mar</text><text x="350" y="208">Apr</text><text x="398.3" y="208">May</text><text x="446.7" y="208">Jun</text><text x="495" y="208">Jul</text><text x="543.3" y="208">Aug</text><text x="591.7" y="208">Sep</text><text x="640" y="208">Oct</text></g>
+    <text x="60" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="#3d4752">24,046</text>
+    <text x="301.7" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#3d4752">25,550</text>
+    <text x="628" y="115" text-anchor="end" font-size="12" font-weight="700" fill="#FF333C">11,326</text>
+  </svg></div>
+  <div>
+    <div class="stats" style="flex-direction:column;gap:12px">
+      <div class="stat"><div class="v accent">25,550</div><div class="k">March 2026, the high point of the last 13 months</div></div>
+      <div class="stat"><div class="v bad">11,326</div><div class="k">October 2026: down 56% on March and 53% on October 2025 (24,046)</div></div>
+      <div class="stat"><div class="v">17,900</div><div class="k">13-month average, October 2025 to October 2026</div></div>
+    </div>
+  </div>
+</div>
+<div class="callout mt"><strong>Where the clicks went, March to October (Search Console):</strong> collections lost 5,952 clicks (70%) and the blog 2,643 (66%), together 70% of the 12,208 lost. Product pages fell less: the rewritten ones by 53%, the untouched ones by 46%. The 34 pages rewritten in August had lost most of that before they went live, and since then they have lost 25% against 40% for untouched pages. Spanish pages fell 13%.</div>
+<p class="src">Source: GA4 property 272692639, Organic Search channel, monthly sessions. Click split: Search Console page data, March and October 2026. Before and after the August rewrite: Search Console clicks, July 21 to August 17 vs October 18 to November 14, 2026, against the 675 product pages left untouched.</p>
+</section>
+
+<!-- 04 -->
+<section class="slide" data-screen-label="05">
+<div class="head"><div class="label">Baseline · Search Console + GA4</div>
+<h2>Collections get the most Google clicks. They bring 6.5% of organic revenue.</h2>
+<p class="subtitle">Last 90 days. 73% of the clicks come from searches that don't mention Detail King, so most visitors are still choosing where to buy.</p></div>
+<div class="two-col">
+  <div>
+    <h3>Where Google's clicks land (Search Console)</h3>
+    <div class="bars">
+      <div class="bar"><div class="bl">Collection pages</div><div class="bt"><div class="bf" style="width:100%"></div></div><div class="bv">8,416</div></div>
+      <div class="bar"><div class="bl">Product pages</div><div class="bt"><div class="bf" style="width:87.8%"></div></div><div class="bv">7,388</div></div>
+      <div class="bar"><div class="bl">blog.detailking.com</div><div class="bt"><div class="bf honey" style="width:51.2%"></div></div><div class="bv">4,306</div></div>
+      <div class="bar"><div class="bl">Homepage and other</div><div class="bt"><div class="bf" style="width:38.6%"></div></div><div class="bv">3,252</div></div>
+      <div class="bar"><div class="bl">Spanish pages (/es/)</div><div class="bt"><div class="bf" style="width:26.4%"></div></div><div class="bv">2,223</div></div>
+      <div class="bar"><div class="bl">Static pages</div><div class="bt"><div class="bf" style="width:12.9%"></div></div><div class="bv">1,087</div></div>
+    </div>
+    <p class="fine">Clicks summed by landing URL, August 17 to November 14, 2026. Branded searches ("detail king" and its spellings): 27% of clicks; non-brand: 73%.</p>
+  </div>
+  <div>
+    <h3>Organic revenue by landing page (GA4)</h3>
+    <table class="mini">
+      <thead><tr><th>Landing page</th><th class="num">Sessions</th><th class="num">Orders</th><th class="num">Revenue</th></tr></thead>
+      <tbody>
+        <tr><td>Homepage</td><td class="num">3,964</td><td class="num">161</td><td class="num strong">$34,326</td></tr>
+        <tr><td>Product pages</td><td class="num">10,821</td><td class="num">107</td><td class="num">$23,276</td></tr>
+        <tr><td>Other store paths</td><td class="num">1,841</td><td class="num">31</td><td class="num">$14,148</td></tr>
+        <tr><td><strong>Collection pages</strong></td><td class="num">10,081</td><td class="num">38</td><td class="num down">$5,136</td></tr>
+        <tr><td>Static pages</td><td class="num">1,129</td><td class="num">7</td><td class="num">$2,046</td></tr>
+        <tr><td>Spanish pages</td><td class="num">1,656</td><td class="num">1</td><td class="num">$110</td></tr>
+        <tr><td><strong>blog.detailking.com</strong></td><td class="num">6,059</td><td class="num">0</td><td class="num down">$0</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>The gap:</strong> collection pages draw as many organic visits as product pages and convert at 0.38%, against 0.99% for product pages and 4.06% for the homepage. The blog brings 6,059 visits and no orders.</div>
+  </div>
+</div>
+<p class="src">Sources: Search Console (sc-domain:detailking.com), GA4 Organic Search sessions, August 20 to November 17, 2026.</p>
+</section>
+
+<!-- 05 -->
+<section class="slide divider" data-screen-label="06">
+<div><div class="label">Section 02</div><div class="idx">02</div><div class="rule"></div>
+<h1 style="font-size:72px">The competitive landscape</h1><p class="subtitle" style="font-size:20px;max-width:820px">Four multi-brand detailing stores that sell what you sell and compete for the same searches.</p></div>
+</section>
+
+<!-- 06 -->
+<section class="slide" data-screen-label="07">
+<div class="head"><div class="label">Domain comparison · SEMrush</div>
+<h2>You are close to Car Supplies Warehouse on authority and have more linking sites. It gets 64% more organic traffic.</h2>
+<p class="subtitle">The four stores SEMrush finds competing with you most often, filtered to retailers that carry several brands of chemicals and equipment.</p></div>
+<table>
+  <thead><tr><th>Domain</th><th class="num">Authority Score</th><th class="num">Referring domains</th><th class="num">Ranking keywords</th><th class="num">Organic traffic / mo</th><th class="num">Keywords shared with you</th></tr></thead>
+  <tbody>
+    <tr><td><strong>detailking.com</strong></td><td class="num strong">33</td><td class="num strong">5.9K</td><td class="num strong">14.1K</td><td class="num strong">14.8K</td><td class="num">·</td></tr>
+    <tr><td>carsupplieswarehouse.com</td><td class="num">36</td><td class="num">4.1K</td><td class="num">16.8K</td><td class="num up">24.3K</td><td class="num">1.6K</td></tr>
+    <tr><td>autogeek.net</td><td class="num">38</td><td class="num">9.5K</td><td class="num">12.3K</td><td class="num up">33.6K</td><td class="num">1.2K</td></tr>
+    <tr><td>clean-garage.com</td><td class="num">24</td><td class="num">5.2K</td><td class="num">10.1K</td><td class="num up">17.4K</td><td class="num">986</td></tr>
+    <tr><td>detailing.com</td><td class="num">29</td><td class="num">7.3K</td><td class="num">11.3K</td><td class="num">14.4K</td><td class="num">946</td></tr>
+  </tbody>
+</table>
+<div class="two-col mt">
+  <div class="callout info"><strong>Authority is not the gap.</strong> Your Authority Score sits in the middle of the group, and you have more referring domains than Car Supplies Warehouse. Links alone won't close a 64% traffic gap.</div>
+  <div class="callout"><strong>Structure is.</strong> Clean Garage has a lower Authority Score than you (24 against 33) and still gets 18% more traffic. The next slide shows where: category searches won by collection pages.</div>
+</div>
+<p class="src">Source: SEMrush, US database, pulled November 18, 2026 (traffic data dated November 12). Traffic and keywords are SEMrush estimates (desktop); referring domains and Authority Score from Backlink Analytics.</p>
+</section>
+
+<!-- 07 -->
+<section class="slide" data-screen-label="08">
+<div class="head"><div class="label">Keyword gap · SEMrush + Search Console</div>
+<h2>Competitors win the big category searches with collection pages. Yours sit on pages 2 to 4, or nowhere.</h2>
+<p class="subtitle">SEMrush finds 1,153 non-brand category searches (difficulty 49 or lower) where a competitor's collection ranks top 10 and you are not in the top 20. The biggest, checked against your Search Console data; you sell every one of these categories.</p></div>
+<table class="mini">
+  <thead><tr><th>Search</th><th class="num">Searches / mo</th><th>Competitor page that ranks</th><th>Your page Google shows</th><th class="num">Your avg position</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ceramic coating</strong></td><td class="num">40,500</td><td>Car Supplies Warehouse collection · #5</td><td>Ceramic Coatings collection</td><td class="num down">21.7</td></tr>
+    <tr><td><strong>upholstery cleaner</strong></td><td class="num">40,500</td><td>detailing.com collection · #8</td><td>No page shows regularly</td><td class="num down">·</td></tr>
+    <tr><td><strong>car vacuum</strong></td><td class="num">27,100</td><td>Car Supplies Warehouse collection · #8</td><td>Vacuums collection</td><td class="num down">33.7</td></tr>
+    <tr><td><strong>car air freshener</strong></td><td class="num">22,200</td><td>detailing.com collection · #5</td><td>No page shows regularly</td><td class="num down">·</td></tr>
+    <tr><td><strong>car cleaning kit</strong></td><td class="num">9,900</td><td>Car Supplies Warehouse collection · #10</td><td>Detail King Value Kits collection</td><td class="num down">19.3</td></tr>
+    <tr><td><strong>tire shine</strong></td><td class="num">9,900</td><td>Car Supplies Warehouse collection · #6</td><td>3D Tire Shine product page</td><td class="num down">25.5</td></tr>
+    <tr><td><strong>car carpet cleaner</strong></td><td class="num">8,100</td><td>Car Supplies Warehouse collection · #5</td><td>Car Carpet Shampoo product page</td><td class="num down">21.2</td></tr>
+    <tr><td><strong>dual action polisher</strong></td><td class="num">5,400</td><td>Car Supplies Warehouse collection · #2</td><td>Flex collection</td><td class="num down">20.3</td></tr>
+    <tr><td><strong>buffing pads</strong></td><td class="num">2,900</td><td>detailing.com collection · #6</td><td>Rotary Pads &amp; Accessories collection</td><td class="num down">26.8</td></tr>
+  </tbody>
+</table>
+<div class="callout mt"><strong>The pattern:</strong> generic searches are won by category collections. For several of these, Google shows one of your products or a brand collection instead, because none of your collections is built for that search.</div>
+<p class="src">Searches and competitor positions: SEMrush, US, desktop, November 17, 2026. Your position: Search Console, impression-weighted average over 90 days. SEMrush volumes are estimates; we use them to rank, not to forecast.</p>
+</section>
+
+<!-- 08 -->
+<section class="slide divider" data-screen-label="09">
+<div><div class="label">Section 03</div><div class="idx">03</div><div class="rule"></div>
+<h1 style="font-size:72px">The technical foundation</h1><p class="subtitle" style="font-size:20px;max-width:860px">What stops the pages you already have from ranking and converting: collections, pages competing with each other, the blog, the Spanish site and the templates.</p></div>
+</section>
+
+<!-- 09 -->
+<section class="slide" data-screen-label="10">
+<div class="head"><div class="label">Collections · Search Console</div>
+<h2>62 collections already sit on page 1 or 2. Fewer than 1 in 100 searchers click them.</h2>
+<p class="subtitle">Collections with 2,000+ impressions and an average position between 4 and 20 in the last 90 days: 987,223 impressions, 7,721 clicks. On your own store pages, non-brand searches get clicked 0.22% of the time in positions 11 to 20, 0.63% in positions 4 to 10 and 1.26% in the top 3.</p></div>
+<table class="mini">
+  <thead><tr><th>Collection</th><th class="num">Impressions</th><th class="num">Clicks</th><th class="num">Click rate</th><th class="num">Avg position</th><th class="num">Description words</th><th>Meta description</th></tr></thead>
+  <tbody>
+    <tr><td>All Tools &amp; Supplies</td><td class="num">116,579</td><td class="num">848</td><td class="num">0.73%</td><td class="num">10.7</td><td class="num">124</td><td class="status-ok">Yes</td></tr>
+    <tr><td>Carpet Extractors</td><td class="num">60,043</td><td class="num">504</td><td class="num">0.84%</td><td class="num">8.8</td><td class="num">152</td><td class="status-ok">Yes</td></tr>
+    <tr><td>All Equipment</td><td class="num">58,077</td><td class="num">576</td><td class="num">0.99%</td><td class="num">14.3</td><td class="num">157</td><td class="status-bad">No</td></tr>
+    <tr><td>Tornador</td><td class="num">54,382</td><td class="num">502</td><td class="num">0.92%</td><td class="num">8.4</td><td class="num">386</td><td class="status-ok">Yes</td></tr>
+    <tr><td>Brushes</td><td class="num">48,084</td><td class="num">80</td><td class="num down">0.17%</td><td class="num">13.2</td><td class="num">176</td><td class="status-ok">Yes</td></tr>
+    <tr><td>Water Tanks</td><td class="num">31,350</td><td class="num">876</td><td class="num up">2.79%</td><td class="num">6.7</td><td class="num">310</td><td class="status-ok">Yes</td></tr>
+    <tr><td>Pressure Washers</td><td class="num">30,217</td><td class="num">189</td><td class="num">0.63%</td><td class="num">17.8</td><td class="num down">0</td><td class="status-ok">Yes</td></tr>
+    <tr><td>Vacuums</td><td class="num">28,347</td><td class="num">163</td><td class="num">0.58%</td><td class="num">14.3</td><td class="num down">0</td><td class="status-ok">Yes</td></tr>
+  </tbody>
+</table>
+<div class="two-col mt">
+  <div class="callout"><strong>188 of your 288 collections have no description at all,</strong> including Pressure Washers and Vacuums above, and Carpet Dyeing (29,607 impressions). Most of the others carry 100 to 300 words placed below the products: on Carpet Extractors the description starts about 5,700 pixels down the page.</div>
+  <div class="callout info"><strong>Water Tanks shows what a well-matched collection does:</strong> position 6.7 and a 2.79% click rate, more than three times the group's 0.78%.</div>
+</div>
+<p class="src">Search Console, August 17 to November 14, 2026, collection URLs on www.detailking.com. Descriptions read from your Shopify collection description field, November 18, 2026.</p>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-screen-label="11">
+<div class="head"><div class="label">Pages competing with each other · Search Console</div>
+<h2>On 267 searches, two or more of your pages split Google's attention.</h2>
+<p class="subtitle">Searches with 300+ impressions in 90 days where a second Detail King URL takes at least 15% of the impressions: 261,112 impressions in total. When two of your pages compete, Google often alternates between them and neither holds a strong position.</p></div>
+<table class="mini">
+  <thead><tr><th>Search</th><th class="num">Impressions</th><th>Page 1 (position)</th><th>Page 2 (position)</th></tr></thead>
+  <tbody>
+    <tr><td><strong>detailing courses online</strong></td><td class="num">14,817</td><td>Blog video: hands-on training course (7.5)</td><td>Training page (3.6)</td></tr>
+    <tr><td><strong>headlight restoration</strong></td><td class="num">12,414</td><td>Headlight Restoration collection (17.8)</td><td>Professional Headlight Restoration Kit (14.9)</td></tr>
+    <tr><td><strong>carpet dye</strong></td><td class="num">11,116</td><td>Carpet Dyeing collection (6.8)</td><td>Blog video: dye carpet with liquid dye (11.8)</td></tr>
+    <tr><td><strong>mytee extractor</strong></td><td class="num">8,007</td><td>Mytee extractors, accessories &amp; parts page (7.9)</td><td>Mytee Extractors collection (5.6)</td></tr>
+    <tr><td><strong>dewalt polisher</strong></td><td class="num">7,907</td><td>DeWalt Polishers &amp; Accessories collection (9.4)</td><td>DeWalt DWP849X product page (12.1)</td></tr>
+    <tr><td><strong>dewalt buffer</strong></td><td class="num">6,500</td><td>DeWalt Polishers &amp; Accessories collection (9.1)</td><td>DeWalt collection (9.4)</td></tr>
+    <tr><td><strong>car wash brush</strong></td><td class="num">5,901</td><td>Exterior Brushes collection (10.0)</td><td>Wash Brushes collection (10.8)</td></tr>
+    <tr><td><strong>mytee 8070</strong></td><td class="num">4,076</td><td>Blog video: Mytee Lite 8070 (8.6)</td><td>Mytee Lite III 8070 product page (8.2)</td></tr>
+  </tbody>
+</table>
+<div class="three-col mt">
+  <div class="stat"><div class="v">56K</div><div class="k">Impressions split between a collection and a product page</div></div>
+  <div class="stat"><div class="v">54K</div><div class="k">Split between two collections (three brush collections, two DeWalt collections)</div></div>
+  <div class="stat"><div class="v honey">88K</div><div class="k">Split between blog.detailking.com and a store page</div></div>
+</div>
+<p class="src">Search Console query and page data, August 17 to November 14, 2026, English pages only.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-screen-label="12">
+<div class="head"><div class="label">The blog · blog.detailking.com</div>
+<h2>The blog reaches 27% of your Google impressions, and no GA4-tracked order started there in 90 days.</h2>
+<p class="subtitle">blog.detailking.com is a separate WordPress site. 857 of its URLs appeared in Google in the last 90 days, 6,059 organic visits started there, and none of them led to an order.</p></div>
+<div class="two-col">
+  <div>
+    <div class="stats">
+      <div class="stat"><div class="v">920,915</div><div class="k">Google impressions on the blog in 90 days (27% of your total)</div></div>
+      <div class="stat"><div class="v">4,306</div><div class="k">Clicks to the blog (16% of your total)</div></div>
+      <div class="stat"><div class="v bad">0</div><div class="k">Orders from 6,059 organic sessions that started on the blog</div></div>
+    </div>
+    <div class="callout mt"><strong>Video pages compete with the products they show.</strong> The blog's /video/ pages drew 161,933 impressions. The Mytee Lite 8070 video page ranks next to the Mytee 8070 product page for the same searches and has no link to it.</div>
+  </div>
+  <div>
+    <h3>The most-read articles and their links into the store</h3>
+    <table class="mini">
+      <thead><tr><th>Article</th><th class="num">Impressions</th><th class="num">Clicks</th><th>Links to the store</th></tr></thead>
+      <tbody>
+        <tr><td>Remove sour milk smell from a car</td><td class="num">71,567</td><td class="num">545</td><td>2 product links</td></tr>
+        <tr><td>Guide to ozone generators</td><td class="num">60,126</td><td class="num">437</td><td>1 collection, 1 product link</td></tr>
+        <tr><td>How to start a detailing business</td><td class="num">52,118</td><td class="num">289</td><td>No product or collection link</td></tr>
+        <tr><td>How to remove car seats</td><td class="num">28,109</td><td class="num">254</td><td>3 product, 1 collection link</td></tr>
+        <tr><td>The best interior detailing tools</td><td class="num">24,914</td><td class="num">165</td><td>6 product, 4 collection links</td></tr>
+      </tbody>
+    </table>
+    <p class="fine">Links counted in the article body, November 18 and 19, 2026.</p>
+  </div>
+</div>
+<p class="src">Search Console and GA4 (Organic Search sessions by landing host), last 90 days.</p>
+</section>
+
+<!-- 12 SPANISH (placeholder) -->
+<section class="slide" data-screen-label="13">
+<div class="head"><div class="label">The Spanish site · /es/</div>
+<h2>Your Spanish pages still show the old product text, and they sell almost nothing.</h2>
+<p class="subtitle">Shopify translates the store into Spanish at /es/. The translations were made once and did not follow the English rewrites: on 71 of the 79 rewritten product pages we could compare, the Spanish description still has the old structure and length.</p></div>
+<div class="two-col">
+  <div>
+    <div class="stats">
+      <div class="stat"><div class="v">2,223</div><div class="k">Google clicks to Spanish pages in 90 days (8% of all clicks)</div></div>
+      <div class="stat"><div class="v bad">1</div><div class="k">Order from 1,656 organic sessions that started on a Spanish page ($110)</div></div>
+      <div class="stat"><div class="v">71 of 79</div><div class="k">Rewritten product pages whose Spanish version is still the old text (none of 20 untouched pages show the same mismatch)</div></div>
+    </div>
+    <div class="callout info mt"><strong>The setup itself is correct:</strong> on the pages we checked, the English page and its Spanish twin point to each other (hreflang), so Google shows the Spanish page to Spanish searchers, not instead of the English one.</div>
+  </div>
+  <div>
+    <h3>What a Spanish searcher sees today</h3>
+    <table class="mini">
+      <thead><tr><th>English product</th><th>Spanish title on the live page</th></tr></thead>
+      <tbody>
+        <tr><td>Bug Remover</td><td>"Eliminador de errores" (remover of software errors)</td></tr>
+        <tr><td>Mytee LITE III 8070</td><td>Old title with "*** Plazo de entrega de 1 semana" (1-week lead time)</td></tr>
+        <tr><td>Koch-Chemie Green Star</td><td>"Estrella verde de Koch-Chemie" (brand name translated)</td></tr>
+        <tr><td>Mytee Demand Pump</td><td>"***PREVENTA***" (pre-order) in the title</td></tr>
+      </tbody>
+    </table>
+    <div class="callout mt"><strong>Your call:</strong> either translate the rewritten pages again from the current English and keep brand and product names untranslated, or leave the Spanish site as it is and accept that it trails the English one. Given 1 order in 90 days, we would not put the Spanish site ahead of the collections. Its clicks come mostly from the US and Mexico.</div>
+  </div>
+</div>
+<p class="src">Spanish vs English product descriptions compared on November 19, 2026 (headings, lists, tables and text length). Search Console and GA4, last 90 days.</p>
+</section>
+
+<!-- 13 TECH (placeholder) -->
+<section class="slide" data-screen-label="14">
+<div class="head"><div class="label">Template audit · Shopify + live pages</div>
+<h2>The templates hold up. The gaps are empty SEO fields and retired products without redirects.</h2>
+<p class="subtitle">We read the SEO fields of all 1,104 live products and 288 collections in Shopify, and fetched 513 live pages (every collection, every static page, the 150 products Google shows most, and the homepage).</p></div>
+<div class="two-col" style="grid-template-columns:1.5fr 1fr">
+  <table class="mini">
+    <thead><tr><th>Finding</th><th class="num">Count</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td>Product pages with broken safety-sheet, manual or product links (CRO audit)</td><td class="num">199</td><td><span class="pill p1">P1</span></td></tr>
+      <tr><td>Retired product URLs still in Google (13,954 impressions in 90 days); 11 of the 12 most-seen return a 404 with no redirect</td><td class="num">225</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>Collections with no meta description, All Equipment (58,077 impressions) among them</td><td class="num">193</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>Live products using the first lines of the description as their snippet (no written meta description)</td><td class="num">243</td><td><span class="pill p3">P3</span></td></tr>
+      <tr><td>Top-25 product pages whose review markup fails in Google (CRO audit)</td><td class="num">10</td><td><span class="pill p2">P2</span></td></tr>
+      <tr><td>"-mobile" copies of brand landing pages (Mytee, Tornador, Flex, MetroVac, Jade and others); 9 carry the same title as the original</td><td class="num">10</td><td><span class="pill p3">P3</span></td></tr>
+      <tr><td>Static pages with two or more H1 headings (Privacy Policy, Terms &amp; Conditions and others)</td><td class="num">33</td><td><span class="pill p3">P3</span></td></tr>
+      <tr><td>Product pages hidden from Google with noindex (Mytee Lite III 8070 230V, Garden Hose Foam Gun): confirm this is intended</td><td class="num">2</td><td><span class="pill p3">P3</span></td></tr>
+    </tbody>
+  </table>
+  <div>
+    <div class="callout good"><strong>What already works:</strong> every page we fetched carries a canonical tag pointing to itself, its structured data parses without errors, and no collection is blocked from Google. English and Spanish pages point to each other (hreflang) on the pages we checked. Real-visitor speed passes Core Web Vitals.</div>
+    <div class="callout warn mt"><strong>Retired products:</strong> Trim Black Paint, the Flex Cordless Blower and the Rupes LHR 75E Mini each drew 450 to 1,500 impressions in 90 days on pages that now return "not found". A redirect to the nearest live product or collection keeps that visitor, and from now on each retired product can get its redirect the day it comes down.</div>
+  </div>
+</div>
+<p class="src">Shopify Admin data and live fetches, November 18 and 19, 2026. Of the 513 pages, 503 loaded; 3 were rate-limited by the store, 1 timed out, and 6 no longer exist (4 test or unpublished collections, 2 retired products).</p>
+</section>
+
+<!-- 14 -->
+<section class="slide divider" data-screen-label="15">
+<div><div class="label">Section 04</div><div class="idx">04</div><div class="rule"></div>
+<h1 style="font-size:72px">Keyword architecture</h1><p class="subtitle" style="font-size:20px;max-width:860px">One page owns each search family. Collections own categories, product pages own models, the blog answers questions and points to both.</p></div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-screen-label="16">
+<div class="head"><div class="label">Architecture</div>
+<h2>Three hubs, built mostly from collections you already have.</h2>
+<p class="subtitle">Each hub is a category collection with its sub-collections and brand collections under it. Every generic search gets one owner; brand and model searches go to the brand collection or the product page.</p></div>
+<div class="hubgrid">
+  <div>
+    <div class="hubhead"><div class="hubsub">Hub 1</div><div class="hubname">Interior &amp; carpet care</div><div class="huburl">Carpet Extractors · 60,043 impressions</div></div>
+    <div class="hubstem"></div>
+    <div class="spokes"><span class="spk">Mytee Extractors</span><span class="spk">Carpet Dyeing</span><span class="spk">Interior Cleaning Solutions</span><span class="spk">Interior Scents &amp; Cleaners</span><span class="spk">Vapor Steamers</span><span class="spk">Vacuums</span></div>
+    <p class="fine mt">Owns: carpet extractor, upholstery cleaner, car carpet cleaner, car vacuum, car air freshener.</p>
+  </div>
+  <div>
+    <div class="hubhead"><div class="hubsub">Hub 2</div><div class="hubname">Paint correction &amp; protection</div><div class="huburl">Polishers · 21,229 impressions</div></div>
+    <div class="hubstem"></div>
+    <div class="spokes"><span class="spk">Flex</span><span class="spk">Rupes</span><span class="spk">DeWalt (one page)</span><span class="spk">Polisher Pads &amp; Accessories</span><span class="spk">Ceramic Coatings</span><span class="spk">Jade Ceramic</span><span class="spk">Koch-Chemie</span><span class="spk">Exterior Dressings/Conditioners</span><span class="spk">Headlight Restoration</span></div>
+    <p class="fine mt">Owns: dual action polisher (a new sub-collection under Polishers), buffing pads, ceramic coating, tire shine, headlight restoration.</p>
+  </div>
+  <div>
+    <div class="hubhead"><div class="hubsub">Hub 3</div><div class="hubname">Mobile detailing equipment</div><div class="huburl">All Equipment · 58,077 impressions</div></div>
+    <div class="hubstem"></div>
+    <div class="spokes"><span class="spk">Water Tanks</span><span class="spk">Pressure Washers</span><span class="spk">Tornador</span><span class="spk">Water Filtration</span><span class="spk">Start-Up Kits</span><span class="spk">Brushes</span><span class="spk">Exterior Brushes (Wash Brushes merged in)</span></div>
+    <p class="fine mt">Owns: water tank for detailing, pressure washer, tornador, car cleaning kit, car wash brush.</p>
+  </div>
+</div>
+<div class="callout mt"><strong>Owner decisions come first.</strong> For each split search on slide 10 we pick the page that should rank, point the other page's links to it, and, where two collections do the same job (Wash Brushes inside Exterior Brushes, the two DeWalt collections), merge them with a redirect. Every merge goes to you for approval before anything changes. Each merge retires one URL: we delete it, redirect it to the page that stays, and point menus, links and older redirects straight there. Pages that already rank keep their URLs, misspelled ones like /collections/carpet-dying included.</div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-screen-label="17">
+<div class="head"><div class="label">Quick wins</div>
+<h2>The ten collections to rebuild first carry nearly 400,000 impressions between them.</h2>
+<p class="subtitle">The first collections we rebuild, in order. Each gets two or three sentences above the products on what the collection covers and how to choose, a short how-to-choose section below them, 3 to 5 real buyer questions from Google and your Search Console data, links to its sub-collections and best sellers, and a title and meta description written for the search it owns.</p></div>
+<table class="mini">
+  <thead><tr><th>#</th><th>Collection</th><th>Search it should own</th><th class="num">Impressions</th><th class="num">Avg position</th><th>What changes</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Carpet Extractors</td><td>carpet extractor for detailing</td><td class="num">60,043</td><td class="num">8.8</td><td>Buying guide (heated vs cold, PSI, tank size); link Mytee and accessories</td></tr>
+    <tr><td>2</td><td>Brushes</td><td>car detailing brushes</td><td class="num">48,084</td><td class="num">13.2</td><td>Merge Wash Brushes into Exterior Brushes, which keeps "car wash brush"; one guide by surface linking exterior, interior and wheel brushes</td></tr>
+    <tr><td>3</td><td>Headlight Restoration</td><td>headlight restoration</td><td class="num">47,151</td><td class="num">12.7</td><td>Own the generic search; kit page keeps "headlight restoration kit"</td></tr>
+    <tr><td>4</td><td>Pressure Washers</td><td>pressure washer for detailing</td><td class="num">30,217</td><td class="num">17.8</td><td>First description; electric vs gas, PSI and GPM guide</td></tr>
+    <tr><td>5</td><td>Carpet Dyeing</td><td>carpet dye</td><td class="num">29,607</td><td class="num">6.3</td><td>First description; link the dye video into the collection</td></tr>
+    <tr><td>6</td><td>Vacuums</td><td>car vacuum</td><td class="num">28,347</td><td class="num">14.3</td><td>First description; wet/dry, shop vs portable</td></tr>
+    <tr><td>7</td><td>Koch-Chemie</td><td>koch chemie</td><td class="num">28,245</td><td class="num">9.0</td><td>Brand guide by step (wash, decon, polish, protect); dilution notes</td></tr>
+    <tr><td>8</td><td>Polishers</td><td>dual action polisher, car buffer</td><td class="num">21,229</td><td class="num">20.0</td><td>Comparison table across Flex, Rupes, DeWalt; one DeWalt page</td></tr>
+    <tr><td>9</td><td>Ceramic Coatings</td><td>ceramic coating</td><td class="num">44,532</td><td class="num">26.2</td><td>Pro vs DIY coatings, durability, prep products</td></tr>
+    <tr><td>10</td><td>All Equipment</td><td>auto detailing equipment</td><td class="num">58,077</td><td class="num">14.3</td><td>Meta description (missing); hub links to the equipment collections</td></tr>
+  </tbody>
+</table>
+<p class="src">Impressions and positions: Search Console, last 90 days. All but Ceramic Coatings sit in positions 6 to 20; Ceramic Coatings is included for the size of its category gap (slide 7).</p>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-screen-label="18">
+<div class="head"><div class="label">Authority</div>
+<h2>Your competitors' useful links come from owner and detailing forums. That is where buyers ask what to buy.</h2>
+<p class="subtitle">SEMrush lists 9,809 sites linking to your competitors and not to you; most are directories and scrapers worth nothing. Filtered to sites with an Authority Score of 30+ that link to at least two competitors, 60 remain: a few coupon and SEO-tool sites, and 39 car owner and detailing forums.</p></div>
+<div class="two-col">
+  <table class="mini">
+    <thead><tr><th>Site</th><th class="num">Authority</th><th class="num">Competitors it links to</th></tr></thead>
+    <tbody>
+      <tr><td>cumminsforum.com</td><td class="num">46</td><td class="num">2 of 4</td></tr>
+      <tr><td>bimmerfest.com</td><td class="num">45</td><td class="num">2 of 4</td></tr>
+      <tr><td>bimmerforums.com</td><td class="num">44</td><td class="num">2 of 4</td></tr>
+      <tr><td>garagejournal.com</td><td class="num">42</td><td class="num">3 of 4</td></tr>
+      <tr><td>swedespeed.com</td><td class="num">41</td><td class="num">3 of 4</td></tr>
+      <tr><td>ramforum.com</td><td class="num">38</td><td class="num">4 of 4</td></tr>
+      <tr><td>detailingworld.co.uk</td><td class="num">38</td><td class="num">2 of 4</td></tr>
+      <tr><td>diydetail.com</td><td class="num">31</td><td class="num">2 of 4</td></tr>
+    </tbody>
+  </table>
+  <div>
+    <div class="callout info"><strong>Links that bring visitors, measured page by page.</strong> Answers come from a named Detail King trainer, within each forum's vendor rules, and point at five pages from slide 16, a few links each. We read the effect in GA4 referral visits and in Search Console for those five pages.</div>
+    <ul class="dash mt">
+      <li>Forum threads where owners ask about extractors, polishers and water tanks are the natural place for an answer from a supplier that trains detailers.</li>
+      <li>Your training programs and certifications give these communities a reason to link that a parts store doesn't have.</li>
+      <li>No paid guest posts on unrelated lifestyle blogs.</li>
+    </ul>
+  </div>
+</div>
+<p class="src">SEMrush Backlink Gap, detailking.com against the four competitors, November 18, 2026.</p>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-screen-label="19">
+<div class="head"><div class="label">AI search</div>
+<h2>ChatGPT already sends you 2,059 visits a quarter, and they buy more often than Google visitors.</h2>
+<p class="subtitle">GA4 records an AI Assistant channel: 35 orders and $10,504 in the last 90 days, almost all from chatgpt.com. AI answers draw on pages that state product and category facts plainly.</p></div>
+<div class="three-col">
+  <div class="stat"><div class="v">2,059</div><div class="k">Sessions from chatgpt.com in 90 days (Gemini, Copilot, Perplexity and Claude add 75 more)</div></div>
+  <div class="stat"><div class="v good">1.64%</div><div class="k">Conversion rate from AI assistants, against 0.98% from Google organic</div></div>
+  <div class="stat"><div class="v">$10,504</div><div class="k">Revenue from AI assistant sessions in 90 days</div></div>
+</div>
+<div class="two-col mt">
+  <div class="callout info"><strong>Already in place:</strong> Shopify publishes an agent discovery sitemap and an agents.md file for your store, so AI shopping tools can read your catalog.</div>
+  <div class="callout"><strong>What we add:</strong> the review markup fix from the CRO audit (one product block with rating and price), collections that describe their category in plain facts, and blog answers that link to the product they recommend. The same work serves Google and AI answers.</div>
+</div>
+<p class="src">GA4 AI Assistant channel, August 20 to November 17, 2026; monthly sessions held between 661 and 830 from June to October.</p>
+</section>
+
+<!-- 19 -->
+<section class="slide divider" data-screen-label="20">
+<div><div class="label">Section 05</div><div class="idx">05</div><div class="rule"></div>
+<h1 style="font-size:72px">The roadmap</h1><p class="subtitle" style="font-size:20px;max-width:860px">Four months of structure work alongside the 25 product pages a month already in progress.</p></div>
+</section>
+
+<!-- 20 -->
+<section class="slide dark" data-screen-label="21">
+<div class="head"><div class="label">Roadmap · Months 1 to 4</div>
+<h2>Month 1 fixes what blocks the pages you have. Months 2 to 4 rebuild the collections.</h2></div>
+<div class="four-col">
+  <div class="rm-col"><div class="rm-m">Month 1</div><h4>Decide and fix</h4>
+    <ul><li>Owner page for each of the top 30 split searches; merge list (brushes, DeWalt, the Mytee and Rupes brand pages) for your approval; Tornador video pages link to the Tornadors collection</li>
+    <li>Meta descriptions and titles for the page 1 and 2 collections that lack them; the 4 Spanish titles on slide 12 corrected</li>
+    <li>Blog video pages and top articles link to the product or collection they cover</li>
+    <li>Broken safety-sheet links repointed (54 to copies already on the blog; the rest need the file from you)</li>
+    <li>Baseline report: positions and clicks for every collection in the plan</li></ul></div>
+  <div class="rm-col"><div class="rm-m">Month 2</div><h4>First 5 collections</h4>
+    <ul><li>Carpet Extractors, Brushes and Exterior Brushes, Headlight Restoration, Pressure Washers, Carpet Dyeing</li>
+    <li>Short intro above the products; how to choose and buyer questions below; links to sub-collections and best sellers</li>
+    <li>The month's 25 product pages link up to their collection</li>
+    <li>Review markup fix with Emplifi (TurnTo)</li></ul></div>
+  <div class="rm-col"><div class="rm-m">Month 3</div><h4>Next 5 + Spanish</h4>
+    <ul><li>Vacuums, Koch-Chemie, Polishers, Ceramic Coatings, All Equipment</li>
+    <li>If you keep the Spanish site: rewritten pages translated again from the current English, titles checked by hand</li>
+    <li>Forum answers from a named Detail King trainer, pointing at 5 of the rebuilt collections</li></ul></div>
+  <div class="rm-col"><div class="rm-m">Month 4</div><h4>Measure and extend</h4>
+    <ul><li>Positions and clicks for the 10 rebuilt collections against the Month 1 baseline</li>
+    <li>Next 5 collections from the page 1 and 2 list</li>
+    <li>Blog plan for your review, when you want to restart articles: questions that lead to a collection</li></ul></div>
+</div>
+<p class="fine mt">All changes to live pages go to Zach and Jason for review first, as the product pages do today.</p>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-screen-label="22">
+<div class="head"><div class="label">Technical work by month</div>
+<h2>Every technical item, its priority and its month.</h2></div>
+<table class="mini">
+  <thead><tr><th>Priority</th><th>Item</th><th>Where it comes from</th><th>Month</th></tr></thead>
+  <tbody>
+    <tr><td><span class="pill p1">P1</span></td><td>Pick owner pages and merge duplicate collections (with redirects)</td><td>267 split searches, slide 10</td><td>1</td></tr>
+    <tr><td><span class="pill p1">P1</span></td><td>Link blog video pages and top articles to their product or collection</td><td>Blog, slide 11</td><td>1</td></tr>
+    <tr><td><span class="pill p1">P1</span></td><td>Repoint broken safety-sheet and manual links</td><td>CRO audit, 199 pages</td><td>1</td></tr>
+    <tr><td><span class="pill p2">P2</span></td><td>Titles and meta descriptions for collections that lack them; products get theirs as they are rewritten</td><td>Template audit, slide 13</td><td>1 to 2</td></tr>
+    <tr><td><span class="pill p2">P2</span></td><td>One product block with price, rating and review count (set up with Emplifi)</td><td>CRO audit, Google stars</td><td>2</td></tr>
+    <tr><td><span class="pill p2">P2</span></td><td>A short intro field above the product grid; the current description stays below</td><td>Collections, slide 9</td><td>2</td></tr>
+    <tr><td><span class="pill p2">P2</span></td><td>Spanish pages translated again after each English rewrite</td><td>Spanish site, slide 12</td><td>3</td></tr>
+    <tr><td><span class="pill p3">P3</span></td><td>Lead times and pre-order notes out of product names</td><td>CRO audit</td><td>3</td></tr>
+    <tr><td><span class="pill p3">P3</span></td><td>Hero carousel loading (first slide first)</td><td>CRO audit, speed</td><td>4</td></tr>
+  </tbody>
+</table>
+</section>
+
+<!-- 22 -->
+<section class="slide dark" data-screen-label="23">
+<div class="head"><div class="label">Traffic trajectory</div>
+<h2>Base case: about 13,000 organic sessions a month by Month 12, from the collection work alone.</h2>
+<p class="subtitle">From October's 11,326. We count only what the collection plan can move: the 62 collections on page 1 or 2 drew about 2,570 Google clicks a month at a 0.78% click rate. The base case lifts those clicks 1.5 times, the upper case doubles them. Spring seasonality, the 25 product pages a month and a future blog plan are not counted.</p></div>
+<div class="chart-wrap">
+<svg viewBox="0 0 900 260" width="100%" style="display:block" role="img" aria-label="Projected organic sessions, Month 0 to Month 12">
+  <g stroke="rgba(255,255,255,0.08)" stroke-width="1"><line x1="70" y1="220" x2="860" y2="220"/><line x1="70" y1="175" x2="860" y2="175"/><line x1="70" y1="130" x2="860" y2="130"/><line x1="70" y1="85" x2="860" y2="85"/><line x1="70" y1="40" x2="860" y2="40"/></g>
+  <g fill="rgba(255,255,255,0.55)" font-size="11" font-family="Quatro" text-anchor="end"><text x="62" y="224">0</text><text x="62" y="179">4K</text><text x="62" y="134">8K</text><text x="62" y="89">12K</text><text x="62" y="44">16K</text></g>
+  <polyline fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-dasharray="6,5" points="90,92.6 280,84.9 470,73.3 840,54.1"/>
+  <polyline fill="none" stroke="#FF333C" stroke-width="3" points="90,92.6 280,88.8 470,82.9 840,73.3"/>
+  <g fill="#FF333C"><circle cx="90" cy="92.6" r="5"/><circle cx="280" cy="88.8" r="5"/><circle cx="470" cy="82.9" r="5"/><circle cx="840" cy="73.3" r="5"/></g>
+  <g fill="#fff" font-size="12.5" font-weight="700" font-family="Quatro" text-anchor="middle"><text x="90" y="116">11,326</text><text x="280" y="112">~11,700</text><text x="470" y="106">~12,200</text><text x="840" y="97">~13,000</text></g>
+  <g fill="rgba(255,255,255,0.7)" font-size="11" font-family="Quatro" text-anchor="middle"><text x="280" y="74">12,000</text><text x="470" y="62">13,000</text><text x="840" y="44">14,700</text></g>
+  <g fill="rgba(255,255,255,0.55)" font-size="11" font-family="Quatro" text-anchor="middle"><text x="90" y="242">Oct 2026 (baseline)</text><text x="280" y="242">Month 3</text><text x="470" y="242">Month 6</text><text x="840" y="242">Month 12</text></g>
+</svg>
+<div class="legend"><span><i style="background:#FF333C"></i>Base case: collection clicks x1.5 (a fifth of the gain by Month 3, half by Month 6)</span><span><i style="background:rgba(255,255,255,0.45)"></i>Upper case: collection clicks x2</span></div>
+</div>
+<p class="src">Estimates, not a guarantee. Google clicks converted to sessions at your 90-day ratio (1.33 organic sessions per click). Last November ran 32% below October, so the first monthly report may dip before spring. October 2025 was 24,046. We judge the work by comparing rebuilt collections with similar ones we have not touched, so the season and Google updates cancel out.</p>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-screen-label="24">
+<div class="head"><div class="label">Next steps</div>
+<h2>What we need from you to start Month 1.</h2></div>
+<div class="cta-box">
+  <ul class="cta-bullets">
+    <li>Approval of the owner-page list and the collection merges (we send it early in Month 1, page by page)</li>
+    <li>Who edits collections in Shopify: your team, or us through the same review doc used for product pages</li>
+    <li>A contact at Emplifi (TurnTo) for the review markup change</li>
+    <li>Your call on the Spanish site: keep it and translate the rewritten pages again, or keep it as it is</li>
+    <li>Who makes theme code changes (the intro field above the grid): your developer or us</li>
+    <li>WordPress access to the blog, to add the links into the store</li>
+    <li>Who answers forum questions for Detail King, and the safety sheets and manuals we could not find</li>
+    <li>Optional: read access to orders in Shopify, so monthly reports use Shopify's order count instead of GA4's</li>
+  </ul>
+  <a class="btn" href="mailto:tj@embertribe.com?subject=Detail%20King%20SEO%20Foundation">Talk it through with TJ</a>
+</div>
+<p class="fine mt">Prepared by EmberTribe for Detail King. Questions: tj@embertribe.com</p>
+</section>
+
+<div id="nav">
+  <div class="brand"><span><b>ember</b>tribe</span> · Detail King SEO Foundation</div>
+  <div class="dots" id="dots"></div>
+  <div class="ctrl"><button id="prev" aria-label="Previous">‹</button><span id="count">1 / 23</span><button id="next" aria-label="Next">›</button></div>
+</div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotsWrap = document.getElementById('dots');
+  const count = document.getElementById('count');
+  let i = 0;
+  slides.forEach((_, n) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (n === 0 ? ' active' : '');
+    d.onclick = () => go(n);
+    dotsWrap.appendChild(d);
+  });
+  const dots = [...dotsWrap.children];
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    dots.forEach((d, k) => d.classList.toggle('active', k === i));
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    slides[i].scrollTop = 0;
+    try { localStorage.setItem('et-dk-foundation-slide', i); } catch (e) {}
+  }
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(slides.length - 1);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.closest('#nav') || e.target.closest('a') || e.target.closest('button')) return;
+    const r = e.clientX / window.innerWidth;
+    if (r < 0.12) go(i - 1); else if (r > 0.88) go(i + 1);
+  });
+  let start = 0;
+  const saved = (() => { try { return localStorage.getItem('et-dk-foundation-slide'); } catch (e) { return null; } })();
+  if (saved !== null && !isNaN(+saved)) start = +saved;
+  go(start);
+</script>
+</body>
+</html>
