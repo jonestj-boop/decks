@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>FeedingBird · Paid Media Audit · EmberTribe</title>
+<style>
+
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+:root {
+  --navy:        #120F0F;
+  --navy-mid:    #1c1414;
+  --navy-card:   #2a1f1f;
+  --blue:        #FF333D;
+  --blue-light:  #ff6b73;
+  --blue-bg:     #fff0f0;
+  --amber:       #FF333D;
+  --amber-bg:    #fff0f0;
+  --green:       #2FC171;
+  --green-bg:    #f0fdf6;
+  --red:         #FF333D;
+  --red-bg:      #fff0f0;
+  --purple:      #9847EE;
+  --purple-bg:   #f5f0ff;
+  --white:       #F7F7F7;
+  --ink:         #120F0F;
+  --ink2:        #1c1414;
+  --ink3:        #5a4848;
+  --ink4:        #9c8888;
+  --border:      #e8e0e0;
+  --border-dark: rgba(255,255,255,0.1);
+  --card-bg:     #F7F7F7;
+  --neutral-bar: #e8e0e0;
+  --px:          clamp(20px, 5vw, 64px);
+  --gap:         clamp(10px, 2vw, 18px);
+  --radius:      14px;
+  --pill:        100px;
+}
+
+html, body {
+  font-family: "Quatro", "Calibri", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+.topnav { position: sticky; top: 0; z-index: 500; background: #120F0F; display: flex; align-items: center; justify-content: space-between; padding: 10px var(--px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+.topnav-brand { font-size: clamp(8px,1.1vw,10px); font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--amber); }
+.topnav-right { display: flex; align-items: center; gap: 10px; }
+.nav-dots { display: flex; gap: 5px; flex-wrap: wrap; max-width: 220px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.2); border: none; cursor: pointer; padding: 0; transition: background .2s, transform .2s; }
+.dot.active { background: var(--amber); transform: scale(1.25); }
+.nav-btn { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: rgba(255,255,255,.7); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s; line-height: 1; }
+.nav-btn:hover { background: var(--blue); border-color: var(--blue); color: white; }
+.nav-btn:disabled { opacity: .25; cursor: default; }
+.page-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,.45); letter-spacing: .08em; min-width: 38px; text-align: center; }
+.pdf-btn { display: flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.15); border-radius: var(--pill); font-family: inherit; font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: all .18s; }
+.pdf-btn:hover { background: var(--blue); border-color: var(--blue); color: white; }
+.pdf-btn svg { width: 11px; height: 11px; fill: currentColor; }
+
+.slide { position: relative; display: none; flex-direction: column; min-height: calc(100vh - 52px); padding: 0 var(--px); }
+.slide.active { display: flex; }
+.slide--dark { background: linear-gradient(135deg, #120F0F 0%, #1c1414 60%, #0a0808 100%); color: var(--white); }
+.slide--light { background: #F7F7F7; color: #120F0F; }
+.slide--grey { background: #eeeeee; color: var(--ink); }
+
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: clamp(14px,2.5vh,22px) 0 clamp(12px,2vh,18px); border-bottom: 1px solid var(--border-dark); flex-shrink: 0; gap: 8px; }
+.slide--light .topbar, .slide--grey .topbar { border-bottom-color: var(--border); }
+.topbar-kicker { font-size: clamp(8px,1vw,10px); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; display: flex; align-items: center; flex-wrap: wrap; gap: 2px; line-height: 1.6; }
+.kicker-brand { color: var(--amber); }
+.slide--light .kicker-brand, .slide--grey .kicker-brand { color: var(--blue); }
+.kicker-sep { color: var(--ink4); margin: 0 4px; }
+.kicker-label { color: var(--ink4); }
+.topbar-page { font-size: 10px; font-weight: 600; letter-spacing: .1em; color: var(--ink4); white-space: nowrap; flex-shrink: 0; }
+
+.slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: clamp(18px,3vh,32px) 0; gap: var(--gap); }
+.slide-footer { display: flex; align-items: center; justify-content: space-between; padding: clamp(10px,2vh,14px) 0 clamp(14px,2.5vh,20px); border-top: 1px solid var(--border-dark); flex-shrink: 0; margin-top: clamp(10px,2vh,18px); gap: 8px; }
+.slide--light .slide-footer, .slide--grey .slide-footer { border-top-color: var(--border); }
+.footer-brand { font-size: clamp(8px,.85vw,10px); font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--ink4); }
+
+.eyebrow { font-size: clamp(9px,1.1vw,11px); font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+.slide--light .eyebrow, .slide--grey .eyebrow { color: var(--amber); }
+.hero-h1 { font-size: clamp(32px,5.8vw,66px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; color: var(--white); max-width: 880px; }
+.slide-h1 { font-size: clamp(22px,3vw,40px); font-weight: 900; letter-spacing: -.025em; line-height: 1.1; color: var(--ink); max-width: 780px; }
+.slide--dark .slide-h1 { color: var(--white); }
+.slide-sub { font-size: clamp(13px,1.4vw,15px); font-weight: 400; color: var(--ink3); line-height: 1.65; max-width: 640px; margin-top: 6px; }
+.slide--dark .slide-sub { color: rgba(255,255,255,.55); }
+
+.cols-60-40 { display: grid; grid-template-columns: 60% 1fr; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-40-60 { display: grid; grid-template-columns: 1fr 60%; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-50-50 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); flex: 1; align-items: stretch; }
+.cols-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--gap); flex: 1; align-items: start; }
+.cols-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--gap); align-items: start; }
+.col { display: flex; flex-direction: column; gap: var(--gap); }
+
+.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(14px,2vw,22px); }
+.card--flex { display: flex; flex-direction: column; gap: 12px; }
+.card--stretch { flex: 1; }
+.card--dark { background: var(--navy-card); border-color: rgba(255,255,255,.12); }
+.card--amber-tint { background: #fff5f5; border-color: #ffc2c5; }
+.card--green-tint { background: var(--green-bg); border-color: #a7e0c0; }
+
+.stat-label { font-size: clamp(8px,.9vw,10px); font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink4); margin-bottom: 5px; }
+.card--dark .stat-label { color: rgba(255,255,255,.45); }
+.stat-number { font-size: clamp(24px,2.8vw,34px); font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--ink); margin-bottom: 7px; font-variant-numeric: tabular-nums; }
+.card--dark .stat-number { color: var(--white); }
+.stat-note { font-size: clamp(10px,1vw,11px); color: var(--ink4); line-height: 1.45; margin-top: 3px; }
+.card--dark .stat-note { color: rgba(255,255,255,.4); }
+
+.hero-number { font-size: clamp(44px,6.5vw,76px); font-weight: 900; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+
+.pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: var(--pill); font-size: clamp(10px,1vw,11px); font-weight: 700; letter-spacing: .03em; margin-bottom: 5px; }
+.pill--green  { background: var(--green-bg)  !important; color: var(--green)  !important; }
+.pill--amber  { background: var(--amber-bg)  !important; color: var(--amber)  !important; }
+.pill--white  { background: rgba(255,255,255,.12) !important; color: rgba(255,255,255,.8) !important; }
+
+.insight-bar { display: flex; align-items: center; gap: 10px; padding: clamp(11px,1.5vw,14px) clamp(14px,2vw,20px); border-radius: 12px; flex-wrap: wrap; margin-top: auto; }
+.insight-bar--green { background: var(--green-bg); }
+.insight-bar--amber { background: var(--amber-bg); }
+.insight-bar--blue  { background: var(--blue-bg);  }
+.insight-tag { font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; padding: 3px 10px; border-radius: var(--pill); white-space: nowrap; flex-shrink: 0; }
+.insight-bar--green .insight-tag { background: var(--green); color: white; }
+.insight-bar--amber .insight-tag { background: var(--amber); color: white; }
+.insight-bar--blue  .insight-tag { background: var(--blue);  color: white; }
+.insight-text { font-size: clamp(11px,1.2vw,13px); font-weight: 500; color: var(--ink2); line-height: 1.45; }
+
+.bar-chart { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.bar-chart-inner { display: flex; align-items: flex-end; gap: 6px; flex: 1; min-height: 160px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; gap: 4px; }
+.bar-val { font-size: clamp(8px,.8vw,10px); font-weight: 700; color: var(--ink3); font-variant-numeric: tabular-nums; }
+.bar { width: 100%; border-radius: 5px 5px 0 0; min-height: 2px; }
+.bar--blue  { background: var(--blue); }
+.bar--grey  { background: var(--neutral-bar); }
+.bar-x { font-size: clamp(8px,.78vw,9.5px); font-weight: 500; color: var(--ink4); text-align: center; line-height: 1.2; }
+
+.hbar-list { display: flex; flex-direction: column; gap: 11px; flex: 1; justify-content: center; }
+.hbar-row { display: flex; flex-direction: column; gap: 4px; }
+.hbar-meta { display: flex; justify-content: space-between; align-items: baseline; }
+.hbar-label { font-size: clamp(11px,1.2vw,13px); font-weight: 700; color: var(--ink2); }
+.hbar-val { font-size: clamp(11px,1.2vw,13px); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hbar-track { height: 10px; background: var(--neutral-bar); border-radius: var(--pill); overflow: hidden; }
+.hbar-fill { height: 100%; border-radius: var(--pill); }
+.hbar-sub { font-size: 10px; color: var(--ink4); }
+
+.funnel { display: flex; flex-direction: column; gap: 8px; flex: 1; justify-content: center; }
+.funnel-stage { display: flex; align-items: center; gap: 12px; }
+.funnel-bar-wrap { flex: 1; display: flex; align-items: center; }
+.funnel-fill { height: 44px; border-radius: 8px; display: flex; align-items: center; padding: 0 14px; min-width: 70px; }
+.funnel-label { font-size: clamp(11px,1.2vw,13px); font-weight: 700; color: white; white-space: nowrap; }
+.funnel-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; min-width: 96px; }
+.funnel-num { font-size: clamp(14px,1.6vw,18px); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+.funnel-pct { font-size: 10px; font-weight: 600; color: var(--ink4); }
+
+.process-row { display: flex; align-items: stretch; gap: 8px; }
+.process-step { flex: 1; display: flex; flex-direction: column; gap: 8px; padding: clamp(14px,1.8vw,20px); position: relative; justify-content: flex-start; border-radius: var(--radius); background: var(--card-bg); border: 1px solid var(--border); }
+.process-step:not(:last-child)::after { content: '→'; position: absolute; right: -16px; top: 24px; color: var(--ink4); font-size: 13px; font-weight: 700; z-index: 2; }
+.process-num { font-size: 10px; font-weight: 800; letter-spacing: .1em; color: var(--blue); }
+.process-title { font-size: clamp(13px,1.4vw,15px); font-weight: 800; color: var(--ink); line-height: 1.25; }
+.process-body { font-size: clamp(10.5px,1.05vw,12px); color: var(--ink3); line-height: 1.5; }
+
+.check { display: inline-flex; width: 20px; height: 20px; border-radius: 50%; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+.check--no  { background: var(--amber-bg);   color: var(--amber);    }
+.check--yes { background: var(--green-bg);  color: var(--green);  }
+
+.issue-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+.issue-row:last-child { border-bottom: none; }
+.issue-title { font-size: clamp(11.5px,1.2vw,13px); font-weight: 700; color: var(--ink); line-height: 1.3; }
+.issue-body { font-size: clamp(10.5px,1.05vw,12px); color: var(--ink3); line-height: 1.5; margin-top: 2px; }
+
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; font-size: clamp(9px,.95vw,10.5px); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--ink4); padding: 7px 10px; border-bottom: 2px solid var(--border); }
+.data-table td { font-size: clamp(10.5px,1.05vw,12.5px); color: var(--ink2); padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table td.num, .data-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.data-table td.strong { font-weight: 700; color: var(--ink); }
+
+.kpi-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--gap); }
+.cover-stats-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: var(--gap); margin-top: clamp(10px,2vw,20px); }
+.cover-stats-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: var(--gap); margin-top: clamp(10px,2vw,20px); }
+.accent-line { width: 48px; height: 4px; border-radius: 2px; background: var(--amber); margin-bottom: 12px; }
+
+@media screen and (max-width: 900px) {
+  .cols-60-40, .cols-40-60, .cols-50-50 { grid-template-columns: 1fr; }
+  .cols-3, .kpi-grid-3 { grid-template-columns: 1fr 1fr; }
+  .cols-4 { grid-template-columns: 1fr 1fr; }
+  .cover-stats-5 { grid-template-columns: repeat(3,1fr); }
+  .process-row { flex-direction: column; }
+  .process-step:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -14px; transform: translateX(50%); }
+}
+@media screen and (max-width: 600px) {
+  .cover-stats-3 { grid-template-columns: 1fr; }
+  .cover-stats-5 { grid-template-columns: 1fr; }
+  .cols-3, .kpi-grid-3 { grid-template-columns: 1fr; }
+  .cols-4 { grid-template-columns: 1fr 1fr; }
+  .topbar-kicker span:not(.kicker-brand) { display: none; }
+  .footer-brand, .pdf-btn { display: none; }
+  .data-table { font-size: 10px; }
+}
+
+@media print{
+  @page{ size: A4 landscape; margin: 0; }
+  html, body{ width: 297mm; height: auto !important; overflow: visible !important; }
+  .topnav{ display:none !important; }
+  .export-btn{ display:none !important; }
+  .slide{ display:flex !important; flex-direction:column; width: 297mm; min-height: 210mm; height: auto; page-break-after: always; break-after: page; overflow: visible !important; padding: 13mm 15mm 11mm !important; }
+  .slide:last-child{ page-break-after: auto; }
+  .card, .stat-card, [style*="overflow"]{ overflow: visible !important; max-height: none !important; }
+  *{ -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  .card, .stat-card{ page-break-inside: avoid; }
+  table{ page-break-inside: avoid; }
+  .insight-bar{ page-break-inside: avoid; margin-top:12px; }
+  h1{ font-size: 20pt !important; line-height: 1.2 !important; }
+  .subtitle{ font-size: 10.5pt !important; }
+  .eyebrow{ font-size: 8.5pt !important; }
+  .topbar{ font-size: 8pt !important; }
+  .stat-label{ font-size: 7.5pt !important; }
+  .stat-note{ font-size: 7.5pt !important; }
+  thead{ display: table-header-group; }
+  table.table-long{ page-break-inside: auto !important; }
+  table.table-long tr{ page-break-inside: avoid; }
+}
+
+
+
+/* ---- Added for Google Ads audit primitives (merged deck) ---- */
+.step-num { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+.step-num--dark { background: rgba(255,255,255,.1); color: var(--amber); }
+.step-num--light { background: var(--blue-bg); color: var(--blue); }
+.step-title { font-size: clamp(13px,1.3vw,15px); font-weight: 700; color: var(--white); margin-bottom: 4px; }
+.step-desc { font-size: clamp(10px,1vw,12px); font-weight: 400; color: rgba(255,255,255,.55); line-height: 1.5; }
+.slide--light .step-title { color: var(--ink); }
+.slide--light .step-desc { color: var(--ink3); }
+
+.data-table th.right, .data-table td.right { text-align: right; }
+.slide--dark .data-table th { color: rgba(255,255,255,.4); border-bottom-color: rgba(255,255,255,.1); }
+.slide--dark .data-table td { color: rgba(255,255,255,.8); border-bottom-color: rgba(255,255,255,.06); }
+.td-muted { color: var(--ink4) !important; font-weight: 400 !important; }
+.td-green { color: var(--green) !important; font-weight: 700 !important; }
+.td-amber { color: var(--amber) !important; font-weight: 700 !important; }
+
+.card--blue-tint { background: #fff0f0; border-color: #FF333D; }
+
+.cover-stats-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--gap); margin-top: clamp(10px,2vw,20px); }
+@media screen and (max-width: 900px) {
+  .cover-stats-4 { grid-template-columns: repeat(2,1fr); }
+}
+@media screen and (max-width: 600px) {
+  .cover-stats-4 { grid-template-columns: 1fr; }
+}
+
+
+/* ════ EmberTribe brand layer (embertribe-design) ════ */
+@font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Reg.otf") format("opentype");      font-weight:400; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("../fonts/Quatro_SemiBold.otf") format("opentype"); font-weight:600; font-display:swap; }
+@font-face { font-family:"Quatro"; src:url("../fonts/Quatro_Bold.otf") format("opentype");     font-weight:700; font-display:swap; }
+:root {
+  --et-red:#FF333C; --et-red-deep:#E62831; --et-honey:#FFB000; --good:#2FC171;
+  --blue:#FF333C; --blue-light:#FF333C; --blue-bg:#fff5f5; --amber:#FF333C; --amber-bg:#fff5f5; --red:#FF333C; --red-bg:#fff5f5;
+  --navy:#000000; --navy-mid:#111111; --navy-card:#1a1a1a; --purple:#474747; --purple-bg:#f7f7f7;
+  --white:#FFFFFF; --ink:#000000; --ink2:#303030; --ink3:#474747; --ink4:#6b6b6b; --ink-100:#efefef;
+  --border:#e7e7e7; --card-bg:#f7f7f7; --neutral-bar:#efefef;
+}
+html, body, button, .pdf-btn { font-family:"Quatro","Calibri","Segoe UI",system-ui,sans-serif; }
+body { background:#000; padding-bottom:56px; }
+.hero-h1, .slide-h1, .stat-number, .hero-number, .process-title, .step-title, .funnel-num { font-weight:700; }
+.slide { min-height:calc(100vh - 56px); }
+.slide--light, .slide--grey { background:#FFFFFF; color:#000; }
+.slide--light .hero-h1 { color:#000; }
+.eyebrow, .slide--light .eyebrow, .slide--grey .eyebrow { color:var(--et-red); letter-spacing:.14em; }
+
+/* covers: solid red field, white headline, black ALL-CAPS labels, "e" watermark */
+.slide--cover { background:var(--et-red); color:#fff; overflow:hidden; --blue-light:#fff; --amber:var(--et-honey); --green:#fff; }
+.slide--cover::after { content:"e"; position:absolute; right:-40px; bottom:-160px; font-weight:700; font-size:640px; line-height:1; color:rgba(0,0,0,0.07); pointer-events:none; }
+.slide--cover > * { position:relative; z-index:1; }
+.slide--cover .eyebrow, .slide--cover .kicker-brand { color:#000; }
+.slide--cover .kicker-label, .slide--cover .kicker-sep, .slide--cover .topbar-page, .slide--cover .footer-brand { color:rgba(255,255,255,.82); }
+.slide--cover .topbar, .slide--cover .slide-footer { border-color:rgba(0,0,0,.15); }
+.slide--cover .hero-h1 { color:#fff; }
+.slide--cover .slide-sub { color:rgba(255,255,255,.92); }
+.slide--cover .card--dark { background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.22); }
+.slide--cover .card--dark .stat-label { color:rgba(255,255,255,.85) !important; }
+.slide--cover .card--dark .stat-note { color:rgba(255,255,255,.85) !important; }
+.slide--cover .accent-rule { width:64px; height:5px; background:#000; margin-bottom:18px; }
+
+/* callout bars, matching the roadmap deck */
+.insight-bar { border-left:3px solid var(--et-red); border-radius:0 10px 10px 0; background:#fff5f5; }
+.insight-bar--green { border-left-color:var(--good); background:#e9f9f0; }
+.insight-bar--blue  { border-left-color:#000; background:#f7f7f7; }
+.insight-bar--blue .insight-tag { background:#000; }
+.insight-bar--amber { border-left-color:var(--et-honey); background:#fff8e8; }
+.insight-bar--amber .insight-tag { background:var(--et-honey); color:#000; }
+.card--amber-tint { background:#fff8e8; border-color:#ffd98a; }
+.card--blue-tint { background:#fff5f5; border-color:#ffb3b6; }
+.data-table th { color:#fff; background:#000; border-bottom:none; }
+.slide--light .data-table th { color:#fff; }
+
+/* bottom nav, matching the roadmap deck */
+.topnav { position:fixed; top:auto; bottom:0; left:0; right:0; height:56px; background:#050505; padding:0 26px; border-top:1px solid rgba(255,255,255,.1); border-bottom:none; }
+.topnav-brand { color:rgba(255,255,255,.4); font-size:11px; font-weight:700; letter-spacing:.12em; }
+.topnav-brand b { color:var(--et-red); }
+.dot.active { background:var(--et-honey); }
+.nav-btn { width:36px; height:36px; font-size:16px; }
+.nav-btn:hover, .pdf-btn:hover { background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.3); }
+.incl-list { list-style:none; margin:0; padding:0; font-size:13.5px; line-height:1.55; color:var(--ink2); }
+.incl-list li { padding:9px 0; border-bottom:1px solid var(--border); }
+.incl-list li:last-child { border-bottom:none; }
+.incl-list strong { color:#000; }
+@media print { body { padding-bottom:0; background:#fff; } .topnav { display:none !important; } }
+
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-brand"><span><b>ember</b>tribe</span> · FeedingBird · Paid Media Audit</div>
+  <div class="topnav-right">
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-btn" id="btnPrev" onclick="goSlide(-1)">‹</button>
+    <span class="page-label" id="pageLabel">1 / 22</span>
+    <button class="nav-btn" id="btnNext" onclick="goSlide(1)">›</button>
+    <button class="pdf-btn export-btn" onclick="exportPDF()">
+      <svg viewBox="0 0 16 16"><path d="M4 1h8a1 1 0 011 1v8l-3 3H4a1 1 0 01-1-1V2a1 1 0 011-1zm5 9h3l-3 3V10z"/></svg>
+      Export PDF
+    </button>
+  </div>
+</nav>
+
+<section class="slide slide--cover active" id="slide-1">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">PAID MEDIA AUDIT</span></div>
+    <div class="topbar-page">01 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">PAID MEDIA AUDIT</div>
+      <div class="hero-h1">FeedingBird across Google Ads and Meta Ads: one account, two very different pictures.</div>
+      <div class="slide-sub" style="margin-top:14px;">A full review of both paid channels, structure, budgets, tracking, and creative, prepared for FeedingBird by EmberTribe.</div>
+    </div>
+    <div class="cover-stats-4">
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Combined ad spend</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(34px,4.6vw,52px);">$132.4K</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">Google + Meta, same period</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Combined purchases</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(34px,4.6vw,52px);">105</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">83 Google, 22 Meta</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Blended CAC</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(34px,4.6vw,52px);">$1,261</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">weighted across both channels</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">More efficient channel</div>
+        <div class="hero-number" style="color:var(--blue-light);font-size:clamp(34px,4.6vw,52px);">Google</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">$1,153 CAC vs Meta's $1,670</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-2">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">PAID MEDIA AUDIT</span></div>
+    <div class="topbar-page">02 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">HOW THE TWO CHANNELS COMPARE</div>
+      <div class="slide-h1">Google is further along. Meta needs its tracking fixed before it can be judged fairly.</div>
+      <div class="slide-sub">Both accounts serve the same business and the same ultimate goal, a paying customer, but they sit at different stages of maturity, and this audit covers each in full on the pages that follow.</div>
+    </div>
+    <div class="kpi-grid-3">
+      <div class="card">
+        <div class="stat-label">MATURITY</div>
+        <div class="stat-number" style="font-size:clamp(18px,2vw,24px);">Google: 3 months</div>
+        <div class="stat-note">Built with clear intent from day one. Meta: roughly 12 weeks of real flight time, but structurally thinner.</div>
+      </div>
+      <div class="card">
+        <div class="stat-label">REPORTED CAC TODAY</div>
+        <div class="stat-number" style="font-size:clamp(18px,2vw,24px);">$1,153 vs $1,670</div>
+        <div class="stat-note">Google's customer acquisition cost already beats Meta's, and Meta's number is likely understated by the tracking gaps on page 17.</div>
+      </div>
+      <div class="card card--amber-tint">
+        <div class="stat-label">BIDDING TARGET</div>
+        <div class="stat-number" style="font-size:clamp(18px,2vw,24px);">Same root issue</div>
+        <div class="stat-note">Google optimizes to a free sign-up, not a purchase. Meta optimizes to Complete Registration, not a purchase. Neither account is bidding toward revenue yet.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">TAKEAWAY</div>
+      <div class="insight-text">Both channels are structured around the same shallow objective: a free top-of-funnel action instead of revenue. Fixing that is the single highest-leverage move available across the whole account, not just one channel.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · PAID MEDIA AUDIT</div></div>
+</section>
+
+<section class="slide slide--cover" id="slide-3">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">03 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">GOOGLE ADS ACCOUNT AUDIT</div>
+      <div class="hero-h1">FeedingBird:<br>Where the account stands today.</div>
+      <div class="slide-sub" style="margin-top:14px;">A full review of campaign structure, keyword strategy, conversion setup, and performance across the first three months of paid search activity. November 2026.</div>
+    </div>
+    <div class="cover-stats-3">
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">TOTAL SPEND (AUG-NOV)</div>
+        <div class="hero-number" style="color:var(--amber);font-size:clamp(44px,6vw,72px);">$95.7K</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">ACCOUNT SIGN-UPS</div>
+        <div class="hero-number" style="color:var(--blue-light);font-size:clamp(36px,5vw,64px);">1,214</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">PURCHASES</div>
+        <div class="hero-number" style="color:var(--green);font-size:clamp(40px,5.5vw,68px);">83</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-4">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">04 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">ACCOUNT OVERVIEW</div>
+      <div class="slide-h1">The account is 3 months old and built with clear intent.</div>
+      <div class="slide-sub">First spend hit August 31, 2026. Seven campaigns created, five currently enabled. Two national Search campaigns drive over 95% of total spend.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">CAMPAIGN INVENTORY</div>
+          <table class="data-table">
+            <thead><tr><th>CAMPAIGN</th><th>TYPE</th><th class="right">SPEND</th><th class="right">STATUS</th></tr></thead>
+            <tbody>
+              <tr><td>National | Will</td><td>Search</td><td class="right">$48,034</td><td class="right">Enabled</td></tr>
+              <tr><td>National | Trust</td><td>Search</td><td class="right">$43,333</td><td class="right">Enabled</td></tr>
+              <tr><td>Metro | Atlanta</td><td>Search</td><td class="right">$1,792</td><td class="right">Enabled</td></tr>
+              <tr><td>PMax | Will and Trust</td><td>PMax</td><td class="right">$1,104</td><td class="right">Enabled</td></tr>
+              <tr><td>Demand Gen | Retargeting</td><td>Demand Gen</td><td class="right">$725</td><td class="right">Enabled</td></tr>
+              <tr><td>National | Estate Planning</td><td>Search</td><td class="right">$711</td><td class="right td-muted">Paused</td></tr>
+              <tr><td>Display | Retargeting</td><td>Display</td><td class="right">$0</td><td class="right td-muted">Paused</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="stat-label">MONTHLY SPEND TREND</div>
+          <div class="stat-number">$40-53K</div>
+          <div class="stat-note">Sep: $52.6K (ramp-up). Oct: $45.6K. Nov (through 24th): $40.7K. August was launch day only ($241).</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">ACCOUNT CPC RANGE</div>
+          <div class="stat-number">$4.36 - $8.04</div>
+          <div class="stat-note">CPCs vary by ad group from $4.36 (Trust Pricing) to $8.04 (Atlanta Will DIY). The estate planning vertical is competitive in Search.</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">TAKEAWAY</div>
+      <div class="insight-text">This is a focused, Search-first account. The two national campaigns are the engine; everything else is a small test or supplemental channel. The structure is intentional.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-5">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">05 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">CAMPAIGN ARCHITECTURE</div>
+      <div class="slide-h1">Two national Search campaigns carry the entire account.</div>
+      <div class="slide-sub">Each campaign maps to one product line. Within each, ad groups are segmented by user intent, with dedicated landing pages for every cluster.</div>
+    </div>
+    <div class="cols-50-50">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">WILL CAMPAIGN (9 AD GROUPS)</div>
+          <div class="stat-number" style="font-size:clamp(20px,2.4vw,28px);">$48,034</div>
+          <div style="font-size:clamp(10px,1vw,12px);color:var(--ink3);line-height:1.6;">
+            <strong style="color:var(--ink);">Ad groups by intent:</strong> How To Write, DIY, Online, Free Start, Forms and Templates, Pricing, Software (paused), Living Will and POA<br><br>
+            <strong style="color:var(--ink);">Landing pages:</strong> /lp/write-your-own-will, /lp/what-a-will-costs, /lp/living-will-and-power-of-attorney, /will (product page for free-seekers)<br><br>
+            <strong style="color:var(--ink);">Match types:</strong> Predominantly Exact with selective Phrase. ~180 keywords across all ad groups.
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">TRUST CAMPAIGN (10 AD GROUPS)</div>
+          <div class="stat-number" style="font-size:clamp(20px,2.4vw,28px);">$43,333</div>
+          <div style="font-size:clamp(10px,1vw,12px);color:var(--ink3);line-height:1.6;">
+            <strong style="color:var(--ink);">Ad groups by intent:</strong> Setup How To, Online, DIY, Living and Revocable, House and Property, Pricing, Software (paused), Estate Planning Software (paused), Trust vs Will<br><br>
+            <strong style="color:var(--ink);">Landing pages:</strong> /lp/how-to-set-up-a-trust, /lp/putting-your-house-in-a-trust, /lp/pricing, /lp/trust-vs-will, /lp/estate-planning<br><br>
+            <strong style="color:var(--ink);">Match types:</strong> Same Exact-dominant approach. Cross-negatives between ad groups to manage overlap.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">INSIGHT</div>
+      <div class="insight-text">The architecture is well-structured: intent-based ad group segmentation, dedicated landing pages, Exact match for spend control, and clean negative keyword coverage blocking law firm, attorney, and cybersecurity trust terms.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-6">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">06 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">PERFORMANCE BY AD GROUP</div>
+      <div class="slide-h1">DIY and Online ad groups convert at the lowest cost.</div>
+      <div class="slide-sub">Users who search with self-service intent convert at $70-72 per sign-up. Informational and niche ad groups run 2-4x higher.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">TOP AD GROUPS BY CPA (SIGN-UP)</div>
+          <table class="data-table">
+            <thead><tr><th>AD GROUP</th><th class="right">SPEND</th><th class="right">CONV.</th><th class="right">CPA</th></tr></thead>
+            <tbody>
+              <tr><td>Trust - DIY</td><td class="right">$5,078</td><td class="right">73</td><td class="right td-green">$70</td></tr>
+              <tr><td>Will - Online</td><td class="right">$10,244</td><td class="right">145</td><td class="right td-green">$71</td></tr>
+              <tr><td>Will - DIY</td><td class="right">$24,092</td><td class="right">333</td><td class="right td-green">$72</td></tr>
+              <tr><td>Trust - Setup How To</td><td class="right">$17,943</td><td class="right">231</td><td class="right td-green">$78</td></tr>
+              <tr><td>Trust vs Will</td><td class="right">$167</td><td class="right">2</td><td class="right">$83</td></tr>
+              <tr class=""><td>Trust - Online</td><td class="right">$8,205</td><td class="right">87</td><td class="right">$95</td></tr>
+              <tr><td>Will - How To Write</td><td class="right">$5,420</td><td class="right">55</td><td class="right">$99</td></tr>
+              <tr><td>Trust - Living/Revocable</td><td class="right">$7,379</td><td class="right">73</td><td class="right">$101</td></tr>
+              <tr><td>Trust - Pricing</td><td class="right">$4,011</td><td class="right">33</td><td class="right">$122</td></tr>
+              <tr><td>Living Will and POA</td><td class="right">$6,984</td><td class="right">57</td><td class="right td-amber">$123</td></tr>
+              <tr><td>Trust - House/Property</td><td class="right">$632</td><td class="right">2</td><td class="right td-amber">$316</td></tr>
+              <tr><td>Demand Gen RT</td><td class="right">$725</td><td class="right">0</td><td class="right td-amber">N/A</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card--blue-tint">
+          <div class="stat-label" style="color:var(--blue);">REALLOCATION OPPORTUNITY</div>
+          <div class="stat-number" style="color:var(--blue);font-size:clamp(22px,2.6vw,30px);">$8,341</div>
+          <div class="stat-note" style="color:var(--ink3);">Combined spend in the three underperforming segments (House/Property, Living Will/POA, Demand Gen). Trimming or pausing these frees budget for the top converters.</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">BEST PERFORMERS SHARE A PATTERN</div>
+          <div class="stat-note" style="color:var(--ink2);">The top four ad groups by CPA all target users with self-service intent: "can I do this myself" or "do this online." These users are pre-sold on the concept of a DIY tool, which is exactly what FeedingBird sells.</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">WARNING</div>
+      <div class="insight-text">Trust - House and Property ($316 CPA) costs more per sign-up than the Trust plan itself ($299). Demand Gen retargeting has spent $725 with zero conversions. Both warrant pausing or restructuring.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-7">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">07 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">CONVERSION SETUP</div>
+      <div class="slide-h1">The bidding goal optimizes for free sign-ups, not paying customers.</div>
+      <div class="slide-sub">Smart Bidding sees only Account Sign Up as a primary action. Assessment completions and purchases are tracked but excluded from the optimization signal.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">THE CONVERSION FUNNEL</div>
+          <div style="display:flex;flex-direction:column;align-items:stretch;gap:0;">
+            <div style="background:var(--blue);color:white;padding:16px 20px;border-radius:12px 12px 0 0;text-align:center;">
+              <div style="font-size:clamp(10px,1vw,11px);font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.8;">PRIMARY (BIDDING TARGET)</div>
+              <div style="font-size:clamp(22px,2.5vw,30px);font-weight:800;margin:4px 0;">1,214 Sign-ups</div>
+              <div style="font-size:clamp(10px,1vw,11px);opacity:.75;">Free account registration</div>
+            </div>
+            <div style="background:var(--ink);color:white;padding:14px 20px;text-align:center;">
+              <div style="font-size:clamp(10px,1vw,11px);font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.5;">SECONDARY</div>
+              <div style="font-size:clamp(18px,2vw,24px);font-weight:800;margin:4px 0;">316 Assessments</div>
+              <div style="font-size:clamp(10px,1vw,11px);opacity:.55;">Completed the guided questionnaire</div>
+            </div>
+            <div style="background:var(--green);color:white;padding:14px 20px;border-radius:0 0 12px 12px;text-align:center;">
+              <div style="font-size:clamp(10px,1vw,11px);font-weight:700;letter-spacing:.15em;text-transform:uppercase;opacity:.8;">SECONDARY</div>
+              <div style="font-size:clamp(18px,2vw,24px);font-weight:800;margin:4px 0;">83 Purchases</div>
+              <div style="font-size:clamp(10px,1vw,11px);opacity:.75;">Paid for a Will or Trust plan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="stat-label">SIGN-UP TO PURCHASE RATE</div>
+          <div class="stat-number">6.8%</div>
+          <div class="stat-note">Over 93% of what Smart Bidding optimizes for does not result in revenue. The algorithm learns to find sign-ups, regardless of whether those users convert downstream.</div>
+        </div>
+        <div class="card">
+          <div class="stat-label">9 CONVERSION ACTIONS ENABLED</div>
+          <div class="stat-note" style="color:var(--ink2);">Account Sign Up (primary), website_assessment_completed, Purchase, HubSpot Customer, Calls from ads (x2, possible duplicate), YouTube views, YouTube subs, Android installs. Only the first feeds bidding.</div>
+        </div>
+        <div class="card card--blue-tint" style="margin-top:auto;">
+          <div class="stat-label" style="color:var(--blue);">QUESTION FOR THE CLIENT</div>
+          <div class="stat-note" style="color:var(--ink2);">Why is assessment_completed not the primary conversion? With 316 events over 3 months, there is enough volume for Smart Bidding to optimize toward a deeper funnel action.</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">RECOMMENDATION</div>
+      <div class="insight-text">Moving assessment_completed to primary status would shift the algorithm toward users who actually engage with the product, not just register. This is the single highest-impact change available.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-8">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">08 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">CAC VS CPL ANALYSIS</div>
+      <div class="slide-h1" style="color:var(--ink);">A $79 CPL masks a $1,153 customer acquisition cost.</div>
+      <div class="slide-sub">The gap between lead cost and customer cost reveals where the real efficiency problem sits. Total account spend: $95,698.</div>
+    </div>
+    <div class="cols-50-50">
+      <div class="col">
+        <div class="card card card--flex card--stretch">
+          <div class="stat-label" style="color:var(--ink4);">COST PER CONVERSION ACTION (ACCOUNT-WIDE)</div>
+          <table class="data-table">
+            <thead><tr><th>CONVERSION ACTION</th><th class="right">VOLUME</th><th class="right">COST PER</th></tr></thead>
+            <tbody>
+              <tr><td>Account Sign Up <span style="font-size:9px;color:var(--ink4);font-weight:700;letter-spacing:.1em;">PRIMARY</span></td><td class="right">1,214</td><td class="right" style="color:var(--green);">$79</td></tr>
+              <tr><td>Assessment Completed</td><td class="right">316</td><td class="right" style="color:var(--et-red);">$303</td></tr>
+              <tr><td>Purchase <span style="font-size:9px;color:var(--ink4);font-weight:700;letter-spacing:.1em;">$143 AOV</span></td><td class="right">83</td><td class="right" style="color:var(--amber);">$1,153</td></tr>
+              <tr><td>Calls from Ads</td><td class="right">70</td><td class="right" style="color:var(--ink4);">$1,367</td></tr>
+              <tr><td>HubSpot Customer</td><td class="right">9</td><td class="right" style="color:var(--ink4);">$10,633</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:clamp(9px,.9vw,10px);color:var(--ink4);line-height:1.5;margin-top:4px;">Purchase passes dynamic revenue ($143.49 avg). All other actions use $0 or $1 placeholder values. Only Account Sign Up feeds Smart Bidding.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card card--flex card--stretch">
+          <div class="stat-label" style="color:var(--ink4);">CPL VS CAC BY CAMPAIGN</div>
+          <table class="data-table">
+            <thead><tr><th>CAMPAIGN</th><th class="right">CPL</th><th class="right">CAC</th><th class="right">PURCH. AOV</th></tr></thead>
+            <tbody>
+              <tr><td>National Trust</td><td class="right">$87</td><td class="right" style="color:var(--green);">$950</td><td class="right">$166</td></tr>
+              <tr><td>National Will</td><td class="right">$80</td><td class="right" style="color:var(--et-red);">$1,285</td><td class="right">$116</td></tr>
+              <tr><td>PMax</td><td class="right" style="color:var(--green);">$63</td><td class="right" style="color:var(--amber);">N/A</td><td class="right" style="color:var(--ink4);">0 purchases</td></tr>
+              <tr><td>Atlanta</td><td class="right">$163</td><td class="right" style="color:var(--amber);">N/A</td><td class="right" style="color:var(--ink4);">0 purchases</td></tr>
+              <tr><td>Estate Planning</td><td class="right">$356</td><td class="right" style="color:var(--amber);">N/A</td><td class="right" style="color:var(--ink4);">0 purchases</td></tr>
+              <tr><td>Demand Gen</td><td class="right" style="color:var(--amber);">N/A</td><td class="right" style="color:var(--amber);">N/A</td><td class="right" style="color:var(--ink4);">0 of either</td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:clamp(9px,.9vw,10px);color:var(--ink4);line-height:1.5;margin-top:4px;">CPL = cost per Account Sign Up. CAC = cost per Purchase. Trust campaign has the lower CAC despite a higher CPL, because its sign-ups convert to purchases at a higher rate (9.1% vs 6.2%).</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">TAKEAWAY</div>
+      <div class="insight-text">PMax shows the cheapest CPL in the account ($63) but has generated zero purchases. The Trust campaign has a higher CPL than Will ($87 vs $80) but a lower CAC ($950 vs $1,285) and a higher AOV ($166 vs $116). Optimizing for the cheapest lead is not the same as optimizing for the most efficient customer.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-9">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">09 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">GAPS IDENTIFIED</div>
+      <div class="slide-h1">Three high-value keyword clusters are sitting dark.</div>
+      <div class="slide-sub">The account has well-built keyword sets and ad copy for Software, Branded, and Competitor searches, but none are actively capturing demand.</div>
+    </div>
+    <div class="cols-3">
+      <div class="card card--flex card--stretch">
+        <div class="step-num step-num--light">1</div>
+        <div class="step-title" style="color:var(--ink);">Software keywords are paused</div>
+        <div class="step-desc" style="color:var(--ink3);">Will Software, Trust Software, and Estate Planning Software ad groups are all paused in both national campaigns. Zero impressions. These target users searching for the exact type of product FeedingBird is: "estate planning software," "will maker software." This is the highest-intent cluster in the account.</div>
+      </div>
+      <div class="card card--flex card--stretch">
+        <div class="step-num step-num--light">2</div>
+        <div class="step-title" style="color:var(--ink);">No branded campaign exists</div>
+        <div class="step-desc" style="color:var(--ink3);">No one is bidding on "FeedingBird," "feedingbird.com," or brand variations. At $40K+/month in spend generating 1,200+ sign-ups, brand search volume exists. Without a branded campaign, competitors like LegalZoom or Trust and Will can appear above FeedingBird for its own name.</div>
+      </div>
+      <div class="card card--flex card--stretch">
+        <div class="step-num step-num--light">3</div>
+        <div class="step-title" style="color:var(--ink);">PMax creative lacks differentiation</div>
+        <div class="step-desc" style="color:var(--ink3);">Both PMax asset groups (Will and Trust) share identical images ("general-lead-only"). Search themes show leakage into irrelevant territory: "affordable living trust attorney near me" and "trust account requirements." Without unique creative per product, Google treats both asset groups as interchangeable.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">FOCUS</div>
+      <div class="insight-text">Additionally, the Atlanta metro campaign has an $875/day budget but has only spent $1,800 total. The geo + exact match combination limits volume. This warrants a conversation with the client about the expansion strategy.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-10">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">10 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">WHAT WE WOULD DO</div>
+      <div class="slide-h1" style="color:var(--ink);">Five moves to shift the account closer to revenue.</div>
+      <div class="slide-sub">The account is well-built. The opportunity is in filling gaps, moving the optimization target downstream, and reallocating spend from underperformers to proven converters.</div>
+    </div>
+    <div class="cols-3" style="align-items:stretch;">
+      <div class="card card card--flex">
+        <div class="step-num step-num--light">1</div>
+        <div class="step-title">Shift the bidding target downstream</div>
+        <div class="step-desc">Move assessment_completed to primary status so Smart Bidding optimizes for users who engage with the product, not just register. This is the single highest-leverage change. We would validate the rationale behind the current setup with the client first.</div>
+      </div>
+      <div class="card card card--flex">
+        <div class="step-num step-num--light">2</div>
+        <div class="step-title">Reactivate Software keywords</div>
+        <div class="step-desc">Pull all Software and App keywords into a dedicated campaign with its own budget ($50-75/day). The negative keyword work is already built. These are users specifically looking for a tool like FeedingBird.</div>
+      </div>
+      <div class="card card card--flex">
+        <div class="step-num step-num--light">3</div>
+        <div class="step-title">Launch a branded Search campaign</div>
+        <div class="step-desc">Defend the brand name with a small-budget ($10-15/day) branded campaign. Low CPCs, high conversion rates, and prevents competitors from capturing FeedingBird's own search demand.</div>
+      </div>
+    </div>
+    <div class="cols-3" style="align-items:stretch;margin-top:var(--gap);">
+      <div class="card card card--flex">
+        <div class="step-num step-num--light">4</div>
+        <div class="step-title">Restructure PMax creative</div>
+        <div class="step-desc">Give each asset group (Will and Trust) unique images, add search themes to guide matching, and turn off URL expansion. Block the attorney/financial trust leakage the search theme data is showing.</div>
+      </div>
+      <div class="card card card--flex">
+        <div class="step-num step-num--light">5</div>
+        <div class="step-title">Trim underperformers, reallocate budget</div>
+        <div class="step-desc">Pause or restructure House and Property ($316 CPA), evaluate Living Will and POA ($123 CPA), and pause Demand Gen retargeting ($725 spent, 0 conversions). Redirect freed budget to DIY and Online ad groups.</div>
+      </div>
+      <div class="card card card--flex" style="">
+        <div class="step-num" style="background:var(--ink-100);color:var(--ink4);">+</div>
+        <div class="step-title" style="color:var(--ink4);">Future test: Competitor campaign</div>
+        <div class="step-desc" style="color:var(--ink4);">Once the restructure is in place and performing, test a competitor-targeting campaign (Trust and Will, LegalZoom, Rocket Lawyer). FeedingBird's pricing and one-time payment model are strong differentiators. This is a Phase 2 play.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">PRINCIPLE</div>
+      <div class="insight-text">Same or slightly higher total spend, allocated toward higher-intent searches and optimized for deeper funnel actions. The structure stays clean; we fill the gaps and stop paying for sign-ups that never convert.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-11">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">GOOGLE ADS AUDIT</span></div>
+    <div class="topbar-page">11 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">PRIORITY ROADMAP</div>
+      <div class="slide-h1">Implementation order and expected impact.</div>
+      <div class="slide-sub">Ordered by leverage: the first three moves address the largest gaps. Optimization and future tests follow once the foundation is in place.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <table class="data-table">
+            <thead><tr><th style="width:30px;">#</th><th>ACTION</th><th>EXPECTED IMPACT</th><th>TIMING</th></tr></thead>
+            <tbody>
+              <tr><td><strong>1</strong></td><td>Shift primary conversion to assessment_completed</td><td>Higher quality traffic, better downstream ROI</td><td>Week 1</td></tr>
+              <tr><td><strong>2</strong></td><td>Reactivate Software keywords as standalone campaign</td><td>Capture highest-intent demand currently dark</td><td>Week 1</td></tr>
+              <tr><td><strong>3</strong></td><td>Launch branded Search campaign</td><td>Defend brand, low-cost high-converting traffic</td><td>Week 1-2</td></tr>
+              <tr><td><strong>4</strong></td><td>Restructure PMax (unique creative, search themes, URL expansion off)</td><td>Reduce waste, improve relevance of PMax traffic</td><td>Week 2-3</td></tr>
+              <tr><td><strong>5</strong></td><td>Trim underperformers, reallocate budget to top converters</td><td>Shift ~$8K/quarter from $120-316 CPA segments to $70-78 CPA segments</td><td>Week 2-3</td></tr>
+              <tr><td style="color:var(--ink4);">+</td><td class="td-muted">Competitor campaign (Phase 2)</td><td class="td-muted">Capture comparison shoppers post-restructure</td><td class="td-muted">Month 2+</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card--blue-tint">
+          <div class="stat-label" style="color:var(--blue);">OPEN QUESTION: ATLANTA</div>
+          <div class="stat-note" style="color:var(--ink2);">The Atlanta metro campaign has a large daily budget ($875) but minimal spend ($1,800 total). The structure is a full 7-ad-group clone of the national campaigns. We would want to discuss the geo expansion strategy directly with the client before proposing changes here.</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">NET EFFECT</div>
+          <div class="stat-note" style="color:var(--ink2);">The account structure stays clean (it was well-built to begin with). We keep what's working, fill the gaps, shift the optimization target closer to revenue, and reallocate spend from proven underperformers to proven converters. No reinvention needed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">NEXT STEP</div>
+      <div class="insight-text">Once we have clarity on the conversion hierarchy and the Atlanta strategy, implementation of moves 1-3 can begin within the first week of engagement.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · GOOGLE ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--cover" id="slide-12">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">12 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">META ADS ACCOUNT AUDIT</div>
+      <div class="hero-h1">A full picture of FeedingBird's Meta Ads account, from structure to tracking to creative.</div>
+      <div class="slide-sub" style="margin-top:14px;">A review of structure, budgets, tracking, audiences, and creative across eleven months of account history, prepared for FeedingBird by EmberTribe.</div>
+    </div>
+    <div class="cover-stats-5">
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Total ad spend</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(30px,4vw,46px);">$36.7K</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">Jan to Nov 2026</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Cost per registration</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(30px,4vw,46px);">$120</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">across 305 registrations</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Total purchases</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(30px,4vw,46px);">22</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">attributed to Meta</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">CAC per purchase</div>
+        <div class="hero-number" style="color:var(--white);font-size:clamp(30px,4vw,46px);">$1,670</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">account-wide</div>
+      </div>
+      <div class="card card--dark">
+        <div class="stat-label" style="color:rgba(255,255,255,.38);">Reported ROAS</div>
+        <div class="hero-number" style="color:var(--blue-light);font-size:clamp(30px,4vw,46px);">0.08x</div>
+        <div class="stat-note" style="color:rgba(255,255,255,.4);">before the fixes on page 17</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-13">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">13 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">EXECUTIVE SUMMARY</div>
+      <div class="slide-h1">This is a young account with a short list of fixable problems, not a failed one.</div>
+      <div class="slide-sub">Real paid activity only began in September. In that short window, Meta's own systems and ours independently flagged the same three structural issues. Across the account's five campaigns, most optimize toward Complete Registration, except two paused campaigns and one active retargeting campaign that optimize toward Purchase instead.</div>
+    </div>
+    <div class="kpi-grid-3">
+      <div class="card card--amber-tint">
+        <div class="stat-label">ACTUAL FLIGHT TIME</div>
+        <div class="stat-number">~12 weeks</div>
+        <div class="stat-note">Spend was $0 from January through August. The account has far less real history than eleven months suggests.</div>
+      </div>
+      <div class="card card--amber-tint">
+        <div class="stat-label">PURCHASE TRACKING</div>
+        <div class="stat-number">Incomplete</div>
+        <div class="stat-note">Meta's own diagnostics flag the Purchase event as not fully set up for campaign optimization.</div>
+      </div>
+      <div class="card card--amber-tint">
+        <div class="stat-label">ACCOUNT STRUCTURE</div>
+        <div class="stat-number">6 ad sets</div>
+        <div class="stat-note">Flagged by Meta's Opportunity Score as duplicate audiences fragmenting the same budget.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">RECOMMENDATION</div>
+      <div class="insight-text">Every issue in this audit is fixable without adding budget. We'd expect the real picture to look meaningfully better within one full reporting cycle after implementation.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-14">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">14 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">SPEND TIMELINE</div>
+      <div class="slide-h1">Eight months of silence, then a fast ramp.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="bar-chart">
+            <div class="bar-chart-inner">
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Jan</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Feb</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Mar</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Apr</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">May</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Jun</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Jul</div></div>
+              <div class="bar-wrap"><div class="bar-val">$0</div><div class="bar bar--grey" style="height:2%;"></div><div class="bar-x">Aug</div></div>
+              <div class="bar-wrap"><div class="bar-val">$6.5K</div><div class="bar bar--blue" style="height:32%;"></div><div class="bar-x">Sep</div></div>
+              <div class="bar-wrap"><div class="bar-val">$20.6K</div><div class="bar bar--blue" style="height:100%;"></div><div class="bar-x">Oct</div></div>
+              <div class="bar-wrap"><div class="bar-val">$9.7K</div><div class="bar bar--blue" style="height:47%;"></div><div class="bar-x">Nov 1-22</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="stat-label">PEAK MONTH</div>
+          <div class="stat-number">$20.6K</div>
+          <div class="stat-note">October 2026</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">CURRENT STATE</div>
+          <div class="stat-number">2 active</div>
+          <div class="stat-note">campaigns, as of November 22</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">TAKEAWAY</div>
+      <div class="insight-text">With only about three months of real delivery, almost every creative and audience signal in this account is still statistically thin. Meta's own quality rankings show "insufficient data" on every single ad in the account.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-15">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">15 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">ACCOUNT STRUCTURE</div>
+      <div class="slide-h1">Five campaigns, two doing all the work, one dead on arrival.</div>
+    </div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Campaign</th><th>Status</th><th>Budget</th><th class="num">Spend</th><th class="num">Regs</th><th class="num">Cost / reg</th><th class="num">Purch.</th><th class="num">Cost / purch.</th><th class="num">AOV</th><th class="num">ROAS</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Launch Testing | Account | ABO</td><td>Active</td><td>ABO, per ad set</td><td class="num strong">$27,032</td><td class="num">213</td><td class="num">$127</td><td class="num">13</td><td class="num">$2,079</td><td class="num">$145</td><td class="num">0.07x</td></tr>
+          <tr><td>Launch Testing | Account Creation</td><td>Inactive</td><td>$400 / day</td><td class="num">$8,904</td><td class="num">84</td><td class="num">$106</td><td class="num">5</td><td class="num">$1,781</td><td class="num">$176</td><td class="num">0.10x</td></tr>
+          <tr><td>RTG | Purchase</td><td>Inactive</td><td>$150 / day</td><td class="num">$478</td><td class="num">6</td><td class="num">$80</td><td class="num">4</td><td class="num">$119</td><td class="num">$26</td><td class="num">0.22x</td></tr>
+          <tr><td>RTG | Purchase | Segments | CBO</td><td>Active</td><td>$50 / day CBO</td><td class="num">$318</td><td class="num">2</td><td class="num">$159</td><td class="num">0</td><td class="num">n/a</td><td class="num">n/a</td><td class="num">n/a</td></tr>
+          <tr><td>Launch Testing | Lead | ABO</td><td>Inactive</td><td>n/a</td><td class="num">$0</td><td class="num">0</td><td class="num">n/a</td><td class="num">0</td><td class="num">n/a</td><td class="num">n/a</td><td class="num">n/a</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">WARNING</div>
+      <div class="insight-text">Meta's own Opportunity Score (51/100) independently flags six similar ad sets fragmenting the same audience, worth 14 of the 49 points available. It's the single largest lever on the table, and it costs nothing to pull.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-16">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">16 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">FUNNEL AND RESULTS</div>
+      <div class="slide-h1">The funnel narrows hard after registration, and Meta can't see where the rest of the business converts.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="funnel">
+            <div class="funnel-stage">
+              <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:100%;background:var(--navy);"><span class="funnel-label">Impressions</span></div></div>
+              <div class="funnel-meta"><div class="funnel-num">399,702</div><div class="funnel-pct">100%</div></div>
+            </div>
+            <div class="funnel-stage">
+              <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:62%;background:var(--blue);"><span class="funnel-label">Link clicks</span></div></div>
+              <div class="funnel-meta"><div class="funnel-num">11,477</div><div class="funnel-pct">2.9% of impressions</div></div>
+            </div>
+            <div class="funnel-stage">
+              <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:30%;background:var(--purple);"><span class="funnel-label">Registrations</span></div></div>
+              <div class="funnel-meta"><div class="funnel-num">305</div><div class="funnel-pct">2.7% of clicks</div></div>
+            </div>
+            <div class="funnel-stage">
+              <div class="funnel-bar-wrap"><div class="funnel-fill" style="width:18%;background:var(--green);"><span class="funnel-label">Purchases</span></div></div>
+              <div class="funnel-meta"><div class="funnel-num">22</div><div class="funnel-pct">7.2% of registrations</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="stat-label">COST PER REGISTRATION</div>
+          <div class="stat-number">$120</div>
+        </div>
+        <div class="card">
+          <div class="stat-label">COST PER PURCHASE</div>
+          <div class="stat-number">$1,670</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">REPORTED ROAS</div>
+          <div class="stat-number">0.08x</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">FOR SHREYA</div>
+      <div class="insight-text"><strong>Please check this before we judge ROAS.</strong> Your Meta Events Manager logged 152 Purchase events in the last 28 days, well above the 20 to 25 customers you expected for November. And Google (83) and Meta (22) together claim 105 purchases since launch, close to every customer you've had. Purchase events may be firing more than once per order, or both platforms may be counting the same sale. If you can share real orders by week from your own system, we'll match each channel against actual sales.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-17">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">17 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">TRACKING HEALTH</div>
+      <div class="slide-h1">The fastest lever in this account is fixing what Meta can already see.</div>
+    </div>
+    <div class="card">
+      <div class="issue-row">
+        <div class="check check--no">!</div>
+        <div><div class="issue-title">Advanced matching not enabled</div><div class="issue-body">Flagged as an active error in Diagnostics since September 25. It lowers how well Meta can match ad clicks to the people who convert.</div></div>
+      </div>
+      <div class="issue-row">
+        <div class="check check--no">!</div>
+        <div><div class="issue-title">Purchase event incompletely configured</div><div class="issue-body">In Meta's own words: already used in conversion campaigns, but not fully set up, so ads can't optimize toward it.</div></div>
+      </div>
+      <div class="issue-row">
+        <div class="check check--no">!</div>
+        <div><div class="issue-title">Event Match Quality at 6.1 out of 10</div><div class="issue-body">On both Complete Registration and Purchase, with an "update recommended" flag on each.</div></div>
+      </div>
+      <div class="issue-row">
+        <div class="check check--no">!</div>
+        <div><div class="issue-title">Pixel firing unconfirmed on at least one live landing page</div><div class="issue-body">Worth a direct check in the website's custom code settings before the next flight.</div></div>
+      </div>
+      <div class="issue-row">
+        <div class="check check--no">!</div>
+        <div><div class="issue-title">CRM connection to Meta still pending</div><div class="issue-body">Whether it ends up being HubSpot or another system, closing this loop would let qualified conversions flow back into Meta. Right now that connection is 25% complete, and Meta estimates an 18% lower cost per qualified lead once it's finished.</div></div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--amber">
+      <div class="insight-tag">RECOMMENDATION</div>
+      <div class="insight-text">None of this requires new budget. It requires about a day of implementation work, and it's very likely the single biggest reason the reported ROAS looks worse than the business actually is.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-18">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">18 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">AUDIENCE PERFORMANCE</div>
+      <div class="slide-h1">The budget and the best audience aren't pointed at each other.</div>
+    </div>
+    <div class="cols-60-40">
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="hbar-list">
+            <div class="hbar-row">
+              <div class="hbar-meta"><div class="hbar-label">65+</div><div class="hbar-val">$22.1K · 60% of spend</div></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:100%;background:var(--amber);"></div></div>
+              <div class="hbar-sub">$126 cost per registration · <strong style="color:var(--ink2);">$1,699 cost per purchase</strong> (13 purchases)</div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta"><div class="hbar-label">55-64</div><div class="hbar-val">$9.7K · 26% of spend</div></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:44%;background:var(--amber);"></div></div>
+              <div class="hbar-sub">$107 cost per registration · <strong style="color:var(--ink2);">$9,672 cost per purchase</strong> (1 purchase, low sample)</div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta"><div class="hbar-label">45-54</div><div class="hbar-val">$3.8K · 10% of spend</div></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:17%;background:var(--ink4);"></div></div>
+              <div class="hbar-sub">$148 cost per registration · <strong style="color:var(--ink2);">$3,840 cost per purchase</strong> (1 purchase, low sample)</div>
+            </div>
+            <div class="hbar-row">
+              <div class="hbar-meta"><div class="hbar-label">35-44</div><div class="hbar-val">$1.0K · 3% of spend</div></div>
+              <div class="hbar-track"><div class="hbar-fill" style="width:5%;background:var(--green);"></div></div>
+              <div class="hbar-sub">$75 cost per registration · <strong style="color:var(--green);">$150 cost per purchase</strong>, the account's lowest (7 purchases)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="stat-label">FEMALE AUDIENCES</div>
+          <div class="stat-number">15 purchases</div>
+          <div class="stat-note">61% of spend, 3.26% CTR, more than double the purchases of male audiences</div>
+        </div>
+        <div class="card" style="margin-top:auto;">
+          <div class="stat-label">MALE AUDIENCES</div>
+          <div class="stat-number">6 purchases</div>
+          <div class="stat-note">39% of spend, 2.38% CTR</div>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">FOCUS</div>
+      <div class="insight-text">The 35-44 bracket produced a third of the account's purchases on 3% of the budget, at a cost per purchase roughly ten times lower than any other segment. That gap is large enough that it cuts both ways: it's either a genuinely underserved segment worth real budget, or a sign worth checking that purchase tracking is fully reliable at this volume.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-19">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">19 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">CREATIVE PERFORMANCE</div>
+      <div class="slide-h1">One concept is already working. It hasn't been given room to prove how well.</div>
+    </div>
+    <div class="card">
+      <table class="data-table">
+        <thead><tr><th>Ad</th><th class="num">Spend</th><th class="num">CTR</th><th class="num">CPM</th><th class="num">Regs</th><th class="num">Cost / reg</th><th class="num">Purch.</th><th class="num">Cost / purch.</th></tr></thead>
+        <tbody>
+          <tr><td class="strong">Brand | Shoes, 15s</td><td class="num strong">$8,203</td><td class="num">3.05%</td><td class="num">$104</td><td class="num">102</td><td class="num">$80</td><td class="num">6</td><td class="num">$1,367</td></tr>
+          <tr><td>UGC | Jam</td><td class="num">$3,808</td><td class="num">4.02%</td><td class="num">$226</td><td class="num">16</td><td class="num">$238</td><td class="num">3</td><td class="num">$1,269</td></tr>
+          <tr><td>Brand | Suit, 15s</td><td class="num">$2,922</td><td class="num">2.01%</td><td class="num">$72</td><td class="num">28</td><td class="num">$104</td><td class="num">2</td><td class="num">$1,461</td></tr>
+          <tr><td>RTG | Docs Waiting</td><td class="num">$478</td><td class="num">1.16%</td><td class="num">$39</td><td class="num">6</td><td class="num">$80</td><td class="num">4</td><td class="num">$119</td></tr>
+          <tr><td>UGC | Cynthia</td><td class="num">$422</td><td class="num">2.09%</td><td class="num">$108</td><td class="num">1</td><td class="num">$422</td><td class="num">0</td><td class="num">n/a</td></tr>
+          <tr><td>Brand | 90s</td><td class="num">$207</td><td class="num">2.77%</td><td class="num">$67</td><td class="num">3</td><td class="num">$69</td><td class="num">1</td><td class="num">$207</td></tr>
+          <tr><td>Brand | Flower, 15s</td><td class="num">$63</td><td class="num">1.46%</td><td class="num">$42</td><td class="num">0</td><td class="num">n/a</td><td class="num">0</td><td class="num">n/a</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight-bar insight-bar--blue">
+      <div class="insight-tag">LEARNING</div>
+      <div class="insight-text">Every tested ad is video, no static image has run in this account, and Meta's own recommendations flag that as an open opportunity. "Flower" and the 90s cut were never given a real budget to prove themselves either way.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-20">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">META ADS AUDIT</span></div>
+    <div class="topbar-page">20 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">THE PLAN</div>
+      <div class="slide-h1">A three-phase path from measurement to scale.</div>
+    </div>
+    <div class="process-row">
+      <div class="process-step">
+        <div class="process-num">WEEK 1</div>
+        <div class="process-title">Fix the signal</div>
+        <div class="process-body">Enable advanced matching, complete the Purchase event setup, confirm the pixel fires on every live landing page, consolidate the six flagged ad sets into one, and connect a CRM, whether HubSpot or another system, so qualified conversions flow back to Meta.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">DAY 30</div>
+        <div class="process-title">Rebalance and expand</div>
+        <div class="process-body">Once purchase tracking is confirmed reliable, shift budget toward the 35-44 segment, expand each ad from one primary text, headline, and description to three or four variations for real testing room, and add a static creative alongside video.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">NEXT QUARTER</div>
+        <div class="process-title">Build for scale</div>
+        <div class="process-body">Move optimization from registrations toward purchase value with Value Rules, test purchase campaigns split by main vertical the way Google Ads is structured today to see if a higher-funnel, costlier event still produces a better purchase CAC, and fund the abandonment retargeting segment at a real budget.</div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">NEXT STEP</div>
+      <div class="insight-text">Phases one and two cost nothing beyond implementation time. We'd expect to see the impact in the numbers within one full reporting cycle.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · META ADS AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-21">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">PAID MEDIA AUDIT</span></div>
+    <div class="topbar-page">21 — 22</div>
+  </div>
+  <div class="slide-body">
+    <div>
+      <div class="eyebrow">INVESTMENT</div>
+      <div class="slide-h1">One team running Google and Meta toward the same goal: paying customers.</div>
+      <div class="slide-sub">A flat monthly fee covers both channels. Your ad spend stays separate and goes straight to Google and Meta. It's never part of our fee.</div>
+    </div>
+    <div class="cols-40-60">
+      <div class="col">
+        <div class="card card--blue-tint card--flex card--stretch" style="border-top:4px solid var(--et-red);">
+          <div class="stat-label" style="color:var(--et-red);">PAID MEDIA MANAGEMENT · GOOGLE + META</div>
+          <div class="hero-number" style="color:#000;">$6,000<span style="font-size:18px;color:var(--ink4);font-weight:600;letter-spacing:0;"> / month</span></div>
+          <div class="stat-note" style="color:var(--ink2);font-size:13px;">Ad spend billed separately, at cost.</div>
+          <div class="stat-note" style="color:var(--ink2);font-size:13px;">We work in 60- or 90-day sprints, with no annual contract.</div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card card--flex card--stretch">
+          <div class="stat-label">WHAT'S INCLUDED</div>
+          <ul class="incl-list">
+            <li><strong>Strategy and rebuild:</strong> every move in this audit, starting with bidding toward purchases instead of sign-ups.</li>
+            <li><strong>Tracking:</strong> we set up and verify the Purchase event, advanced matching and conversion fixes, working with whoever manages your site.</li>
+            <li><strong>Creative:</strong> new video, static and UGC-style ads, built from the videos and illustrations you already have.</li>
+            <li><strong>Targeting and budget:</strong> audiences and spend shifted toward what turns into customers, like the DIY searches and the 35-44 segment.</li>
+            <li><strong>Reporting:</strong> a weekly learning journal of what we ran, what happened and what we test next, plus weekly calls.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="insight-bar insight-bar--green">
+      <div class="insight-tag">HOW IT FITS</div>
+      <div class="insight-text">The organic growth roadmap runs alongside this. Paid shows which questions turn into customers; content and AI visibility keep winning those customers without paying for every click.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">EMBERTRIBE · FEEDINGBIRD · PAID MEDIA AUDIT</div></div>
+</section>
+
+<section class="slide slide--light" id="slide-22">
+  <div class="topbar">
+    <div class="topbar-kicker"><span class="kicker-brand">EMBERTRIBE</span><span class="kicker-sep">·</span><span class="kicker-label">FEEDINGBIRD</span><span class="kicker-sep">·</span><span class="kicker-label">PAID MEDIA AUDIT</span></div>
+    <div class="topbar-page">22 — 22</div>
+  </div>
+  <div class="slide-body" style="justify-content:center;align-items:center;text-align:center;">
+    <div>
+      <div class="eyebrow" style="margin-bottom:16px;">NEXT STEPS</div>
+      <div class="hero-h1" style="max-width:700px;margin:0 auto;">Questions, alignment,<br>then we build.</div>
+      <div class="slide-sub" style="max-width:560px;margin:18px auto 0;text-align:center;">This audit covers both channels. The next conversation is about priorities, timelines, and what success looks like for FeedingBird in 2027.</div>
+    </div>
+    <div class="cols-50-50" style="max-width:800px;margin:clamp(14px,2.5vw,24px) auto 0;text-align:left;">
+      <div class="card card">
+        <div class="stat-label" style="color:var(--ink4);">ON GOOGLE</div>
+        <div class="stat-note" style="color:var(--ink2);font-size:13px;">Clarity on the conversion hierarchy, why assessment_completed isn't the primary bidding signal, and alignment on the Atlanta geo-expansion strategy before we restructure.</div>
+      </div>
+      <div class="card card">
+        <div class="stat-label" style="color:var(--ink4);">ON META</div>
+        <div class="stat-note" style="color:var(--ink2);font-size:13px;">An event setup walkthrough with whoever manages the pixel and Conversions API, and the business-wide purchase volume across every channel.</div>
+      </div>
+    </div>
+    <div class="cover-stats-3" style="max-width:650px;margin:clamp(14px,2.5vw,24px) auto 0;">
+      <div class="card card" style="text-align:center;">
+        <div class="stat-label" style="color:var(--ink4);">AUDIT</div>
+        <div style="font-size:clamp(13px,1.3vw,15px);font-weight:700;color:var(--green);margin-top:4px;">Complete</div>
+      </div>
+      <div class="card card" style="text-align:center;">
+        <div class="stat-label" style="color:var(--ink4);">PROPOSAL</div>
+        <div style="font-size:clamp(13px,1.3vw,15px);font-weight:700;color:var(--amber);margin-top:4px;">Ready to discuss</div>
+      </div>
+      <div class="card card" style="text-align:center;">
+        <div class="stat-label" style="color:var(--ink4);">IMPLEMENTATION</div>
+        <div style="font-size:clamp(13px,1.3vw,15px);font-weight:700;color:var(--ink4);margin-top:4px;">Pending alignment</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-footer"><div class="footer-brand">PREPARED BY EMBERTRIBE · embertribe.com</div></div>
+</section>
+
+<script>
+(function () {
+  const slides  = Array.from(document.querySelectorAll('.slide'));
+  const total   = slides.length;
+  let current   = 0;
+  const dotsEl    = document.getElementById('navDots');
+  const pageLabel = document.getElementById('pageLabel');
+  const btnPrev   = document.getElementById('btnPrev');
+  const btnNext   = document.getElementById('btnNext');
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+  function goTo(idx) {
+    idx = Math.max(0, Math.min(total - 1, idx));
+    slides[current].classList.remove('active');
+    slides[idx].classList.add('active');
+    current = idx;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    pageLabel.textContent = `${idx + 1} / ${total}`;
+    btnPrev.disabled = idx === 0;
+    btnNext.disabled = idx === total - 1;
+  }
+  window.goSlide = dir => goTo(current + dir);
+  btnPrev.disabled = true;
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight','ArrowDown','PageDown'].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+    if (['ArrowLeft','ArrowUp','PageUp'].includes(e.key))     { e.preventDefault(); goTo(current - 1); }
+  });
+})();
+function exportPDF(){ window.print(); }
+</script>
+</body>
+</html>
